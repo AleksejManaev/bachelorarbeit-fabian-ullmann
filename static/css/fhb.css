@@ -1,0 +1,96 @@
+/**
+ * Created by ullmanfa on 11.05.15.
+ */
+
+.btn-float {
+    line-height: 50px;
+}
+
+/* custom background-color-settings */
+
+.collection .collection-item.active,
+span.badge.new,
+.progress .determinate,
+.progress .indeterminate,
+.btn, .btn-large,
+.btn-floating,
+[type="radio"]:checked + label:after,
+[type="checkbox"].filled-in:checked + label:after,
+.switch label input[type=checkbox]:checked + .lever:after,
+input[type=range] + .thumb,
+input[type=range]::-webkit-slider-thumb,
+.picker__date-display,
+.picker__weekday-display,
+.picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected,
+nav {
+    background-color: #0095cc;
+}
+
+body.login-body:before {
+    background-color: #0095cc;
+    background-size: 300px;
+    background-image: url("../img/logo_fhb.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* custom color-settings */
+
+.dropdown-content li > a,
+.collection a.collection-item,
+.dropdown-content li > span,
+.secondary-content,
+.input-field .prefix.active,
+input[type=text]:focus:not([readonly]) + label, input[type=password]:focus:not([readonly]) + label, input[type=email]:focus:not([readonly]) + label, input[type=url]:focus:not([readonly]) + label, input[type=time]:focus:not([readonly]) + label, input[type=date]:focus:not([readonly]) + label, input[type=datetime-local]:focus:not([readonly]) + label, input[type=tel]:focus:not([readonly]) + label, input[type=number]:focus:not([readonly]) + label, input[type=search]:focus:not([readonly]) + label, textarea.materialize-textarea:focus:not([readonly]) + label,
+[type="radio"].with-gap:checked + label:after,
+input[type=range] + .thumb .value,
+.picker__day.picker__day--today,
+.picker__close, .picker__today {
+    color: #0095cc;
+}
+
+/* costom border */
+
+[type="radio"]:checked + label:after,
+[type="radio"].with-gap:checked + label:before,
+[type="radio"].with-gap:checked + label:after,
+[type="checkbox"].filled-in:checked + label:after,
+{
+    border: 2px solid #0095cc;
+}
+
+[type="checkbox"]:checked + label:before {
+    border-right: 2px solid #0095cc;
+    border-bottom: 2px solid #0095cc;
+
+}
+
+[type="checkbox"]:indeterminate + label:before {
+    border-right: 2px solid #0095cc;
+
+}
+
+input[type=text]:focus:not([readonly]), input[type=password]:focus:not([readonly]), input[type=email]:focus:not([readonly]), input[type=url]:focus:not([readonly]), input[type=time]:focus:not([readonly]), input[type=date]:focus:not([readonly]), input[type=datetime-local]:focus:not([readonly]), input[type=tel]:focus:not([readonly]), input[type=number]:focus:not([readonly]), input[type=search]:focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
+    border-bottom: 1px solid #0095cc;
+    box-shadow: 0 1px 0 0 #0095cc;
+}
+
+.todo-item input[type=checkbox]:checked + label {
+    text-decoration-color: #0095cc;
+}
+
+body.login-body:before, nav a.brand-logo {
+    background-image: url("../img/logo_fhb.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+nav a.brand-logo {
+    height: 100%;
+    width: 150px;
+    background-size: 150px;
+}
+
+a.disabled {
+    cursor: not-allowed;
+}

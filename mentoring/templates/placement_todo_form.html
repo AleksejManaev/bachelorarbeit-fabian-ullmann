@@ -1,0 +1,46 @@
+{% extends 'base_portal.html' %}
+{% load material %}
+{% block material_content %}
+<ul id="dropdown_thesis_finalize" class="dropdown-content">
+    <li><a href="{% url 'placement-update' object.pk %}" class="fancybox fancybox.iframe">Edit in Form</a></li>
+    <li><a href="#!">two</a></li>
+    <li class="divider"></li>
+    <li><a href="#!">hallo</a></li>
+</ul>
+<form enctype="multipart/form-data" action="" method="post">
+    {% csrf_token %}
+    <div class="card todo-list">
+
+
+        {% material_card_header title='Placement' actions='dropdown_thesis_finalize' %}
+
+        <div class="card-content">
+            {% material_todo_formfields placement_form %}
+            {% material_todo_item_begin %}
+            {% material_todo_item_activator id='id_company_todo' label='Company' %}
+            <div class="input-group hide col s12">
+                {% material_form placement_company_form %}
+                {% material_formset placement_company_formset %}
+            </div>
+            {% material_todo_item_end %}
+
+
+            {% material_todo_item_begin %}
+            {% material_todo_item_activator id='id_workcompany_todo' label='Contact-Data' %}
+            <div class="input-group hide col s12">
+                {% material_formset placement_contact_formset %}
+            </div>
+            {% material_todo_item_end %}
+            {# {% material_todo_formsetfields placement_contact_formset item_group=True %}#}
+        </div>
+        <div class="card-action">
+            <input type="submit">
+
+        </div>
+        {% material_todo_reveal %}
+    </div>
+</form>
+
+{% endblock %}
+
+{% block material_extra_script %}{% material_todo_js %}{% endblock %}

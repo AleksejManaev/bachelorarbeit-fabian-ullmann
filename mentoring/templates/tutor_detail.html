@@ -1,0 +1,17 @@
+{% extends 'base_portal.html' %}
+{% load material %}
+
+{% block material_content %}
+
+{% for request in object.requests %}
+<a href="{% url 'tutor-request' request.pk %}" class="fancybox fancybox.iframe">{{ request }}</a>
+{% endfor %}
+{% endblock %}
+
+{% block material_extra_script %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.fancybox').fancybox()
+    })
+</script>
+{% endblock %}

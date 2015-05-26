@@ -1,0 +1,12 @@
+{% extends 'material_base.html' %}
+{% load material %}
+{% load bootstrap3 %}
+
+{% block material_content %}
+<form action="" method="post">
+    {% csrf_token %}
+    {% material_form form %}
+    {% material_formset formset %}
+    <button type="submit">submit</button>
+</form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base_portal.html' %}
+{% load material %}
+{% block material_content %}
+
+<form enctype="multipart/form-data" action="" method="post">
+    {% csrf_token %}
+    {% material_form thesis_form %}
+
+    {% material_form thesis_company_form %}
+    {% material_formset thesis_company_formset %}
+    {% material_formset thesis_contact_formset %}
+    {% material_form thesis_mentoringrequest_form %}
+
+    <input type="submit">
+</form>
+
+{% endblock %}

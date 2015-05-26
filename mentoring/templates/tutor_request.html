@@ -1,0 +1,24 @@
+{% extends request.is_ajax|yesno:"material_base_modal.html,material_base.html" %}
+{% load material %}
+
+{% block material_content %}
+<form action="{{ form_action }}" method="post">
+    {% csrf_token %}
+    <p>{{ object.comment }}</p>
+
+    <p>{{ object.requested_on }}</p>
+
+    <p>{{ object.thesis.description }}</p>
+
+    <p>{{ object.thesis.student }}</p>
+
+    <p>{{ object.thesis.workcompany.company }}</p>
+
+    <p>{{ object.thesis.workcompany.description }}</p>
+
+    <p>{{ object.thesis.workcompany.contactdata }}</p>
+    {% material_form form %}
+    <button type="submit" name="accept">accept</button>
+    <button type="submit" name="deny">deny</button>
+</form>
+{% endblock %}

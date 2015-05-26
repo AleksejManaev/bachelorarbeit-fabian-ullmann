@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load material %}
+{% load staticfiles %}
+{% block material_body_class %}student-overview{% endblock %}
+{% block material_nav %}
+<nav>
+    <div class="nav-wrapper container">
+        <a href="#!" class="brand-logo"></a>
+    </div>
+</nav>
+
+{% endblock %}
+{% block material_extra_script %}{% material_todo_js %}{% endblock %}
+{% block material_content %}
+
+<div class="row">
+    <div id="thesis" class="col s12">
+
+        {% material_block_header 'Abschlussarbeit' action_visibility=True %}
+
+        <div class="col s12 m8 l9">
+            <div class="card todo-list">
+                <div class="card-header">
+                    <div class="card-title blue-grey-text">Finalisieren der Abschlussarbeit
+                        <ul id="dropdown_thesis_finalize" class="dropdown-content">
+                            <li><a href="#!">one</a></li>
+                            <li><a href="#!">two</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!">hallo</a></li>
+                        </ul>
+                        {% material_action_dropdown 'dropdown_thesis_finalize' %}
+
+                    </div>
+                </div>
+                <form action="#" method="post">
+                    {% csrf_token %}
+                    {% material_todo_form form_thesis_finalization class_name='card-content' %}
+                    <div class="card-action valign-wrapper">
+                        <a href="#" type="submit" class="col s12 center-align">Finalisieren</a>
+                    </div>
+                </form>
+
+            </div>
+            <div class="card todo-list">
+                <div class="card-header">
+                    <div class="card-title blue-grey-text">Anmeldung zur Abschlussarbeit
+                        <ul id="dropdown_thesis_registration" class="dropdown-content">
+                            <li><a href="#!">one</a></li>
+                            <li><a href="#!">two</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!">hallo</a></li>
+                        </ul>
+                        {% material_action_dropdown 'dropdown_thesis_registration' %}
+
+                    </div>
+                </div>
+                <form action="#" method="post">
+                    {% csrf_token %}
+                    {% material_todo_form form_thesis_registration class_name='card-content' %}
+                </form>
+                <div class="card-action valign-wrapper">
+                    <a href="#" class="col s12 center-align">Anmeldung abschließen</a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m4 l3">
+            <div class="card date-widget amber accent-3 center-align">
+                <p>Kolloquium-Termin</p>
+
+                <div class="date">20. Juli 2015</div>
+
+                <ul class="dv-list">
+                    <li><i class="mdi-action-schedule"></i> 10:30 Uhr</a>
+                    </li>
+                    <li><i class="mdi-action-room"></i> R109</li>
+                </ul>
+            </div>
+            <div class="card profile-view">
+                <div class="pv-header red darken-1">
+                    <i class="large mdi-social-school"></i>
+                    <img src="img/profile-pics/profile-pic.jpg" class="pv-main hide" alt="">
+                </div>
+
+                <div class="pv-body">
+                    <h2>Prof. Dr. Thomas Preuss</h2>
+
+                    <ul class="pv-contact">
+                        <li><i class="mdi-content-mail"></i> <a
+                                href="mailto:thomas.preuss@fh-brandenburg.de">E-Mail</a>
+                        </li>
+                        <li><i class="mdi-communication-phone"></i> +49 3381 355-452</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div id="placement" class="col s12">
+
+        {% material_block_header 'Praxisprojekt' action_visibility=True %}
+        <div class="col s12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title blue-grey-text">
+                        <small>Cras congue nec lorem eget posuere</small>
+                        <ul id="dropdown_placement" class="dropdown-content">
+                            <li><a href="#!">one</a></li>
+                            <li><a href="#!">two</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!">hallo</a></li>
+                        </ul>
+                        {% material_action_dropdown 'dropdown_placement' %}
+
+                    </div>
+                </div>
+                <div class="card-content">
+                    <!-- Dropdown Structure -->
+
+                    <div class="todo-item valign-wrapper row">
+                        <div class="col s10">
+                            <input type="checkbox" id="placement"/>
+                            <label for="placement">Praktikum beschreiben</label>
+                        </div>
+                        <a class="col s2 dropdown-button right-align" href="#!">
+                            <i class="mdi-editor-mode-edit"></i>
+
+                        </a>
+                    </div>
+                    <div class="todo-item valign-wrapper row">
+                        <div class="col s10">
+                            <input type="checkbox" id="company"/>
+                            <label for="company">Unternehmen beschreiben</label>
+                        </div>
+                        <a class="col s2 dropdown-button right-align" href="#!">
+                            <i class="mdi-editor-mode-edit"></i>
+
+                        </a>
+                    </div>
+                    <div class="todo-item valign-wrapper row">
+                        <div class="col s10">
+                            <input type="checkbox" id="placement_report"/>
+                            <label for="placement_report">Praktikumsbericht hochladen</label>
+                        </div>
+                        <a class="col s2 dropdown-button right-align" href="#!">
+                            <i class="mdi-file-file-upload"></i>
+
+                        </a>
+                    </div>
+                    <div class="todo-item valign-wrapper row">
+                        <div class="col s10">
+                            <input type="checkbox" id="placement_report"/>
+                            <label for="placement_report">Zeugnis hochladen</label>
+                        </div>
+                        <a class="col s2 dropdown-button right-align" href="#!">
+                            <i class="mdi-file-file-upload"></i>
+
+                        </a>
+                    </div>
+                    <div class="todo-item valign-wrapper row">
+                        <div class="col s10">
+                            <input type="checkbox" id="placement_report"/>
+                            <label for="placement_report">Präsentation hochladen</label>
+                        </div>
+                        <a class="col s2 dropdown-button right-align" href="#!">
+                            <i class="mdi-file-file-upload"></i>
+
+                        </a>
+                    </div>
+                </div>
+                <div class="card-action valign-wrapper">
+                    <a href="#" class="col s12 center-align">Abschließen</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

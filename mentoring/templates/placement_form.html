@@ -1,0 +1,16 @@
+{% extends 'base_portal.html' %}
+{% load material %}
+{% block material_content %}
+
+<form enctype="multipart/form-data" action="" method="post">
+    {% csrf_token %}
+    {% material_form placement_form %}
+
+    {% material_form placement_company_form %}
+    {% material_formset placement_company_formset %}
+    {% material_formset placement_contact_formset %}
+
+    <input type="submit">
+</form>
+
+{% endblock %}
