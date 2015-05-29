@@ -1,18 +1,21 @@
 {% load material %}
 
 <ul id="dropdown_thesis_finalize" class="dropdown-content">
-    {% if not object.finished %}
-        <li><a href="{% url 'placement-update' object.pk %}" class="fancybox fancybox.iframe">Edit in Form</a></li>
+    {% if thesis.mentoring.tutor_1.status == 'NR' %}
+        <li><a href="{% url 'thesis-mentoringrequest-update' thesis.pk %}" class="fancybox fancybox.iframe">Edit in
+            Form</a></li>
     {% else %}
-        <li><a href="{% url 'placement-preview' object.pk %}" class="fancybox fancybox.iframe">Preview</a></li>
-        <li><a href="{% url 'placement-update-todo' object.pk %}?editMode=true" class="">Edit Mode</a></li>
-
+        <li><a href="{% url 'thesis-preview' thesis.pk %}" class="fancybox fancybox.iframe">Preview</a></li>
+        {% if thesis.mentoring.tutor_1.status != 'AC' %}
+            <li><a href="{% url 'thesis-mentoringrequest-update-todo' thesis.pk %}?editMode=true" class="">Edit Mode</a>
+            </li>
+        {% endif %}
     {% endif %}
 </ul>
 <div class="card todo-list">
 
 
-    {% material_card_header title='Thesis' actions='dropdown_thesis_finalize' %}
+    {% material_card_header title='Mentoring-Request' actions='dropdown_thesis_finalize' %}
 
     <div class="card-content">
         {% material_todo_formfields thesis_form %}
@@ -41,10 +44,14 @@
         {% material_todo_item_end %}
 
     </div>
-    <div class="card-action valign-wrapper">
-        {% if not object.finished %}
-            <a href="#" type="submit" name="finish" class="col s12 center-align">Finish</a>
-        {% endif %}
+    {% if thesis.mentoring.tutor_1.status == 'NR' %}
+        <div class="card-action valign-wrapper">
+        <a href="#" type="submit" name="finish" class="col s12 center-align">Request</a>
+    {% else %}
+        <div class="card-action">
+        <div><p>Requested on: {{ thesis.mentoring.tutor_1.requested_on }}</p></div>
+        <p>Status: {{ thesis.mentoring.tutor_1.status }}</p>
+    {% endif %}
     </div>
     {% material_todo_reveal %}
-</div>
+    </div>

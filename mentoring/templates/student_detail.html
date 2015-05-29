@@ -3,87 +3,21 @@
 
 {% block material_content %}
 
-<ul id="dropdown_placement" class="dropdown-content">
-    <li><a href="{% url 'placement-update' object.placement.pk %}" class="fancybox fancybox.iframe">Edit in Form</a>
-    </li>
-</ul>
+    <ul id="dropdown_placement" class="dropdown-content">
+        <li><a href="{% url 'placement-update' object.placement.pk %}" class="fancybox fancybox.iframe">Edit in Form</a>
+        </li>
+    </ul>
 
-<form enctype="multipart/form-data" action="{% url 'placement-update' object.placement.pk %}" method="post">
-    {% csrf_token %}
-    {% include 'widget/placement_todo_list.html' %}
-    {#    <div class="card todo-list">#}
-    {##}
-    {##}
-    {#        {% material_card_header title='Placement' actions='dropdown_placement' %}#}
-    {##}
-    {#        <div class="card-content">#}
-    {#            {% material_todo_formfields placement_form %}#}
-    {#            {% material_todo_item_begin %}#}
-    {#            {% material_todo_item_activator id='id_placement_company_todo' label='Company' %}#}
-    {#            <div class="input-group hide col s12">#}
-    {#                {% material_form placement_company_form %}#}
-    {#                {% material_formset placement_company_formset %}#}
-    {#            </div>#}
-    {#            {% material_todo_item_end %}#}
-    {##}
-    {##}
-    {#            {% material_todo_item_begin %}#}
-    {#            {% material_todo_item_activator id='id_placement_workcompany_todo' label='Contact-Data' %}#}
-    {#            <div class="input-group hide col s12">#}
-    {#                {% material_formset placement_contact_formset %}#}
-    {#            </div>#}
-    {#            {% material_todo_item_end %}#}
-    {#        </div>#}
-    {#        <div class="card-action valign-wrapper">#}
-    {#            <a href="#" type="submit" name="finish" class="col s12 center-align">Finish</a>#}
-    {#        </div>#}
-    {#        {% material_todo_reveal %}#}
-    {#    </div>#}
-</form>
-
-<ul id="dropdown_thesis" class="dropdown-content">
-    <li><a href="{% url 'thesis-update' object.thesis.pk %}" class="fancybox fancybox.iframe">Edit in Form</a></li>
-</ul>
-
-<form enctype="multipart/form-data" action="{% url 'thesis-update' object.thesis.pk %}" method="post">
-    {% csrf_token %}
-    <div class="card todo-list">
+    <form enctype="multipart/form-data" action="{% url 'placement-update' placement.pk %}" method="post">
+        {% csrf_token %}
+        {% include 'widget/placement_todo_list.html' %}
+    </form>
 
 
-        {% material_card_header title='Thesis' actions='dropdown_thesis' %}
-
-        <div class="card-content">
-            {% material_todo_formfields thesis_form %}
-            {% material_todo_item_begin %}
-            {% material_todo_item_activator id='id_thesis_company_todo' label='Company' %}
-            <div class="input-group hide col s12">
-                {% material_form thesis_company_form %}
-                {% material_formset thesis_company_formset %}
-            </div>
-            {% material_todo_item_end %}
-
-
-            {% material_todo_item_begin %}
-            {% material_todo_item_activator id='id_thesis_workcompany_todo' label='Contact-Data' %}
-            <div class="input-group hide col s12">
-                {% material_formset thesis_contact_formset %}
-            </div>
-            {% material_todo_item_end %}
-
-
-            {% material_todo_item_begin %}
-            {% material_todo_item_activator id='id_thesis_mentoringrequest_todo' label='Tutor' %}
-            <div class="input-group hide col s12">
-                {% material_form thesis_mentoringrequest_form %}
-            </div>
-            {% material_todo_item_end %}
-        </div>
-        <div class="card-action">
-            <a href="#" type="submit" name="finish" class="col s12 center-align">Finish</a>
-        </div>
-        {% material_todo_reveal %}
-    </div>
-</form>
+    <form enctype="multipart/form-data" action="{% url 'thesis-mentoringrequest-update' thesis.pk %}" method="post">
+        {% csrf_token %}
+        {% include 'widget/thesis_mentoringrequest_todo_list.html' %}
+    </form>
 {% endblock %}
 
 {% block material_extra_script %}{% material_todo_js %}{% endblock %}

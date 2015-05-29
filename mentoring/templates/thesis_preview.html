@@ -1,0 +1,14 @@
+{% extends 'base_portal.html' %}
+{% load staticfiles %}
+{% load material %}
+
+{# Todo Preview-Seite erstellen #}
+{% block material_content %}
+
+    <p>{{ object.description }}</p>
+    <p>{{ object.workcompany.company }}</p>
+    <p>{{ object.workcompany.description }}</p>
+    <br>
+    <p>{{ object.mentoring.tutor_1 }}</p>
+    <p>{{ object.mentoring.tutor_2 }}</p>
+{% endblock %}

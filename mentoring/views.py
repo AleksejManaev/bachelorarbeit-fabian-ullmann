@@ -14,6 +14,7 @@ class PlacementUpdateView(UpdateView):
     def get_context_placement(self, data=None, files=None, **kwargs):
         placement = self.get_placement()
         return {
+            'placement': placement,
             'placement_form': FormPlacement(data, files=files, instance=placement, prefix='placement_form'),
             'placement_company_form': FormCompany(data, parent=placement.workcompany,
                                                   instance=placement.workcompany.company,
@@ -25,6 +26,7 @@ class PlacementUpdateView(UpdateView):
         }
 
     def get(self, request, status=200, *args, **kwargs):
+        print("PlacementUpdateView")
         self.object = self.get_object()
 
         if (request.GET.has_key('editMode')):
@@ -79,15 +81,16 @@ class PlacementPreviewView(DetailView):
     template_name = 'placement_preview.html'
 
 
-class ThesisUpdateView(UpdateView):
+class ThesisMentoringrequestUpdateView(UpdateView):
     model = Thesis
-    form_class = FormThesis
-    template_name = 'thesis_todo_form.html'
+    form_class = FormThesisMentoringrequest
+    template_name = 'thesis_mentoringrequest_todo_form.html'
 
     def get_context_thesis(self, data=None, files=None, **kwargs):
         thesis = self.get_thesis()
         return {
-            'thesis_form': FormThesis(data, files=files, instance=thesis, prefix='thesis_form'),
+            'thesis': thesis,
+            'thesis_form': FormThesisMentoringrequest(data, files=files, instance=thesis, prefix='thesis_form'),
             'thesis_company_form': FormCompany(data, parent=thesis.workcompany, instance=thesis.workcompany.company,
                                                prefix='thesis_company_form'),
             'thesis_company_formset': FormsetWorkCompany(data, instance=thesis, prefix='thesis_company_formset'),
@@ -97,11 +100,12 @@ class ThesisUpdateView(UpdateView):
                                                                  prefix='thesis_mentoringrequest_form'), }
 
     def get(self, request, status=200, *args, **kwargs):
+        print("ThesisMentoringrequestUpdateView")
         self.object = self.get_object()
 
-        if (request.GET.has_key('editMode')):
-            self.object.finished = False
-            self.object.save()
+        if (request.GET.has_key('editMode') and not self.object.mentoring.tutor_1.status == 'AC'):
+            self.object.mentoring.tutor_1.status = 'NR'
+            self.object.mentoring.tutor_1.save()
             return redirect('./')
 
         cd = self.get_context_data()
@@ -112,7 +116,7 @@ class ThesisUpdateView(UpdateView):
 
         self.object = self.get_object()
 
-        if self.object.finished:
+        if self.object.finished or self.object.mentoring.tutor_1.status in ['RE', 'AC']:
             return self.get(request, status=405)
 
         else:
@@ -146,80 +150,12 @@ class ThesisUpdateView(UpdateView):
         return ''
 
 
-# class ThesisUpdateView(UpdateView):
-#     model = Thesis
-#     template_name = 'thesis_todo_form.html'
-#     form_class = FormThesis
-#
-#     def post(self, request, *args, **kwargs):
-#         self.object = self.get_object()
-#         thesis = self.get_context_data_thesis(request.POST, files=request.FILES)
-#         all_valid = True
-#         if (thesis.get('thesis_form').is_valid()):
-#             thesis.get('thesis_form').save()
-#         else:
-#             all_valid = False
-#
-#         if (thesis.get('thesis_contact_formset').is_valid()):
-#             thesis.get('thesis_contact_formset').save()
-#         else:
-#             all_valid = False
-#
-#         if (thesis.get('thesis_company_formset').is_valid()):
-#             thesis.get('thesis_company_formset').save()
-#         else:
-#             all_valid = False
-#
-#         if (thesis.get('thesis_mentoringrequest_form').is_valid()):
-#             thesis.get('thesis_mentoringrequest_form').save()
-#         else:
-#             all_valid = False
-#
-#         company = thesis.get('thesis_company_form')
-#         companywork = WorkCompany.objects.get(work=self.object)
-#         company.instance = Company.objects.get_or_create(name=company['name'].value())[0]
-#         companywork.company = company.instance
-#         companywork.save()
-#         """
-#         Set mentoring request status to 'requested'
-#         """
-#         if (request.POST.has_key('finish') and all_valid):
-#             self.object = self.get_object()
-#             self.object.mentoring.tutor_1.status = 'RE'
-#             self.object.mentoring.tutor_1.save()
-#
-#         return self.render_to_response(thesis)
-#
-#     def get_context_data_thesis(self, data=None, files=None, **kwargs):
-#         thesis = self.get_thesis()
-#         companywork = WorkCompany.objects.get(work=thesis)
-#         thesis_form = FormThesis(data, files=files, instance=thesis, prefix='thesis_form')
-#         thesis_company_form = FormCompany(data, instance=companywork.company, prefix='thesis_company_form')
-#         thesis_company_formset = FormsetWorkCompany(data, instance=thesis, prefix='thesis_company_formset')
-#         thesis_contact_formset = FormsetWorkCompanyContactdata(data, instance=companywork,
-#                                                                prefix='thesis_contact_formset')
-#         thesis_mentoringrequest_form = FormMentoringRequest(data, instance=thesis.mentoring.tutor_1,
-#                                                             prefix='thesis_mentoringrequest_form')
-#
-#         return {
-#             'thesis_form': thesis_form,
-#             'thesis_company_form': thesis_company_form,
-#             'thesis_company_formset': thesis_company_formset,
-#             'thesis_contact_formset': thesis_contact_formset,
-#             'thesis_mentoringrequest_form': thesis_mentoringrequest_form,
-#         }
-#
-#     def get_context_data(self, **kwargs):
-#         return self.get_context_data_thesis()
-#
-#     def get_thesis(self):
-#         return self.get_object()
-#
-#     def get_success_url(self):
-#         return ''
+class ThesisPreviewView(DetailView):
+    model = Thesis
+    template_name = 'thesis_preview.html'
 
 
-class StudentView(PlacementUpdateView, ThesisUpdateView):
+class StudentView(ThesisMentoringrequestUpdateView, PlacementUpdateView):
     template_name = 'student_detail.html'
     model = Student
 
@@ -231,7 +167,7 @@ class StudentView(PlacementUpdateView, ThesisUpdateView):
             if context_object_name:
                 context[context_object_name] = self.object
         context.update(kwargs)
-        context.update(self.get_context_data_thesis())
+        context.update(self.get_context_thesis())
         context.update(self.get_context_placement())
         return context
 

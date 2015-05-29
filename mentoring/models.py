@@ -136,9 +136,9 @@ class MentoringRequest(models.Model):
         ('DE', 'denied'),
     )
     tutor_email = models.EmailField()
-    requested_on = models.DateTimeField(_('requested on'), auto_now=True)
+    requested_on = models.DateTimeField(_('requested on'), null=True, editable=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='NR')
-    comment = models.TextField(_('comment'), null=True)
+    comment = models.TextField(_('comment'))
     answer = models.TextField(_('answer'), blank=True, null=True)
 
     def __str__(self):

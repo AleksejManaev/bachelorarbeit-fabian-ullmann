@@ -26,10 +26,16 @@ urlpatterns = [
         name='placement-update-todo'),
     url(r'^placement/preview/(?P<pk>\d+)/$', PlacementPreviewView.as_view(), name='placement-preview'),
 
-    url(r'^thesis/update/(?P<pk>\d+)/$', ThesisUpdateView.as_view(template_name='thesis_form.html'),
-        name='thesis-update'),
-    url(r'^thesis/update/(?P<pk>\d+)/todo/$', ThesisUpdateView.as_view(template_name='thesis_todo_form.html'),
-        name='thesis-update-todo'),
+    url(r'^thesis/mentoring-request/update/(?P<pk>\d+)/$',
+        ThesisMentoringrequestUpdateView.as_view(template_name='thesis_mentoringrequest_form.html'),
+        name='thesis-mentoringrequest-update'),
+    url(r'^thesis/mentoring-request/update/(?P<pk>\d+)/todo/$',
+        ThesisMentoringrequestUpdateView.as_view(template_name='thesis_mentoringrequest_todo_form.html'),
+        name='thesis-mentoringrequest-update-todo'),
+    url(r'^thesis/preview/(?P<pk>\d+)/$', ThesisPreviewView.as_view(), name='thesis-preview'),
+
+
+
     url(r'^tutor/$', TutorView.as_view(), name='tutor-overview'),
     url(r'^tutor/request/(?P<pk>\d+)/', TutorRequestView.as_view(), name='tutor-request')
 ]

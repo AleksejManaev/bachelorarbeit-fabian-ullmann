@@ -1,5 +1,6 @@
 from django import forms
 from django.forms.utils import ErrorList
+from django.utils import timezone
 
 from mentoring.models import *
 
@@ -103,10 +104,35 @@ class FormPlacement(forms.ModelForm):
         }
 
 
-class FormThesis(forms.ModelForm):
+class FormThesisMentoringrequest(forms.ModelForm):
+    def is_valid(self):
+        """
+        Falls das Objekt bereits angefragt wurde -> invalid
+        """
+        if (self.instance.mentoring.tutor_1.status in ['RE', 'AC']):
+            return False
+
+        """
+        Falls Mentoringrequest finalisiert werden soll, setze all Felder 'required'
+        """
+
+        req = True if self.data.has_key('finalize') else False
+        is_valid = super(FormThesisMentoringrequest, self).is_valid()
+
+        """
+        Falls Mentoringrequest valid und request -> Placement.finished
+        """
+
+        if is_valid and req:
+            self.instance.mentoring.tutor_1.status = 'RE'
+            self.instance.mentoring.tutor_1.requested_on = timezone.now()
+            self.instance.mentoring.tutor_1.save()
+            self.instance.save()
+
+        return is_valid
     class Meta:
         model = Thesis
-        exclude = ['student']
+        exclude = ['student', 'finished']
         fields = '__all__'
         widgets = {
             'finished': forms.HiddenInput()
