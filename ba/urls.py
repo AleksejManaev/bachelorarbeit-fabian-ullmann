@@ -13,8 +13,9 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-import os
-from django.conf.urls import include, url, patterns
+from django.conf import settings
+from django.conf.urls.static import static
+from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
@@ -23,9 +24,9 @@ urlpatterns = [
     url(r'^', include('mentoring.urls')),
     url(r'^material/', include('materialize.urls')),
     url(r'^admin/', include(admin.site.urls)),
-]
-urlpatterns += patterns('',
-                        (r'^files/(.*)$', 'django.views.static.serve',
-                         {'document_root': os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                                                        '../files')}),
-                        )
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += patterns('',
+#                         (r'^files/(.*)$', 'django.views.static.serve',
+#                          {'document_root': os.path.join(os.path.abspath(os.path.dirname(__file__)),
+#                                                         '../files')}),
+#                         )

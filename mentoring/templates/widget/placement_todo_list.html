@@ -1,0 +1,45 @@
+{% load material %}
+
+<ul id="dropdown_thesis_finalize" class="dropdown-content">
+    {% if not object.finished %}
+        <li><a href="{% url 'placement-update' object.pk %}" class="fancybox fancybox.iframe">Edit in Form</a></li>
+    {% else %}
+        <li><a href="{% url 'placement-preview' object.pk %}" class="fancybox fancybox.iframe">Preview</a></li>
+        <li><a href="{% url 'placement-update-todo' object.pk %}?editMode=true" class="">Edit Mode</a></li>
+
+    {% endif %}
+</ul>
+
+<div class="card todo-list">
+
+
+    {% material_card_header title='Placement' actions='dropdown_thesis_finalize' %}
+
+    <div class="card-content">
+        {% material_todo_formfields placement_form exclude='public' %}
+        {% material_todo_item_begin %}
+        {% material_todo_item_activator id='id_company_todo' label='Company' %}
+        <div class="input-group hide col s12">
+            {% material_form placement_company_form %}
+            {% material_formset placement_company_formset %}
+        </div>
+        {% material_todo_item_end %}
+
+
+        {% material_todo_item_begin %}
+        {% material_todo_item_activator id='id_workcompany_todo' label='Contact-Data' %}
+        <div class="input-group hide col s12">
+            {% material_formset placement_contact_formset %}
+        </div>
+        {% material_todo_item_end %}
+
+        {% material_formfield placement_form.public %}
+        {# {% material_todo_formsetfields placement_contact_formset item_group=True %}#}
+    </div>
+    <div class="card-action valign-wrapper">
+        {% if not object.finished %}
+            <a href="#" type="submit" name="finish" class="col s12 center-align">Finish</a>
+        {% endif %}
+    </div>
+    {% material_todo_reveal %}
+</div>

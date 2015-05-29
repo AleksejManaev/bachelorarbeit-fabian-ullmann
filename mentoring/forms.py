@@ -27,21 +27,10 @@ class TestForm(forms.Form):
     date = forms.DateField()
 
 
-class FormThesisInvitation(forms.Form):
-    desc = forms.CharField(label="Thema beschreiben", max_length=1000, widget=forms.Textarea(attrs={'length': '1000'}))
-    company = forms.CharField(label="Unternehmen beschreiben")
-
-
-class FormThesisRegistration(forms.Form):
-    pass
-
-
-class FormThesisFinalization(forms.Form):
-    upload_thesis = forms.FileField(label="Abschlussarbeit hochladen")
-    upload_poster = forms.FileField(label="Poster hochladen")
-
-
 class FormCompany(forms.ModelForm):
+    """
+    Formular darf nicht validiert werden, wegen Dupliakts-Error
+    """
     validate = False
 
     class Meta:
@@ -56,12 +45,41 @@ class FormContactModel(forms.ModelForm):
 
 
 class FormPlacement(forms.ModelForm):
-    finish = forms.BooleanField(initial=False, required=False, widget=forms.HiddenInput)
+    def is_valid(self):
+        """
+        Falls das Objekt bereits finalisiert wude -> invalid
+        """
+        if (self.instance.finished):
+            return False
+
+        """
+        Falls Placement finalisiert werden soll, setze all Felder 'required'
+        """
+
+        req = True if self.data.has_key('finalize') and self.data['finalize'] == 'true' else False
+
+        for key, val in self.fields.iteritems():
+            if not key in ['public', 'finished']:
+                val.required = req
+            else:
+                val.required = False
+
+        is_valid = super(FormPlacement, self).is_valid()
+
+        """
+        Falls Placement valid und finalize -> Placement.finished
+        """
+
+        if is_valid and req:
+            self.instance.finished = True
+            print(self.instance.finished)
+            self.instance.save()
+
+        return is_valid
 
     class Meta:
         model = Placement
         exclude = ['student', 'finished']
-        include = ['finish']
         fields = '__all__'
         widgets = {
             'report': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
@@ -84,7 +102,6 @@ FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fiel
                                                  fk_name='work', can_delete=False)
 FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, ContactData, fields='__all__', extra=1,
                                                             can_delete=True);
-# FormsetMentoringRequest = forms.inlineformset_factory(Thesis, Mentoring, fields=['tutor_email', 'comment'], extra=1, can_delete=False)
 
 class FormMentoringRequest(forms.ModelForm):
     class Meta:

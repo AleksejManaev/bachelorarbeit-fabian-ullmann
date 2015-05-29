@@ -1,0 +1,14 @@
+{% extends 'base_portal.html' %}
+{% load staticfiles %}
+{% load material %}
+
+{# Todo Preview-Seite erstellen #}
+{% block material_content %}
+
+    <p>{{ object.description }}</p>
+    <p><a href="{{ MEDIA_URL }}{{ object.report }}">Report</a></p>
+    <p><a href="{{ MEDIA_URL }}{{ object.presentation }}">Presentation</a></p>
+    <p><a href="{{ MEDIA_URL }}{{ object.certificate }}">Certificate</a></p>
+    <p>{{ object.workcompany.company }}</p>
+    <p>{{ object.workcompany.description }}</p>
+{% endblock %}

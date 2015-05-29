@@ -1,22 +1,10 @@
-# Create your views here.
+# -*- coding: utf-8 -*-
+from django.shortcuts import redirect
 
-from django.views.generic import TemplateView, UpdateView, DetailView
+from django.views.generic import UpdateView, DetailView
 
 from mentoring.forms import *
 from mentoring.models import Student, Placement
-
-
-class StudentOverviewView(TemplateView):
-    template_name = 'student_overview.html'
-
-    def get_context_data(self, **kwargs):
-        cd = super(StudentOverviewView, self).get_context_data()
-        cd['form_thesis_registration'] = FormThesisInvitation()
-        cd['form_thesis_finalization'] = FormThesisFinalization()
-        cd['form_placement'] = FormPlacement()
-
-        return cd
-
 
 class PlacementUpdateView(UpdateView):
     model = Placement
@@ -26,63 +14,91 @@ class PlacementUpdateView(UpdateView):
     def get_context_data_placement(self, data=None, files=None, **kwargs):
         placement = self.get_placement()
         companywork = WorkCompany.objects.get(work=placement)
-        self.get_form(self.form_class)
-        placement_form = FormPlacement(data, files=files, instance=placement, prefix='placement_form')
-        placement_company_form = FormCompany(data, instance=companywork.company, prefix='placement_company_form')
-        placement_company_formset = FormsetWorkCompany(data, instance=placement, prefix='placement_company_formset')
-        placement_contact_formset = FormsetWorkCompanyContactdata(data, instance=companywork,
-                                                                  prefix='placement_contact_formset')
-
         return {
-            'placement_form': placement_form,
-            'placement_company_form': placement_company_form,
-            'placement_company_formset': placement_company_formset,
-            'placement_contact_formset': placement_contact_formset,
+            'placement_form': FormPlacement(data, files=files, instance=placement, prefix='placement_form'),
+            'placement_company_form': FormCompany(data, instance=companywork.company, prefix='placement_company_form'),
+            'placement_company_formset': FormsetWorkCompany(data, instance=placement,
+                                                            prefix='placement_company_formset'),
+            'placement_contact_formset': FormsetWorkCompanyContactdata(data, instance=companywork,
+                                                                       prefix='placement_contact_formset'),
         }
 
-    def get_context_data(self, **kwargs):
-        return self.get_context_data_placement()
+    def validate_and_safe_all(self, placement):
+        pass
+
+    def todo_post(self, request):
+        form_target = request.POST.get('target_form').split(',') if request.POST.has_key('target_form') else [i for i, v
+                                                                                                              in
+                                                                                                              self.placement.iteritems()]
+        status = 200
+
+        for t in form_target:
+            if self.placement.has_key(t) and self.placement.get(t).is_valid():
+                self.placement.get(t).save()
+            else:
+                status = 400
+
+        if status == 200:
+            placement = self.get_context_data_placement()
+
+        cd = self.get_context_data()
+        cd.update(self.placement)
+        return self.render_to_response(cd, status=status)
+
+    def get(self, request, status=200, *args, **kwargs):
+        self.object = self.get_object()
+
+        if (request.GET.has_key('editMode')):
+            self.object.finished = False
+            self.object.save()
+            return redirect('./')
+
+        cd = self.get_context_data()
+        cd.update(self.get_context_data_placement())
+        return self.render_to_response(cd, status=status)
 
     def post(self, request, *args, **kwargs):
+
         self.object = self.get_object()
-        placement = self.get_context_data_placement(request.POST, files=request.FILES)
-        all_valid = True
 
-        if (placement.get('placement_form').is_valid()):
-            placement.get('placement_form').save()
+        if self.object.finished:
+            return self.get(request, status=405)
+
         else:
-            all_valid = False
+            self.placement = self.get_context_data_placement(request.POST, files=request.FILES)
 
-        if (placement.get('placement_contact_formset').is_valid()):
-            placement.get('placement_contact_formset').save()
-        else:
-            all_valid = False
+        if request.is_ajax():
+            return self.todo_post(request)
 
-        if (placement.get('placement_company_formset').is_valid()):
-            placement.get('placement_company_formset').save()
-        else:
-            all_valid = False
+        if (self.placement.get('placement_form').is_valid()):
+            self.placement.get('placement_form').save()
 
-        company = placement.get('placement_company_form')
+        if (self.placement.get('placement_contact_formset').is_valid()):
+            self.placement.get('placement_contact_formset').save()
+
+        if (self.placement.get('placement_company_formset').is_valid()):
+            self.placement.get('placement_company_formset').save()
+
+        # Todo Prüfe company.save()
+
+        company = self.placement.get('placement_company_form')
         companywork = WorkCompany.objects.get(work=self.object)
         company.instance = Company.objects.get_or_create(name=company['name'].value())[0]
         companywork.company = company.instance
         companywork.save()
 
-        print(request.POST.get('placement_form-finish'))
-
-        if (request.POST.get('placement_form-finish')):
-            pl = self.get_placement()
-            pl.finished = all_valid
-            pl.save()
-
-        return self.render_to_response(placement)
+        return self.render_to_response(self.placement)
 
     def get_placement(self):
         return self.get_object()
 
     def get_success_url(self):
         return ''
+
+
+class PlacementPreviewView(DetailView):
+    model = Placement
+    template_name = 'placement_preview.html'
 
 
 class ThesisUpdateView(UpdateView):

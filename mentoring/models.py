@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -33,7 +33,7 @@ class Degree(models.Model):
 
 
 class Company(models.Model):
-    name = models.CharField(_('company name'), max_length=100)
+    name = models.CharField(_('company name'), max_length=100, unique=True)
 
     def __str__(self):
         return self.name
@@ -65,7 +65,6 @@ class AbstractWork(models.Model):
     description = models.TextField(_('description'), blank=True, null=True)
     created_on = models.DateTimeField(_('date joined'), auto_created=True, auto_now_add=True)
     updated_on = models.DateTimeField(_('date joined'), auto_now=True, null=True)
-    finished = models.BooleanField(_('finished'), default=False)
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
@@ -79,6 +78,8 @@ class Placement(AbstractWork):
                                     validators=[validate_pdf, validate_size])
     certificate = models.FileField(_('certificate'), upload_to=upload_to_certificate, blank=True, null=True,
                                    validators=[validate_pdf, validate_size])
+    public = models.BooleanField(_('public'), default=False)
+    finished = models.BooleanField(_('finished'), default=False)
 
     def __str__(self):
         return "Placement {}".format(self.student.user.username)
@@ -101,12 +102,11 @@ class Placement(AbstractWork):
 class WorkCompany(models.Model):
     work = models.OneToOneField(AbstractWork, primary_key=True)
     company = models.ForeignKey(Company, null=True, blank=True)
-    description = models.TextField(_('company description'), blank=True, null=True)
+    description = models.TextField(_('company description'), blank=False)
 
 
 class ContactData(models.Model):
     work_company = models.OneToOneField(WorkCompany)
-    title = models.CharField(_('title'), max_length=30, blank=True, null=True)
     first_name = models.CharField(_('first name'), max_length=30)
     last_name = models.CharField(_('last name'), max_length=30)
     email = models.EmailField(_('email'))
@@ -201,5 +201,14 @@ def post_save_student(sender, instance, created, **kwargs):
         ContactData.objects.get_or_create(
             work_company=WorkCompany.objects.get_or_create(
                 work=thesis)[0])
-        Mentoring.objects.get_or_create(thesis=thesis, tutor_1=MentoringRequest(status='NR'))
+        mr = MentoringRequest(status='NR')
+        mr.save()
+        Mentoring.objects.get_or_create(thesis=thesis, tutor_1=mr)
         Address.objects.get_or_create(portal_user=instance)
+
+
+@receiver(post_delete, sender=ContactData)
+def post_delete_contactdata(sender, instance, using, **kwargs):
+    print("post_delete_contactdata")
+    print(instance)
+    ContactData.objects.get_or_create(work_company=instance.work_company)

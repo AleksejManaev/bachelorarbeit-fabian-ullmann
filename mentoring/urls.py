@@ -19,11 +19,13 @@ from mentoring.views import *
 
 urlpatterns = [
     url(r'^student/$', StudentView.as_view(), name='student-overview'),
-    url(r'^student-template/$', StudentOverviewView.as_view(), name='student-template'),
+
     url(r'^placement/update/(?P<pk>\d+)/$', PlacementUpdateView.as_view(template_name='placement_form.html'),
         name='placement-update'),
     url(r'^placement/update/(?P<pk>\d+)/todo/$', PlacementUpdateView.as_view(template_name='placement_todo_form.html'),
         name='placement-update-todo'),
+    url(r'^placement/preview/(?P<pk>\d+)/$', PlacementPreviewView.as_view(), name='placement-preview'),
+
     url(r'^thesis/update/(?P<pk>\d+)/$', ThesisUpdateView.as_view(template_name='thesis_form.html'),
         name='thesis-update'),
     url(r'^thesis/update/(?P<pk>\d+)/todo/$', ThesisUpdateView.as_view(template_name='thesis_todo_form.html'),
