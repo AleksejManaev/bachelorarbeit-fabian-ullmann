@@ -28,10 +28,13 @@ class TestForm(forms.Form):
 
 
 class FormCompany(forms.ModelForm):
-    """
-    Formular darf nicht validiert werden, wegen Dupliakts-Error
-    """
-    validate = False
+    def is_valid(self):
+        if not self['name'].value():
+            return False
+        else:
+            self.instance = Company.objects.get_or_create(name=self['name'].value())[0]
+            self.instance.save()
+            return True
 
     class Meta:
         model = Company

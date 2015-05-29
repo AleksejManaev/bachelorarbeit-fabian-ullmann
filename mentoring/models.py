@@ -209,6 +209,4 @@ def post_save_student(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=ContactData)
 def post_delete_contactdata(sender, instance, using, **kwargs):
-    print("post_delete_contactdata")
-    print(instance)
     ContactData.objects.get_or_create(work_company=instance.work_company)

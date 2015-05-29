@@ -39,7 +39,10 @@ class PlacementUpdateView(UpdateView):
                 status = 400
 
         if status == 200:
-            placement = self.get_context_data_placement()
+            self.placement = self.get_context_data_placement()
+        else:
+            self.object.finished = False
+            self.object.save()
 
         cd = self.get_context_data()
         cd.update(self.placement)

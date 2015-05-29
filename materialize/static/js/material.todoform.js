@@ -164,6 +164,7 @@
 
                         form.instance.find('.red-text').parents('.todo-item').find('label').removeClass('red-text');
                         form.instance.find('.has-error').parents('.todo-item').find('label').addClass('red-text');
+                        form.refresh();
                     });
                 },
                 showErrors: function () {
