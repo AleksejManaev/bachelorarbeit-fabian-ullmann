@@ -3,11 +3,6 @@
 
 {% block material_content %}
 
-    <ul id="dropdown_placement" class="dropdown-content">
-        <li><a href="{% url 'placement-update' object.placement.pk %}" class="fancybox fancybox.iframe">Edit in Form</a>
-        </li>
-    </ul>
-
     <form enctype="multipart/form-data" action="{% url 'placement-update' placement.pk %}" method="post">
         {% csrf_token %}
         {% include 'widget/placement_todo_list.html' %}

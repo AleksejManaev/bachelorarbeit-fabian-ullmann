@@ -1,6 +1,6 @@
 {% load material %}
 
-<ul id="dropdown_thesis_finalize" class="dropdown-content">
+<ul id="dropdown_thesis" class="dropdown-content">
     {% if thesis.mentoring.tutor_1.status == 'NR' %}
         <li><a href="{% url 'thesis-mentoringrequest-update' thesis.pk %}" class="fancybox fancybox.iframe">Edit in
             Form</a></li>
@@ -15,12 +15,12 @@
 <div class="card todo-list">
 
 
-    {% material_card_header title='Mentoring-Request' actions='dropdown_thesis_finalize' %}
+    {% material_card_header title='Mentoring-Request' actions='dropdown_thesis' %}
 
     <div class="card-content">
         {% material_todo_formfields thesis_form %}
         {% material_todo_item_begin %}
-        {% material_todo_item_activator id='id_company_todo' label='Company' %}
+        {% material_todo_item_activator id='id_mentoringrequest_company_todo' label='Company' %}
         <div class="input-group hide col s12">
             {% material_form thesis_company_form %}
             {% material_formset thesis_company_formset %}
@@ -29,7 +29,7 @@
 
 
         {% material_todo_item_begin %}
-        {% material_todo_item_activator id='id_workcompany_todo' label='Contact-Data' %}
+        {% material_todo_item_activator id='id_mentoringrequest_workcompany_todo' label='Contact-Data' %}
         <div class="input-group hide col s12">
             {% material_formset thesis_contact_formset %}
         </div>
@@ -37,7 +37,7 @@
 
 
         {% material_todo_item_begin %}
-        {% material_todo_item_activator id='id_mentoringrequest_todo' label='Contact-Data' %}
+        {% material_todo_item_activator id='id_mentoringrequest_mentoringrequest_todo' label='Contact-Data' %}
         <div class="input-group hide col s12">
             {% material_form thesis_mentoringrequest_form %}
         </div>

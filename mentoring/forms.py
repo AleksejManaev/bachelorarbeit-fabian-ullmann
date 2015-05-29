@@ -112,10 +112,6 @@ class FormThesisMentoringrequest(forms.ModelForm):
         if (self.instance.mentoring.tutor_1.status in ['RE', 'AC']):
             return False
 
-        """
-        Falls Mentoringrequest finalisiert werden soll, setze all Felder 'required'
-        """
-
         req = True if self.data.has_key('finalize') else False
         is_valid = super(FormThesisMentoringrequest, self).is_valid()
 
@@ -123,13 +119,17 @@ class FormThesisMentoringrequest(forms.ModelForm):
         Falls Mentoringrequest valid und request -> Placement.finished
         """
 
-        if is_valid and req:
+        print(bool(self.instance.mentoring.tutor_1.tutor_email))
+
+        if is_valid and req and self.instance.mentoring.tutor_1.tutor_email and self.instance.mentoring.tutor_1.comment:
             self.instance.mentoring.tutor_1.status = 'RE'
             self.instance.mentoring.tutor_1.requested_on = timezone.now()
             self.instance.mentoring.tutor_1.save()
             self.instance.save()
+            return True
+        else:
+            return False
 
-        return is_valid
     class Meta:
         model = Thesis
         exclude = ['student', 'finished']

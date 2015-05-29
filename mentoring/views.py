@@ -100,7 +100,6 @@ class ThesisMentoringrequestUpdateView(UpdateView):
                                                                  prefix='thesis_mentoringrequest_form'), }
 
     def get(self, request, status=200, *args, **kwargs):
-        print("ThesisMentoringrequestUpdateView")
         self.object = self.get_object()
 
         if (request.GET.has_key('editMode') and not self.object.mentoring.tutor_1.status == 'AC'):
@@ -125,6 +124,10 @@ class ThesisMentoringrequestUpdateView(UpdateView):
         form_target = request.POST.get('target_form').split(',') if request.POST.has_key('target_form') else [i for i, v
                                                                                                               in
                                                                                                               self.thesis.iteritems()]
+
+        if 'thesis' in form_target:
+            form_target.remove('thesis')
+
         status = 200
 
         for t in form_target:

@@ -21,7 +21,6 @@
                         /*
                          setTimeout is important to identify the activator state
                          */
-
                         setTimeout(function () {
                             reveal.target = activator;
                             reveal.addContent();
@@ -30,15 +29,8 @@
                         }, 200)
                     });
 
-                    $.each($('.input-field.hide, .input-group.hide'), function (i, inp) {
-                        //console.log(this);
-                        //console.log($(this).find('.validate:not(.valid)[id*=id_]'));
-                        //console.log($(this).find('[id*=id_] :has(.validate) :not(.valid)'));
-                    });
                     $('.input-field.hide:has(.valid)').prev().find('input[type=checkbox]').prop("checked", true);
                     $('.input-group.hide>.input-field:has(.valid)').parent().prev().find('input[type=checkbox]').prop("checked", true);
-                    //$('.input-field.hide').find('.validate:not(.valid)[id*=id_]').prev().find('input[type=checkbox]').prop("checked", false);
-                    //$('.input-group.hide>.input-field:has(.validate:not(.valid)[id*=id_])').parent().prev().find('input[type=checkbox]').prop("checked", false);
 
                     $(this.instance).find('.card-action [name=finish]').on('click', function () {
                         form.saveFinal();
@@ -86,6 +78,8 @@
                         });
                 },
                 saveFinal: function () {
+                    console.log("saveFinal");
+                    console.log(this.instance);
                     // Todo onSuccess Finish-Button entfernen und actions aktualisieren
                     form.instance.find('input[name*=finished]').val('True');
                     var postData = this.getPostData();
@@ -265,7 +259,7 @@
                     this.close_btn = this.reveal.find('.card-title i');
                     this.cancel_btn = this.reveal.find('.card-action a[data-cr-action=dismiss]');
                     this.save_btn = this.reveal.find('.card-action a[data-cr-action=save]');
-
+                    console.log(this.reveal);
                 },
                 removeContent: function () {
                     var current = $(this.content).find('.input-field, .input-group')[0],
@@ -311,6 +305,7 @@
                     }
                 },
                 show: function () {
+                    console.log(this.reveal);
                     this.reveal.css({display: 'block'}).velocity("stop", false).velocity({translateY: '-100%'}, {
                         duration: 300,
                         queue: false,
@@ -324,8 +319,8 @@
 
                 },
             };
-        reveal.init();
         form.init();
+        reveal.init();
 
     }
 })(jQuery);
