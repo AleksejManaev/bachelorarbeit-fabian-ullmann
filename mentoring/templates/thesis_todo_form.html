@@ -3,44 +3,7 @@
 {% block material_content %}
 <form enctype="multipart/form-data" action="" method="post">
     {% csrf_token %}
-    <div class="card todo-list">
-
-
-        {% material_card_header title='Placement' actions='dropdown_thesis_finalize' %}
-
-        <div class="card-content">
-            {% material_todo_formfields thesis_form %}
-            {% material_todo_item_begin %}
-            {% material_todo_item_activator id='id_company_todo' label='Company' %}
-            <div class="input-group hide col s12">
-                {% material_form thesis_company_form %}
-                {% material_formset thesis_company_formset %}
-            </div>
-            {% material_todo_item_end %}
-
-
-            {% material_todo_item_begin %}
-            {% material_todo_item_activator id='id_workcompany_todo' label='Contact-Data' %}
-            <div class="input-group hide col s12">
-                {% material_formset thesis_contact_formset %}
-            </div>
-            {% material_todo_item_end %}
-
-
-            {% material_todo_item_begin %}
-            {% material_todo_item_activator id='id_mentoringrequest_todo' label='Contact-Data' %}
-            <div class="input-group hide col s12">
-                {% material_form thesis_mentoringrequest_form %}
-            </div>
-            {% material_todo_item_end %}
-
-        </div>
-        <div class="card-action">
-            <input type="submit">
-
-        </div>
-        {% material_todo_reveal %}
-    </div>
+    {% include 'widget/thesis_todo_list.html' %}
 </form>
 
 {% endblock %}

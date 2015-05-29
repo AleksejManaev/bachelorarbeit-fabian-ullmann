@@ -64,7 +64,8 @@ class Student(PortalUser):
 class AbstractWork(models.Model):
     description = models.TextField(_('description'), blank=True, null=True)
     created_on = models.DateTimeField(_('date joined'), auto_created=True, auto_now_add=True)
-    updated_on = models.DateTimeField(_('date joined'), auto_now=True, null=True)
+    updated_on = models.DateTimeField(_('date updated'), auto_now=True, null=True)
+    finished = models.BooleanField(_('finished'), default=False)
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
@@ -79,7 +80,6 @@ class Placement(AbstractWork):
     certificate = models.FileField(_('certificate'), upload_to=upload_to_certificate, blank=True, null=True,
                                    validators=[validate_pdf, validate_size])
     public = models.BooleanField(_('public'), default=False)
-    finished = models.BooleanField(_('finished'), default=False)
 
     def __str__(self):
         return "Placement {}".format(self.student.user.username)

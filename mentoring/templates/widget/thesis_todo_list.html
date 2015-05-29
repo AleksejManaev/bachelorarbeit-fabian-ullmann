@@ -1,0 +1,50 @@
+{% load material %}
+
+<ul id="dropdown_thesis_finalize" class="dropdown-content">
+    {% if not object.finished %}
+        <li><a href="{% url 'placement-update' object.pk %}" class="fancybox fancybox.iframe">Edit in Form</a></li>
+    {% else %}
+        <li><a href="{% url 'placement-preview' object.pk %}" class="fancybox fancybox.iframe">Preview</a></li>
+        <li><a href="{% url 'placement-update-todo' object.pk %}?editMode=true" class="">Edit Mode</a></li>
+
+    {% endif %}
+</ul>
+<div class="card todo-list">
+
+
+    {% material_card_header title='Thesis' actions='dropdown_thesis_finalize' %}
+
+    <div class="card-content">
+        {% material_todo_formfields thesis_form %}
+        {% material_todo_item_begin %}
+        {% material_todo_item_activator id='id_company_todo' label='Company' %}
+        <div class="input-group hide col s12">
+            {% material_form thesis_company_form %}
+            {% material_formset thesis_company_formset %}
+        </div>
+        {% material_todo_item_end %}
+
+
+        {% material_todo_item_begin %}
+        {% material_todo_item_activator id='id_workcompany_todo' label='Contact-Data' %}
+        <div class="input-group hide col s12">
+            {% material_formset thesis_contact_formset %}
+        </div>
+        {% material_todo_item_end %}
+
+
+        {% material_todo_item_begin %}
+        {% material_todo_item_activator id='id_mentoringrequest_todo' label='Contact-Data' %}
+        <div class="input-group hide col s12">
+            {% material_form thesis_mentoringrequest_form %}
+        </div>
+        {% material_todo_item_end %}
+
+    </div>
+    <div class="card-action valign-wrapper">
+        {% if not object.finished %}
+            <a href="#" type="submit" name="finish" class="col s12 center-align">Finish</a>
+        {% endif %}
+    </div>
+    {% material_todo_reveal %}
+</div>

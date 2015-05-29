@@ -1,4 +1,5 @@
 from django import forms
+from django.forms.utils import ErrorList
 
 from mentoring.models import *
 
@@ -28,13 +29,24 @@ class TestForm(forms.Form):
 
 
 class FormCompany(forms.ModelForm):
+    def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None,
+                 initial=None, error_class=ErrorList, label_suffix=None,
+                 empty_permitted=False, instance=None, parent=None):
+        self.parent = parent
+        super(FormCompany, self).__init__(data=data, files=files, auto_id=auto_id, prefix=prefix,
+                                          initial=initial, error_class=error_class, label_suffix=label_suffix,
+                                          empty_permitted=empty_permitted, instance=instance)
+
     def is_valid(self):
         if not self['name'].value():
             return False
         else:
             self.instance = Company.objects.get_or_create(name=self['name'].value())[0]
             self.instance.save()
-            return True
+            if self.parent:
+                self.parent.company = self.instance
+                self.parent.save()
+            return super(FormCompany, self).is_valid()
 
     class Meta:
         model = Company
