@@ -13,17 +13,23 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+from account.views import LoginView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.views.generic import TemplateView
+from django.contrib.auth import views as auth_views
+from django.core.urlresolvers import reverse_lazy
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='ldap_login.html')),
-    url(r'^', include('mentoring.urls')),
-    url(r'^material/', include('materialize.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+                  url(r'^accounts/login/$', LoginView.as_view(template_name='ldap_login.html'), name='login'),
+                  url(r'^accounts/logout/$',
+                      auth_views.logout,
+                      {'template_name': 'registration/logout.html', 'next_page': reverse_lazy('index')},
+                      name='auth_logout'),
+                  url(r'^', include('mentoring.urls')),
+                  url(r'^material/', include('materialize.urls')),
+                  url(r'^admin/', include(admin.site.urls)),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # urlpatterns += patterns('',
 #                         (r'^files/(.*)$', 'django.views.static.serve',

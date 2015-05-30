@@ -125,7 +125,10 @@ class Thesis(AbstractWork):
 
 class Tutor(PortalUser):
     def requests(self):
-        return MentoringRequest.objects.filter(tutor_email=self.user.email)
+        return MentoringRequest.objects.filter(tutor_email=self.user.email, status='RE')
+
+    def mentorings(self):
+        return Mentoring.objects.filter(tutor_1__tutor_email=self.user.email, tutor_1__status='AC')
 
 
 class MentoringRequest(models.Model):

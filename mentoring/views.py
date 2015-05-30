@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import redirect
 
-from django.views.generic import UpdateView, DetailView
+from django.views.generic import *
 
 from mentoring.forms import *
 from mentoring.models import Student, Placement
+
 
 class PlacementUpdateView(UpdateView):
     model = Placement
@@ -207,3 +208,13 @@ class TutorRequestView(UpdateView):
             self.form_invalid(self.get_form())
         self.object.save()
         return self.get(request)
+
+
+class IndexView(RedirectView):
+    def get(self, request, *args, **kwargs):
+        if (hasattr(request.user.portaluser, 'tutor')):
+            self.pattern_name = 'tutor-overview'
+        elif (hasattr(request.user.portaluser, 'student')):
+            self.pattern_name = 'student-overview'
+
+        return super(IndexView, self).get(request, *args, **kwargs)

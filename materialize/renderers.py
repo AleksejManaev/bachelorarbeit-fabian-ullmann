@@ -171,7 +171,6 @@ class FormRenderer(BaseRenderer):
             raise MaterializeError(
                 'Parameter "form" should contain a valid Django Form.')
         self.form = form
-        self.formset = kwargs.get('formset', None)
         self.item_group = kwargs.get('item_group', False)
         super(FormRenderer, self).__init__(*args, **kwargs)
         # Handle form.empty_permitted
@@ -308,6 +307,7 @@ class FieldRenderer(BaseRenderer):
 
         self.addon_before = kwargs.get('addon_before', self.initial_attrs.pop('addon_before', ''))
         self.addon_after = kwargs.get('addon_after', self.initial_attrs.pop('addon_after', ''))
+        self.icon = kwargs.get('icon', None)
 
         # These are set in Django or in the global BOOTSTRAP3 settings, and
         # they can be overwritten in the template
@@ -403,12 +403,6 @@ class FieldRenderer(BaseRenderer):
         bs.ul.name = 'div'
         return str(bs)
 
-    def put_inside_label(self, html):
-        content = '{field} {label}'.format(field=html, label=self.field.label)
-        return render_label(
-            content=content, label_for=self.field.id_for_label,
-            label_title=strip_tags(self.field_help))
-
     def put_outside_label(self, html):
         content = self.field.label
         self.label_class = "outside-label"
@@ -499,6 +493,7 @@ class FieldRenderer(BaseRenderer):
             }))
             html += '<small class="help-block">{help}</small>'.format(
                 help=help_html)
+
         return html
 
     def get_field_class(self):
@@ -539,8 +534,9 @@ class FieldRenderer(BaseRenderer):
         label = self.get_label()
         if label:
             icon = ''
-            if self.widget.attrs.get('icon'):
-                icon = render_icon(self.widget.attrs.get('icon'), classes='prefix')
+            if self.widget.attrs.get('icon') or self.icon:
+                tmp = self.icon or self.widget.attrs.get('icon')
+                icon = render_icon(tmp, classes='prefix')
             lbl = icon + render_label(
                 label,
                 label_for=self.field.id_for_label,

@@ -3,11 +3,16 @@
 
 {% block material_content %}
 
+    <h3>Requests</h3>
 {% for request in object.requests %}
 <a href="{% url 'tutor-request' request.pk %}" class="fancybox fancybox.iframe">{{ request }}</a>
 {% endfor %}
+    <br>
+    <h3>Mentorings</h3>
+    {% for mentoring in object.mentorings %}
+        {{ mentoring.thesis }}
+    {% endfor %}
 {% endblock %}
-
 {% block material_extra_script %}
 <script type="text/javascript">
     $(document).ready(function () {

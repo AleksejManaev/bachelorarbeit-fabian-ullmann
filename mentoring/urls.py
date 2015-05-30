@@ -18,7 +18,9 @@ from django.conf.urls import url
 from mentoring.views import *
 
 urlpatterns = [
-    url(r'^student/$', StudentView.as_view(), name='student-overview'),
+    url(r'^$', login_required(IndexView.as_view()), name='index'),
+
+    url(r'^student/$', login_required(StudentView.as_view()), name='student-overview'),
 
     url(r'^placement/update/(?P<pk>\d+)/$', PlacementUpdateView.as_view(template_name='placement_form.html'),
         name='placement-update'),
