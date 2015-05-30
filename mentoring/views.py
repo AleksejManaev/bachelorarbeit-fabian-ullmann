@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import redirect
+from django.utils import timezone
 
 from django.views.generic import *
 

@@ -4,6 +4,7 @@
 
 (function ($) {
     //Todo Error-Meldungen optimieren
+    //Todo Aktualisierung überprüfen
     $.fn.todoList = function () {
 
         $(document).off('click.card', '.card');
@@ -28,7 +29,7 @@
 
                         }, 200)
                     });
-
+                    console.log(this.instance.find('.activator'));
                     $('.input-field.hide:has(.valid)').prev().find('input[type=checkbox]').prop("checked", true);
                     $('.input-group.hide>.input-field:has(.valid)').parent().prev().find('input[type=checkbox]').prop("checked", true);
 
@@ -89,12 +90,12 @@
                         function (data, textStatus, jqXHR) {
                             //data: return data from server
                             Materialize.toast("finished", 2000, 'green');
-                            form.setFinalData(jqXHR.responseText);
+                            form.setFinalSuccessData();
                         },
                         function (jqXHR, textStatus, errorThrown) {
                             console.log(errorThrown);
                             Materialize.toast("Not finished!", 5000, 'red');
-                            form.setFinalData(jqXHR.responseText);
+                            form.setFinalErrorData(jqXHR.responseText);
 
                         });
                 },
@@ -146,7 +147,7 @@
                     reveal.setContentHeight();
 
                 },
-                setFinalData: function (post_data) {
+                setFinalErrorData: function (post_data) {
                     response = $(post_data);
                     $.each(response.find('input[id], textarea[id]'), function (a, b) {
                         var name = $(b).attr('name') ? $(b).attr('name') : '';
@@ -165,6 +166,24 @@
                         form.refresh();
                     });
                 },
+                setFinalSuccessData: function () {
+                    $.ajax({
+                            url: parent.location.href,
+                            method: 'GET',
+                            success: function (data, textStatus, jqXHR) {
+                                var response = jqXHR.responseText,
+                                    action = form.instance.attr('action')
+                                form.instance.replaceWith($($(response).find('[action="' + action + '"]')[0]));
+                                console.log(_this.todoList);
+                                $.removeData(_this.todoList);
+                                console.log(_this.todoList);
+                                $.each($('form[action="' + action + '"] > .card.todo-list'), function () {
+                                    $(this).todoList();
+                                });
+                            }
+                        }
+                    )
+                },
                 showErrors: function () {
                     //Todo Error-Meldungen optimieren
                 }
@@ -182,8 +201,8 @@
                     $(this.title).text($(this.target).parent().find('label').text());
                     $(this.title).append(this.close_btn);
                     $(this.content).html(inp_target.removeClass('hide'));
-                    $(this.reveal).show();
-                    this.input = $(this.reveal).find('input, textarea, select');
+                    $(this.instance).show();
+                    this.input = $(this.instance).find('input, textarea, select');
                     this.input_original = this.input.clone();
                     this.state = '';
 
@@ -240,10 +259,9 @@
                     });
 
                     reveal.setContentHeight();
-                    //setContentHeight(_this, this.content);
                 },
                 hide: function () {
-                    $(this.reveal).velocity("stop", false).velocity(
+                    $(this.instance).velocity("stop", false).velocity(
                         {translateY: 0}, {
                             duration: 225,
                             queue: false,
@@ -257,13 +275,12 @@
                     reveal.removeContent();
                 },
                 init: function () {
-                    this.reveal = $(_this).find('.card-reveal');
-                    this.title = this.reveal.find('.card-title');
-                    this.content = this.reveal.find('.card-content');
-                    this.close_btn = this.reveal.find('.card-title i');
-                    this.cancel_btn = this.reveal.find('.card-action a[data-cr-action=dismiss]');
-                    this.save_btn = this.reveal.find('.card-action a[data-cr-action=save]');
-                    console.log(this.reveal);
+                    this.instance = $(_this).find('.card-reveal');
+                    this.title = this.instance.find('.card-title');
+                    this.content = this.instance.find('.card-content');
+                    this.close_btn = this.instance.find('.card-title i');
+                    this.cancel_btn = this.instance.find('.card-action a[data-cr-action=dismiss]');
+                    this.save_btn = this.instance.find('.card-action a[data-cr-action=save]');
                 },
                 removeContent: function () {
                     var current = $(this.content).find('.input-field, .input-group')[0],
@@ -300,8 +317,9 @@
                     this.setContentHeight();
                 },
                 setContentHeight: function () {
-                    my_height = $(this.content).outerHeight();
-                    parent_height = $(_this).find('> .card-content').height();
+                    var my_height = $(this.content).outerHeight(),
+                        parent_height = $(_this).find('> .card-content').height();
+
                     if (my_height > parent_height) {
                         $(_this).find('> .card-content').first().css({'height': $(this.content).outerHeight()});
                     } else {
@@ -309,8 +327,8 @@
                     }
                 },
                 show: function () {
-                    console.log(this.reveal);
-                    this.reveal.css({display: 'block'}).velocity("stop", false).velocity({translateY: '-100%'}, {
+                    console.log(this.instance);
+                    this.instance.css({display: 'block'}).velocity("stop", false).velocity({translateY: '-100%'}, {
                         duration: 300,
                         queue: false,
                         easing: 'easeInOutQuad'
@@ -323,8 +341,14 @@
 
                 },
             };
+
+
         form.init();
         reveal.init();
+
+        if ($('select')[0]) {
+            $('select').material_select();
+        }
 
     }
 })(jQuery);
@@ -335,6 +359,7 @@ $(document).ready(function () {
             parent.location.reload(true);
         }
     });
+
     $.each($('form > .card.todo-list'), function () {
         $(this).todoList();
     });
