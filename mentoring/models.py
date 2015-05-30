@@ -128,7 +128,7 @@ class Tutor(PortalUser):
         return MentoringRequest.objects.filter(tutor_email=self.user.email, status='RE')
 
     def mentorings(self):
-        return Mentoring.objects.filter(tutor_1__tutor_email=self.user.email, tutor_1__status='AC')
+        return Mentoring.objects.filter(tutor_1=self)
 
 
 class MentoringRequest(models.Model):
@@ -138,24 +138,40 @@ class MentoringRequest(models.Model):
         ('AC', 'accepted'),
         ('DE', 'denied'),
     )
-    tutor_email = models.EmailField()
+    thesis = models.OneToOneField(Thesis)
+    tutor_email = models.EmailField(_('Tutor email'), blank=True, null=True)
     requested_on = models.DateTimeField(_('requested on'), null=True, editable=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='NR')
-    comment = models.TextField(_('comment'))
+    comment = models.TextField(_('comment'), blank=True, null=True)
     answer = models.TextField(_('answer'), blank=True, null=True)
 
     def __str__(self):
         return "Request for {}".format(self.tutor_email)
 
+    def from_student(self):
+        return self.thesis.student
 
 class Mentoring(models.Model):
-    thesis = models.OneToOneField(Thesis)
-    tutor_1 = models.OneToOneField(MentoringRequest, related_name='tutor_1')
-    tutor_2 = models.OneToOneField(MentoringRequest, related_name='tutor_2', null=True, blank=True)
+    request = models.OneToOneField(MentoringRequest)
+    tutor_1 = models.OneToOneField(Tutor)
+    tutor_2 = models.OneToOneField(ContactData)
+    created_on = models.DateTimeField(auto_created=True, auto_now_add=True)
+
+    def thesis(self):
+        return self.request.thesis
+
+
+class MentoringReport(models.Model):
+    mentoring = models.OneToOneField(Mentoring)
     date_initial_meeting = models.DateField(_('date initial meeting'), null=True, blank=True)
     date_deadline = models.DateField(_('date deadline'), null=True, blank=True)
-    permission_contact = models.BooleanField(_('permission contact'), default=False)
 
+
+class MentoringReportItem(models.Model):
+    report = models.OneToOneField(MentoringReport)
+    subject = models.CharField(_('subject'), max_length=100)
+    message = models.TextField(_('message'), null=True, blank=True)
+    created_on = models.DateTimeField(auto_created=True, auto_now_add=True)
 
 class Registration(models.Model):
     mentoring = models.OneToOneField(Mentoring)
@@ -164,7 +180,6 @@ class Registration(models.Model):
     permission_infocus = models.BooleanField(_('permission INFOCUS'), default=False)
     permission_library = models.BooleanField(_('permission library'), default=False)
 
-
 class ResponseExaminationBoard(models.Model):
     registration = models.OneToOneField(Registration)
     start_editing = models.DateField(_('start editing'))
@@ -172,11 +187,9 @@ class ResponseExaminationBoard(models.Model):
     extend_to = models.DateField(_('extended to'))
     delivery = models.DateField(_('delivery thesis'))
 
-
 class Colloquium(models.Model):
     mentoring = models.OneToOneField(Mentoring)
     date_colloquium = models.DateTimeField(_('date colloquium'))
-
 
 class CompanyRating(models.Model):
     rate = models.PositiveSmallIntegerField(_('rate'))
@@ -205,8 +218,9 @@ def post_save_student(sender, instance, created, **kwargs):
             work_company=WorkCompany.objects.get_or_create(
                 work=thesis)[0])
         mr = MentoringRequest(status='NR')
+        mr.thesis = thesis
         mr.save()
-        Mentoring.objects.get_or_create(thesis=thesis, tutor_1=mr)
+        # Mentoring.objects.get_or_create(thesis=thesis, tutor_1=mr)
         Address.objects.get_or_create(portal_user=instance)
 
 

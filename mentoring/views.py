@@ -7,6 +7,15 @@ from mentoring.forms import *
 from mentoring.models import Student, Placement
 
 
+class IndexView(RedirectView):
+    def get(self, request, *args, **kwargs):
+        if (hasattr(request.user.portaluser, 'tutor')):
+            self.pattern_name = 'tutor-overview'
+        elif (hasattr(request.user.portaluser, 'student')):
+            self.pattern_name = 'student-overview'
+
+        return super(IndexView, self).get(request, *args, **kwargs)
+
 class PlacementUpdateView(UpdateView):
     model = Placement
     form_class = FormPlacement
@@ -53,6 +62,8 @@ class PlacementUpdateView(UpdateView):
                                                                                                               in
                                                                                                               self.placement.iteritems()]
         status = 200
+        if 'placement' in form_target:
+            form_target.remove('placement')
 
         for t in form_target:
             if self.placement.has_key(t) and self.placement.get(t).is_valid():
@@ -84,28 +95,28 @@ class PlacementPreviewView(DetailView):
 
 class ThesisMentoringrequestUpdateView(UpdateView):
     model = Thesis
-    form_class = FormThesisMentoringrequest
+    form_class = FormThesis
     template_name = 'thesis_mentoringrequest_todo_form.html'
 
     def get_context_thesis(self, data=None, files=None, **kwargs):
         thesis = self.get_thesis()
         return {
             'thesis': thesis,
-            'thesis_form': FormThesisMentoringrequest(data, files=files, instance=thesis, prefix='thesis_form'),
+            'thesis_form': FormThesis(data, files=files, instance=thesis, prefix='thesis_form'),
             'thesis_company_form': FormCompany(data, parent=thesis.workcompany, instance=thesis.workcompany.company,
                                                prefix='thesis_company_form'),
             'thesis_company_formset': FormsetWorkCompany(data, instance=thesis, prefix='thesis_company_formset'),
             'thesis_contact_formset': FormsetWorkCompanyContactdata(data, instance=thesis.workcompany,
                                                                     prefix='thesis_contact_formset'),
-            'thesis_mentoringrequest_form': FormMentoringRequest(data, instance=thesis.mentoring.tutor_1,
+            'thesis_mentoringrequest_form': FormMentoringrequestStudent(data, instance=thesis.mentoringrequest,
                                                                  prefix='thesis_mentoringrequest_form'), }
 
     def get(self, request, status=200, *args, **kwargs):
         self.object = self.get_object()
 
-        if (request.GET.has_key('editMode') and not self.object.mentoring.tutor_1.status == 'AC'):
-            self.object.mentoring.tutor_1.status = 'NR'
-            self.object.mentoring.tutor_1.save()
+        if (request.GET.has_key('editMode') and not self.object.mentoringrequest.status == 'AC'):
+            self.object.mentoringrequest.status = 'NR'
+            self.object.mentoringrequest.save()
             return redirect('./')
 
         cd = self.get_context_data()
@@ -116,15 +127,15 @@ class ThesisMentoringrequestUpdateView(UpdateView):
 
         self.object = self.get_object()
 
-        if self.object.finished or self.object.mentoring.tutor_1.status in ['RE', 'AC']:
+        if self.object.finished or self.object.mentoringrequest.status in ['RE', 'AC']:
             return self.get(request, status=405)
-
         else:
             self.thesis = self.get_context_thesis(request.POST, files=request.FILES)
 
         form_target = request.POST.get('target_form').split(',') if request.POST.has_key('target_form') else [i for i, v
                                                                                                               in
                                                                                                               self.thesis.iteritems()]
+
 
         if 'thesis' in form_target:
             form_target.remove('thesis')
@@ -139,6 +150,10 @@ class ThesisMentoringrequestUpdateView(UpdateView):
 
         if status == 200:
             self.thesis = self.get_context_thesis()
+            if request.POST.has_key('finalize'):
+                self.object.mentoringrequest.status = 'RE'
+                self.object.mentoringrequest.requested_on = timezone.now()
+                self.object.mentoringrequest.save()
         else:
             self.object.finished = False
             self.object.save()
@@ -196,7 +211,7 @@ class TutorView(DetailView):
 class TutorRequestView(UpdateView):
     model = MentoringRequest
     template_name = 'tutor_request.html'
-    form_class = FormTutorRequest
+    form_class = FormMentoringrequestTutor
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -210,11 +225,3 @@ class TutorRequestView(UpdateView):
         return self.get(request)
 
 
-class IndexView(RedirectView):
-    def get(self, request, *args, **kwargs):
-        if (hasattr(request.user.portaluser, 'tutor')):
-            self.pattern_name = 'tutor-overview'
-        elif (hasattr(request.user.portaluser, 'student')):
-            self.pattern_name = 'student-overview'
-
-        return super(IndexView, self).get(request, *args, **kwargs)

@@ -89,6 +89,7 @@
                         function (data, textStatus, jqXHR) {
                             //data: return data from server
                             Materialize.toast("finished", 2000, 'green');
+                            form.setFinalData(jqXHR.responseText);
                         },
                         function (jqXHR, textStatus, errorThrown) {
                             console.log(errorThrown);
@@ -151,7 +152,10 @@
                         var name = $(b).attr('name') ? $(b).attr('name') : '';
                         var tmp = "#id_" + name;
                         if ($(b).parents('.input-field').length > 0 && form.instance.find(tmp).length > 0) {
-                            $(form.instance.find(tmp).parents('.input-field')[0]).replaceWith($($(b).parents('.input-field')[0]));
+                            var tmp = $(form.instance.find(tmp).parents('.input-field')[0]),
+                                tmp_classes = tmp.attr('class');
+                            tmp.replaceWith($($(b).parents('.input-field')[0]).addClass(tmp_classes));
+                            console.log(tmp);
                         } else {
                             form.instance.find(tmp).replaceWith($(b));
                         }

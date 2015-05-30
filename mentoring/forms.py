@@ -1,6 +1,5 @@
 from django import forms
 from django.forms.utils import ErrorList
-from django.utils import timezone
 
 from mentoring.models import *
 
@@ -104,39 +103,34 @@ class FormPlacement(forms.ModelForm):
         }
 
 
-class FormThesisMentoringrequest(forms.ModelForm):
+class FormThesis(forms.ModelForm):
     def is_valid(self):
-        """
-        Falls das Objekt bereits angefragt wurde -> invalid
-        """
-        if (self.instance.mentoring.tutor_1.status in ['RE', 'AC']):
-            return False
-
         req = True if self.data.has_key('finalize') else False
-        is_valid = super(FormThesisMentoringrequest, self).is_valid()
 
-        """
-        Falls Mentoringrequest valid und request -> Placement.finished
-        """
+        for key, val in self.fields.iteritems():
+            val.required = req
 
-        print(bool(self.instance.mentoring.tutor_1.tutor_email))
+        is_valid = super(FormThesis, self).is_valid()
+        return is_valid
 
-        if is_valid and req and self.instance.mentoring.tutor_1.tutor_email and self.instance.mentoring.tutor_1.comment:
-            self.instance.mentoring.tutor_1.status = 'RE'
-            self.instance.mentoring.tutor_1.requested_on = timezone.now()
-            self.instance.mentoring.tutor_1.save()
-            self.instance.save()
-            return True
-        else:
-            return False
+    #
+    #     """
+    #     Falls Mentoringrequest valid und request -> Placement.finished
+    #     """
+    #
+    #     if is_valid and req:
+    #         self.instance.mentoringrequest.status = 'RE'
+    #         self.instance.mentoringrequest.requested_on = timezone.now()
+    #         self.instance.mentoringrequest.save()
+    #         self.instance.save()
+    #         return True
+    #     else:
+    #         return False
 
     class Meta:
         model = Thesis
         exclude = ['student', 'finished']
         fields = '__all__'
-        widgets = {
-            'finished': forms.HiddenInput()
-        }
 
 
 FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fields=['description'], extra=1,
@@ -144,14 +138,35 @@ FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fiel
 FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, ContactData, fields='__all__', extra=1,
                                                             can_delete=True);
 
-class FormMentoringRequest(forms.ModelForm):
+
+class FormMentoringrequestStudent(forms.ModelForm):
+    def is_valid(self):
+        """
+        Falls das Objekt bereits angefragt wurde -> invalid
+        """
+        if (self.instance.status in ['RE', 'AC']):
+            return False
+
+        req = True if self.data.has_key('finalize') else False
+
+        for key, val in self.fields.iteritems():
+            val.required = True
+
+        is_valid = super(FormMentoringrequestStudent, self).is_valid()
+        return is_valid
+
+
+
     class Meta:
         model = MentoringRequest
         fields = ['tutor_email', 'comment']
 
 
-class FormTutorRequest(forms.ModelForm):
+class FormMentoringrequestTutor(forms.ModelForm):
     class Meta:
         model = MentoringRequest
         fields = ['answer']
         exclude = ['status']
+        widgets = {
+            'answer': forms.Textarea(attrs={'required': 'required'})
+        }
