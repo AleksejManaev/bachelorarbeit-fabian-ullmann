@@ -26,7 +26,7 @@ urlpatterns = [
                   url(r'^accounts/logout/$',
                       auth_views.logout,
                       {'template_name': 'registration/logout.html', 'next_page': reverse_lazy('index')},
-                      name='auth_logout'),
+                      name='logout'),
                   url(r'^', include('mentoring.urls')),
                   url(r'^material/', include('materialize.urls')),
                   url(r'^admin/', include(admin.site.urls)),

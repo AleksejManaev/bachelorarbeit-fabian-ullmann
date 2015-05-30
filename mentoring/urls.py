@@ -40,5 +40,5 @@ urlpatterns = [
 
 
     url(r'^tutor/$', TutorView.as_view(), name='tutor-overview'),
-    url(r'^tutor/request/(?P<pk>\d+)/', TutorRequestView.as_view(), name='tutor-request')
+    url(r'^tutor/request/(?P<pk>\d+)/', TutorMentoringrequestView.as_view(), name='tutor-request')
 ]

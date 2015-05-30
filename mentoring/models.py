@@ -104,17 +104,18 @@ class WorkCompany(models.Model):
     company = models.ForeignKey(Company, null=True, blank=True)
     description = models.TextField(_('company description'), blank=False)
 
-
 class ContactData(models.Model):
-    work_company = models.OneToOneField(WorkCompany)
     first_name = models.CharField(_('first name'), max_length=30)
     last_name = models.CharField(_('last name'), max_length=30)
     email = models.EmailField(_('email'))
     phone = models.CharField(_('phone'), max_length=30)
 
+
+class CompanyContactData(ContactData):
+    work_company = models.OneToOneField(WorkCompany)
+
     def __str__(self):
         return "{} {}".format(self.first_name, self.last_name)
-
 
 class Thesis(AbstractWork):
     student = models.OneToOneField(Student, unique=True)
@@ -154,12 +155,17 @@ class MentoringRequest(models.Model):
 class Mentoring(models.Model):
     request = models.OneToOneField(MentoringRequest)
     tutor_1 = models.OneToOneField(Tutor)
-    tutor_2 = models.OneToOneField(ContactData)
     created_on = models.DateTimeField(auto_created=True, auto_now_add=True)
 
     def thesis(self):
         return self.request.thesis
 
+    def tutor_2(self):
+        return self.tutor2contactdata
+
+
+class Tutor2ContactData(ContactData):
+    mentoring = models.OneToOneField(Mentoring)
 
 class MentoringReport(models.Model):
     mentoring = models.OneToOneField(Mentoring)
@@ -211,10 +217,10 @@ def post_save_student(sender, instance, created, **kwargs):
         placement = Placement.objects.get_or_create(student=instance)[0]
         thesis = Thesis.objects.get_or_create(student=instance)[0]
 
-        ContactData.objects.get_or_create(
+        CompanyContactData.objects.get_or_create(
             work_company=WorkCompany.objects.get_or_create(
                 work=placement)[0])
-        ContactData.objects.get_or_create(
+        CompanyContactData.objects.get_or_create(
             work_company=WorkCompany.objects.get_or_create(
                 work=thesis)[0])
         mr = MentoringRequest(status='NR')
@@ -224,6 +230,6 @@ def post_save_student(sender, instance, created, **kwargs):
         Address.objects.get_or_create(portal_user=instance)
 
 
-@receiver(post_delete, sender=ContactData)
+@receiver(post_delete, sender=CompanyContactData)
 def post_delete_contactdata(sender, instance, using, **kwargs):
-    ContactData.objects.get_or_create(work_company=instance.work_company)
+    CompanyContactData.objects.get_or_create(work_company=instance.work_company)

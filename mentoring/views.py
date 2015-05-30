@@ -10,11 +10,13 @@ from mentoring.models import Student, Placement
 
 class IndexView(RedirectView):
     def get(self, request, *args, **kwargs):
-        if (hasattr(request.user.portaluser, 'tutor')):
-            self.pattern_name = 'tutor-overview'
-        elif (hasattr(request.user.portaluser, 'student')):
-            self.pattern_name = 'student-overview'
-
+        if (hasattr(request.user, 'portaluser')):
+            if (hasattr(request.user.portaluser, 'tutor')):
+                self.pattern_name = 'tutor-overview'
+            elif (hasattr(request.user.portaluser, 'student')):
+                self.pattern_name = 'student-overview'
+        else:
+            self.pattern_name = 'logout'
         return super(IndexView, self).get(request, *args, **kwargs)
 
 class PlacementUpdateView(UpdateView):
@@ -37,7 +39,6 @@ class PlacementUpdateView(UpdateView):
         }
 
     def get(self, request, status=200, *args, **kwargs):
-        print("PlacementUpdateView")
         self.object = self.get_object()
 
         if (request.GET.has_key('editMode')):
@@ -154,6 +155,7 @@ class ThesisMentoringrequestUpdateView(UpdateView):
             if request.POST.has_key('finalize'):
                 self.object.mentoringrequest.status = 'RE'
                 self.object.mentoringrequest.requested_on = timezone.now()
+                self.object.mentoringrequest.answer = ''
                 self.object.mentoringrequest.save()
         else:
             self.object.finished = False
@@ -209,20 +211,65 @@ class TutorView(DetailView):
         return Tutor.objects.get(user=self.request.user)
 
 
-class TutorRequestView(UpdateView):
+class TutorMentoringrequestView(UpdateView):
     model = MentoringRequest
-    template_name = 'tutor_request.html'
+    template_name = 'tutor_mentoringrequest.html'
     form_class = FormMentoringrequestTutor
+
+    def get_context_mentoringrequest(self, data=None, files=None, **kwargs):
+        mentoringrequest = self.get_object()
+        return {
+            'mentoringrequest': mentoringrequest,
+            'mentoringrequest_form': FormMentoringrequestTutor(data, instance=mentoringrequest,
+                                                               prefix='mentoringrequest_form'),
+            'mentoringrequest_tutor2_form': FormContactData(data, prefix='mentoringrequest_tutor2_form'),
+        }
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        cd = self.get_context_data()
+        cd.update(self.get_context_mentoringrequest())
+        return self.render_to_response(cd)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if request.POST.has_key('accept'):
-            self.object.status = 'AC'
-        elif request.POST.has_key('deny'):
-            self.object.status = 'DE'
-        else:
-            self.form_invalid(self.get_form())
-        self.object.save()
-        return self.get(request)
+        fmrt = FormMentoringrequestTutor(data=request.POST, instance=self.object, prefix='mentoringrequest_form')
 
+        if (request.POST.has_key('deny')):
+            print 'deny'
+            if (fmrt.is_valid()):
+                fmrt.instance.status = 'DE'
+                self.object = fmrt.save()
 
+                status = 200
+            else:
+                status = 400
+
+            cd = self.get_context_data()
+            cmr = self.get_context_mentoringrequest()
+            cmr['mentoringrequest_form'] = fmrt
+            cd.update(cmr)
+            return self.render_to_response(cd, status=status)
+
+        elif (request.POST.has_key('accept')):
+            print 'accept'
+            forms = self.get_context_mentoringrequest(data=request.POST)
+            if (forms['mentoringrequest_form'].is_valid()
+                and forms['mentoringrequest_tutor2_form'].is_valid()):
+                status = 200
+                self.object = forms['mentoringrequest_form'].save()
+                mentoring = Mentoring.objects.get_or_create(request=self.object, tutor_1=request.user.portaluser.tutor)[
+                    0]
+                mentoring.tutor2contactdata = Tutor2ContactData()
+                contact = forms['mentoringrequest_tutor2_form'].save()
+                mentoring.tutor2contactdata.contactdata = contact
+                mentoring.tutor2contactdata.save()
+                self.object.status = 'AC'
+                self.object.save()
+
+            else:
+                status = 400
+
+        cd = self.get_context_data()
+        cd.update(forms)
+        return self.render_to_response(cd, status=status)

@@ -12,7 +12,7 @@ admin.site.register(Student)
 
 admin.site.register(Company)
 admin.site.register(ContactModel)
-admin.site.register(ContactData)
+admin.site.register(CompanyContactData)
 admin.site.register(Address)
 admin.site.register(Degree)
 admin.site.register(WorkCompany)

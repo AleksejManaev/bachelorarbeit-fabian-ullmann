@@ -53,11 +53,16 @@ class FormCompany(forms.ModelForm):
         fields = '__all__'
 
 
-class FormContactModel(forms.ModelForm):
+class FormContactData(forms.ModelForm):
     class Meta:
-        model = ContactModel
+        model = ContactData
         fields = '__all__'
 
+
+class FormTutor2ContactData(forms.ModelForm):
+    class Meta:
+        model = Tutor2ContactData
+        fields = '__all__'
 
 class FormPlacement(forms.ModelForm):
     def is_valid(self):
@@ -113,29 +118,14 @@ class FormThesis(forms.ModelForm):
         is_valid = super(FormThesis, self).is_valid()
         return is_valid
 
-    #
-    #     """
-    #     Falls Mentoringrequest valid und request -> Placement.finished
-    #     """
-    #
-    #     if is_valid and req:
-    #         self.instance.mentoringrequest.status = 'RE'
-    #         self.instance.mentoringrequest.requested_on = timezone.now()
-    #         self.instance.mentoringrequest.save()
-    #         self.instance.save()
-    #         return True
-    #     else:
-    #         return False
-
     class Meta:
         model = Thesis
         exclude = ['student', 'finished']
         fields = '__all__'
 
-
 FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fields=['description'], extra=1,
                                                  fk_name='work', can_delete=False)
-FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, ContactData, fields='__all__', extra=1,
+FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, CompanyContactData, fields='__all__', extra=1,
                                                             can_delete=True);
 
 
@@ -163,10 +153,20 @@ class FormMentoringrequestStudent(forms.ModelForm):
 
 
 class FormMentoringrequestTutor(forms.ModelForm):
+    def is_valid(self):
+        self.fields['answer'].required = True
+        return super(FormMentoringrequestTutor, self).is_valid()
+
     class Meta:
         model = MentoringRequest
         fields = ['answer']
         exclude = ['status']
-        widgets = {
-            'answer': forms.Textarea(attrs={'required': 'required'})
-        }
+
+
+class FormMentoringTutor(forms.ModelForm):
+    class Meta:
+        model = Mentoring
+        fields = '__all__'
+
+
+FormsetMentoringTutor2 = forms.inlineformset_factory(Mentoring, Tutor2ContactData, fields='__all__', extra=1)

@@ -17,7 +17,9 @@
     <p>{{ object.thesis.workcompany.description }}</p>
 
     <p>{{ object.thesis.workcompany.contactdata }}</p>
-    {% material_form form %}
+    {% material_form mentoringrequest_form %}
+    {% material_form mentoringrequest_tutor2_form %}
+
     <button type="submit" name="accept">accept</button>
     <button type="submit" name="deny">deny</button>
 </form>
