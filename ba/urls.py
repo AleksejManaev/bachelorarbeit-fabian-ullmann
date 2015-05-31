@@ -31,8 +31,3 @@ urlpatterns = [
                   url(r'^material/', include('materialize.urls')),
                   url(r'^admin/', include(admin.site.urls)),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-# urlpatterns += patterns('',
-#                         (r'^files/(.*)$', 'django.views.static.serve',
-#                          {'document_root': os.path.join(os.path.abspath(os.path.dirname(__file__)),
-#                                                         '../files')}),
-#                         )
