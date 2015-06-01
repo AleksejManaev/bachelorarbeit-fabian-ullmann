@@ -117,7 +117,9 @@ $(document).ready(
             })
         }
 
-        $("form").materialform()
+        $("form").materialform();
+        $(".dropdown-button").dropdown();
+
 
     }
 )

@@ -25,7 +25,7 @@ urlpatterns = [
                   url(r'^accounts/login/$', LoginView.as_view(template_name='ldap_login.html'), name='login'),
                   url(r'^accounts/logout/$',
                       auth_views.logout,
-                      {'template_name': 'registration/logout.html', 'next_page': reverse_lazy('index')},
+                      {'next_page': reverse_lazy('index')},
                       name='logout'),
                   url(r'^', include('mentoring.urls')),
                   url(r'^material/', include('materialize.urls')),

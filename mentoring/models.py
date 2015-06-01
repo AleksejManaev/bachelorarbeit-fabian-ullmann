@@ -43,22 +43,22 @@ class PortalUser(models.Model):
     user = models.OneToOneField(User, primary_key=True)
 
 
-class Address(models.Model):
-    portal_user = models.OneToOneField(PortalUser)
-    street = models.CharField(_('street'), max_length=255)
-    city = models.CharField(_('city'), max_length=255)
-    zip_code = models.CharField(_('zip code'), max_length=30)
-    location = models.CharField(_('location'), max_length=100)
-    phone = models.CharField(_('phone'), max_length=30, blank=True, null=True)
-    web_address = models.CharField(_('web address'), max_length=255, blank=True, null=True)
-
-
 class Student(PortalUser):
     course = models.ForeignKey(Course)
     matriculation_number = models.CharField(_('matriculation number'), max_length=8)
 
     def __str__(self):
         return "{} ({})".format(self.user.get_full_name(), self.matriculation_number)
+
+
+class Address(models.Model):
+    portal_user = models.OneToOneField(Student)
+    street = models.CharField(_('street'), max_length=255)
+    city = models.CharField(_('city'), max_length=255)
+    zip_code = models.CharField(_('zip code'), max_length=30)
+    location = models.CharField(_('location'), max_length=100)
+    phone = models.CharField(_('phone'), max_length=30, blank=True, null=True)
+    web_address = models.CharField(_('web address'), max_length=255, blank=True, null=True)
 
 
 class AbstractWork(models.Model):

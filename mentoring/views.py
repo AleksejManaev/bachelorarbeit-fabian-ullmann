@@ -236,15 +236,12 @@ class TutorMentoringrequestView(UpdateView):
         fmrt = FormMentoringrequestTutor(data=request.POST, instance=self.object, prefix='mentoringrequest_form')
 
         if (request.POST.has_key('deny')):
-            print 'deny'
             if (fmrt.is_valid()):
                 fmrt.instance.status = 'DE'
                 self.object = fmrt.save()
-
                 status = 200
             else:
                 status = 400
-
             cd = self.get_context_data()
             cmr = self.get_context_mentoringrequest()
             cmr['mentoringrequest_form'] = fmrt
@@ -252,7 +249,6 @@ class TutorMentoringrequestView(UpdateView):
             return self.render_to_response(cd, status=status)
 
         elif (request.POST.has_key('accept')):
-            print 'accept'
             forms = self.get_context_mentoringrequest(data=request.POST)
             if (forms['mentoringrequest_form'].is_valid()
                 and forms['mentoringrequest_tutor2_form'].is_valid()):
@@ -273,3 +269,33 @@ class TutorMentoringrequestView(UpdateView):
         cd = self.get_context_data()
         cd.update(forms)
         return self.render_to_response(cd, status=status)
+
+
+class StudentSettingsView(UpdateView):
+    model = Student
+    form_class = FormStudentSettings
+    template_name = 'student_settings.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        cd = self.get_context_data(request.POST)
+
+        if (cd.get('user_form').is_valid()
+            and cd.get('student_user_formset').is_valid()
+            and cd.get('student_address_formset').is_valid()):
+            cd.get('user_form').save()
+            cd.get('student_user_formset').save()
+            cd.get('student_address_formset').save()
+            return self.render_to_response(cd, status=200)
+        else:
+            return self.render_to_response(cd, status=400)
+
+    def get_context_data(self, data=None, **kwargs):
+        return super(StudentSettingsView, self).get_context_data(
+            user_form=FormStudentSettings(data=data, instance=self.get_object().user),
+            student_user_formset=FormsetStudentContact(data=data, instance=self.get_object().user),
+            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object())
+        )
+
+    def get_object(self, queryset=None):
+        return Student.objects.get(user=self.request.user)

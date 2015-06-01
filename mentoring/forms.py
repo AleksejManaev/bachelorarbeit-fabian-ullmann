@@ -170,3 +170,13 @@ class FormMentoringTutor(forms.ModelForm):
 
 
 FormsetMentoringTutor2 = forms.inlineformset_factory(Mentoring, Tutor2ContactData, fields='__all__', extra=1)
+
+
+class FormStudentSettings(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
+
+FormsetStudentContact = forms.inlineformset_factory(User, Student, fields='__all__', extra=1, can_delete=False)
+FormsetStudentAddress = forms.inlineformset_factory(Student, Address, fields='__all__', extra=1, can_delete=False)

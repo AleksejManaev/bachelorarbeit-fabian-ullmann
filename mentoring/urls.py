@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^$', login_required(IndexView.as_view()), name='index'),
 
     url(r'^student/$', login_required(StudentView.as_view()), name='student-overview'),
+    url(r'^student/settings/$', login_required(StudentSettingsView.as_view()), name='student-settings'),
 
     url(r'^placement/update/(?P<pk>\d+)/$', PlacementUpdateView.as_view(template_name='placement_form.html'),
         name='placement-update'),

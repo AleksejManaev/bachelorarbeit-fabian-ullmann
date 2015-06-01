@@ -6,10 +6,13 @@
     <!-- Dropdown Structure -->
     <nav>
         <div class="nav-wrapper container">
-            <a href="#!" class="brand-logo"></a>
+            <a href="{% url 'index' %}" class="brand-logo"></a>
             <ul class="right hide-on-med-and-down">
-                <li><a href="#!" class="Privacy Settings"><i
-                        class="mdi-social-person fancybox fancybox-iframe"></i></a></li>
+                {% if user.portaluser.student %}
+                    <li><a href="{% url 'student-settings' %}" class="fancybox fancybox.iframe"
+                           title="Privacy Settings"><i
+                            class="mdi-social-person"></i></a></li>
+                {% endif %}
                 <li><a href="{% url 'logout' %}" title="Logout"><i
                         class="mdi-action-highlight-remove"></i></a></li>
 
