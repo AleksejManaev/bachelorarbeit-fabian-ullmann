@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
 {% load material %}
-{% load material %}
 {% load staticfiles %}
 {% block material_body_class %}student-overview{% endblock %}
 {% block material_nav %}
-<nav>
-    <div class="nav-wrapper container">
-        <a href="#!" class="brand-logo"></a>
-    </div>
-</nav>
+    <!-- Dropdown Structure -->
+    <nav>
+        <div class="nav-wrapper container">
+            <a href="#!" class="brand-logo"></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#!" class="Privacy Settings"><i
+                        class="mdi-social-person fancybox fancybox-iframe"></i></a></li>
+                <li><a href="{% url 'logout' %}" title="Logout"><i
+                        class="mdi-action-highlight-remove"></i></a></li>
+
+            </ul>
+        </div>
+    </nav>
 
 {% endblock %}
