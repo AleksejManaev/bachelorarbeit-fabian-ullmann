@@ -1,0 +1,13 @@
+{% extends 'base_portal.html' %}
+{% load material %}
+
+{% block material_content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {% material_form user_form %}
+        {% material_formset student_user_formset %}
+        {% material_formset student_address_formset %}
+
+        <button type="submit">submit</button>
+    </form>
+{% endblock %}
