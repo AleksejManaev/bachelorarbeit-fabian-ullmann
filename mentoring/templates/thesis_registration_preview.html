@@ -1,0 +1,183 @@
+{% extends 'base_portal.html' %}
+{% block material_body_class %}for-pdf{% endblock %}
+{% block material_body_inner %}
+    <div class="row center-align">
+        <div class="col s12">
+            <h1>Anmeldung zur Abschlussarbeit</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s3"><p>Studiengang:</p></div>
+        <div class="col s9"><p>{{ object.student.course }}</p></div>
+    </div>
+    <div class="row">
+        <div class="col s3"><p>Name des Studierenden:</p></div>
+        <div class="col s9"><p>{{ object.student.user.get_full_name }}</p></div>
+    </div>
+    <div class="row">
+        <div class="col s3"><p>Matrikelnummer:</p></div>
+        <div class="col s9"><p>{{ object.student.matriculation_number }}</p></div>
+    </div>
+    <div class="row">
+        <div class="col s3"><p>Anschrift des Studierenden:</p></div>
+        <div class="col s9"><p>{{ object.student.address.street }}<br>
+            {{ object.student.address.zip_code }} {{ object.student.address.city }}<br>
+            {{ object.student.address.location|upper }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s6"><p>Tel.Nr: {{ object.student.phone }}</p></div>
+        <div class="col s6"><p>E-Mail: {{ object.student.user.email }}</p></div>
+    </div>
+    <div class="row">
+        <div class="col s9">
+            <p>Ich erkläre mich einverstanden, <br>dass meine an der FHB erfassten Kontaktdaten (Adresse, E-Mail) nach
+                meiner Exmatrikulation
+                für die Kontaktaufnahme im Rahmen der Alumniarbeit genutzt werden dürfen.</p>
+        </div>
+        <div class="col s3 center-align">
+            <!-- Switch -->
+            <div class="switch">
+                <label>
+                    Nein
+                    <input type="checkbox" {% if registration.permission_contact %}checked="checked"{% endif %}>
+                    <span class="lever"></span>
+                    Ja
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s9">
+            <p>Bei erfolgreichem Studienabschluss wird der Veröffentlichung von Name, Vorname und Studiengang in der
+                Hochschulzeitschrift INFOCUS zugestimmt.</p>
+        </div>
+        <div class="col s3 center-align">
+            <!-- Switch -->
+            <div class="switch">
+                <label>
+                    Nein
+                    <input type="checkbox" {% if registration.permission_infocus %}checked="checked"{% endif %}>
+                    <span class="lever"></span>
+                    Ja
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s9">
+            <p>Die Abschlussarbeit kann in der Hochschulbibliothek der FHB allen Nutzern zur Verfügung gestellt
+                werden.</p>
+        </div>
+        <div class="col s3 center-align">
+            <!-- Switch -->
+            <div class="switch">
+                <label>
+                    Nein
+                    <input type="checkbox" {% if registration.permission_library %}checked="checked"{% endif %}>
+                    <span class="lever"></span>
+                    Ja
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s9">
+            <p>Die Abschlussarbeit soll auf dem Publikationsserver der Hochschulbibliothek der FHB im Internet
+                veröffentlicht werden. Das Dokument wird selbstständig hochgeladen bzw. als PDF-Version der
+                Hochschulbibliothek der FHB übergeben.</p>
+        </div>
+        <div class="col s3 center-align">
+            <!-- Switch -->
+            <div class="switch">
+                <label>
+                    Nein
+                    <input type="checkbox" {% if registration.permission_public %}checked="checked"{% endif %}>
+                    <span class="lever"></span>
+                    Ja
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s9">
+            <p>Der/die Erstgutachter/in ist einverstanden, dass die Abschlussarbeit auf dem Publikationsserver der
+                Hochschulbibliothek im Internet veröffentlicht wird.</p>
+        </div>
+        <div class="col s3 center-align">
+            <!-- Switch -->
+            <div class="switch">
+                <label>
+                    Nein
+                    <input type="checkbox" {% if registration.permission_library_tutor %}checked="checked"{% endif %}>
+                    <span class="lever"></span>
+                    Ja
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12"><p>Bearbeitungszeit: 3 Monate</p></div>
+    </div>
+    <div class="row">
+        <p>Thema der Abschlussarbeit:</p>
+
+        <p>{{ registration.subject }}</p>
+    </div>
+    <div class="row center-align">
+        <div class="col s6 no-border">
+            <p>&nbsp;</p>
+
+            <p class="overline">Unterschrift 1. Gutachter</p>
+        </div>
+        <div class="col s6">
+            <p>{{ registration.mentoring.tutor_1 }}</p>
+
+            <p class="overline center-align">Name und Titel 1. Gutachter</p>
+        </div>
+    </div>
+    <div class="row  center-align">
+        <div class="col s6 no-border">
+            <p>&nbsp;</p>
+
+            <p class="overline">Name/Stempel/Einrichtung</p>
+        </div>
+        <div class="col s6">
+            <p>{{ registration.mentoring.tutor_2 }}</p>
+
+            <p class="overline">Name und Titel 2. Gutachter</p>
+        </div>
+    </div>
+    <div class="grey lighten-5 bottom">
+        <div class="row no-border">
+            <div class="col s12 center-align"><b>(vom Prüfungsausschuss auszufüllen)</b></div>
+        </div>
+        <div class="row">
+            <div class="col s6 no-border">
+                <p>Beginn der Bearbeitungszeit:</p>
+            </div>
+            <div class="col s6">
+                <p>Abgabetermin der Abschlussarbeit am:</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s6">
+                <p>Die Bearbeitungszeit der Abschlussarbeit wurde auf Antrag verlängert bis:</p>
+            </div>
+            <div class="col s6">
+                <p>Abgabe der Abschlussarbeit erfolgte am:</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s6">
+                <p>Die Vorleistungen wurden erbracht.</p>
+
+                <p>Bearbeiter Prüfungsamt:</p>
+            </div>
+            <div class="col s6">
+                <p>Prüfungsausschuss:</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

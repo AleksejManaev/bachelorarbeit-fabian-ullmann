@@ -170,6 +170,7 @@ class FormMentoringTutor(forms.ModelForm):
 FormsetMentoringTutor2 = forms.inlineformset_factory(Mentoring, Tutor2ContactData, fields='__all__', extra=1)
 
 
+# Todo FormStudent alternative E-Mail anpassen
 class FormSettings(forms.ModelForm):
     class Meta:
         model = User

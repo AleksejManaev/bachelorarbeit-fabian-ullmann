@@ -45,6 +45,7 @@ class PortalUser(ContactModel):
 class Student(PortalUser):
     course = models.ForeignKey(Course)
     matriculation_number = models.CharField(_('matriculation number'), max_length=8)
+    extern_email = models.EmailField()
 
     def __str__(self):
         return "{} ({})".format(self.user.get_full_name(), self.matriculation_number)
@@ -119,13 +120,20 @@ class Thesis(AbstractWork):
     def __str__(self):
         return ('Thesis {}'.format(self.student.user.username))
 
+    @property
     def mentoring(self):
         return self.mentoringrequest.mentoring
 
+    @property
+    def registration(self):
+        return self.mentoringrequest.mentoring.registration
+
 class Tutor(PortalUser):
+    @property
     def requests(self):
         return MentoringRequest.objects.filter(tutor_email=self.user.email, status='RE')
 
+    @property
     def mentorings(self):
         return Mentoring.objects.filter(tutor_1=self)
 
@@ -157,9 +165,11 @@ class Mentoring(models.Model):
     tutor_1 = models.OneToOneField(Tutor)
     created_on = models.DateTimeField(auto_created=True, auto_now_add=True)
 
+    @property
     def thesis(self):
         return self.request.thesis
 
+    @property
     def tutor_2(self):
         return self.tutor2contactdata
 

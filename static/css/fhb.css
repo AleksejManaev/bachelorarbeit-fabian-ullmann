@@ -26,6 +26,9 @@ nav {
     background-color: #0095cc;
 }
 
+.switch label input[type=checkbox]:checked + .lever {
+    background-color: #00ace6;
+}
 body.login-body:before {
     background-color: #0095cc;
     background-size: 300px;

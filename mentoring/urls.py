@@ -21,7 +21,7 @@ from mentoring.views import *
 urlpatterns = [
     url(r'^$', login_required(IndexView.as_view()), name='index'),
 
-    url(r'^student/$', login_required(StudentView.as_view()), name='student-overview'),
+    url(r'^student/$', login_required(StudentUpdateView.as_view()), name='student-overview'),
     url(r'^student/settings/$', login_required(StudentSettingsView.as_view()), name='student-settings'),
 
     url(r'^placement/update/$', PlacementUpdateView.as_view(template_name='placement_form.html'),
@@ -38,12 +38,13 @@ urlpatterns = [
         name='thesis-mentoringrequest-update-todo'),
 
     url(r'^thesis/registration/update/$',
-        ThesisRegistrationView.as_view(template_name='thesis_registration_form.html'),
+        ThesisRegistrationUpdateView.as_view(template_name='thesis_registration_form.html'),
         name='thesis-registration-update'),
     url(r'^thesis/registration/update/todo/$',
-        ThesisRegistrationView.as_view(template_name='thesis_registration_todo_form.html'),
+        ThesisRegistrationUpdateView.as_view(template_name='thesis_registration_todo_form.html'),
         name='thesis-registration-update-todo'),
-    url(r'^thesis/registration/preview/$', ThesisRegistrationPreviewView.as_view(), name='thesis-registration-preview'),
+    url(r'^thesis/registration/preview/$', ThesisRegistrationPDFPreview.as_view(), name='thesis-registration-preview'),
+    url(r'^thesis/registration/pdf/$', ThesisRegistrationPDF.as_view(), name='thesis-registration-pdf'),
     url(r'^thesis/preview/$', ThesisPreviewView.as_view(), name='thesis-preview'),
 
 

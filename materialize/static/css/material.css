@@ -490,14 +490,15 @@ div.dropdown-button {
     border-bottom: solid 1px;
 }
 
-.for-pdf .row .col:nth-child(2):not(.no-border) {
-    border-left: solid 1px;
+.for-pdf .row .col:first-child:not(.no-border):not(:last-child) {
+    border-right: solid 1px;
 }
 
 p.overline {
     border-top: solid 1px;
 }
 
+/*Todo .for-pdf kann gelöscht werden, wenn fdfgen funktionier*/
 .for-pdf h1 {
     font-size: 16px;
     font-weight: bolder;
@@ -507,4 +508,20 @@ p.overline {
 
 .for-pdf p {
     margin: .8rem;
+}
+
+body.for-pdf {
+    background-color: white;
+    font-family: Verdana, Arial, sans-serif;
+    color: black;
+}
+
+.for-pdf .bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.for-pdf .switch {
+    margin: 11px;
 }

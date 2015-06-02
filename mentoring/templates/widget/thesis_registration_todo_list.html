@@ -1,0 +1,20 @@
+{% load material %}
+{% load filter %}
+
+<ul id="dropdown_thesis_registration" class="dropdown-content">
+    <li><a href="{% url 'thesis-registration-preview' %}" class="fancybox fancybox.iframe">Preview</a></li>
+    <li><a href="{% url 'thesis-registration-pdf' %}">Download</a></li>
+</ul>
+<div class="card todo-list">
+
+
+    {% material_card_header title='Thesis-Registration' actions='dropdown_thesis_registration' %}
+
+    <div class="card-content">
+        {% material_form thesis_registration_form %}
+    </div>
+    <div class="card-action valign-wrapper">
+        <a href="{% url 'thesis-registration-preview' %}" class="fancybox fancybox.iframe col s12 center-align"
+           type="submit" name="pdf">PDF</a>
+    </div>
+</div>

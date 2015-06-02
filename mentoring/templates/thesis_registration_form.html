@@ -1,0 +1,10 @@
+{% extends 'base_portal.html' %}
+{% load material %}
+{% block material_content %}
+
+    <form enctype="multipart/form-data" action="" method="post">
+        {% csrf_token %}
+        {% material_form thesis_registration_form %}
+    </form>
+
+{% endblock %}

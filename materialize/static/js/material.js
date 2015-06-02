@@ -121,7 +121,8 @@ $(document).ready(
         $(".dropdown-button").dropdown();
         $('.fancybox').fancybox();
 
-        $("form .card-action [type=submit]").on('click', function () {
+        $("form .card-action [type=submit]").on('click', function (e) {
+            console.log(e.target);
             $(this).parents('form').submit();
         })
 

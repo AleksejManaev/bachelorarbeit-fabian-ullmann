@@ -1,0 +1,10 @@
+{% extends 'base_portal.html' %}
+{% load material %}
+{% block material_content %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {% include 'widget/thesis_registration_todo_list.html' %}
+    </form>
+
+{% endblock %}

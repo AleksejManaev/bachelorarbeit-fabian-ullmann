@@ -1,15 +1,22 @@
 # -*- coding: utf-8 -*-
+from datetime import date, datetime
+from django import http
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
 from django.utils import timezone
 
 from django.views.generic import *
+from fdfgen import forge_fdf
 
 from mentoring.forms import *
 from mentoring.models import Student, Placement
+import pdfkit
 
 
 class IndexView(RedirectView):
     permanent = True
+
     def get(self, request, *args, **kwargs):
         if (hasattr(request.user, 'portaluser')):
             if (hasattr(request.user.portaluser, 'tutor')):
@@ -19,6 +26,7 @@ class IndexView(RedirectView):
         else:
             self.pattern_name = 'logout'
         return super(IndexView, self).get(request, *args, **kwargs)
+
 
 class PlacementUpdateView(UpdateView):
     model = Placement
@@ -93,6 +101,7 @@ class PlacementUpdateView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.placement
 
+
 class PlacementPreviewView(DetailView):
     model = Placement
     template_name = 'placement_preview.html'
@@ -117,7 +126,7 @@ class ThesisMentoringrequestUpdateView(UpdateView):
             'thesis_contact_formset': FormsetWorkCompanyContactdata(data, instance=thesis.workcompany,
                                                                     prefix='thesis_contact_formset'),
             'thesis_mentoringrequest_form': FormMentoringrequestStudent(data, instance=thesis.mentoringrequest,
-                                                                 prefix='thesis_mentoringrequest_form'), }
+                                                                        prefix='thesis_mentoringrequest_form'), }
 
     def get(self, request, status=200, *args, **kwargs):
         self.object = self.get_object()
@@ -143,7 +152,6 @@ class ThesisMentoringrequestUpdateView(UpdateView):
         form_target = request.POST.get('target_form').split(',') if request.POST.has_key('target_form') else [i for i, v
                                                                                                               in
                                                                                                               self.thesis.iteritems()]
-
 
         if 'thesis' in form_target:
             form_target.remove('thesis')
@@ -181,12 +189,33 @@ class ThesisMentoringrequestUpdateView(UpdateView):
         return self.request.user.portaluser.student.thesis
 
 
-class ThesisRegistrationView(UpdateView):
+class ThesisRegistrationUpdateView(UpdateView):
     model = Registration
     form_class = FormRegistration
 
-    def get_context_data(self, **kwargs):
-        return super(ThesisRegistrationView, self).get_context_data(thesis_registration_form=self.get_form())
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_registration()
+        cd = self.get_context_data()
+        cd.update(self.get_context_registration())
+        return self.render_to_response(cd)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_registration()
+        reg = self.get_context_registration(data=request.POST)
+        if (reg['thesis_registration_form'].is_valid()):
+            return self.form_valid(reg['thesis_registration_form'])
+        else:
+            return self.form_invalid(reg['thesis_registration_form'])
+
+    def get_context_registration(self, data=None):
+        registration = self.get_registration()
+        return {
+            'registration': registration,
+            'thesis_registration_form': FormRegistration(data=data, instance=registration, prefix='registration_form')
+        }
+
+    def get_registration(self):
+        return self.get_object()
 
     def get_object(self, queryset=None):
         return Registration.objects.get_or_create(
@@ -196,13 +225,60 @@ class ThesisRegistrationView(UpdateView):
         return ''
 
 
-class ThesisRegistrationPreviewView(DetailView):
-    model = Registration
-    template_name = 'thesis_registration_preview.html'
+class ThesisRegistrationPDF(View):
+    target = 'attachment'
 
-    def get_object(self, queryset=None):
-        return Registration.objects.get_or_create(
-            mentoring=self.request.user.portaluser.student.thesis.mentoringrequest.mentoring)[0]
+    def get(self, request, *args, **kwargs):
+        student = self.request.user.portaluser.student
+        fields = [
+            ('Strasse', student.address.street),
+            ('PLZ_Ort', '{} {}'.format(student.address.zip_code, student.address.city)),
+            ('email_extern', student.extern_email),
+            ('Absolventendatei', 0 if student.thesis.registration.permission_contact else 'Off'),
+            ('Check Box4', 'Off'),
+            ('Check Box4a', 'Off'),
+            ('Studiengang', student.course),
+            ('Student_Name', student.user.get_full_name()),
+            ('Matrikelnummer', student.matriculation_number),
+            ('p2_Strasse', student.address.street),
+            ('p2_PLZ_Ort', '{} {}'.format(student.address.zip_code, student.address.city)),
+            ('p2_email', student.user.email),
+            ('Alumniarbeit', 'Ja' if student.thesis.registration.permission_contact else 'Off'),
+            ('Infocus', 'Ja' if student.thesis.registration.permission_infocus else 'Off'),
+            ('Bibliothek', 'Ja' if student.thesis.registration.permission_library else 'Off'),
+            ('PubServer', 'Ja' if student.thesis.registration.permission_public else 'Off'),
+            ('PubServer_EG', 'Ja' if student.thesis.registration.permission_library_tutor else 'Off'),
+            ('Bearbeitungszeit', student.course.get_editing_time_display()),
+            ('Thema der Abschlussarbeit', student.thesis.registration.subject),
+            ('Gutachter_1', student.thesis.mentoring.tutor_1),
+            ('Gutachter_2', student.thesis.mentoring.tutor_2),
+            ('Datum_Antrag', datetime.now().strftime("%d.%m.%Y"))
+        ]
+        directory = "files/{}/thesis/registration/".format(request.user)
+        filename = 'Anmeldung-Abschlussarbeit-{firstn}-{lastn}.pdf'.format(directory=directory,
+                                                                           firstn=request.user.first_name,
+                                                                           lastn=request.user.last_name)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        fdf = forge_fdf("", fields, [], [], [])
+        fdf_file = open("{}/data.fdf".format(directory), "wb")
+        fdf_file.write(fdf)
+        fdf_file.close()
+        os.system(
+            'pdftk files/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf output {directory}/{file}'.format(
+                directory=directory, file=filename))
+
+        with open('{}{}'.format(directory, filename), 'r') as pdf:
+            response = http.HttpResponse(pdf.read(), content_type='application/pdf')
+            response['Content-Disposition'] = '{}; filename="{}"'.format(self.target, filename)
+            return response
+        pdf.closed
+
+
+class ThesisRegistrationPDFPreview(ThesisRegistrationPDF):
+    target = 'inline'
+
 
 
 class ThesisPreviewView(DetailView):
@@ -212,7 +288,8 @@ class ThesisPreviewView(DetailView):
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
 
-class StudentView(ThesisMentoringrequestUpdateView, PlacementUpdateView):
+
+class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, ThesisRegistrationUpdateView):
     template_name = 'student_detail.html'
     model = Student
 
@@ -226,6 +303,7 @@ class StudentView(ThesisMentoringrequestUpdateView, PlacementUpdateView):
         context.update(kwargs)
         context.update(self.get_context_thesis())
         context.update(self.get_context_placement())
+        context.update(self.get_context_registration())
         return context
 
     def get_thesis(self):
@@ -234,8 +312,12 @@ class StudentView(ThesisMentoringrequestUpdateView, PlacementUpdateView):
     def get_placement(self):
         return self.get_object().placement
 
+    def get_registration(self):
+        return self.get_object().thesis.registration
+
     def get_object(self, queryset=None):
         return Student.objects.get(user=self.request.user)
+
 
 class TutorView(DetailView):
     model = Tutor
@@ -243,6 +325,7 @@ class TutorView(DetailView):
 
     def get_object(self, queryset=None):
         return Tutor.objects.get(user=self.request.user)
+
 
 class TutorMentoringrequestView(UpdateView):
     model = MentoringRequest
@@ -307,6 +390,7 @@ class TutorMentoringrequestView(UpdateView):
         cd = self.get_context_data()
         cd.update(forms)
         return self.render_to_response(cd, status=status)
+
 
 class StudentSettingsView(UpdateView):
     model = Student

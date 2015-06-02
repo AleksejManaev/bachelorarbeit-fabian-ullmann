@@ -32,9 +32,12 @@
                     $('.input-field.hide:has(.valid)').prev().find('input[type=checkbox]').prop("checked", true);
                     $('.input-group.hide>.input-field:has(.valid)').parent().prev().find('input[type=checkbox]').prop("checked", true);
 
-                    $(this.instance).find('.card-action [name=finish]').off('click');
+                    $(this.instance).find('.card-action [name=finish], .card-action [name=pdf]').off('click');
                     $(this.instance).find('.card-action [name=finish]').on('click', function () {
                         form.saveFinal();
+                    });
+                    $(this.instance).find('.card-action [name=pdf]').on('click', function () {
+                        form.savePDF();
                     });
                 },
                 getPostData: function () {
@@ -76,6 +79,20 @@
                             type: 'POST',
                             success: success,
                             error: error,
+                        });
+                },
+                savePDF: function () {
+                    // Todo onSuccess Finish-Button entfernen und actions aktualisieren
+                    var postData = this.getPostData();
+                    this.sendForm(
+                        postData,
+                        function (data, textStatus, jqXHR) {
+                            //data: return data from server
+                            Materialize.toast("pdf generated", 2000, 'green');
+                        },
+                        function (jqXHR, textStatus, errorThrown) {
+                            Materialize.toast("pdf not generated!", 5000, 'red');
+
                         });
                 },
                 saveFinal: function () {
