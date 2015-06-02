@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
-from datetime import date, datetime
-from django import http
-from django.core.urlresolvers import reverse_lazy, reverse
-from django.shortcuts import redirect
-from django.template.loader import render_to_string
-from django.utils import timezone
+from datetime import datetime
 
+from django import http
+from django.shortcuts import redirect
+from django.utils import timezone
 from django.views.generic import *
 from fdfgen import forge_fdf
-
 from mentoring.forms import *
 from mentoring.models import Student, Placement
-import pdfkit
 
 
 class IndexView(RedirectView):
@@ -278,7 +274,6 @@ class ThesisRegistrationPDF(View):
 
 class ThesisRegistrationPDFPreview(ThesisRegistrationPDF):
     target = 'inline'
-
 
 
 class ThesisPreviewView(DetailView):

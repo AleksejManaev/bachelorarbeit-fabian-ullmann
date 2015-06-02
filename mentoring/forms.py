@@ -122,7 +122,7 @@ class FormThesis(forms.ModelForm):
 FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fields=['description'], extra=1,
                                                  fk_name='work', can_delete=False)
 FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, CompanyContactData, fields='__all__', extra=1,
-                                                            can_delete=True);
+                                                            can_delete=False);
 
 
 class FormMentoringrequestStudent(forms.ModelForm):

@@ -21,7 +21,9 @@ Introduction
 Installation and Requirements
 -----------------------------
 
-https://www.pdflabs.com/tools/pdftk-server/ is required
++ PDFTK-Server <https://www.pdflabs.com/tools/pdftk-server/>
++ Python 2.7.10
+
 ### Movable Type ###
 
 Markdown works with Movable Type version 2.6 or later (including 

@@ -121,6 +121,7 @@ STATICFILES_FINDERS = (
 
 TEMPLATE_DIRS = (
     '/var/www/mi_fhb/ba/templates/',
+    os.path.join(BASE_DIR, 'mentoring/templatetags'),
 )
 TEMPLATE_CONTEXT_PROCESSORS = [
     "account.context_processors.account",

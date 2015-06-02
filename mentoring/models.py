@@ -126,7 +126,10 @@ class Thesis(AbstractWork):
 
     @property
     def registration(self):
-        return self.mentoringrequest.mentoring.registration
+        if hasattr(self.mentoringrequest, 'mentoring'):
+            return self.mentoringrequest.mentoring.registration
+        else:
+            return None
 
 class Tutor(PortalUser):
     @property
