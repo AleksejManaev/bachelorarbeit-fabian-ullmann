@@ -9,6 +9,7 @@ from mentoring.models import Student, Placement
 
 
 class IndexView(RedirectView):
+    permanent = True
     def get(self, request, *args, **kwargs):
         if (hasattr(request.user, 'portaluser')):
             if (hasattr(request.user.portaluser, 'tutor')):
@@ -89,10 +90,15 @@ class PlacementUpdateView(UpdateView):
     def get_success_url(self):
         return ''
 
+    def get_object(self, queryset=None):
+        return self.request.user.portaluser.student.placement
 
 class PlacementPreviewView(DetailView):
     model = Placement
     template_name = 'placement_preview.html'
+
+    def get_object(self, queryset=None):
+        return self.request.user.portaluser.student.placement
 
 
 class ThesisMentoringrequestUpdateView(UpdateView):
@@ -171,11 +177,40 @@ class ThesisMentoringrequestUpdateView(UpdateView):
     def get_success_url(self):
         return ''
 
+    def get_object(self, queryset=None):
+        return self.request.user.portaluser.student.thesis
+
+
+class ThesisRegistrationView(UpdateView):
+    model = Registration
+    form_class = FormRegistration
+
+    def get_context_data(self, **kwargs):
+        return super(ThesisRegistrationView, self).get_context_data(thesis_registration_form=self.get_form())
+
+    def get_object(self, queryset=None):
+        return Registration.objects.get_or_create(
+            mentoring=self.request.user.portaluser.student.thesis.mentoringrequest.mentoring)[0]
+
+    def get_success_url(self):
+        return ''
+
+
+class ThesisRegistrationPreviewView(DetailView):
+    model = Registration
+    template_name = 'thesis_registration_preview.html'
+
+    def get_object(self, queryset=None):
+        return Registration.objects.get_or_create(
+            mentoring=self.request.user.portaluser.student.thesis.mentoringrequest.mentoring)[0]
+
 
 class ThesisPreviewView(DetailView):
     model = Thesis
     template_name = 'thesis_preview.html'
 
+    def get_object(self, queryset=None):
+        return self.request.user.portaluser.student.thesis
 
 class StudentView(ThesisMentoringrequestUpdateView, PlacementUpdateView):
     template_name = 'student_detail.html'
@@ -202,14 +237,12 @@ class StudentView(ThesisMentoringrequestUpdateView, PlacementUpdateView):
     def get_object(self, queryset=None):
         return Student.objects.get(user=self.request.user)
 
-
 class TutorView(DetailView):
     model = Tutor
     template_name = 'tutor_detail.html'
 
     def get_object(self, queryset=None):
         return Tutor.objects.get(user=self.request.user)
-
 
 class TutorMentoringrequestView(UpdateView):
     model = MentoringRequest
@@ -256,13 +289,18 @@ class TutorMentoringrequestView(UpdateView):
                 self.object = forms['mentoringrequest_form'].save()
                 mentoring = Mentoring.objects.get_or_create(request=self.object, tutor_1=request.user.portaluser.tutor)[
                     0]
-                mentoring.tutor2contactdata = Tutor2ContactData()
                 contact = forms['mentoringrequest_tutor2_form'].save()
-                mentoring.tutor2contactdata.contactdata = contact
-                mentoring.tutor2contactdata.save()
+                tutor2contactdata = Tutor2ContactData(contact=contact, mentoring=mentoring)
+                tutor2contactdata.save()
                 self.object.status = 'AC'
                 self.object.save()
 
+                if request.POST.has_key('mentoringrequest_form-permission') and request.POST.get(
+                        'mentoringrequest_form-permission') == 'on':
+                    print "has permission"
+                    reg = Registration.objects.get_or_create(mentoring=mentoring)[0]
+                    reg.permission_library_tutor = True
+                    reg.save()
             else:
                 status = 400
 
@@ -270,10 +308,9 @@ class TutorMentoringrequestView(UpdateView):
         cd.update(forms)
         return self.render_to_response(cd, status=status)
 
-
 class StudentSettingsView(UpdateView):
     model = Student
-    form_class = FormStudentSettings
+    form_class = FormSettings
     template_name = 'student_settings.html'
 
     def post(self, request, *args, **kwargs):
@@ -292,10 +329,36 @@ class StudentSettingsView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsView, self).get_context_data(
-            user_form=FormStudentSettings(data=data, instance=self.get_object().user),
-            student_user_formset=FormsetStudentContact(data=data, instance=self.get_object().user),
+            user_form=FormSettings(data=data, instance=self.get_object().user),
+            student_user_formset=FormsetUserPortaluser(data=data, instance=self.get_object().user),
             student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object())
         )
 
     def get_object(self, queryset=None):
         return Student.objects.get(user=self.request.user)
+
+
+class TutorSettingsView(UpdateView):
+    model = Tutor
+    form_class = FormSettings
+    template_name = 'tutor_settings.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        cd = self.get_context_data(request.POST)
+        if (cd.get('user_form').is_valid()
+            and cd.get('tutor_user_formset').is_valid()):
+            cd.get('user_form').save()
+            cd.get('tutor_user_formset').save()
+            return self.render_to_response(cd, status=200)
+        else:
+            return self.render_to_response(cd, status=400)
+
+    def get_context_data(self, data=None, **kwargs):
+        return super(TutorSettingsView, self).get_context_data(
+            user_form=FormSettings(data=data, instance=self.get_object().user),
+            tutor_user_formset=FormsetUserPortaluser(data=data, instance=self.get_object().user)
+        )
+
+    def get_object(self, queryset=None):
+        return Tutor.objects.get(user=self.request.user)

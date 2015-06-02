@@ -119,6 +119,11 @@ $(document).ready(
 
         $("form").materialform();
         $(".dropdown-button").dropdown();
+        $('.fancybox').fancybox();
+
+        $("form .card-action [type=submit]").on('click', function () {
+            $(this).parents('form').submit();
+        })
 
 
     }

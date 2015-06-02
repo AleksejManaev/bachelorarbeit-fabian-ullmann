@@ -24,22 +24,31 @@ urlpatterns = [
     url(r'^student/$', login_required(StudentView.as_view()), name='student-overview'),
     url(r'^student/settings/$', login_required(StudentSettingsView.as_view()), name='student-settings'),
 
-    url(r'^placement/update/(?P<pk>\d+)/$', PlacementUpdateView.as_view(template_name='placement_form.html'),
+    url(r'^placement/update/$', PlacementUpdateView.as_view(template_name='placement_form.html'),
         name='placement-update'),
-    url(r'^placement/update/(?P<pk>\d+)/todo/$', PlacementUpdateView.as_view(template_name='placement_todo_form.html'),
+    url(r'^placement/update/todo/$', PlacementUpdateView.as_view(template_name='placement_todo_form.html'),
         name='placement-update-todo'),
-    url(r'^placement/preview/(?P<pk>\d+)/$', PlacementPreviewView.as_view(), name='placement-preview'),
+    url(r'^placement/preview/$', PlacementPreviewView.as_view(), name='placement-preview'),
 
-    url(r'^thesis/mentoring-request/update/(?P<pk>\d+)/$',
+    url(r'^thesis/mentoring-request/update/$',
         ThesisMentoringrequestUpdateView.as_view(template_name='thesis_mentoringrequest_form.html'),
         name='thesis-mentoringrequest-update'),
-    url(r'^thesis/mentoring-request/update/(?P<pk>\d+)/todo/$',
+    url(r'^thesis/mentoring-request/update/todo/$',
         ThesisMentoringrequestUpdateView.as_view(template_name='thesis_mentoringrequest_todo_form.html'),
         name='thesis-mentoringrequest-update-todo'),
-    url(r'^thesis/preview/(?P<pk>\d+)/$', ThesisPreviewView.as_view(), name='thesis-preview'),
+
+    url(r'^thesis/registration/update/$',
+        ThesisRegistrationView.as_view(template_name='thesis_registration_form.html'),
+        name='thesis-registration-update'),
+    url(r'^thesis/registration/update/todo/$',
+        ThesisRegistrationView.as_view(template_name='thesis_registration_todo_form.html'),
+        name='thesis-registration-update-todo'),
+    url(r'^thesis/registration/preview/$', ThesisRegistrationPreviewView.as_view(), name='thesis-registration-preview'),
+    url(r'^thesis/preview/$', ThesisPreviewView.as_view(), name='thesis-preview'),
 
 
 
     url(r'^tutor/$', TutorView.as_view(), name='tutor-overview'),
-    url(r'^tutor/request/(?P<pk>\d+)/', TutorMentoringrequestView.as_view(), name='tutor-request')
+    url(r'^tutor/settings/$', login_required(TutorSettingsView.as_view()), name='tutor-settings'),
+    url(r'^tutor/request/(?P<pk>\d+)/', TutorMentoringrequestView.as_view(), name='tutor-request'),
 ]

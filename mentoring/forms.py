@@ -27,7 +27,6 @@ class TestForm(forms.Form):
     integer = forms.IntegerField()
     date = forms.DateField()
 
-
 class FormCompany(forms.ModelForm):
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None,
                  initial=None, error_class=ErrorList, label_suffix=None,
@@ -52,12 +51,10 @@ class FormCompany(forms.ModelForm):
         model = Company
         fields = '__all__'
 
-
 class FormContactData(forms.ModelForm):
     class Meta:
         model = ContactData
         fields = '__all__'
-
 
 class FormTutor2ContactData(forms.ModelForm):
     class Meta:
@@ -107,7 +104,6 @@ class FormPlacement(forms.ModelForm):
             'certificate': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
 
-
 class FormThesis(forms.ModelForm):
     def is_valid(self):
         req = True if self.data.has_key('finalize') else False
@@ -151,17 +147,19 @@ class FormMentoringrequestStudent(forms.ModelForm):
         model = MentoringRequest
         fields = ['tutor_email', 'comment']
 
-
 class FormMentoringrequestTutor(forms.ModelForm):
+    permission = forms.BooleanField()
+    permission.required = False
+
     def is_valid(self):
+        # Todo Answer soll bei Accept nicht required sein
         self.fields['answer'].required = True
         return super(FormMentoringrequestTutor, self).is_valid()
 
     class Meta:
         model = MentoringRequest
-        fields = ['answer']
+        fields = ['answer', 'permission']
         exclude = ['status']
-
 
 class FormMentoringTutor(forms.ModelForm):
     class Meta:
@@ -172,11 +170,18 @@ class FormMentoringTutor(forms.ModelForm):
 FormsetMentoringTutor2 = forms.inlineformset_factory(Mentoring, Tutor2ContactData, fields='__all__', extra=1)
 
 
-class FormStudentSettings(forms.ModelForm):
+class FormSettings(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name']
 
 
-FormsetStudentContact = forms.inlineformset_factory(User, Student, fields='__all__', extra=1, can_delete=False)
+FormsetUserPortaluser = forms.inlineformset_factory(User, PortalUser, fields='__all__', extra=1, can_delete=False)
 FormsetStudentAddress = forms.inlineformset_factory(Student, Address, fields='__all__', extra=1, can_delete=False)
+
+
+class FormRegistration(forms.ModelForm):
+    class Meta:
+        model = Registration
+        fields = '__all__'
+        exclude = ['mentoring', 'permission_library_tutor']

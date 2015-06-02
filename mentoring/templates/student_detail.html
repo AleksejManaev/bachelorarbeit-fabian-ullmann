@@ -1,18 +1,112 @@
 {% extends 'base_portal.html' %}
 {% load material %}
+{% load filter %}
 
 {% block material_content %}
 
-    <form enctype="multipart/form-data" action="{% url 'placement-update' placement.pk %}" method="post">
+    <form enctype="multipart/form-data" action="{% url 'placement-update' %}" method="post">
         {% csrf_token %}
         {% include 'widget/placement_todo_list.html' %}
     </form>
 
+    <div class="row">
+        <div class="
+    {% if student.thesis.mentoringrequest.status == 'NR' %}
+       col s12
+    {% else %}
+        col s12 m8 l9
+    {% endif %}
+    ">
+            <form action="{% url 'thesis-mentoringrequest-update' %}"
+                  method="post">
+                {% csrf_token %}
+                {% include 'widget/thesis_mentoringrequest_todo_list.html' %}
+            </form>
+            {% if student.thesis.mentoring %}
+                <form action="{% url 'thesis-registration-update' %}" method="post">
+                    {% csrf_token %}
+                    {% include 'widget/thesis_registration_todo_list.html' %}
+                </form>
+            {% endif %}
+        </div>
 
-    <form enctype="multipart/form-data" action="{% url 'thesis-mentoringrequest-update' thesis.pk %}" method="post">
-        {% csrf_token %}
-        {% include 'widget/thesis_mentoringrequest_todo_list.html' %}
-    </form>
+
+        {% if not student.thesis.mentoringrequest.status == 'NR' %}
+            <div class="col s12 m4 l3">
+                <div class="card profile-view">
+
+
+                    {% if student.thesis.mentoringrequest.status == 'RE' %}
+                        <div class="pv-header orange padding">
+                            <div class="white-text left-align">
+                                Requested on: {{ student.thesis.mentoringrequest.requested_on|date:"D d M Y" }}
+                                Status: {{ student.thesis.mentoringrequest.status|state }}
+                            </div>
+                            <i class="large mdi-social-school"></i>
+                        </div>
+
+                        <div class="pv-body">
+                            <p>{{ student.thesis.mentoringrequest.tutor_email }}</p>
+
+                        </div>
+
+
+
+                    {% elif student.thesis.mentoringrequest.status == 'DE' %}
+                        <div class="pv-header red padding">
+                            <div class="white-text left-align">
+                                Requested on: {{ student.thesis.mentoringrequest.requested_on|date:"D d M Y" }}
+                                Status: {{ student.thesis.mentoringrequest.status|state }}
+                            </div>
+                            <i class="large mdi-social-school"></i>
+                        </div>
+
+                        <div class="pv-body">
+                            <p>{{ student.thesis.mentoringrequest.answer }}</p>
+
+                            <p>From: {{ student.thesis.mentoringrequest.tutor_email }}</p>
+
+                        </div>
+
+
+                    {% elif student.thesis.mentoringrequest.status == 'AC' %}
+                        <div class="pv-header green padding">
+                            <div class="white-text left-align">
+                                Requested on: {{ student.thesis.mentoringrequest.requested_on|date:"D d M Y" }}
+                                Status: {{ student.thesis.mentoringrequest.status|state }}
+                            </div>
+                            <i class="large mdi-social-school"></i>
+                        </div>
+
+                        <div class="pv-body">
+                            <small>1. Prüfer</small>
+                            <h2>{{ student.thesis.mentoring.tutor_1 }}</h2>
+
+                            <ul class="pv-contact">
+                                <li><i class="mdi-content-mail"></i> <a
+                                        href="mailto:{{ student.thesis.mentoring.tutor_1.user.email }}"> {{ student.thesis.mentoring.tutor_1.user.email }}</a>
+                                </li>
+                                <li><i class="mdi-communication-phone"></i> {{ student.thesis.mentoring.tutor_1.phone }}
+                                </li>
+                            </ul>
+                            <div class="divider"></div>
+                            <small>2. Prüfer</small>
+                            <h2>{{ student.thesis.mentoring.tutor2contactdata.contact }}</h2>
+
+                            <ul class="pv-contact">
+                                <li><i class="mdi-content-mail"></i> <a
+                                        href="mailto:{{ student.thesis.mentoring.tutor2contactdata.contact.email }}"> {{ student.thesis.mentoring.tutor2contactdata.contact.email }}</a>
+                                </li>
+                                <li>
+                                    <i class="mdi-communication-phone"></i> {{ student.thesis.mentoring.tutor2contactdata.contact.phone }}
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block material_extra_script %}{% material_todo_js %}{% endblock %}

@@ -29,10 +29,10 @@
 
                         }, 200)
                     });
-                    console.log(this.instance.find('.activator'));
                     $('.input-field.hide:has(.valid)').prev().find('input[type=checkbox]').prop("checked", true);
                     $('.input-group.hide>.input-field:has(.valid)').parent().prev().find('input[type=checkbox]').prop("checked", true);
 
+                    $(this.instance).find('.card-action [name=finish]').off('click');
                     $(this.instance).find('.card-action [name=finish]').on('click', function () {
                         form.saveFinal();
                     });
@@ -79,8 +79,6 @@
                         });
                 },
                 saveFinal: function () {
-                    console.log("saveFinal");
-                    console.log(this.instance);
                     // Todo onSuccess Finish-Button entfernen und actions aktualisieren
                     form.instance.find('input[name*=finished]').val('True');
                     var postData = this.getPostData();
@@ -91,6 +89,7 @@
                             //data: return data from server
                             Materialize.toast("finished", 2000, 'green');
                             form.setFinalSuccessData();
+                            location.reload()
                         },
                         function (jqXHR, textStatus, errorThrown) {
                             console.log(errorThrown);
@@ -354,11 +353,6 @@
 })(jQuery);
 
 $(document).ready(function () {
-    $('.fancybox').fancybox({
-        'afterClose': function () {
-            parent.location.reload(true);
-        }
-    });
 
     $.each($('form > .card.todo-list'), function () {
         $(this).todoList();

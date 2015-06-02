@@ -60,7 +60,7 @@ ROOT_URLCONF = 'ba.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': ['templates','templatetags'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,6 +117,7 @@ STATICFILES_FINDERS = (
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
+    os.path.join(BASE_DIR, 'mentoring/templatetags'),
 )
 
 MATERIALIZE = {

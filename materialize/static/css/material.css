@@ -480,3 +480,31 @@ div.dropdown-button {
     margin: 0;
     padding: 5px 10px;
 }
+
+.for-pdf .row {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.for-pdf .row:not(.no-border) {
+    border-bottom: solid 1px;
+}
+
+.for-pdf .row .col:nth-child(2):not(.no-border) {
+    border-left: solid 1px;
+}
+
+p.overline {
+    border-top: solid 1px;
+}
+
+.for-pdf h1 {
+    font-size: 16px;
+    font-weight: bolder;
+    line-height: 1.2rem;
+    margin: 0.8rem;
+}
+
+.for-pdf p {
+    margin: .8rem;
+}

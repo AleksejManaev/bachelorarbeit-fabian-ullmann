@@ -9,9 +9,19 @@
             <a href="{% url 'index' %}" class="brand-logo"></a>
             <ul class="right hide-on-med-and-down">
                 {% if user.portaluser.student %}
-                    <li><a href="{% url 'student-settings' %}" class="fancybox fancybox.iframe"
-                           title="Privacy Settings"><i
-                            class="mdi-social-person"></i></a></li>
+                    <li>
+                        <a href="{% url 'student-settings' %}" class="fancybox fancybox.iframe"
+                           title="Privacy Settings">
+                            <i class="mdi-social-person"></i>
+                        </a>
+                    </li>
+                {% elif user.portaluser.tutor %}
+                    <li>
+                        <a href="{% url 'tutor-settings' %}" class="fancybox fancybox.iframe"
+                           title="Privacy Settings">
+                            <i class="mdi-social-person"></i>
+                        </a>
+                    </li>
                 {% endif %}
                 <li><a href="{% url 'logout' %}" title="Logout"><i
                         class="mdi-action-highlight-remove"></i></a></li>

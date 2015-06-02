@@ -9,28 +9,23 @@ from django.utils.translation import ugettext_lazy as _
 from mentoring.helpers import *
 from mentoring.validators import *
 
-
-class ContactModel(models.Model):
-    first_name = models.CharField(_('first name'), max_length=30)
-    last_name = models.CharField(_('last name'), max_length=30)
-
-    def __str__(self):
-        return "{}, {}".format(self.first_name, self.last_name)
-
-
 class Course(models.Model):
+    TIME_CHOICES = (
+        ('3', _('3 months')),
+        ('6', _('6 months')),
+        ('8', _('8 weeks')),
+    )
+    editing_time = models.CharField(_('editing time thesis'), max_length=1, choices=TIME_CHOICES, default='3')
     description = models.CharField(_('description'), max_length=255)
 
     def __str__(self):
         return self.description
-
 
 class Degree(models.Model):
     description = models.CharField(_('description'), max_length=255)
 
     def __str__(self):
         return self.description
-
 
 class Company(models.Model):
     name = models.CharField(_('company name'), max_length=100, unique=True)
@@ -39,9 +34,13 @@ class Company(models.Model):
         return self.name
 
 
-class PortalUser(models.Model):
-    user = models.OneToOneField(User, primary_key=True)
+class ContactModel(models.Model):
+    title = models.CharField(_('title'), max_length=30, null=True, blank=True)
+    phone = models.CharField(_('phone'), max_length=30, blank=True, null=True)
 
+
+class PortalUser(ContactModel):
+    user = models.OneToOneField(User, primary_key=True)
 
 class Student(PortalUser):
     course = models.ForeignKey(Course)
@@ -50,16 +49,13 @@ class Student(PortalUser):
     def __str__(self):
         return "{} ({})".format(self.user.get_full_name(), self.matriculation_number)
 
-
 class Address(models.Model):
     portal_user = models.OneToOneField(Student)
     street = models.CharField(_('street'), max_length=255)
     city = models.CharField(_('city'), max_length=255)
     zip_code = models.CharField(_('zip code'), max_length=30)
     location = models.CharField(_('location'), max_length=100)
-    phone = models.CharField(_('phone'), max_length=30, blank=True, null=True)
     web_address = models.CharField(_('web address'), max_length=255, blank=True, null=True)
-
 
 class AbstractWork(models.Model):
     description = models.TextField(_('description'), blank=True, null=True)
@@ -69,7 +65,6 @@ class AbstractWork(models.Model):
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
-
 
 class Placement(AbstractWork):
     student = models.OneToOneField(Student, unique=True)
@@ -98,18 +93,19 @@ class Placement(AbstractWork):
                     if not samefile:
                         os.remove(os.path.join(dir, file))
 
-
 class WorkCompany(models.Model):
     work = models.OneToOneField(AbstractWork, primary_key=True)
     company = models.ForeignKey(Company, null=True, blank=True)
     description = models.TextField(_('company description'), blank=False)
 
-class ContactData(models.Model):
+
+class ContactData(ContactModel):
     first_name = models.CharField(_('first name'), max_length=30)
     last_name = models.CharField(_('last name'), max_length=30)
     email = models.EmailField(_('email'))
-    phone = models.CharField(_('phone'), max_length=30)
 
+    def __str__(self):
+        return "{} {} {}".format(self.title, self.first_name, self.last_name)
 
 class CompanyContactData(ContactData):
     work_company = models.OneToOneField(WorkCompany)
@@ -123,6 +119,8 @@ class Thesis(AbstractWork):
     def __str__(self):
         return ('Thesis {}'.format(self.student.user.username))
 
+    def mentoring(self):
+        return self.mentoringrequest.mentoring
 
 class Tutor(PortalUser):
     def requests(self):
@@ -131,6 +129,8 @@ class Tutor(PortalUser):
     def mentorings(self):
         return Mentoring.objects.filter(tutor_1=self)
 
+    def __str__(self):
+        return "{} {} {}".format(self.title, self.user.first_name, self.user.last_name)
 
 class MentoringRequest(models.Model):
     STATUS_CHOICES = (
@@ -164,14 +164,16 @@ class Mentoring(models.Model):
         return self.tutor2contactdata
 
 
-class Tutor2ContactData(ContactData):
+class Tutor2ContactData(models.Model):
     mentoring = models.OneToOneField(Mentoring)
+    contact = models.OneToOneField(ContactData)
 
+    def __str__(self):
+        return "{} {} {}".format(self.contact.title, self.contact.first_name, self.contact.last_name)
 class MentoringReport(models.Model):
     mentoring = models.OneToOneField(Mentoring)
     date_initial_meeting = models.DateField(_('date initial meeting'), null=True, blank=True)
     date_deadline = models.DateField(_('date deadline'), null=True, blank=True)
-
 
 class MentoringReportItem(models.Model):
     report = models.OneToOneField(MentoringReport)
@@ -181,10 +183,16 @@ class MentoringReportItem(models.Model):
 
 class Registration(models.Model):
     mentoring = models.OneToOneField(Mentoring)
-    date = models.DateField(_('date'))
+    subject = models.TextField(_('subject'), max_length=250, default='')
+    date = models.DateField(_('date'), auto_now=True)
     permission_contact = models.BooleanField(_('permission contact'), default=False)
     permission_infocus = models.BooleanField(_('permission INFOCUS'), default=False)
+    permission_public = models.BooleanField(_('permission public'), default=False)
     permission_library = models.BooleanField(_('permission library'), default=False)
+    permission_library_tutor = models.BooleanField(_('permission library tutor'), default=False)
+
+    def student(self):
+        return self.mentoring.request.from_student()
 
 class ResponseExaminationBoard(models.Model):
     registration = models.OneToOneField(Registration)
