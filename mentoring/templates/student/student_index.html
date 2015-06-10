@@ -6,7 +6,7 @@
 
     <form enctype="multipart/form-data" action="{% url 'placement-update' %}" method="post">
         {% csrf_token %}
-        {% include 'widget/placement_todo_widget.html' %}
+        {% include 'student/placement/placement_todo_widget.html' %}
     </form>
 
     <div class="row">

@@ -27,7 +27,7 @@ class IndexView(RedirectView):
 class PlacementUpdateView(UpdateView):
     model = Placement
     form_class = FormPlacement
-    template_name = 'placement_todo_form.html'
+    template_name = 'student/placement/placement_form.html'
 
     def get_context_placement(self, data=None, files=None, **kwargs):
         placement = self.get_placement()
@@ -100,7 +100,7 @@ class PlacementUpdateView(UpdateView):
 
 class PlacementPreviewView(DetailView):
     model = Placement
-    template_name = 'placement_index.html'
+    template_name = 'student/placement/placement_index.html'
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.placement
@@ -109,7 +109,7 @@ class PlacementPreviewView(DetailView):
 class ThesisMentoringrequestUpdateView(UpdateView):
     model = Thesis
     form_class = FormThesis
-    template_name = 'mentoringrequest_todo_form.html'
+    template_name = 'student/thesis/mentoringrequest/mentoringrequest_form.html'
 
     def get_context_thesis(self, data=None, files=None, **kwargs):
         thesis = self.get_thesis()
@@ -188,6 +188,7 @@ class ThesisMentoringrequestUpdateView(UpdateView):
 class ThesisRegistrationUpdateView(UpdateView):
     model = Registration
     form_class = FormRegistration
+    template_name = 'student/thesis/registration/registration_form.html'
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_registration()
@@ -296,14 +297,14 @@ class ThesisRegistrationPDFPreview(ThesisRegistrationPDF):
 
 class ThesisPreviewView(DetailView):
     model = Thesis
-    template_name = 'thesis_index.html'
+    template_name = 'student/thesis/thesis_index.html'
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
 
 
 class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, ThesisRegistrationUpdateView):
-    template_name = 'student_index.html'
+    template_name = 'student/student_index.html'
     model = Student
 
     def get_context_data(self, **kwargs):
@@ -334,15 +335,16 @@ class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, T
 
 class TutorView(DetailView):
     model = Tutor
-    template_name = 'tutor_index.html'
+    template_name = 'tutor/tutor_index.html'
 
     def get_object(self, queryset=None):
+
         return Tutor.objects.get(user=self.request.user)
 
 
 class TutorMentoringrequestView(UpdateView):
     model = MentoringRequest
-    template_name = 'tutor_mentoringrequest.html'
+    template_name = 'tutor/tutor_mentoringrequest.html'
     form_class = FormMentoringrequestTutor
 
     def get_context_mentoringrequest(self, data=None, files=None, **kwargs):
@@ -408,7 +410,7 @@ class TutorMentoringrequestView(UpdateView):
 class StudentSettingsView(UpdateView):
     model = Student
     form_class = FormSettings
-    template_name = 'student_settings.html'
+    template_name = 'student/student_settings.html'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -438,7 +440,7 @@ class StudentSettingsView(UpdateView):
 class TutorSettingsView(UpdateView):
     model = Tutor
     form_class = FormSettings
-    template_name = 'tutor_settings.html'
+    template_name = 'tutor/tutor_settings.html'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

@@ -7,7 +7,7 @@
     <nav>
         <div class="nav-wrapper container">
             <a href="{% url 'index' %}" class="brand-logo"></a>
-            <ul class="right hide-on-med-and-down">
+            <ul class="right">
                 {% if user.portaluser.student %}
                     <li>
                         <a href="{% url 'student-settings' %}" class="fancybox fancybox.iframe"
