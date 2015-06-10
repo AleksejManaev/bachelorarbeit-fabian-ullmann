@@ -2,21 +2,38 @@
 {% load material %}
 
 {% block material_content %}
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title blue-grey-text">Mentoring Requests</span>
+                </div>
+                <div class="card-content">
+                    <ul class="collection">
+                        {% for request in object.requests %}
+                            <li class="collection-item row">
+                                <a href="{% url 'tutor-request' request.pk %}" class="fancybox fancybox.iframe">
+                                    <div class="request-message col s12">
+                                        <span class="title">{{ request.from_student }}</span>
 
-    <h3>Requests</h3>
-{% for request in object.requests %}
-<a href="{% url 'tutor-request' request.pk %}" class="fancybox fancybox.iframe">{{ request }}</a>
-{% endfor %}
-    <br>
-    <h3>Mentorings</h3>
-    {% for mentoring in object.mentorings %}
-        {{ mentoring.thesis }}
-    {% endfor %}
+                                        <small class="right">{{ request.requested_on|date }}</small>
+                                        <div class="divider">&nbsp;</div>
+                                        <p class="request-desc">{{ request.comment }}</p>
+                                    </div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
 {% endblock %}
 {% block material_extra_script %}
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.fancybox').fancybox()
-    })
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.fancybox').fancybox()
+        })
+    </script>
 {% endblock %}

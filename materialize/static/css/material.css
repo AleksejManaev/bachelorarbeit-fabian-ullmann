@@ -416,15 +416,15 @@ div.dropdown-button {
     display: none;
 }
 
-.card .card-reveal {
+.card.todo-list .card-reveal {
     padding: 0;
 }
 
-.card .card-reveal .card-action {
+.card.todo-list .card-reveal .card-action {
     padding: 0 20px;
 }
 
-.card .card-reveal .card-action a {
+.card.todo-list .card-reveal .card-action a {
     font-size: 25px;
     padding: 0 6px;
     border-radius: 50%;
@@ -496,32 +496,4 @@ div.dropdown-button {
 
 p.overline {
     border-top: solid 1px;
-}
-
-/*Todo .for-pdf kann gelöscht werden, wenn fdfgen funktionier*/
-.for-pdf h1 {
-    font-size: 16px;
-    font-weight: bolder;
-    line-height: 1.2rem;
-    margin: 0.8rem;
-}
-
-.for-pdf p {
-    margin: .8rem;
-}
-
-body.for-pdf {
-    background-color: white;
-    font-family: Verdana, Arial, sans-serif;
-    color: black;
-}
-
-.for-pdf .bottom {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
-
-.for-pdf .switch {
-    margin: 11px;
 }

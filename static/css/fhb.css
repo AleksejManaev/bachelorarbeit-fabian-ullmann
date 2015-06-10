@@ -29,6 +29,7 @@ nav {
 .switch label input[type=checkbox]:checked + .lever {
     background-color: #00ace6;
 }
+
 body.login-body:before {
     background-color: #0095cc;
     background-size: 300px;
@@ -96,4 +97,39 @@ nav a.brand-logo {
 
 a.disabled {
     cursor: not-allowed;
+}
+
+.collection-item {
+    overflow: hidden;
+}
+
+.collection-item p.request-desc {
+    display: block; /* Fallback for non-webkit */
+    display: -webkit-box;
+    max-width: 100%;
+    height: 2em; /* Fallback for non-webkit */
+    margin: 0 auto;
+    line-height: 1em;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    cursor: default;
+}
+
+.collection-item .request-action a {
+    height: 50%;
+}
+
+.card-action.acceptdeny {
+    padding: 0;
+}
+
+.card-action.acceptdeny > div {
+    min-height: 40px;
+}
+
+.card-action.acceptdeny > div > div {
+    margin: auto;
 }

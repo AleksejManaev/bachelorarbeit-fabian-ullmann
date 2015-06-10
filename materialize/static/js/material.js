@@ -85,9 +85,9 @@ $(document).ready(
 
         if ($('.card-reveal')[0]) {
             $('.card-reveal').show();
-            $.each($('.card-reveal .card-content'), function (a, b) {
-                $(b).css('min-height', $(b).parent().outerHeight() - $(b).parent().find('.card-header').outerHeight() - $(b).parent().find('.card-action').outerHeight());
-            })
+            //$.each($('.card-reveal .card-content'), function (a, b) {
+            //    $(b).css('min-height', $(b).parent().outerHeight() - $(b).parent().find('.card-header').outerHeight() - $(b).parent().find('.card-action').outerHeight());
+            //});
             $('.card-reveal').hide();
         }
 
@@ -122,7 +122,6 @@ $(document).ready(
         $('.fancybox').fancybox();
 
         $("form .card-action [type=submit]").on('click', function (e) {
-            console.log(e.target);
             $(this).parents('form').submit();
         })
 

@@ -33,11 +33,12 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+    def works(self):
+        return WorkCompany.objects.filter(company=self)
 
 class ContactModel(models.Model):
     title = models.CharField(_('title'), max_length=30, null=True, blank=True)
     phone = models.CharField(_('phone'), max_length=30, blank=True, null=True)
-
 
 class PortalUser(ContactModel):
     user = models.OneToOneField(User, primary_key=True)
@@ -98,7 +99,6 @@ class WorkCompany(models.Model):
     work = models.OneToOneField(AbstractWork, primary_key=True)
     company = models.ForeignKey(Company, null=True, blank=True)
     description = models.TextField(_('company description'), blank=False)
-
 
 class ContactData(ContactModel):
     first_name = models.CharField(_('first name'), max_length=30)
@@ -176,13 +176,14 @@ class Mentoring(models.Model):
     def tutor_2(self):
         return self.tutor2contactdata
 
-
 class Tutor2ContactData(models.Model):
     mentoring = models.OneToOneField(Mentoring)
     contact = models.OneToOneField(ContactData)
 
     def __str__(self):
         return "{} {} {}".format(self.contact.title, self.contact.first_name, self.contact.last_name)
+
+
 class MentoringReport(models.Model):
     mentoring = models.OneToOneField(Mentoring)
     date_initial_meeting = models.DateField(_('date initial meeting'), null=True, blank=True)

@@ -23,7 +23,6 @@ class IndexView(RedirectView):
             self.pattern_name = 'logout'
         return super(IndexView, self).get(request, *args, **kwargs)
 
-
 class PlacementUpdateView(UpdateView):
     model = Placement
     form_class = FormPlacement
@@ -45,7 +44,7 @@ class PlacementUpdateView(UpdateView):
 
     def get(self, request, status=200, *args, **kwargs):
         self.object = self.get_object()
-
+        print(request.is_ajax())
         if (request.GET.has_key('editMode')):
             self.object.finished = False
             self.object.save()
@@ -97,14 +96,12 @@ class PlacementUpdateView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.placement
 
-
 class PlacementPreviewView(DetailView):
     model = Placement
     template_name = 'student/placement/placement_index.html'
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.placement
-
 
 class ThesisMentoringrequestUpdateView(UpdateView):
     model = Thesis
@@ -184,7 +181,6 @@ class ThesisMentoringrequestUpdateView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
 
-
 class ThesisRegistrationUpdateView(UpdateView):
     model = Registration
     form_class = FormRegistration
@@ -220,7 +216,6 @@ class ThesisRegistrationUpdateView(UpdateView):
 
     def get_success_url(self):
         return ''
-
 
 class ThesisRegistrationPDF(View):
     target = 'attachment'
@@ -290,10 +285,8 @@ class ThesisRegistrationPDF(View):
             return response
         pdf.closed
 
-
 class ThesisRegistrationPDFPreview(ThesisRegistrationPDF):
     target = 'inline'
-
 
 class ThesisPreviewView(DetailView):
     model = Thesis
@@ -301,7 +294,6 @@ class ThesisPreviewView(DetailView):
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
-
 
 class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, ThesisRegistrationUpdateView):
     template_name = 'student/student_index.html'
@@ -332,7 +324,6 @@ class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, T
     def get_object(self, queryset=None):
         return Student.objects.get(user=self.request.user)
 
-
 class TutorView(DetailView):
     model = Tutor
     template_name = 'tutor/tutor_index.html'
@@ -340,7 +331,6 @@ class TutorView(DetailView):
     def get_object(self, queryset=None):
 
         return Tutor.objects.get(user=self.request.user)
-
 
 class TutorMentoringrequestView(UpdateView):
     model = MentoringRequest
@@ -406,7 +396,6 @@ class TutorMentoringrequestView(UpdateView):
         cd.update(forms)
         return self.render_to_response(cd, status=status)
 
-
 class StudentSettingsView(UpdateView):
     model = Student
     form_class = FormSettings
@@ -435,7 +424,6 @@ class StudentSettingsView(UpdateView):
 
     def get_object(self, queryset=None):
         return Student.objects.get(user=self.request.user)
-
 
 class TutorSettingsView(UpdateView):
     model = Tutor

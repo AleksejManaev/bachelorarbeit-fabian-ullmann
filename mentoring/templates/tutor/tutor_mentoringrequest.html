@@ -1,26 +1,70 @@
-{% extends request.is_ajax|yesno:"material_base_modal.html,material_base.html" %}
+{% extends "base_portal.html" %}
 {% load material %}
 
 {% block material_content %}
-<form action="{{ form_action }}" method="post">
-    {% csrf_token %}
-    <p>{{ object.comment }}</p>
 
-    <p>{{ object.requested_on }}</p>
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title blue-grey-text">{{ object.from_student }}<br/><small>{{ object.from_student.course }}</small></span>
+                </div>
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <p>{{ object.comment|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="row">
+                        <div class="col s12">
+                            <p>{{ object.thesis.description|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                    <div class="row grey lighten-4">
+                        <div class="col s8">
+                            <b>{{ object.thesis.workcompany.company }}</b>
+                            {# TODO Link zu CompanyWorks  #}
+                            ({{ object.thesis.workcompany.company.works|length|add:-1 }})
+                            <ul>
+                                <li><i> {{ object.thesis.workcompany.description|linebreaksbr }}</i></li>
+                            </ul>
+                        </div>
+                        <div class="col s4">
+                            <b>{{ object.thesis.workcompany.companycontactdata.title }} {{ object.thesis.workcompany.companycontactdata.first_name }} {{ object.thesis.workcompany.companycontactdata.last_name }}</b>
+                            <ul>
+                                <li><i class="mdi-content-mail"></i> <a
+                                        href="mailto:{{ object.thesis.workcompany.companycontactdata.email }}"> {{ object.thesis.workcompany.companycontactdata.email }}</a>
+                                </li>
+                                <li>
+                                    <i class="mdi-communication-phone"></i> {{ object.thesis.workcompany.companycontactdata.phone }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-    <p>{{ object.thesis.description }}</p>
+                </div>
 
-    <p>{{ object.thesis.student }}</p>
+                <div class="card-action acceptdeny">
+                    <div class="col s6 activator green white-text valign-wrapper">
+                        <div>Accept</div>
+                    </div>
+                    <div class="col s6 activator red white-text valign-wrapper">
+                        <div>Deny</div>
+                    </div>
+                </div>
 
-    <p>{{ object.thesis.workcompany.company }}</p>
+                {% material_todo_reveal %}
+            </div>
+        </div>
+    </div>
 
-    <p>{{ object.thesis.workcompany.description }}</p>
+    <form action="{{ form_action }}" method="post">
+        {% csrf_token %}
+        {% material_form mentoringrequest_form %}
+        {% material_form mentoringrequest_tutor2_form %}
 
-    <p>{{ object.thesis.workcompany.contactdata }}</p>
-    {% material_form mentoringrequest_form %}
-    {% material_form mentoringrequest_tutor2_form %}
-
-    <button type="submit" name="accept">accept</button>
-    <button type="submit" name="deny">deny</button>
-</form>
+        <button type="submit" name="accept">accept</button>
+        <button type="submit" name="deny">deny</button>
+    </form>
 {% endblock %}

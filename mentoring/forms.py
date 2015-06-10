@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 from django.forms.utils import ErrorList
 
@@ -5,7 +6,7 @@ from mentoring.models import *
 
 __author__ = 'ullmanfa'
 
-
+# Todo TestForm kann gelöscht werden
 class TestForm(forms.Form):
     subject = forms.CharField(widget=forms.TextInput(attrs={'length': '100'}), label="Hallo Welt", max_length=100)
 
@@ -118,12 +119,14 @@ class FormThesis(forms.ModelForm):
         model = Thesis
         exclude = ['student', 'finished']
         fields = '__all__'
+        widgets = {
+            'description': forms.Textarea()
+        }
 
 FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fields=['description'], extra=1,
                                                  fk_name='work', can_delete=False)
 FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, CompanyContactData, fields='__all__', extra=1,
-                                                            can_delete=False);
-
+                                                            can_delete=False)
 
 class FormMentoringrequestStudent(forms.ModelForm):
     def is_valid(self):
@@ -146,6 +149,9 @@ class FormMentoringrequestStudent(forms.ModelForm):
     class Meta:
         model = MentoringRequest
         fields = ['tutor_email', 'comment']
+        widgets = {
+            'comment': forms.Textarea()
+        }
 
 class FormMentoringrequestTutor(forms.ModelForm):
     permission = forms.BooleanField()
@@ -166,9 +172,7 @@ class FormMentoringTutor(forms.ModelForm):
         model = Mentoring
         fields = '__all__'
 
-
 FormsetMentoringTutor2 = forms.inlineformset_factory(Mentoring, Tutor2ContactData, fields='__all__', extra=1)
-
 
 # Todo FormStudent alternative E-Mail anpassen
 class FormSettings(forms.ModelForm):
