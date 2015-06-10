@@ -100,7 +100,7 @@ class PlacementUpdateView(UpdateView):
 
 class PlacementPreviewView(DetailView):
     model = Placement
-    template_name = 'placement_preview.html'
+    template_name = 'placement_index.html'
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.placement
@@ -109,7 +109,7 @@ class PlacementPreviewView(DetailView):
 class ThesisMentoringrequestUpdateView(UpdateView):
     model = Thesis
     form_class = FormThesis
-    template_name = 'thesis_mentoringrequest_todo_form.html'
+    template_name = 'mentoringrequest_todo_form.html'
 
     def get_context_thesis(self, data=None, files=None, **kwargs):
         thesis = self.get_thesis()
@@ -296,14 +296,14 @@ class ThesisRegistrationPDFPreview(ThesisRegistrationPDF):
 
 class ThesisPreviewView(DetailView):
     model = Thesis
-    template_name = 'thesis_preview.html'
+    template_name = 'thesis_index.html'
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
 
 
 class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, ThesisRegistrationUpdateView):
-    template_name = 'student_detail.html'
+    template_name = 'student_index.html'
     model = Student
 
     def get_context_data(self, **kwargs):
@@ -334,7 +334,7 @@ class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, T
 
 class TutorView(DetailView):
     model = Tutor
-    template_name = 'tutor_detail.html'
+    template_name = 'tutor_index.html'
 
     def get_object(self, queryset=None):
         return Tutor.objects.get(user=self.request.user)

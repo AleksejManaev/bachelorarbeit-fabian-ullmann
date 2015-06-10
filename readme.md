@@ -1,8 +1,11 @@
 Bachelorarbeit Fabian Ullmann
 ========
-Fachhochschule Brandenburg <br />
-University of Applied Science <br />
-Fachbereich Informatik & Medien <br />
+Fachhochschule Brandenburg
+
+University of Applied Science
+
+Fachbereich Informatik & Medien 
+
 
 
 Version 0.0.1 - 31.05.2015
