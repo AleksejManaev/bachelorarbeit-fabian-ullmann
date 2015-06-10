@@ -165,7 +165,7 @@ class MentoringRequest(models.Model):
 
 class Mentoring(models.Model):
     request = models.OneToOneField(MentoringRequest)
-    tutor_1 = models.OneToOneField(Tutor)
+    tutor_1 = models.ForeignKey(Tutor)
     created_on = models.DateTimeField(auto_created=True, auto_now_add=True)
 
     @property

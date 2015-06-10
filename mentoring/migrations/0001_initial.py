@@ -257,7 +257,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='mentoring',
             name='tutor_1',
-            field=models.OneToOneField(to='mentoring.Tutor'),
+            field=models.ForeignKey(to='mentoring.Tutor'),
         ),
         migrations.AddField(
             model_name='address',

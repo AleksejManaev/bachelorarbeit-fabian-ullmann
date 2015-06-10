@@ -226,6 +226,11 @@ class ThesisRegistrationPDF(View):
 
     def get(self, request, *args, **kwargs):
         student = self.request.user.portaluser.student
+
+        """
+        Eingabefelder von 'files/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular'
+        """
+
         fields = [
             ('Strasse', student.address.street),
             ('PLZ_Ort', '{} {}'.format(student.address.zip_code, student.address.city)),
@@ -250,20 +255,33 @@ class ThesisRegistrationPDF(View):
             ('Gutachter_2', student.thesis.mentoring.tutor_2),
             ('Datum_Antrag', datetime.now().strftime("%d.%m.%Y"))
         ]
-        directory = "files/{}/thesis/registration/".format(request.user)
+        """
+        Where to save the registration-pdf
+        """
+        print(settings.MEDIA_ROOT)
+        directory = "{}/{}/thesis/registration/".format(settings.MEDIA_ROOT, request.user)
+        print(directory)
         filename = 'Anmeldung-Abschlussarbeit-{firstn}-{lastn}.pdf'.format(directory=directory,
                                                                            firstn=request.user.first_name,
                                                                            lastn=request.user.last_name)
+        print(os.path)
         if not os.path.exists(directory):
             os.makedirs(directory)
 
+        """
+        write formular data to file
+        """
         fdf = forge_fdf("", fields, [], [], [])
         fdf_file = open("{}/data.fdf".format(directory), "wb")
         fdf_file.write(fdf)
         fdf_file.close()
+
+        """
+        call command line
+        """
         os.system(
-            'pdftk files/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf output {directory}/{file}'.format(
-                directory=directory, file=filename))
+            'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf output {directory}/{file}'.format(
+                mediaroot=settings.MEDIA_ROOT, directory=directory, file=filename))
 
         with open('{}{}'.format(directory, filename), 'r') as pdf:
             response = http.HttpResponse(pdf.read(), content_type='application/pdf')

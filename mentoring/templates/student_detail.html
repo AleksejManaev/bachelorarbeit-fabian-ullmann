@@ -14,7 +14,7 @@
     {% if student.thesis.mentoringrequest.status == 'NR' %}
        col s12
     {% else %}
-        col s12 m8 l9
+        col s12 m8
     {% endif %}
     ">
             <form action="{% url 'thesis-mentoringrequest-update' %}"
@@ -32,7 +32,7 @@
 
 
         {% if not student.thesis.mentoringrequest.status == 'NR' %}
-            <div class="col s12 m4 l3">
+            <div class="col s12 m4 ">
                 <div class="card profile-view">
 
 
