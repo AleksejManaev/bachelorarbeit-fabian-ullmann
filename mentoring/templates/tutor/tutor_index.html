@@ -1,16 +1,20 @@
 {% extends 'base_portal.html' %}
 {% load material %}
+{% load filter %}
 
 {% block material_content %}
     <div class="row">
         <div class="col s12">
+
+            <ul id="dropdown_requests" class="dropdown-content">
+                <li><a href="{% url 'tutor-requests' %}" class="fancybox fancybox.iframe">Show all</a></li>
+            </ul>
+
             <div class="card">
-                <div class="card-header">
-                    <span class="card-title blue-grey-text">Mentoring Requests</span>
-                </div>
+                {% material_card_header title='Mentoring Requests' actions='dropdown_requests' %}
                 <div class="card-content">
                     <ul class="collection">
-                        {% for request in object.requests %}
+                        {% for request in object.new_requests %}
                             <li class="collection-item row">
                                 <a href="{% url 'tutor-request' request.pk %}" class="fancybox fancybox.iframe">
                                     <div class="request-message col s12">
@@ -19,9 +23,23 @@
                                         <small class="right">{{ request.requested_on|date }}</small>
                                         <div class="divider">&nbsp;</div>
                                         <p class="request-desc">{{ request.comment }}</p>
+
+                                        <p>&nbsp;</p>
+                                        {% if not request.status == 'RE' %}
+                                            <div class="col s12 center-align">
+                                                {% if request.status == 'AC' %}
+                                                    <small class="green-text">{{ request.status|state }}
+                                                        on {{ request.mentoring.created_on|date }}</small>
+                                                {% else %}
+                                                    <small class="red-text">{{ request.status|state }}</small>
+                                                    </div>
+                                                {% endif %}
+                                        {% endif %}
                                     </div>
                                 </a>
                             </li>
+                        {% empty %}
+                            <small class="center-align col s12">no requests</small>
                         {% endfor %}
                     </ul>
                 </div>

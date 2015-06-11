@@ -1,5 +1,6 @@
 {% extends "base_portal.html" %}
 {% load material %}
+{% load filter %}
 
 {% block material_content %}
 
@@ -45,7 +46,8 @@
 
                 </div>
 
-                <form action="{{ form_action }}" method="post" class="col s12 grey lighten-4"
+                <form action="{% if object.status == 'RE' %}{{ form_action }}{% endif %}" method="post"
+                      class="col s12 grey lighten-4"
                       style="border-top: 1px #607d8b solid">
                     {% csrf_token %}
                     {% material_formfield mentoringrequest_form.answer %}
@@ -60,14 +62,23 @@
                     <div class="row">
                         <div class="col">&nbsp;</div>
                     </div>
-                    <div class="card-action acceptdeny">
-                        <div class="col s6 green white-text valign-wrapper">
-                            <button type="submit" name="accept">Accept</button>
+                    {% if not object.status == 'RE' %}
+                        {% material_divider %}
+                        {% if object.status == 'AC' %}
+                            <span class="green-text">{{ object.status|state }} on {{ object.mentoring.created_on|date }}</span>
+                        {% else %}
+                            <span class="red-text">{{ object.status|state }}</span>
+                        {% endif %}
+                    {% else %}
+                        <div class="card-action acceptdeny">
+                            <div class="col s6 green white-text valign-wrapper">
+                                <button type="submit" name="accept">Accept</button>
+                            </div>
+                            <div class="col s6 red white-text valign-wrapper">
+                                <button type="submit" name="deny">Deny</button>
+                            </div>
                         </div>
-                        <div class="col s6 red white-text valign-wrapper">
-                            <button type="submit" name="deny">Deny</button>
-                        </div>
-                    </div>
+                    {% endif %}
                 </form>
 
             </div>

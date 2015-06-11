@@ -329,7 +329,6 @@ class TutorView(DetailView):
     template_name = 'tutor/tutor_index.html'
 
     def get_object(self, queryset=None):
-
         return Tutor.objects.get(user=self.request.user)
 
 class TutorMentoringrequestView(UpdateView):
@@ -395,6 +394,14 @@ class TutorMentoringrequestView(UpdateView):
         cd = self.get_context_data()
         cd.update(forms)
         return self.render_to_response(cd, status=status)
+
+
+class TutorMentoringrequestlistView(DetailView):
+    model = Tutor
+    template_name = 'tutor/tutor_mentoringrequest_list.html'
+
+    def get_object(self, queryset=None):
+        return Tutor.objects.get(user=self.request.user)
 
 class StudentSettingsView(UpdateView):
     model = Student

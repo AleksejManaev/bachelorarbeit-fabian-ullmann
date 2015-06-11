@@ -133,8 +133,11 @@ class Thesis(AbstractWork):
 
 class Tutor(PortalUser):
     @property
-    def requests(self):
+    def new_requests(self):
         return MentoringRequest.objects.filter(tutor_email=self.user.email, status='RE')
+    @property
+    def requests(self):
+        return MentoringRequest.objects.filter(tutor_email=self.user.email)
 
     @property
     def mentorings(self):

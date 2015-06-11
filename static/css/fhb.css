@@ -122,6 +122,10 @@ a.disabled {
     height: 50%;
 }
 
+.collection-item a {
+    color: #607d8b;
+}
+
 .card-action.acceptdeny {
     padding: 0;
     margin: 0 -0.75rem;
