@@ -3,6 +3,7 @@
 {% load filter %}
 
 {% block material_content %}
+    {# BEGIN MENTORING REQUESTS  #}
     <div class="row">
         <div class="col s12">
 
@@ -47,6 +48,53 @@
         </div>
 
     </div>
+    {# END MENTORING REQUESTS  #}
+    {# BEGIN  MENTORINGS  #}
+    <div class="row">
+        <div class="col s12">
+
+            <ul id="dropdown_requests" class="dropdown-content">
+                <li><a href="{% url 'tutor-requests' %}" class="fancybox fancybox.iframe">Show all</a></li>
+            </ul>
+
+            <div class="card">
+                {% material_card_header title='Mentoring' actions='dropdown_mentoring' %}
+                <div class="card-content">
+                    <ul class="collection">
+                        {% for mentoring in object.mentorings %}
+                            <li class="collection-item row">
+                                <a href="{% url 'tutor-mentoring' mentoring.pk %}" class="fancybox fancybox.iframe">
+                                    <div class="request-message col s12">
+                                        <span class="title">{{ request.from_student }}</span>
+
+                                        <small class="right">{{ request.requested_on|date }}</small>
+                                        <div class="divider">&nbsp;</div>
+                                        <p class="request-desc">{{ request.comment }}</p>
+
+                                        <p>&nbsp;</p>
+                                        {% if not request.status == 'RE' %}
+                                            <div class="col s12 center-align">
+                                                {% if request.status == 'AC' %}
+                                                    <small class="green-text">{{ request.status|state }}
+                                                        on {{ request.mentoring.created_on|date }}</small>
+                                                {% else %}
+                                                    <small class="red-text">{{ request.status|state }}</small>
+                                                    </div>
+                                                {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            </li>
+                        {% empty %}
+                            <small class="center-align col s12">no requests</small>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {# END  MENTORINGS  #}
 {% endblock %}
 {% block material_extra_script %}
     <script type="text/javascript">

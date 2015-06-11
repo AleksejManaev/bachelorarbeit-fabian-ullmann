@@ -299,37 +299,52 @@ class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, T
     template_name = 'student/student_index.html'
     model = Student
 
+    def get(self, request, status=200, *args, **kwargs):
+        if not self.get_object():
+            return redirect('index')
+        else:
+            return super(StudentUpdateView, self).get(request, *args, **kwargs)
     def get_context_data(self, **kwargs):
         context = {}
-        if self.object:
+        if self.get_object():
             context['object'] = self.object
             context_object_name = self.get_context_object_name(self.object)
             if context_object_name:
                 context[context_object_name] = self.object
-        context.update(kwargs)
-        context.update(self.get_context_thesis())
-        context.update(self.get_context_placement())
-        context.update(self.get_context_registration())
-        return context
+            context.update(kwargs)
+            context.update(self.get_context_thesis())
+            context.update(self.get_context_placement())
+            context.update(self.get_context_registration())
+            return context
 
+        else:
+            return None
     def get_thesis(self):
-        return self.get_object().thesis
+        return self.get_object().thesis if self.get_object() else None
 
     def get_placement(self):
-        return self.get_object().placement
+        return self.get_object().placement if self.get_object() else None
 
     def get_registration(self):
-        return self.get_object().thesis.registration
+        return self.get_object().thesis.registration if self.get_object() else None
 
     def get_object(self, queryset=None):
-        return Student.objects.get(user=self.request.user)
+        st = Student.objects.filter(user=self.request.user)
+        return st[0] if len(st) > 0 else None
 
 class TutorView(DetailView):
     model = Tutor
     template_name = 'tutor/tutor_index.html'
 
+    def get(self, request, *args, **kwargs):
+        if not self.get_object():
+            return redirect('index')
+        else:
+            return super(TutorView, self).get(request, *args, **kwargs)
+
     def get_object(self, queryset=None):
-        return Tutor.objects.get(user=self.request.user)
+        st = Tutor.objects.filter(user=self.request.user)
+        return st[0] if len(st) > 0 else None
 
 class TutorMentoringrequestView(UpdateView):
     model = MentoringRequest
@@ -396,12 +411,32 @@ class TutorMentoringrequestView(UpdateView):
         return self.render_to_response(cd, status=status)
 
 
-class TutorMentoringrequestlistView(DetailView):
-    model = Tutor
+class TutorMentoringrequestlistView(ListView):
+    model = MentoringRequest
     template_name = 'tutor/tutor_mentoringrequest_list.html'
 
+    def get_queryset(self):
+        return MentoringRequest.objects.filter(tutor_email=self.request.user.email)
+
+
+# TODO Sicherheit: Nur eigene Mentorings aufrufen mit pk
+class TutorMentoringView(UpdateView):
+    model = Mentoring
+    template_name = 'tutor/tutor_mentoring.html'
+    form_class = FormMentoringTutor
+
     def get_object(self, queryset=None):
-        return Tutor.objects.get(user=self.request.user)
+        return Mentoring.objects.get(tutor1__user=self.request.user)
+
+
+class TutorMentoringlistView(ListView):
+    model = Mentoring
+    template_name = 'tutor/tutor_mentoring_list.html'
+
+    def get_queryset(self):
+        return Mentoring.objects.filter(tutor_1__user=self.request.user)
+
+
 
 class StudentSettingsView(UpdateView):
     model = Student

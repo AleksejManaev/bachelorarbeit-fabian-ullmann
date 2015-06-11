@@ -186,7 +186,6 @@ class Tutor2ContactData(models.Model):
     def __str__(self):
         return "{} {} {}".format(self.contact.title, self.contact.first_name, self.contact.last_name)
 
-
 class MentoringReport(models.Model):
     mentoring = models.OneToOneField(Mentoring)
     date_initial_meeting = models.DateField(_('date initial meeting'), null=True, blank=True)
@@ -228,13 +227,11 @@ class CompanyRating(models.Model):
     comment = models.TextField(_('comment'))
     public = models.BooleanField(default=False)
 
-
 @receiver(post_save, sender=MentoringRequest)
 def post_save_mentoring(sender, instance, created, **kwargs):
     print "post_save_mentoringrequest"
     if instance.status == 'AC':
         print(instance.status)
-
 
 @receiver(post_save, sender=Student)
 def post_save_student(sender, instance, created, **kwargs):
@@ -253,7 +250,6 @@ def post_save_student(sender, instance, created, **kwargs):
         mr.save()
         # Mentoring.objects.get_or_create(thesis=thesis, tutor_1=mr)
         Address.objects.get_or_create(portal_user=instance)
-
 
 @receiver(post_delete, sender=CompanyContactData)
 def post_delete_contactdata(sender, instance, using, **kwargs):

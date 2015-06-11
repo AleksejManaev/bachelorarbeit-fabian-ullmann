@@ -11,7 +11,7 @@
                 </div>
                 <div class="card-content">
                     <ul class="collection">
-                        {% for request in object.requests %}
+                        {% for request in object_list %}
                             <li class="collection-item row">
                                 <a href="{% url 'tutor-request' request.pk %}" class="fancybox fancybox.iframe">
                                     <div class="request-message col s12">
