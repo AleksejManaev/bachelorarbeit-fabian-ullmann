@@ -55,7 +55,7 @@ class FormCompany(forms.ModelForm):
 class FormContactData(forms.ModelForm):
     class Meta:
         model = ContactData
-        fields = '__all__'
+        fields = ['title', 'first_name', 'last_name', 'email', 'phone']
 
 class FormTutor2ContactData(forms.ModelForm):
     class Meta:

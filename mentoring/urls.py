@@ -50,7 +50,6 @@ urlpatterns = [
     url(r'^thesis/preview/$', ThesisPreviewView.as_view(), name='thesis-preview'),
 
 
-
     url(r'^tutor/$', TutorView.as_view(), name='tutor-overview'),
     url(r'^tutor/settings/$', login_required(TutorSettingsView.as_view()), name='tutor-settings'),
     url(r'^tutor/request/(?P<pk>\d+)/', TutorMentoringrequestView.as_view(), name='tutor-request'),

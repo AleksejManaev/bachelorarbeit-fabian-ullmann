@@ -1,0 +1,54 @@
+{% extends 'base_portal.html' %}
+{% load material %}
+{% load filter %}
+
+{% block material_content %}
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title blue-grey-text">Mentoring Requests</span>
+                </div>
+                <div class="card-content">
+                    <ul class="collection">
+                        {% for request in object.requests %}
+                            <li class="collection-item row">
+                                <a href="{% url 'tutor-request' request.pk %}" class="fancybox fancybox.iframe">
+                                    <div class="request-message col s12">
+                                        <span class="title">{{ request.from_student }}</span>
+
+                                        <small class="right">{{ request.requested_on|date }}</small>
+                                        <div class="divider">&nbsp;</div>
+                                        <p class="request-desc">{{ request.comment }}</p>
+
+                                        <p>&nbsp;</p>
+                                        {% if not request.status == 'RE' %}
+                                            <div class="col s12 center-align">
+                                                {% if request.status == 'AC' %}
+                                                    <small class="green-text">{{ request.status|state }}
+                                                        on {{ request.mentoring.created_on|date }}</small>
+                                                {% else %}
+                                                    <small class="red-text">{{ request.status|state }}</small>
+                                                    </div>
+                                                {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            </li>
+                        {% empty %}
+                            <small class="center-align col s12">no requests</small>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block material_extra_script %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.fancybox').fancybox()
+        })
+    </script>
+{% endblock %}
