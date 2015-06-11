@@ -124,6 +124,7 @@ a.disabled {
 
 .card-action.acceptdeny {
     padding: 0;
+    margin: 0 -0.75rem;
 }
 
 .card-action.acceptdeny > div {
@@ -132,4 +133,18 @@ a.disabled {
 
 .card-action.acceptdeny > div > div {
     margin: auto;
+}
+
+.card-action.acceptdeny a {
+    color: white;
+    cursor: pointer;
+
+}
+
+.card-action.acceptdeny button {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    margin: auto;
+    text-transform: uppercase;
 }

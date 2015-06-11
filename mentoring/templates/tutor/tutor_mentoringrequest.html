@@ -21,7 +21,7 @@
                             <p>{{ object.thesis.description|linebreaksbr }}</p>
                         </div>
                     </div>
-                    <div class="row grey lighten-4">
+                    <div class="row grey lighten-5">
                         <div class="col s8">
                             <b>{{ object.thesis.workcompany.company }}</b>
                             {# TODO Link zu CompanyWorks  #}
@@ -45,26 +45,47 @@
 
                 </div>
 
-                <div class="card-action acceptdeny">
-                    <div class="col s6 activator green white-text valign-wrapper">
-                        <div>Accept</div>
+                <form action="{{ form_action }}" method="post" class="col s12 grey lighten-4"
+                      style="border-top: 1px #607d8b solid">
+                    {% csrf_token %}
+                    {% material_formfield mentoringrequest_form.answer %}
+                    <div class="row">
+                        <div class="col">&nbsp;</div>
                     </div>
-                    <div class="col s6 activator red white-text valign-wrapper">
-                        <div>Deny</div>
+                    <div class="input-group">
+                        <span class="card-title blue-grey-text">Tutor 2</span>
+                        {% material_form mentoringrequest_tutor2_form %}
+                        {% material_formfield mentoringrequest_form.permission %}
                     </div>
-                </div>
+                    <div class="row">
+                        <div class="col">&nbsp;</div>
+                    </div>
+                    <div class="card-action acceptdeny">
+                        <div class="col s6 green white-text valign-wrapper">
+                            <button type="submit" name="accept">Accept</button>
+                        </div>
+                        <div class="col s6 red white-text valign-wrapper">
+                            <button type="submit" name="deny">Deny</button>
+                        </div>
+                    </div>
+                </form>
 
-                {% material_todo_reveal %}
             </div>
         </div>
     </div>
 
-    <form action="{{ form_action }}" method="post">
-        {% csrf_token %}
-        {% material_form mentoringrequest_form %}
-        {% material_form mentoringrequest_tutor2_form %}
 
-        <button type="submit" name="accept">accept</button>
-        <button type="submit" name="deny">deny</button>
+    <form action="{{ form_action }}" method="post" reveal-name="accept" class="col s12">
+        {% csrf_token %}
+
     </form>
+{% endblock %}
+
+
+{% block material_extra_script %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+        })
+    </script>
+
 {% endblock %}
