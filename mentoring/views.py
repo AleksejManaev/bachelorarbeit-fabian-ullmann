@@ -185,6 +185,7 @@ class ThesisRegistrationUpdateView(UpdateView):
     model = Registration
     form_class = FormRegistration
     template_name = 'student/thesis/registration/registration_form.html'
+    target = 'attachment'
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_registration()
@@ -197,8 +198,15 @@ class ThesisRegistrationUpdateView(UpdateView):
         reg = self.get_context_registration(data=request.POST)
         if (reg['thesis_registration_form'].is_valid()):
             return self.form_valid(reg['thesis_registration_form'])
+            self.save_pdf()
         else:
             return self.form_invalid(reg['thesis_registration_form'])
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.save_pdf()
+
+        return http.HttpResponseRedirect(self.get_success_url())
 
     def get_context_registration(self, data=None):
         registration = self.get_registration()
@@ -217,10 +225,7 @@ class ThesisRegistrationUpdateView(UpdateView):
     def get_success_url(self):
         return ''
 
-class ThesisRegistrationPDF(View):
-    target = 'attachment'
-
-    def get(self, request, *args, **kwargs):
+    def save_pdf(self):
         student = self.request.user.portaluser.student
 
         """
@@ -254,13 +259,11 @@ class ThesisRegistrationPDF(View):
         """
         Where to save the registration-pdf
         """
-        print(settings.MEDIA_ROOT)
-        directory = "{}/{}/thesis/registration/".format(settings.MEDIA_ROOT, request.user)
-        print(directory)
+        directory = "{}/{}/thesis/registration/".format(settings.MEDIA_ROOT, self.request.user)
         filename = 'Anmeldung-Abschlussarbeit-{firstn}-{lastn}.pdf'.format(directory=directory,
-                                                                           firstn=request.user.first_name,
-                                                                           lastn=request.user.last_name)
-        print(os.path)
+                                                                           firstn=self.request.user.first_name,
+                                                                           lastn=self.request.user.last_name)
+        directory = settings.BASE_DIR + directory
         if not os.path.exists(directory):
             os.makedirs(directory)
 
@@ -279,13 +282,28 @@ class ThesisRegistrationPDF(View):
             'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf output {directory}/{file}'.format(
                 mediaroot=settings.MEDIA_ROOT, directory=directory, file=filename))
 
-        with open('{}{}'.format(directory, filename), 'r') as pdf:
+        student.thesis.registration.pdf_file.name = '{}/thesis/registration/{}'.format(student.user, filename)
+        student.thesis.registration.save()
+
+
+class ThesisRegistrationPDFDownload(DetailView):
+    model = Registration
+    target = 'attachment'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if (hasattr(request.user.portaluser,
+                    'student')) and not self.object.pk == request.user.portaluser.student.thesis.registration.pk:
+            return http.HttpResponseForbidden()
+        print(self.object.pdf_file)
+        with open(settings.BASE_DIR + settings.MEDIA_ROOT + self.object.pdf_file.name, 'r') as pdf:
             response = http.HttpResponse(pdf.read(), content_type='application/pdf')
-            response['Content-Disposition'] = '{}; filename="{}"'.format(self.target, filename)
+            response['Content-Disposition'] = '{}; filename="Anmeldung_Abschlussarbeit.pdf"'.format(self.target)
             return response
         pdf.closed
 
-class ThesisRegistrationPDFPreview(ThesisRegistrationPDF):
+
+class ThesisRegistrationPDFDownloadPreview(ThesisRegistrationPDFDownload):
     target = 'inline'
 
 class ThesisPreviewView(DetailView):
@@ -426,7 +444,7 @@ class TutorMentoringView(UpdateView):
     form_class = FormMentoringTutor
 
     def get_object(self, queryset=None):
-        return Mentoring.objects.get(tutor1__user=self.request.user)
+        return Mentoring.objects.get(tutor_1__user=self.request.user)
 
 
 class TutorMentoringlistView(ListView):

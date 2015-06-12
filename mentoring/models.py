@@ -206,6 +206,7 @@ class Registration(models.Model):
     permission_public = models.BooleanField(_('permission public'), default=False)
     permission_library = models.BooleanField(_('permission library'), default=False)
     permission_library_tutor = models.BooleanField(_('permission library tutor'), default=False)
+    pdf_file = models.FileField(_('PDF File'), null=True, blank=True)
 
     def student(self):
         return self.mentoring.request.from_student()

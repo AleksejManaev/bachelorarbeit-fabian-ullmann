@@ -2,8 +2,9 @@
 {% load filter %}
 
 <ul id="dropdown_thesis_registration" class="dropdown-content">
-    <li><a href="{% url 'thesis-registration-preview' %}" class="fancybox fancybox.iframe">Preview</a></li>
-    <li><a href="{% url 'thesis-registration-pdf' %}">Download</a></li>
+    <li><a href="{% url 'thesis-registration-preview' thesis_registration_form.instance.pk %}"
+           class="fancybox fancybox.iframe">Preview</a></li>
+    <li><a href="{% url 'thesis-registration-pdf' thesis_registration_form.instance.pk %}">Download</a></li>
 </ul>
 <div class="card todo-list">
 
@@ -14,7 +15,8 @@
         {% material_form thesis_registration_form %}
     </div>
     <div class="card-action valign-wrapper">
-        <a href="{% url 'thesis-registration-preview' %}" class="fancybox fancybox.iframe col s12 center-align"
+        <a href="{% url 'thesis-registration-preview' thesis_registration_form.instance.pk %}"
+           class="fancybox fancybox.iframe col s12 center-align"
            type="submit" name="pdf">PDF</a>
     </div>
 </div>

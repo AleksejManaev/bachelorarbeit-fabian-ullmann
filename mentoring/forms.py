@@ -189,4 +189,4 @@ class FormRegistration(forms.ModelForm):
     class Meta:
         model = Registration
         fields = '__all__'
-        exclude = ['mentoring', 'permission_library_tutor']
+        exclude = ['mentoring', 'permission_library_tutor', 'pdf_file']

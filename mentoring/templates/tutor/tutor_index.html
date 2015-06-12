@@ -19,7 +19,7 @@
                             <li class="collection-item row">
                                 <a href="{% url 'tutor-request' request.pk %}" class="fancybox fancybox.iframe">
                                     <div class="request-message col s12">
-                                        <span class="title">{{ request.from_student }}</span>
+                                        <span class="title">{{ request.from_student }}<br/><small>{{ request.from_student.course }}</small></span>
 
                                         <small class="right">{{ request.requested_on|date }}</small>
                                         <div class="divider">&nbsp;</div>
@@ -53,35 +53,30 @@
     <div class="row">
         <div class="col s12">
 
-            <ul id="dropdown_requests" class="dropdown-content">
-                <li><a href="{% url 'tutor-requests' %}" class="fancybox fancybox.iframe">Show all</a></li>
+            <ul id="dropdown_mentorings" class="dropdown-content">
+                <li><a href="{% url 'tutor-mentorings' %}" class="fancybox fancybox.iframe">Show all</a></li>
             </ul>
 
             <div class="card">
-                {% material_card_header title='Mentoring' actions='dropdown_mentoring' %}
+                {% material_card_header title='Mentoring' actions='dropdown_mentorings' %}
                 <div class="card-content">
                     <ul class="collection">
                         {% for mentoring in object.mentorings %}
                             <li class="collection-item row">
                                 <a href="{% url 'tutor-mentoring' mentoring.pk %}" class="fancybox fancybox.iframe">
                                     <div class="request-message col s12">
-                                        <span class="title">{{ request.from_student }}</span>
+                                        <span class="title">{{ mentoring.thesis.student }}<br/><small>{{ mentoring.thesis.student.course }}</small></span>
 
-                                        <small class="right">{{ request.requested_on|date }}</small>
+                                        <small class="right">{{ mentoring.created_on|date }}</small>
                                         <div class="divider">&nbsp;</div>
-                                        <p class="request-desc">{{ request.comment }}</p>
+                                        <p class="request-desc">{{ mentoring.thesis.description }}</p>
 
-                                        <p>&nbsp;</p>
-                                        {% if not request.status == 'RE' %}
-                                            <div class="col s12 center-align">
-                                                {% if request.status == 'AC' %}
-                                                    <small class="green-text">{{ request.status|state }}
-                                                        on {{ request.mentoring.created_on|date }}</small>
-                                                {% else %}
-                                                    <small class="red-text">{{ request.status|state }}</small>
-                                                    </div>
-                                                {% endif %}
-                                        {% endif %}
+                                        <div class="row"></div>
+                                        <ul class="lv-attrs">
+                                            <li>2. Tutor: {{ mentoring.tutor2contactdata }}</li>
+                                            <li>Deadline: {{ mentoring.mentoringreport.date_deadline|date }}</li>
+                                            <li>Colloquium: {{ mentoring.colloquium.data_colloquium|date }}</li>
+                                        </ul>
                                     </div>
                                 </a>
                             </li>
