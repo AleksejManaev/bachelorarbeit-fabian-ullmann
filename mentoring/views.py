@@ -458,14 +458,16 @@ class TutorMentoringView(UpdateView):
         return self.render_to_response(cd)
 
     def get_object(self, queryset=None):
-        return Mentoring.objects.get(tutor_1__user=self.request.user)
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        return Mentoring.objects.get(pk=pk, tutor_1__user=self.request.user)
 
     def get_mentoring(self):
-        return Mentoring.objects.get(tutor_1__user=self.request.user)
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        return Mentoring.objects.get(pk=pk, tutor_1__user=self.request.user)
 
     def get_context_mentoring(self, data=None, **kwargs):
         mentoring = self.get_mentoring()
-        examinationboard = mentoring.registration.responseexaminationboard
+        examinationboard = ResponseExaminationBoard.objects.get_or_create(registration=mentoring.registration)[0]
         return {
             'thesis_registration_examinationboard_form': FormRegistrationExamination(data=data,
                                                                                      instance=examinationboard,

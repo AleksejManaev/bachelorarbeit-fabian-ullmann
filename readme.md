@@ -22,8 +22,8 @@ Zur Anmeldung am System stehen folgende User zur Verfügung:
 
 + student1 (pass: student1)
 + student2 (pass: student2)
-+ tutor2 (pass: tutor1)
-
++ tutor1 (pass: tutor1, email for request: tutor1@fh-brandenburg.de)
++ tutor2 (pass: tutor2, email for request: tutor2@fh-brandenburg.de)
 
 
 

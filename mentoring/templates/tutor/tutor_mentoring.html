@@ -73,8 +73,12 @@
                 </div>
                 <div class="card-content">
                     <i class="mdi-action-description"></i>
+                    {% if object.thesis.registration.pdf_file %}
                     <a href="{% url 'thesis-registration-preview' object.thesis.registration.pk %}"
                        class="fancybox fancybox.iframe" name="pdf">PDF</a>
+                    {% else %}
+                        <small>not created</small>
+                    {% endif %}
                 </div>
             </div>
             <div class="card">
