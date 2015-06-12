@@ -213,10 +213,10 @@ class Registration(models.Model):
 
 class ResponseExaminationBoard(models.Model):
     registration = models.OneToOneField(Registration)
-    start_editing = models.DateField(_('start editing'))
-    stop_editing = models.DateField(_('stop editing'))
-    extend_to = models.DateField(_('extended to'))
-    delivery = models.DateField(_('delivery thesis'))
+    start_editing = models.DateField(_('start editing'), null=True, blank=True)
+    stop_editing = models.DateField(_('stop editing'), null=True, blank=True)
+    extend_to = models.DateField(_('extended to'), null=True, blank=True)
+    delivery = models.DateField(_('delivery thesis'), null=True, blank=True)
 
 class Colloquium(models.Model):
     mentoring = models.OneToOneField(Mentoring)

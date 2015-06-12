@@ -198,13 +198,14 @@ class ThesisRegistrationUpdateView(UpdateView):
         reg = self.get_context_registration(data=request.POST)
         if (reg['thesis_registration_form'].is_valid()):
             return self.form_valid(reg['thesis_registration_form'])
-            self.save_pdf()
         else:
             return self.form_invalid(reg['thesis_registration_form'])
 
     def form_valid(self, form):
         self.object = form.save()
         self.save_pdf()
+        examinationboard = ResponseExaminationBoard.objects.get_or_create(registration=self.object)
+        examinationboard.save()
 
         return http.HttpResponseRedirect(self.get_success_url())
 
@@ -285,7 +286,6 @@ class ThesisRegistrationUpdateView(UpdateView):
         student.thesis.registration.pdf_file.name = '{}/thesis/registration/{}'.format(student.user, filename)
         student.thesis.registration.save()
 
-
 class ThesisRegistrationPDFDownload(DetailView):
     model = Registration
     target = 'attachment'
@@ -301,7 +301,6 @@ class ThesisRegistrationPDFDownload(DetailView):
             response['Content-Disposition'] = '{}; filename="Anmeldung_Abschlussarbeit.pdf"'.format(self.target)
             return response
         pdf.closed
-
 
 class ThesisRegistrationPDFDownloadPreview(ThesisRegistrationPDFDownload):
     target = 'inline'
@@ -428,7 +427,6 @@ class TutorMentoringrequestView(UpdateView):
         cd.update(forms)
         return self.render_to_response(cd, status=status)
 
-
 class TutorMentoringrequestlistView(ListView):
     model = MentoringRequest
     template_name = 'tutor/tutor_mentoringrequest_list.html'
@@ -436,16 +434,46 @@ class TutorMentoringrequestlistView(ListView):
     def get_queryset(self):
         return MentoringRequest.objects.filter(tutor_email=self.request.user.email)
 
-
 # TODO Sicherheit: Nur eigene Mentorings aufrufen mit pk
 class TutorMentoringView(UpdateView):
     model = Mentoring
     template_name = 'tutor/tutor_mentoring.html'
     form_class = FormMentoringTutor
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_mentoring()
+        reg = self.get_context_mentoring(data=request.POST)
+        if (reg['thesis_registration_examinationboard_form'].is_valid()):
+            reg['thesis_registration_examinationboard_form'].save()
+            return self.get(request, *args, **kwargs)
+        else:
+            cd = self.get_context_data(form=self.get_form())
+            cd.update(reg)
+            return self.render_to_response(cd)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_mentoring()
+        cd = self.get_context_data(form=self.get_form())
+        cd.update(self.get_context_mentoring())
+        return self.render_to_response(cd)
+
     def get_object(self, queryset=None):
         return Mentoring.objects.get(tutor_1__user=self.request.user)
 
+    def get_mentoring(self):
+        return Mentoring.objects.get(tutor_1__user=self.request.user)
+
+    def get_context_mentoring(self, data=None, **kwargs):
+        mentoring = self.get_mentoring()
+        examinationboard = mentoring.registration.responseexaminationboard
+        return {
+            'thesis_registration_examinationboard_form': FormRegistrationExamination(data=data,
+                                                                                     instance=examinationboard,
+                                                                                     prefix='examinationboard_form'),
+        }
+
+    def get_success_url(self):
+        return ''
 
 class TutorMentoringlistView(ListView):
     model = Mentoring
@@ -453,8 +481,6 @@ class TutorMentoringlistView(ListView):
 
     def get_queryset(self):
         return Mentoring.objects.filter(tutor_1__user=self.request.user)
-
-
 
 class StudentSettingsView(UpdateView):
     model = Student

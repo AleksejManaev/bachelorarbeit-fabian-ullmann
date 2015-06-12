@@ -95,12 +95,13 @@ $(document).ready(
             $('select').material_select();
         }
 
+
         if ($('.datepicker')[0]) {
             $('.datepicker').removeClass('validate');
             $('.datepicker').pickadate({
                 selectMonths: true, // Creates a dropdown to control month
                 selectYears: 15, // Creates a dropdown of 15 years to control year
-                format: 'yyyy-mm-dd'
+                format: 'yyyy-mm-dd',
             });
 
             $('.datepicker').on('change', function () {

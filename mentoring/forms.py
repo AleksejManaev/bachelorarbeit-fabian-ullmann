@@ -190,3 +190,10 @@ class FormRegistration(forms.ModelForm):
         model = Registration
         fields = '__all__'
         exclude = ['mentoring', 'permission_library_tutor', 'pdf_file']
+
+
+class FormRegistrationExamination(forms.ModelForm):
+    class Meta:
+        model = ResponseExaminationBoard
+        fields = '__all__'
+        exclude = ['registration']
