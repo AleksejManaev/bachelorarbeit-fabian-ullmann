@@ -543,15 +543,19 @@ class TutorMentoringView(TutorColloquiumView, ThesisRegistrationExaminationboard
 
     def get_context_mentoring(self, data=None, **kwargs):
         mentoring = self.get_mentoring()
-        examinationboard = ResponseExaminationBoard.objects.get_or_create(registration=mentoring.registration)[0]
+
         c = {
             'mentoring': mentoring,
         }
         c.update(self.get_context_examinationboard(data))
+        c.update(self.get_context_colloquium(data))
         return c
 
-    def get_colloquium(self, queryset=None):
+    def get_examinationboard(self, queryset=None):
         return self.object.thesis.registration.responseexaminationboard
+
+    def get_colloquium(self, queryset=None):
+        return self.object.colloquium
 
     def get_success_url(self):
         return ''

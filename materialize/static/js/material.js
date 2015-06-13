@@ -119,7 +119,7 @@ $(document).ready(
         }
 
         $('.timepicker').pickatime({
-                format: 'hh:i'
+                format: 'HH:i'
             }
         );
 

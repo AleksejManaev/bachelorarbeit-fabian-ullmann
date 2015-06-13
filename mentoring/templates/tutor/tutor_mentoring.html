@@ -5,20 +5,6 @@
 
     <div class="row">
         <div class="col s12 m8 right">
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title blue-grey-text">Report</span>
-                </div>
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <div class="card-content">
-                        {% material_form thesis_registration_examinationboard_form %}
-                    </div>
-                    <div class="card-action valign-wrapper">
-                        <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
-                    </div>
-                </form>
-            </div>
 
         </div>
         <div class="col s12 m4 left">
@@ -27,19 +13,9 @@
                 {% csrf_token %}
                 {% include 'widget/thesis_examinationboard_widget.html' %}
             </form>
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title blue-grey-text">Colloquium</span>
-                </div>
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <div class="card-content">
-                        {% material_form thesis_registration_examinationboard_form %}
-                    </div>
-                    <div class="card-action valign-wrapper">
-                        <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
-                    </div>
-                </form>
+            <form action="{% url 'tutor-mentoring-colloquium' mentoring.pk %}" method="post">
+                {% include 'widget/thesis_colloquium_widget.html' %}
+            </form>
             </div>
         </div>
 
