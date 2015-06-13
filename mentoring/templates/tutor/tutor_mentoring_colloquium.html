@@ -2,7 +2,7 @@
 {% load material %}
 
 {% block material_content %}
-    <form action="{% url 'tutor-mentoring-deadline' colloquium.mentoring.pk %}" method="post">
+    <form action="{% url 'tutor-mentoring-colloquium' colloquium.mentoring.pk %}" method="post">
         {% include 'widget/thesis_colloquium_widget.html' %}
     </form>
 {% endblock %}

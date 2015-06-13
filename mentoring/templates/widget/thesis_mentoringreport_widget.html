@@ -4,28 +4,35 @@
     <div class="card-header">
         <span class="card-title blue-grey-text">Report</span>
     </div>
+    <div class="card-action valign-wrapper" style="border-bottom: 1px solid rgba(160, 160, 160, 0.2);">
+        <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
+    </div>
     {% csrf_token %}
     <div class="card-content">
         {% material_form thesis_mentoringreport_form %}
 
+        <div class="collection row">
+            {{ thesis_mentoringreport_formset.management_form }}
+            {% for form in thesis_mentoringreport_formset reversed %}
+                <div class="collection-item">
+                    <div class="col s12 m2">{{ form.instance.created_on|date }}{{ form.id }}</div>
+                    <div class="col s12{% if form.instance.pk %} m10{% endif %}">{% material_formfield form.subject %}</div>
+                    <div class="col s12{% if form.instance.pk %} m10 offset-m2{% endif %}">{% material_formfield form.message %}</div>
+                </div>
+            {% endfor %}
+
+        </div>
         <table>
             <thead>
             <tr>
-                <th data-field="date">Date</th>
-                <th data-field="subject">Subject</th>
-                <th data-field="message">Message</th>
+                {#                <th data-field="date">Date</th>#}
+                {#                <th data-field="subject">Subject</th>#}
+                {#                <th data-field="message">Message</th>#}
             </tr>
 
             </thead>
             <tbody>
-            {{ thesis_mentoringreport_formset.management_form }}
-            {% for form in thesis_mentoringreport_formset %}
-                <tr>
-                    <td>{{ form.instance.created_on|date }}{{ form.id }}</td>
-                    <td>{{ form.subject }}</td>
-                    <td>{{ form.message }}</td>
-                </tr>
-            {% endfor %}
+
             </tbody>
         </table>
 

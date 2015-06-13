@@ -493,3 +493,7 @@ div.dropdown-button {
 p.overline {
     border-top: solid 1px;
 }
+
+tr > td {
+    vertical-align: top;
+}
