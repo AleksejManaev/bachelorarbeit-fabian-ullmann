@@ -4,6 +4,48 @@
 {% block material_content %}
 
     <div class="row">
+        <div class="col s12 m8 right">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title blue-grey-text">Report</span>
+                </div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="card-content">
+                        {% material_form thesis_registration_examinationboard_form %}
+                    </div>
+                    <div class="card-action valign-wrapper">
+                        <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <div class="col s12 m4 left">
+            <form action="{% url 'thesis-registration-examinationboard' examinationboard.registration.pk %}"
+                  method="post">
+                {% csrf_token %}
+                {% include 'widget/thesis_examinationboard_widget.html' %}
+            </form>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title blue-grey-text">Colloquium</span>
+                </div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="card-content">
+                        {% material_form thesis_registration_examinationboard_form %}
+                    </div>
+                    <div class="card-action valign-wrapper">
+                        <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    {% material_divider %}
+    <div class="row">
         <div class="col s12 m8">
             <div class="card">
                 <div class="card-header">
@@ -74,28 +116,15 @@
                 <div class="card-content">
                     <i class="mdi-action-description"></i>
                     {% if object.thesis.registration.pdf_file %}
-                    <a href="{% url 'thesis-registration-preview' object.thesis.registration.pk %}"
-                       class="fancybox fancybox.iframe" name="pdf">PDF</a>
+                        <a href="{% url 'thesis-registration-preview' object.thesis.registration.pk %}"
+                           class="fancybox fancybox.iframe" name="pdf">PDF</a>
                     {% else %}
                         <small>not created</small>
                     {% endif %}
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title blue-grey-text">Examination Board</span>
-                </div>
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <div class="card-content">
-                        {% material_form thesis_registration_examinationboard_form %}
-                    </div>
-                    <div class="card-action valign-wrapper">
-                        <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
-                    </div>
-                </form>
-            </div>
         </div>
+
     </div>
 
 
@@ -106,3 +135,5 @@
         <button type="submit">submit</button>
     </form>
 {% endblock %}
+
+{% block material_extra_script %}{% material_todo_js %}{% endblock %}

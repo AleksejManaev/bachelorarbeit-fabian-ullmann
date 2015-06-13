@@ -49,6 +49,8 @@ urlpatterns = [
         name='thesis-registration-preview'),
     url(r'^thesis/registration/(?P<pk>\d+)/pdf/$', ThesisRegistrationPDFDownload.as_view(),
         name='thesis-registration-pdf'),
+    url(r'^thesis/registration/(?P<pk>\d+)/examinationboard/', ThesisRegistrationExaminationboardView.as_view(),
+        name='thesis-registration-examinationboard'),
     url(r'^thesis/preview/$', ThesisPreviewView.as_view(), name='thesis-preview'),
 
 
@@ -58,4 +60,5 @@ urlpatterns = [
     url(r'^tutor/requests/', TutorMentoringrequestlistView.as_view(), name='tutor-requests'),
     url(r'^tutor/mentoring/(?P<pk>\d+)/', TutorMentoringView.as_view(), name='tutor-mentoring'),
     url(r'^tutor/mentorings/', TutorMentoringlistView.as_view(), name='tutor-mentorings'),
+
 ]

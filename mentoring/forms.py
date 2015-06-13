@@ -123,6 +123,13 @@ class FormThesis(forms.ModelForm):
             'description': forms.Textarea()
         }
 
+
+class FormStudent(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = '__all__'
+
+
 FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fields=['description'], extra=1,
                                                  fk_name='work', can_delete=False)
 FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, CompanyContactData, fields='__all__', extra=1,
@@ -191,9 +198,20 @@ class FormRegistration(forms.ModelForm):
         fields = '__all__'
         exclude = ['mentoring', 'permission_library_tutor', 'pdf_file']
 
-
 class FormRegistrationExamination(forms.ModelForm):
     class Meta:
         model = ResponseExaminationBoard
         fields = '__all__'
         exclude = ['registration']
+
+
+class FormColloquium(forms.ModelForm):
+    class Meta:
+        model = Colloquium
+        fields = '__all__'
+
+
+class FormMentoringReport(forms.ModelForm):
+    class Meta:
+        model = MentoringReport
+        fields = '__all__'

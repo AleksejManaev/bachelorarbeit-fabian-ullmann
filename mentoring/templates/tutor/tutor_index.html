@@ -63,8 +63,8 @@
                     <ul class="collection">
                         {% for mentoring in object.mentorings %}
                             <li class="collection-item row">
-                                <a href="{% url 'tutor-mentoring' mentoring.pk %}" class="fancybox fancybox.iframe">
-                                    <div class="request-message col s12">
+                                <div class="request-message col s12">
+                                    <a href="{% url 'tutor-mentoring' mentoring.pk %}" class="fancybox fancybox.iframe">
                                         <span class="title">{{ mentoring.thesis.student }}<br/><small>{{ mentoring.thesis.student.course }}</small></span>
 
                                         <small class="right">{{ mentoring.created_on|date }}</small>
@@ -72,13 +72,18 @@
                                         <p class="request-desc">{{ mentoring.thesis.description }}</p>
 
                                         <div class="row"></div>
-                                        <ul class="lv-attrs">
-                                            <li>2. Tutor: {{ mentoring.tutor2contactdata }}</li>
-                                            <li>Deadline: {{ mentoring.mentoringreport.date_deadline|date }}</li>
-                                            <li>Colloquium: {{ mentoring.colloquium.data_colloquium|date }}</li>
-                                        </ul>
-                                    </div>
-                                </a>
+                                    </a>
+                                    <ul class="lv-attrs">
+                                        <li>2. Tutor: {{ mentoring.tutor2contactdata }}</li>
+                                        <li>Deadline: {{ mentoring.mentoringreport.date_deadline|date }}</li>
+                                        <li>Colloquium: {{ mentoring.colloquium.data_colloquium|date }}</li>
+                                        <li>
+                                            <a href="{% url 'thesis_registration_examinationboard' mentoring.thesis.registration.pk %}"
+                                               class="fancybox fancybox.ajax">Examination
+                                                Board: {{ mentoring.thesis.registration.responseexaminationboard.stop_editing|date }}</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                         {% empty %}
                             <small class="center-align col s12">no requests</small>

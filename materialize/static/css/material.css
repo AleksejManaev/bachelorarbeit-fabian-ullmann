@@ -408,10 +408,6 @@ div.dropdown-button {
     margin-bottom: 20px;
 }
 
-.student-overview #content > div.row:first-child {
-    margin-bottom: 120px;
-}
-
 .for-reveal {
     display: none;
 }
