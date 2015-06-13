@@ -15,7 +15,7 @@
         {% material_form thesis_registration_form %}
     </div>
     <div class="card-action valign-wrapper">
-        <a href="{% url 'thesis-registration-preview' thesis_registration_form.instance.pk %}"
+        <a href="{% url 'thesis-registration-pdf' thesis_registration_form.instance.pk %}"
            class="fancybox fancybox.iframe col s12 center-align"
            type="submit" name="pdf">PDF</a>
     </div>

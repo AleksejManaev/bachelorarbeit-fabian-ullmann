@@ -6,16 +6,25 @@
     {% else %}
         <li><a href="{% url 'placement-preview' %}" class="fancybox fancybox.iframe">Preview</a></li>
         <li><a href="{% url 'placement-update-todo' %}?editMode=true" class="">Edit Mode</a></li>
-
     {% endif %}
 </ul>
 
 <div class="card todo-list">
 
+    {% if not placement.finished %}
+        {% material_card_header title='Placement' actions='dropdown_placement' %}
+    {% else %}
+        <div class="card-header green white-text">
+            <div class="card-title">Placement</div>
+            <div class="actions">
+                <a href="{% url 'placement-update-todo' %}?editMode=true" class="fancybox fancybox.iframe"><i
+                        class="mdi-image-edit white-text"></i></a>
+                <a href="{% url 'placement-preview' %}" class="fancybox fancybox.iframe"><i
+                        class="mdi-av-my-library-books white-text"></i></a></div>
+        </div>
+    {% endif %}
 
-    {% material_card_header title='Placement' actions='dropdown_placement' %}
-
-    <div class="card-content">
+    <div class="card-content{% if placement.finished %} hide{% endif %}">
         {% material_todo_formfields placement_form exclude='public' %}
         {% material_todo_item_begin %}
         {% material_todo_item_activator id='id_placement_company_todo' label='Company' %}
@@ -35,11 +44,11 @@
 
         {% material_formfield placement_form.public %}
         {# {% material_todo_formsetfields placement_contact_formset item_group=True %}#}
-    </div>
-    <div class="card-action valign-wrapper">
-        {% if not placement.finished %}
+        </div>
+    {% if not placement.finished %}
+        <div class="card-action valign-wrapper">
             <a href="#" type="submit" name="finish" class="col s12 center-align">Finish</a>
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
     {% material_todo_reveal %}
 </div>

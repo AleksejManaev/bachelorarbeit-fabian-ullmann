@@ -38,6 +38,8 @@ urlpatterns = [
         ThesisMentoringrequestUpdateView.as_view(
             template_name='student/thesis/mentoringrequest/mentoringrequest_todo_form.html'),
         name='thesis-mentoringrequest-update-todo'),
+    url(r'^thesis/mentoring-request/preview/$', ThesisMentoringrequestView.as_view(),
+        name='thesis-mentoringrequest-preview'),
 
     url(r'^thesis/registration/update/$',
         ThesisRegistrationUpdateView.as_view(),

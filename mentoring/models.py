@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
@@ -233,30 +231,24 @@ class CompanyRating(models.Model):
     comment = models.TextField(_('comment'))
     public = models.BooleanField(default=False)
 
-@receiver(post_save, sender=MentoringRequest)
-def post_save_mentoring(sender, instance, created, **kwargs):
-    print "post_save_mentoringrequest"
-    if instance.status == 'AC':
-        print(instance.status)
-
-@receiver(post_save, sender=Student)
-def post_save_student(sender, instance, created, **kwargs):
-    if created:
-        placement = Placement.objects.get_or_create(student=instance)[0]
-        thesis = Thesis.objects.get_or_create(student=instance)[0]
-
-        CompanyContactData.objects.get_or_create(
-            work_company=WorkCompany.objects.get_or_create(
-                work=placement)[0])
-        CompanyContactData.objects.get_or_create(
-            work_company=WorkCompany.objects.get_or_create(
-                work=thesis)[0])
-        mr = MentoringRequest(status='NR')
-        mr.thesis = thesis
-        mr.save()
-        # Mentoring.objects.get_or_create(thesis=thesis, tutor_1=mr)
-        Address.objects.get_or_create(portal_user=instance)
-
-@receiver(post_delete, sender=CompanyContactData)
-def post_delete_contactdata(sender, instance, using, **kwargs):
-    CompanyContactData.objects.get_or_create(work_company=instance.work_company)
+# @receiver(post_save, sender=Student)
+# def post_save_student(sender, instance, created, **kwargs):
+#     if created:
+#         placement = Placement.objects.get_or_create(student=instance)[0]
+#         thesis = Thesis.objects.get_or_create(student=instance)[0]
+#
+#         CompanyContactData.objects.get_or_create(
+#             work_company=WorkCompany.objects.get_or_create(
+#                 work=placement)[0])
+#         CompanyContactData.objects.get_or_create(
+#             work_company=WorkCompany.objects.get_or_create(
+#                 work=thesis)[0])
+#         mr = MentoringRequest(status='NR')
+#         mr.thesis = thesis
+#         mr.save()
+#         # Mentoring.objects.get_or_create(thesis=thesis, tutor_1=mr)
+#         Address.objects.get_or_create(portal_user=instance)
+#
+# @receiver(post_delete, sender=CompanyContactData)
+# def post_delete_contactdata(sender, instance, using, **kwargs):
+#     CompanyContactData.objects.get_or_create(work_company=instance.work_company)

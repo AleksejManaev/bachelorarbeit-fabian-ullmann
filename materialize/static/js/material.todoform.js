@@ -36,8 +36,9 @@
                     $(this.instance).find('.card-action [name=finish]').on('click', function () {
                         form.saveFinal();
                     });
-                    $(this.instance).find('.card-action [name=pdf]').on('click', function () {
-                        form.savePDF();
+                    $(this.instance).find('.card-action [name=pdf]').on('click', function (e) {
+                        form.savePDF(e);
+                        return false;
                     });
                 },
                 getPostData: function () {
@@ -81,7 +82,7 @@
                             error: error,
                         });
                 },
-                savePDF: function () {
+                savePDF: function (e) {
                     // Todo onSuccess Finish-Button entfernen und actions aktualisieren
                     var postData = this.getPostData();
                     this.sendForm(
@@ -89,10 +90,10 @@
                         function (data, textStatus, jqXHR) {
                             //data: return data from server
                             Materialize.toast("pdf generated", 2000, 'green');
+                            window.location.href = e.target.href;
                         },
                         function (jqXHR, textStatus, errorThrown) {
                             Materialize.toast("pdf not generated!", 5000, 'red');
-
                         });
                 },
                 saveFinal: function () {

@@ -183,6 +183,14 @@ class ThesisMentoringrequestUpdateView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
 
+
+class ThesisMentoringrequestView(DetailView):
+    model = MentoringRequest
+    template_name = 'student/thesis/mentoringrequest/mentoringrequest.html'
+
+    def get_object(self, queryset=None):
+        return self.request.user.portaluser.student.thesis.mentoringrequest
+
 class ThesisRegistrationUpdateView(UpdateView):
     model = Registration
     form_class = FormRegistration
@@ -206,10 +214,15 @@ class ThesisRegistrationUpdateView(UpdateView):
     def form_valid(self, form):
         self.object = form.save()
         self.save_pdf()
-        examinationboard = ResponseExaminationBoard.objects.get_or_create(registration=self.object)
+        examinationboard = ResponseExaminationBoard.objects.get_or_create(registration=self.object)[0]
         examinationboard.save()
 
-        return http.HttpResponseRedirect(self.get_success_url())
+        with open(settings.BASE_DIR + settings.MEDIA_ROOT + self.object.pdf_file.name, 'r') as pdf:
+            response = http.HttpResponse(pdf.read(), content_type='application/pdf')
+            response['Content-Disposition'] = '{}; filename="Anmeldung_Abschlussarbeit.pdf"'.format(self.target)
+            return response
+        pdf.closed
+
 
     def get_context_registration(self, data=None):
         registration = self.get_registration()

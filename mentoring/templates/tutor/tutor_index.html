@@ -65,11 +65,11 @@
                             <li class="collection-item row">
                                 <div class="request-message col s12">
                                     <a href="{% url 'tutor-mentoring' mentoring.pk %}" class="fancybox fancybox.iframe">
-                                        <span class="title">{{ mentoring.thesis.student }}<br/><small>{{ mentoring.thesis.student.course }}</small></span>
+                                        <span class="title"><b>{{ mentoring.thesis.student }}</b><br/><small>{{ mentoring.thesis.student.course }}</small></span>
 
                                         <small class="right">{{ mentoring.created_on|date }}</small>
                                         <div class="divider">&nbsp;</div>
-                                        <p class="request-desc">{{ mentoring.thesis.description }}</p>
+                                        <p class="request-desc">{{ mentoring.thesis.registration.subject }}</p>
 
                                         <div class="row"></div>
                                     </a>
@@ -100,7 +100,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     {# END  MENTORINGS  #}
 {% endblock %}
