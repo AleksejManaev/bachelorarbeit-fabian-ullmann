@@ -7,7 +7,28 @@
     {% csrf_token %}
     <div class="card-content">
         {% material_form thesis_mentoringreport_form %}
-        {% material_formset thesis_mentoringreport_formset %}
+
+        <table>
+            <thead>
+            <tr>
+                <th data-field="date">Date</th>
+                <th data-field="subject">Subject</th>
+                <th data-field="message">Message</th>
+            </tr>
+
+            </thead>
+            <tbody>
+            {{ thesis_mentoringreport_formset.management_form }}
+            {% for form in thesis_mentoringreport_formset %}
+                <tr>
+                    <td>{{ form.instance.created_on|date }}{{ form.id }}</td>
+                    <td>{{ form.subject }}</td>
+                    <td>{{ form.message }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
     </div>
     <div class="card-action valign-wrapper">
         <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>

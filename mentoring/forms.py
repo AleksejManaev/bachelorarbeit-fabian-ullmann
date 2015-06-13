@@ -219,4 +219,4 @@ class FormMentoringReport(forms.ModelForm):
         exclude = ['mentoring']
 
 
-FormsetReportItems = forms.inlineformset_factory(MentoringReport, MentoringReportItem, fields='__all__')
+FormsetReportItems = forms.inlineformset_factory(MentoringReport, MentoringReportItem, fields='__all__', extra=1)

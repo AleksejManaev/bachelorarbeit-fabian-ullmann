@@ -544,10 +544,12 @@ class TutorMentoringReportView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_mentoringreport()
         c = self.get_context_mentoringreport(data=request.POST)
-        form = c['thesis_colloquium_form']
+        form = c['thesis_mentoringreport_form']
+        formset = c['thesis_mentoringreport_formset']
 
-        if form.is_valid():
+        if form.is_valid() and formset.is_valid():
             form.save()
+            formset.save()
             return http.HttpResponseRedirect(self.get_success_url())
         else:
             cd = self.get_context_data()

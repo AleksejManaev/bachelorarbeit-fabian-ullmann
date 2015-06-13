@@ -192,7 +192,7 @@ class MentoringReport(models.Model):
     date_deadline = models.DateField(_('date deadline'), null=True, blank=True)
 
 class MentoringReportItem(models.Model):
-    report = models.OneToOneField(MentoringReport)
+    report = models.ForeignKey(MentoringReport)
     subject = models.CharField(_('subject'), max_length=100)
     message = models.TextField(_('message'), null=True, blank=True)
     created_on = models.DateTimeField(auto_created=True, auto_now_add=True)
