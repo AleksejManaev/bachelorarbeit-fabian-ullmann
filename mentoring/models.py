@@ -191,6 +191,9 @@ class MentoringReport(models.Model):
     date_initial_meeting = models.DateField(_('date initial meeting'), null=True, blank=True)
     date_deadline = models.DateField(_('date deadline'), null=True, blank=True)
 
+    def items(self):
+        return MentoringReportItem.objects.filter(report=self)
+
 class MentoringReportItem(models.Model):
     report = models.ForeignKey(MentoringReport)
     subject = models.CharField(_('subject'), max_length=100)

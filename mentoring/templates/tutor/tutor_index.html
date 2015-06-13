@@ -75,7 +75,12 @@
                                     </a>
                                     <ul class="lv-attrs">
                                         <li>2. Tutor: {{ mentoring.tutor2contactdata }}</li>
-                                        <li>Deadline: {{ mentoring.mentoringreport.date_deadline|date }}</li>
+                                        <li>
+                                            <a href="{% url 'tutor-mentoring-report' mentoring.pk %}"
+                                               class="fancybox fancybox.iframe">
+                                                Report: {{ mentoring.mentoringreport.items|length }}
+                                            </a>
+                                        </li>
                                         <li>
                                             <a href="{% url 'tutor-mentoring-colloquium' mentoring.thesis.registration.pk %}"
                                                class="fancybox fancybox.iframe">

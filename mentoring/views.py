@@ -566,7 +566,6 @@ class TutorMentoringReportView(UpdateView):
     def get_success_url(self):
         return ''
 
-
 class TutorMentoringView(TutorMentoringReportView, TutorColloquiumView, ThesisRegistrationExaminationboardView):
     model = Mentoring
     template_name = 'tutor/tutor_mentoring.html'
