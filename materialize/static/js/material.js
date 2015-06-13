@@ -118,6 +118,11 @@ $(document).ready(
             })
         }
 
+        $('.timepicker').pickatime({
+                format: 'hh:i'
+            }
+        );
+
         $("form").materialform();
         $(".dropdown-button").dropdown();
         $('.fancybox').fancybox();

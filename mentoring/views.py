@@ -444,7 +444,6 @@ class ThesisRegistrationExaminationboardView(UpdateView):
 
     def get_context_examinationboard(self, data=None, **kwargs):
         examinationboard = self.get_examinationboard()
-        print(examinationboard.registration.pk)
         return {
             'examinationboard': examinationboard,
             'thesis_registration_examinationboard_form': FormRegistrationExamination(data=data,
@@ -481,30 +480,27 @@ class ThesisRegistrationExaminationboardView(UpdateView):
         return ''
 
 
-class ThesisColloquiumView(UpdateView):
+class TutorColloquiumView(UpdateView):
     model = Colloquium
     template_name = 'widget/thesis_colloquium.html'
     form_class = FormColloquium
 
-    def get_context_examinationboard(self, data=None, **kwargs):
-        examinationboard = self.get_examinationboard()
-        print(examinationboard.registration.pk)
+    def get_context_colloquium(self, data=None, **kwargs):
+        colloquium = self.get_colloquium()
         return {
-            'examinationboard': examinationboard,
-            'thesis_registration_examinationboard_form': FormRegistrationExamination(data=data,
-                                                                                     instance=examinationboard,
-                                                                                     prefix='examinationboard_form'),
+            'colloquium': colloquium,
+            'thesis_colloquium_form': FormColloquium(data=data, instance=colloquium, prefix='colloquium_form'),
         }
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_examinationboard()
-        c = self.get_context_examinationboard()
+        self.object = self.get_colloquium()
+        c = self.get_context_colloquium()
         return self.render_to_response(c)
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_examinationboard()
-        c = self.get_context_examinationboard(data=request.POST)
-        form = c['thesis_registration_examinationboard_form']
+        self.object = self.get_colloquium()
+        c = self.get_context_colloquium(data=request.POST)
+        form = c['thesis_colloquium_form']
 
         if form.is_valid():
             form.save()
@@ -514,18 +510,18 @@ class ThesisColloquiumView(UpdateView):
             cd.update(c)
             return self.render_to_response(cd)
 
-    def get_examinationboard(self, queryset=None):
+    def get_colloquium(self, queryset=None):
         return self.get_object()
 
     def get_object(self, queryset=None):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
-        return Registration.objects.get(pk=pk).responseexaminationboard
+        return Colloquium.objects.get_or_create(mentoring_id=pk)[0]
 
     def get_success_url(self):
         return ''
 
 
-class TutorMentoringView(ThesisColloquiumView, ThesisRegistrationExaminationboardView):
+class TutorMentoringView(TutorColloquiumView, ThesisRegistrationExaminationboardView):
     model = Mentoring
     template_name = 'tutor/tutor_mentoring.html'
     form_class = FormMentoringTutor
@@ -554,7 +550,7 @@ class TutorMentoringView(ThesisColloquiumView, ThesisRegistrationExaminationboar
         c.update(self.get_context_examinationboard(data))
         return c
 
-    def get_examinationboard(self, queryset=None):
+    def get_colloquium(self, queryset=None):
         return self.object.thesis.registration.responseexaminationboard
 
     def get_success_url(self):

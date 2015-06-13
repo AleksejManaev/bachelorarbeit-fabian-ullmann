@@ -209,6 +209,7 @@ class FormColloquium(forms.ModelForm):
     class Meta:
         model = Colloquium
         fields = '__all__'
+        exclude = ['mentoring']
 
 
 class FormMentoringReport(forms.ModelForm):

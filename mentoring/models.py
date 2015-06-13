@@ -220,7 +220,8 @@ class ResponseExaminationBoard(models.Model):
 
 class Colloquium(models.Model):
     mentoring = models.OneToOneField(Mentoring)
-    date_colloquium = models.DateTimeField(_('date colloquium'))
+    date = models.DateField(_('date'), null=True, blank=True)
+    time = models.TimeField(_('time'), null=True, blank=True)
 
 class CompanyRating(models.Model):
     rate = models.PositiveSmallIntegerField(_('rate'))

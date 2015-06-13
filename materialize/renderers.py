@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.forms import ReadOnlyPasswordHashWidget
 from bs4 import BeautifulSoup
 from django.forms import (
-    DateInput, ClearableFileInput, RadioSelect, NumberInput, Select)
+    DateInput, ClearableFileInput, RadioSelect, NumberInput, Select, TimeInput)
 from .forms.widgets import SelectAddNew
 from django.forms.extras import SelectDateWidget
 from django.forms.forms import BaseForm, BoundField
@@ -460,6 +460,11 @@ class FieldRenderer(BaseRenderer):
             bs = BeautifulSoup(html)
             bs.input['class'].append('datepicker')
             html = str(bs)
+        elif isinstance(self.widget, TimeInput):
+            bs = BeautifulSoup(html)
+            bs.input['class'].append('timepicker')
+            html = str(bs)
+
         return html
 
     def make_input_group(self, html):

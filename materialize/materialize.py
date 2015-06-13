@@ -21,6 +21,7 @@ MATERIALIZE_DEFAULTS = {
     'materialize_css_offline': '/static/css/materialize.min.css',
     'materialize_js_url': '//cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js',
     'materialize_js_offline': '/static/js/materialize.min.js',
+    'pickadate_'
     'animate_url': '/static/vendors/animate-css/animate.min.css',
     'fancybox_js_url': '/static/vendors/fancybox/js/jquery.fancybox.pack.js?v=2.1.5',
     'fancybox_css_url': '/static/vendors/fancybox/css/jquery.fancybox.css?v=2.1.5',
