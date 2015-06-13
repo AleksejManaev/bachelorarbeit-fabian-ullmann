@@ -102,3 +102,4 @@ Funktionert noch nicht mit LDAP
 #### Kolloquium ####
 
 + Gutachter können Kolloquiumstermin und Uhrzeit festlegen
++ Gutachter können Raum eintragen

@@ -1,0 +1,8 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
+{% load material %}
+
+{% block material_content %}
+    <form action="{% url 'tutor-mentoring-report' mentoringreport.mentoring.pk %}" method="post">
+        {% include 'widget/thesis_mentoringreport_widget.html' %}
+    </form>
+{% endblock %}

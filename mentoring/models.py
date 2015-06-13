@@ -225,6 +225,7 @@ class Colloquium(models.Model):
     mentoring = models.OneToOneField(Mentoring)
     date = models.DateField(_('date'), null=True, blank=True)
     time = models.TimeField(_('time'), null=True, blank=True)
+    room = models.TextField(_('room'), null=True, blank=True, max_length=100)
 
 class CompanyRating(models.Model):
     rate = models.PositiveSmallIntegerField(_('rate'))
