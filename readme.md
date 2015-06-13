@@ -90,9 +90,15 @@ Funktionert noch nicht mit LDAP
 
 ### Gutachterfunktionen ###
 
-#### Betreuungsanfrage ###
+#### Betreuung ####
 
 + Gutachter können Anfragen ablehnen
 + Gutachter können Anfragen annehmen 
 + Gutachter können Zweit-Gutachter erfassen
++ Gutachter können Erstgespräch festhalten
++ Gutachter können Verlaufsprotokoll pflegen
++ Gutachter können Abgabetermin festlegen
 
+#### Kolloquium ####
+
++ Gutachter können Kolloquiumstermin und Uhrzeit festlegen
