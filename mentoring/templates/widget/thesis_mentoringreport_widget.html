@@ -1,0 +1,15 @@
+{% load material %}
+
+<div class="card todo-list">
+    <div class="card-header">
+        <span class="card-title blue-grey-text">Report</span>
+    </div>
+    {% csrf_token %}
+    <div class="card-content">
+        {% material_form thesis_mentoringreport_form %}
+        {% material_formset thesis_mentoringreport_formset %}
+    </div>
+    <div class="card-action valign-wrapper">
+        <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
+    </div>
+</div>

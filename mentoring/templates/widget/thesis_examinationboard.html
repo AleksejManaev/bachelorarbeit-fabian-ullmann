@@ -1,0 +1,8 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
+{% load material %}
+
+{% block material_content %}
+    <form action="{% url 'thesis-registration-examinationboard' examinationboard.registration.pk %}" method="post">
+        {% include 'widget/thesis_examinationboard_widget.html' %}
+    </form>
+{% endblock %}

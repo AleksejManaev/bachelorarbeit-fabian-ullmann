@@ -61,5 +61,6 @@ urlpatterns = [
     url(r'^tutor/mentorings/', TutorMentoringlistView.as_view(), name='tutor-mentorings'),
     url(r'^tutor/mentoring/(?P<pk>\d+)/$', TutorMentoringView.as_view(), name='tutor-mentoring'),
     url(r'^tutor/mentoring/(?P<pk>\d+)/colloquium/$', TutorColloquiumView.as_view(), name='tutor-mentoring-colloquium'),
+    url(r'^tutor/mentoring/(?P<pk>\d+)/report/$', TutorMentoringReportView.as_view(), name='tutor-mentoring-report'),
 
 ]

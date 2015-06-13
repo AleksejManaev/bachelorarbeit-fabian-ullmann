@@ -482,7 +482,7 @@ class ThesisRegistrationExaminationboardView(UpdateView):
 
 class TutorColloquiumView(UpdateView):
     model = Colloquium
-    template_name = 'widget/thesis_colloquium.html'
+    template_name = 'tutor/tutor_mentoring_colloquium.html'
     form_class = FormColloquium
 
     def get_context_colloquium(self, data=None, **kwargs):
@@ -521,7 +521,51 @@ class TutorColloquiumView(UpdateView):
         return ''
 
 
-class TutorMentoringView(TutorColloquiumView, ThesisRegistrationExaminationboardView):
+class TutorMentoringReportView(UpdateView):
+    model = MentoringReport
+    template_name = 'tutor/tutor_mentoring_report.html'
+    form_class = FormMentoringReport
+
+    def get_context_mentoringreport(self, data=None, **kwargs):
+        mentoringreport = self.get_mentoringreport()
+        return {
+            'mentoringreport': mentoringreport,
+            'thesis_mentoringreport_form': FormMentoringReport(data=data, instance=mentoringreport,
+                                                               prefix='mentoringreport_form'),
+            'thesis_mentoringreport_formset': FormsetReportItems(data=data, instance=mentoringreport,
+                                                                 prefix='mentoringreport_formset'),
+        }
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_mentoringreport()
+        c = self.get_context_mentoringreport()
+        return self.render_to_response(c)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_mentoringreport()
+        c = self.get_context_mentoringreport(data=request.POST)
+        form = c['thesis_colloquium_form']
+
+        if form.is_valid():
+            form.save()
+            return http.HttpResponseRedirect(self.get_success_url())
+        else:
+            cd = self.get_context_data()
+            cd.update(c)
+            return self.render_to_response(cd)
+
+    def get_mentoringreport(self, queryset=None):
+        return self.get_object()
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        return MentoringReport.objects.get_or_create(mentoring_id=pk)[0]
+
+    def get_success_url(self):
+        return ''
+
+
+class TutorMentoringView(TutorMentoringReportView, TutorColloquiumView, ThesisRegistrationExaminationboardView):
     model = Mentoring
     template_name = 'tutor/tutor_mentoring.html'
     form_class = FormMentoringTutor
@@ -549,13 +593,17 @@ class TutorMentoringView(TutorColloquiumView, ThesisRegistrationExaminationboard
         }
         c.update(self.get_context_examinationboard(data))
         c.update(self.get_context_colloquium(data))
+        c.update(self.get_context_mentoringreport(data))
         return c
 
     def get_examinationboard(self, queryset=None):
         return self.object.thesis.registration.responseexaminationboard
 
     def get_colloquium(self, queryset=None):
-        return self.object.colloquium
+        return Colloquium.objects.get_or_create(mentoring=self.object)[0]
+
+    def get_mentoringreport(self, queryset=None):
+        return MentoringReport.objects.get_or_create(mentoring=self.object)[0]
 
     def get_success_url(self):
         return ''

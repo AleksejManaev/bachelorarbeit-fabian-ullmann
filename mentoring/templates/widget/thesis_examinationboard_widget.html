@@ -1,0 +1,14 @@
+{% load material %}
+
+<div class="card todo-list">
+    <div class="card-header">
+        <span class="card-title blue-grey-text">Response Examination Board</span>
+    </div>
+    {% csrf_token %}
+    <div class="card-content">
+        {% material_form thesis_registration_examinationboard_form %}
+    </div>
+    <div class="card-action valign-wrapper">
+        <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
+    </div>
+</div>

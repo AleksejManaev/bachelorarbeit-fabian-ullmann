@@ -216,3 +216,7 @@ class FormMentoringReport(forms.ModelForm):
     class Meta:
         model = MentoringReport
         fields = '__all__'
+        exclude = ['mentoring']
+
+
+FormsetReportItems = forms.inlineformset_factory(MentoringReport, MentoringReportItem, fields='__all__')
