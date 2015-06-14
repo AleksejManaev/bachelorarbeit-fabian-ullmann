@@ -104,7 +104,6 @@ class FormPlacement(forms.ModelForm):
             'certificate': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
 
-
 class FormThesisDocuments(forms.ModelForm):
     def is_valid(self):
         """
@@ -147,7 +146,6 @@ class FormThesisDocuments(forms.ModelForm):
             'poster': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
 
-
 class FormThesisMentoringrequest(forms.ModelForm):
     def is_valid(self):
         req = True if self.data.has_key('finalize') else False
@@ -166,18 +164,15 @@ class FormThesisMentoringrequest(forms.ModelForm):
             'description': forms.Textarea()
         }
 
-
 class FormStudent(forms.ModelForm):
     class Meta:
         model = Student
         fields = '__all__'
 
-
 FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fields=['description'], extra=1,
                                                  fk_name='work', can_delete=False)
 FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, CompanyContactData, fields='__all__', extra=1,
                                                             can_delete=False)
-
 class FormMentoringrequestStudent(forms.ModelForm):
     def is_valid(self):
         """
@@ -230,10 +225,9 @@ class FormSettings(forms.ModelForm):
         model = User
         fields = ['first_name', 'last_name']
 
-
 FormsetUserPortaluser = forms.inlineformset_factory(User, PortalUser, fields='__all__', extra=1, can_delete=False)
-FormsetStudentAddress = forms.inlineformset_factory(Student, Address, fields='__all__', extra=1, can_delete=False)
 
+FormsetStudentAddress = forms.inlineformset_factory(Student, Address, fields='__all__', extra=1, can_delete=False)
 
 class FormRegistration(forms.ModelForm):
     class Meta:
