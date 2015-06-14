@@ -15,7 +15,9 @@
         {% material_card_header title='Placement' actions='dropdown_placement' %}
     {% else %}
         <div class="card-header green white-text">
-            <div class="card-title">Placement</div>
+            <div class="card-title">
+                <a href="{% url 'student-placement-preview' %}" class="fancybox fancybox.iframe white-text">Placement <i
+                        class="mdi-action-done-all"></i></a></div>
             <div class="actions">
                 <a href="{% url 'student-placement-update-todo' %}?editMode=true" class="reload"><i
                         class="mdi-editor-border-color white-text"></i></a>

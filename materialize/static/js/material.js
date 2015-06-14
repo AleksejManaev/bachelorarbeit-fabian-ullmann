@@ -125,6 +125,9 @@ $(document).ready(
 
         $("form").materialform();
         $(".dropdown-button").dropdown();
+        $.each($('.fancybox'), function(){
+            $(this).attr('href',$(this).attr('href')+'?fancy=true');
+        });
         $('.fancybox').fancybox();
         $('a.reload').on('click', function (e) {
             $.ajax(e.target.href)

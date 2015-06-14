@@ -67,7 +67,10 @@
         {% material_todo_reveal %}
     {% else %}
         <div class="card-header{% if thesis.mentoringrequest.status == 'AC' %} green{% else %} orange{% endif %} white-text">
-            <div class="card-title">Mentoring<br/>
+            <div class="card-title">
+                <a href="{% url 'student-thesis-mentoringrequest-preview' %}"
+                   class="fancybox fancybox.iframe white-text">Mentoring <i
+                        class="mdi-action-done-all"></i></a><br/>
                 <ul>
                     <li><i class="mdi-content-send"></i> {{ thesis.mentoringrequest.requested_on|date:"D d M Y" }}</li>
                     <li><i class="mdi-communication-import-export"></i> {{ thesis.mentoringrequest.status|state }}</li>

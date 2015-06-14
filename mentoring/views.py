@@ -2,6 +2,7 @@
 from datetime import datetime
 
 from django import http
+import django
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.generic import *
@@ -9,6 +10,14 @@ from fdfgen import forge_fdf
 from mentoring.forms import *
 from mentoring.models import Student, Placement
 
+
+class DetailView(django.views.generic.DetailView):
+    def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+            print(request)
+
+        return super(DetailView, self).get(request, *args, **kwargs)
 
 class IndexView(RedirectView):
     """
@@ -37,6 +46,7 @@ class BothThesisRegistrationPDFDownload(DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
+        sup = super(BothThesisRegistrationPDFDownload, self).get(request, *args, **kwargs)
         if (hasattr(request.user.portaluser,
                     'student')) and not self.object.pk == request.user.portaluser.student.thesis.registration.pk:
             return http.HttpResponseForbidden()
@@ -445,6 +455,7 @@ class StudentThesisRegistrationFormView(UpdateView):
         student.thesis.registration.pdf_file.name = '{}/thesis/registration/{}'.format(student.user, filename)
         student.thesis.registration.save()
 
+
 class StudentSettingsFormView(UpdateView):
     """
     + Studenten können ihre persönlichen Daten hinterlegen
@@ -568,6 +579,7 @@ class StudentThesisDocumentsIndexView(DetailView):
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
+
 
 class StudentThesisIndexView(DetailView):
     """

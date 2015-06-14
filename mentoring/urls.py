@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^student/placement/update/todo/$',
         StudentPlacementFormView.as_view(template_name='student_placement_form_todo.html'),
         name='student-placement-update-todo'),
-    url(r'^student/placement/preview/$', StudentPlacementIndexView.as_view(), name='student-placement-preview'),
+    url(r'^student/placement/preview/', StudentPlacementIndexView.as_view(), name='student-placement-preview'),
 
     url(r'^student/thesis/request/update/$', StudentThesisMentoringrequestFormView.as_view(),
         name='student-thesis-mentoringrequest-update'),

@@ -92,6 +92,8 @@ Functions
 
 + Absolventen können erhaltene Antwort vom Prüfungsausschuss im System hinterlegen
 
++ Absolventen können Abschlussarbeit und -Poster hochladen
+
 
 ### Gutachterfunktionen ###
 
