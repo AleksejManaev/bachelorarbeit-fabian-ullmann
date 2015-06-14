@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^placement/update/$', PlacementUpdateView.as_view(),
         name='placement-update'),
     url(r'^placement/update/todo/$',
-        PlacementUpdateView.as_view(template_name='student/placement/placement_todo_form.html'),
+        PlacementUpdateView.as_view(template_name='student_placement_form_todo.html'),
         name='placement-update-todo'),
     url(r'^placement/preview/$', PlacementPreviewView.as_view(), name='placement-preview'),
 
@@ -36,7 +36,7 @@ urlpatterns = [
         name='thesis-mentoringrequest-update'),
     url(r'^thesis/mentoring-request/update/todo/$',
         ThesisMentoringrequestUpdateView.as_view(
-            template_name='student/thesis/mentoringrequest/mentoringrequest_todo_form.html'),
+            template_name='student_thesis_mentoringrequest_form_todo.html'),
         name='thesis-mentoringrequest-update-todo'),
     url(r'^thesis/mentoring-request/preview/$', ThesisMentoringrequestView.as_view(),
         name='thesis-mentoringrequest-preview'),
@@ -45,7 +45,7 @@ urlpatterns = [
         ThesisRegistrationUpdateView.as_view(),
         name='thesis-registration-update'),
     url(r'^thesis/registration/update/todo/$',
-        ThesisRegistrationUpdateView.as_view(template_name='student/thesis/registration/registration_todo_form.html'),
+        ThesisRegistrationUpdateView.as_view(template_name='student_thesis_registration_form_todo.html'),
         name='thesis-registration-update-todo'),
     url(r'^thesis/registration/(?P<pk>\d+)/preview/$', ThesisRegistrationPDFDownloadPreview.as_view(),
         name='thesis-registration-preview'),

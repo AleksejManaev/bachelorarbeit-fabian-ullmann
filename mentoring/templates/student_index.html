@@ -6,7 +6,7 @@
 
     <form enctype="multipart/form-data" action="{% url 'placement-update' %}" method="post">
         {% csrf_token %}
-        {% include 'student/placement/placement_todo_widget.html' %}
+        {% include 'student_placement_todo_widget.html' %}
     </form>
 
     <div class="row">
@@ -20,7 +20,7 @@
             <form action="{% url 'thesis-mentoringrequest-update' %}"
                   method="post">
                 {% csrf_token %}
-                {% include 'student/thesis/mentoringrequest/mentoringrequest_widget.html' %}
+                {% include 'student_thesis_mentoringrequest_widget.html' %}
             </form>
 
         </div>
@@ -30,13 +30,13 @@
             <div class="col s12 m4 ">
                 <form action="{% url 'thesis-registration-update' %}" method="post">
                     {% csrf_token %}
-                    {% include 'student/thesis/registration/registration_widget.html' %}
+                    {% include 'student_thesis_registration_widget.html' %}
                 </form>
 
                 {% if student.thesis.registration.pdf_file %}
                     <form action="{% url 'thesis-registration-examinationboard' student.thesis.registration.pk %}"
                           method="post">
-                        {% include 'widget/thesis_examinationboard_widget.html' %}
+                        {% include 'both_thesis_examinationboard_widget.html' %}
                     </form>
                 {% endif %}
             </div>
