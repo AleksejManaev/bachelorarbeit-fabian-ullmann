@@ -9,8 +9,12 @@ from fdfgen import forge_fdf
 from mentoring.forms import *
 from mentoring.models import Student, Placement
 
+
 class IndexView(RedirectView):
-    permanent = True
+    """
+    + prüft ob Tutor oder Student eingeloggt ist und leitet zur entsprechenden Index-Seite weiter
+
+    """
 
     def get(self, request, *args, **kwargs):
         if (hasattr(request.user, 'portaluser')):
@@ -22,12 +26,106 @@ class IndexView(RedirectView):
             self.pattern_name = 'logout'
         return super(IndexView, self).get(request, *args, **kwargs)
 
-class PlacementUpdateView(UpdateView):
+
+class BothThesisRegistrationPDFDownload(DetailView):
+    """
+    Download des erstellten Anmeldeformulars
+    """
+    model = Registration
+    target = 'attachment'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if (hasattr(request.user.portaluser,
+                    'student')) and not self.object.pk == request.user.portaluser.student.thesis.registration.pk:
+            return http.HttpResponseForbidden()
+
+        with open(settings.BASE_DIR + settings.MEDIA_ROOT + self.object.pdf_file.name, 'r') as pdf:
+            response = http.HttpResponse(pdf.read(), content_type='application/pdf')
+            response['Content-Disposition'] = '{}; filename="Anmeldung_Abschlussarbeit.pdf"'.format(self.target)
+            return response
+        pdf.closed
+
+
+class BothThesisRegistrationPDFDownloadPreview(BothThesisRegistrationPDFDownload):
+    target = 'inline'
+
+
+class BothThesisExaminationboardFormView(UpdateView):
+    """
+    Erhaltene Antwort vom Prüfungsausschuss kann im System hinterlegt werden
+    """
+    # TODO Sicherheit: Nur eigene Mentorings aufrufen mit pk
+    model = ResponseExaminationBoard
+    template_name = 'both_thesis_examinationboard_form.html'
+    form_class = FormRegistrationExamination
+
+    def get_context_examinationboard(self, data=None, **kwargs):
+        """
+        enthält all nötigen Formulare, die an Template übergeben werden und validiert werden müssen
+
+        wird auch von erbenden Klassen genutzt
+        """
+        examinationboard = self.get_examinationboard()
+        return {
+            'examinationboard': examinationboard,
+            'thesis_registration_examinationboard_form': FormRegistrationExamination(data=data,
+                                                                                     instance=examinationboard,
+                                                                                     prefix='examinationboard_form'),
+        }
+
+    def get_examinationboard(self, queryset=None):
+        """
+        muss von erbender Klasse überschrieben werden
+        """
+        return self.get_object()
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_examinationboard()
+        c = self.get_context_examinationboard()
+        return self.render_to_response(c)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_examinationboard()
+        c = self.get_context_examinationboard(data=request.POST)
+        form = c['thesis_registration_examinationboard_form']
+
+        if form.is_valid():
+            form.save()
+            return http.HttpResponseRedirect(self.get_success_url())
+        else:
+            cd = self.get_context_data()
+            cd.update(c)
+            return self.render_to_response(cd)
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        return Registration.objects.get(pk=pk).responseexaminationboard
+
+    def get_success_url(self):
+        return ''
+
+
+class StudentPlacementFormView(UpdateView):
+    """
+    + Absolventen können Praktikumsarbeit anlegen
+    + Absolventen können Praktikum beschreiben
+    + Absolventen können Informationen zum Unternehmen erfassen, bei welchem das Praktikum durchgeführt wurde.
+    + Absolventen können ihren Praktikumsbericht im System hochladen.
+    + Absolventen können ihr Praktikumszeugnis im System hochladen.
+    + Absolventen können ihre Praktikumspräsentation im System hochladen.
+    """
+
     model = Placement
     form_class = FormPlacement
     template_name = 'student_placement_form.html'
 
     def get_context_placement(self, data=None, files=None, **kwargs):
+        """
+        enthält all nötigen Formulare, die an Template übergeben werden und validiert werden müssen
+
+        wird auch von erbenden Klassen genutzt
+        """
         placement = self.get_placement()
         return {
             'placement': placement,
@@ -41,8 +139,15 @@ class PlacementUpdateView(UpdateView):
                                                                        prefix='placement_contact_formset'),
         }
 
+    def get_placement(self):
+        """
+        muss von erbender Klasse überschrieben werden
+        """
+        return self.get_object()
+
     def get(self, request, status=200, *args, **kwargs):
         self.object = self.get_object()
+
         if (request.GET.has_key('editMode')):
             self.object.finished = False
             self.object.save()
@@ -53,12 +158,10 @@ class PlacementUpdateView(UpdateView):
         return self.render_to_response(cd, status=status)
 
     def post(self, request, *args, **kwargs):
-
         self.object = self.get_object()
 
         if self.object.finished:
             return self.get(request, status=405)
-
         else:
             self.placement = self.get_context_placement(request.POST, files=request.FILES)
 
@@ -85,8 +188,6 @@ class PlacementUpdateView(UpdateView):
         cd.update(self.placement)
         return self.render_to_response(cd, status=status)
 
-    def get_placement(self):
-        return self.get_object()
 
     def get_success_url(self):
         return ''
@@ -94,22 +195,40 @@ class PlacementUpdateView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.placement
 
-class PlacementPreviewView(DetailView):
+
+class StudentPlacementIndexView(DetailView):
+    """
+    + Web-Ansicht des erstellten Praktikums
+
+    """
     model = Placement
     template_name = 'student_placement_index.html'
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.placement
 
-class ThesisMentoringrequestUpdateView(UpdateView):
+
+class StudentThesisMentoringrequestFormView(UpdateView):
+    """
+    + Absolventen können Abschlussarbeit anlegen
+    + Absolventen können die Abschlussarbeit beschreiben
+    + Absolventen können Informationen zum Unternehmen erfassen, für welches die Abschlussarbeit durchgeführt wurde.
+    + Absolventen können das erfasste Thema einem Dozenten zur Betreuung vorschlagen
+    + Absolventen können den Status der Betreuungsanfrage verfolgen
+    + Absolventen können ein vorausgefülltes Anmeldeformular herunterladen
+
+    """
     model = Thesis
     form_class = FormThesis
     template_name = 'student_thesis_mentoringrequest_form.html'
 
-    def __init__(self):
-        super(ThesisRegistrationUpdateView, self).__init__()
 
     def get_context_thesis(self, data=None, files=None, **kwargs):
+        """
+        enthält all nötigen Formulare, die an Template übergeben werden und validiert werden müssen
+
+        wird auch von erbenden Klassen genutzt
+        """
         thesis = self.get_thesis()
         return {
             'thesis': thesis,
@@ -121,6 +240,12 @@ class ThesisMentoringrequestUpdateView(UpdateView):
                                                                     prefix='thesis_contact_formset'),
             'thesis_mentoringrequest_form': FormMentoringrequestStudent(data, instance=thesis.mentoringrequest,
                                                                         prefix='thesis_mentoringrequest_form'), }
+
+    def get_thesis(self):
+        """
+        muss von erbender Klasse überschrieben werden
+        """
+        return self.get_object()
 
     def get(self, request, status=200, *args, **kwargs):
         self.object = self.get_object()
@@ -173,23 +298,25 @@ class ThesisMentoringrequestUpdateView(UpdateView):
         cd.update(self.thesis)
         return self.render_to_response(cd, status=status)
 
-    def get_thesis(self):
-        return self.get_object()
-
     def get_success_url(self):
         return ''
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
 
-class ThesisMentoringrequestView(DetailView):
+
+class StudentThesisMentoringrequestView(DetailView):
+    """
+    + Web-Ansicht der erstellten Anfrage
+    """
     model = MentoringRequest
     template_name = 'student_thesis_mentoringrequest.html'
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis.mentoringrequest
 
-class ThesisRegistrationUpdateView(UpdateView):
+
+class StudentThesisRegistrationFormView(UpdateView):
     model = Registration
     form_class = FormRegistration
     template_name = 'student_thesis_registration_form.html'
@@ -248,11 +375,13 @@ class ThesisRegistrationUpdateView(UpdateView):
         return ''
 
     def save_pdf(self):
+        """
+        Erstellt das Anmeldeformular
+        """
         student = self.request.user.portaluser.student
 
-        """
-        Eingabefelder von 'files/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular'
-        """
+
+        # Eingabefelder von 'files/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular'
 
         fields = [
             ('Strasse', student.address.street),
@@ -278,9 +407,9 @@ class ThesisRegistrationUpdateView(UpdateView):
             ('Gutachter_2', student.thesis.mentoring.tutor_2),
             ('Datum_Antrag', datetime.now().strftime("%d.%m.%Y"))
         ]
-        """
-        Where to save the registration-pdf
-        """
+
+        # Where to save the registration-pdf
+
         directory = "{}/{}/thesis/registration/".format(settings.MEDIA_ROOT, self.request.user)
         filename = 'Anmeldung-Abschlussarbeit-{firstn}-{lastn}.pdf'.format(directory=directory,
                                                                            firstn=self.request.user.first_name,
@@ -289,17 +418,16 @@ class ThesisRegistrationUpdateView(UpdateView):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        """
-        write formular data to file
-        """
+
+        # write formular data to file
+
         fdf = forge_fdf("", fields, [], [], [])
         fdf_file = open("{}/data.fdf".format(directory), "wb")
         fdf_file.write(fdf)
         fdf_file.close()
 
-        """
-        call command line
-        """
+        # call command line
+
         os.system(
             'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf output {directory}/{file}'.format(
                 mediaroot=settings.MEDIA_ROOT, directory=directory, file=filename))
@@ -307,33 +435,107 @@ class ThesisRegistrationUpdateView(UpdateView):
         student.thesis.registration.pdf_file.name = '{}/thesis/registration/{}'.format(student.user, filename)
         student.thesis.registration.save()
 
-class ThesisRegistrationPDFDownload(DetailView):
-    model = Registration
-    target = 'attachment'
 
-    def get(self, request, *args, **kwargs):
+class StudentSettingsFormView(UpdateView):
+    """
+    + Studenten können ihre persönlichen Daten hinterlegen
+    + Studenten können ihre persönlichen Daten ändern
+    """
+    model = Student
+    form_class = FormSettings
+    template_name = 'student_settings.html'
+
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if (hasattr(request.user.portaluser,
-                    'student')) and not self.object.pk == request.user.portaluser.student.thesis.registration.pk:
-            return http.HttpResponseForbidden()
+        cd = self.get_context_data(request.POST)
 
-        with open(settings.BASE_DIR + settings.MEDIA_ROOT + self.object.pdf_file.name, 'r') as pdf:
-            response = http.HttpResponse(pdf.read(), content_type='application/pdf')
-            response['Content-Disposition'] = '{}; filename="Anmeldung_Abschlussarbeit.pdf"'.format(self.target)
-            return response
-        pdf.closed
+        if (cd.get('user_form').is_valid()
+            and cd.get('student_user_formset').is_valid()
+            and cd.get('student_address_formset').is_valid()):
+            cd.get('user_form').save()
+            cd.get('student_user_formset').save()
+            cd.get('student_address_formset').save()
+            return self.render_to_response(cd, status=200)
+        else:
+            return self.render_to_response(cd, status=400)
 
-class ThesisRegistrationPDFDownloadPreview(ThesisRegistrationPDFDownload):
-    target = 'inline'
+    def get_context_data(self, data=None, **kwargs):
+        return super(StudentSettingsFormView, self).get_context_data(
+            user_form=FormSettings(data=data, instance=self.get_object().user),
+            student_user_formset=FormsetUserPortaluser(data=data, instance=self.get_object().user),
+            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object())
+        )
 
-class ThesisPreviewView(DetailView):
+    def get_object(self, queryset=None):
+        return Student.objects.get(user=self.request.user)
+
+
+class StudentThesisIndexView(DetailView):
+    """
+    Gesamtübersicht der erstellten Abschlussarbeit-Informationen
+    """
     model = Thesis
     template_name = 'student_thesis_index.html'
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
 
+
+class StudentUpdateView(StudentThesisMentoringrequestFormView, StudentPlacementFormView,
+                        StudentThesisRegistrationFormView,
+                        BothThesisExaminationboardFormView):
+    """
+    Zeigt alle Studenten-Formulare in einer Seite an
+    """
+    template_name = 'student_index.html'
+    model = Student
+
+    def get(self, request, status=200, *args, **kwargs):
+        if not self.get_object():
+            return redirect('index')
+        else:
+            return super(StudentUpdateView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        """
+        Alle Context-Data zusammenführen.
+        Wichtig, dass die get_OBJECT Methoden korrekt überschrieben wurden
+        """
+        context = {}
+        if self.get_object():
+            context['object'] = self.object
+            context_object_name = self.get_context_object_name(self.object)
+            if context_object_name:
+                context[context_object_name] = self.object
+            context.update(kwargs)
+            context.update(self.get_context_thesis())
+            context.update(self.get_context_placement())
+            context.update(self.get_context_registration())
+            context.update(self.get_context_examinationboard())
+            return context
+        else:
+            return None
+
+    def get_thesis(self):
+        return self.get_object().thesis if self.get_object() else None
+
+    def get_examinationboard(self, queryset=None):
+        return self.object.thesis.registration.responseexaminationboard
+
+    def get_placement(self):
+        return self.get_object().placement if self.get_object() else None
+
+    def get_registration(self):
+        return self.get_object().thesis.registration if self.get_object() else None
+
+    def get_object(self, queryset=None):
+        st = Student.objects.filter(user=self.request.user)
+        return st[0] if len(st) > 0 else None
+
 class TutorView(DetailView):
+    """
+    Startseite der Professoren
+    """
     model = Tutor
     template_name = 'tutor_index.html'
 
@@ -347,13 +549,104 @@ class TutorView(DetailView):
         st = Tutor.objects.filter(user=self.request.user)
         return st[0] if len(st) > 0 else None
 
-class TutorMentoringrequestView(UpdateView):
+
+class TutorMentoringListView(ListView):
+    """
+    Liste alle Arbeiten auf die betreut werden
+    """
+    model = Mentoring
+    template_name = 'tutor_mentoring_list.html'
+
+    def get_queryset(self):
+        return Mentoring.objects.filter(tutor_1__user=self.request.user)
+
+
+class TutorMentoringColloquiumFormView(UpdateView):
+    """
+    + Gutachter können Kolloquiumstermin und Uhrzeit festlegen
+    + Gutachter können Raum eintragen
+    """
+    # TODO Gutachter können an E-Mail-Verteiler Einladungen zur Teilnhame versenden
+    # TODO Gutachter können einen vorausgefüllten Begleitbogen für das Kolloquium ausdrucken
+    # TODO Gutachten können nach gehaltenem Kolloquium die Note eingeben und die Abschlussarbeit abschließen
+
+    model = Colloquium
+    template_name = 'tutor_mentoring_colloquium.html'
+    form_class = FormColloquium
+
+    def get_context_colloquium(self, data=None, **kwargs):
+        """
+        enthält all nötigen Formulare, die an Template übergeben werden und validiert werden müssen
+
+        wird auch von erbenden Klassen genutzt
+        """
+        colloquium = self.get_colloquium()
+        return {
+            'colloquium': colloquium,
+            'thesis_colloquium_form': FormColloquium(data=data, instance=colloquium, prefix='colloquium_form'),
+        }
+
+    def get_colloquium(self, queryset=None):
+        """
+        muss von erbender Klasse überschrieben werden
+        """
+        return self.get_object()
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_colloquium()
+        c = self.get_context_colloquium()
+        return self.render_to_response(c)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_colloquium()
+        c = self.get_context_colloquium(data=request.POST)
+        form = c['thesis_colloquium_form']
+
+        if form.is_valid():
+            form.save()
+            return http.HttpResponseRedirect(self.get_success_url())
+        else:
+            cd = self.get_context_data()
+            cd.update(c)
+            return self.render_to_response(cd)
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        return Colloquium.objects.get_or_create(mentoring_id=pk)[0]
+
+    def get_success_url(self):
+        return ''
+
+
+class TutorMentoringRequestListView(ListView):
+    """
+    Listet alle Betreuungsanfragen auf, die an Professor gerichtet sind
+    """
     model = MentoringRequest
-    template_name = 'tutor_mentoringrequest.html'
+    template_name = 'tutor_mentoring_request_list.html'
+
+    def get_queryset(self):
+        return MentoringRequest.objects.filter(tutor_email=self.request.user.email)
+
+
+class TutorMentoringRequestFormView(UpdateView):
+    """
+    + Gutachter können Anfragen ablehnen
+    + Gutachter können Anfragen annehmen
+    + Gutachter können Zweit-Gutachter erfassen
+    + Gutachter können Abgabetermin festlegen
+    """
+    model = MentoringRequest
+    template_name = 'tutor_mentoring_request.html'
     form_class = FormMentoringrequestTutor
 
     def get_context_mentoringrequest(self, data=None, files=None, **kwargs):
-        mentoringrequest = self.get_object()
+        """
+        enthält all nötigen Formulare, die an Template übergeben werden und validiert werden müssen
+
+        wird auch von erbenden Klassen genutzt
+        """
+        mentoringrequest = self.get_mentoringrequest()
         return {
             'mentoringrequest': mentoringrequest,
             'mentoringrequest_form': FormMentoringrequestTutor(data, instance=mentoringrequest,
@@ -411,104 +704,28 @@ class TutorMentoringrequestView(UpdateView):
         cd.update(forms)
         return self.render_to_response(cd, status=status)
 
-class TutorMentoringrequestlistView(ListView):
-    model = MentoringRequest
-    template_name = 'tutor_mentoringrequest_list.html'
-
-    def get_queryset(self):
-        return MentoringRequest.objects.filter(tutor_email=self.request.user.email)
-
-# TODO Sicherheit: Nur eigene Mentorings aufrufen mit pk
-
-class ThesisRegistrationExaminationboardView(UpdateView):
-    model = ResponseExaminationBoard
-    template_name = 'both_thesis_examinationboard.html'
-    form_class = FormRegistrationExamination
-
-    def get_context_examinationboard(self, data=None, **kwargs):
-        examinationboard = self.get_examinationboard()
-        return {
-            'examinationboard': examinationboard,
-            'thesis_registration_examinationboard_form': FormRegistrationExamination(data=data,
-                                                                                     instance=examinationboard,
-                                                                                     prefix='examinationboard_form'),
-        }
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_examinationboard()
-        c = self.get_context_examinationboard()
-        return self.render_to_response(c)
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_examinationboard()
-        c = self.get_context_examinationboard(data=request.POST)
-        form = c['thesis_registration_examinationboard_form']
-
-        if form.is_valid():
-            form.save()
-            return http.HttpResponseRedirect(self.get_success_url())
-        else:
-            cd = self.get_context_data()
-            cd.update(c)
-            return self.render_to_response(cd)
-
-    def get_examinationboard(self, queryset=None):
+    def get_mentoringrequest(self):
+        """
+        muss von erbender Klasse überschrieben werden
+        """
         return self.get_object()
 
-    def get_object(self, queryset=None):
-        pk = self.kwargs.get(self.pk_url_kwarg, None)
-        return Registration.objects.get(pk=pk).responseexaminationboard
 
-    def get_success_url(self):
-        return ''
-
-
-class TutorColloquiumView(UpdateView):
-    model = Colloquium
-    template_name = 'tutor_mentoring_colloquium.html'
-    form_class = FormColloquium
-
-    def get_context_colloquium(self, data=None, **kwargs):
-        colloquium = self.get_colloquium()
-        return {
-            'colloquium': colloquium,
-            'thesis_colloquium_form': FormColloquium(data=data, instance=colloquium, prefix='colloquium_form'),
-        }
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_colloquium()
-        c = self.get_context_colloquium()
-        return self.render_to_response(c)
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_colloquium()
-        c = self.get_context_colloquium(data=request.POST)
-        form = c['thesis_colloquium_form']
-
-        if form.is_valid():
-            form.save()
-            return http.HttpResponseRedirect(self.get_success_url())
-        else:
-            cd = self.get_context_data()
-            cd.update(c)
-            return self.render_to_response(cd)
-
-    def get_colloquium(self, queryset=None):
-        return self.get_object()
-
-    def get_object(self, queryset=None):
-        pk = self.kwargs.get(self.pk_url_kwarg, None)
-        return Colloquium.objects.get_or_create(mentoring_id=pk)[0]
-
-    def get_success_url(self):
-        return ''
-
-class TutorMentoringReportView(UpdateView):
+class TutorMentoringReportFormView(UpdateView):
+    """
+    + Gutachter können Erstgespräch festhalten
+    + Gutachter können Verlaufsprotokoll pflegen
+    """
     model = MentoringReport
     template_name = 'tutor_mentoring_report.html'
     form_class = FormMentoringReport
 
     def get_context_mentoringreport(self, data=None, **kwargs):
+        """
+        enthält all nötigen Formulare, die an Template übergeben werden und validiert werden müssen
+
+        wird auch von erbenden Klassen genutzt
+        """
         mentoringreport = self.get_mentoringreport()
         return {
             'mentoringreport': mentoringreport,
@@ -539,6 +756,9 @@ class TutorMentoringReportView(UpdateView):
             return self.render_to_response(cd)
 
     def get_mentoringreport(self, queryset=None):
+        """
+        muss von erbender Klasse überschrieben werden
+        """
         return self.get_object()
 
     def get_object(self, queryset=None):
@@ -548,11 +768,43 @@ class TutorMentoringReportView(UpdateView):
     def get_success_url(self):
         return ''
 
-class TutorMentoringView(TutorMentoringReportView, TutorColloquiumView, ThesisRegistrationExaminationboardView):
+
+class TutorMentoringView(TutorMentoringReportFormView, TutorMentoringColloquiumFormView,
+                         BothThesisExaminationboardFormView):
+    """
+    Zeigt alle Betreuungs-Formulare in einer Seite an
+    """
     model = Mentoring
     template_name = 'tutor_mentoring.html'
     form_class = FormMentoringTutor
 
+    def get_context_mentoring(self, data=None, **kwargs):
+        """
+        Alle Context-Data zusammenführen.
+        Wichtig, dass die get_OBJECT Methoden korrekt überschrieben wurden
+        """
+        mentoring = self.get_mentoring()
+
+        c = {
+            'mentoring': mentoring,
+        }
+        c.update(self.get_context_examinationboard(data))
+        c.update(self.get_context_colloquium(data))
+        c.update(self.get_context_mentoringreport(data))
+        return c
+
+    def get_mentoring(self):
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        return Mentoring.objects.get(pk=pk, tutor_1__user=self.request.user)
+
+    def get_examinationboard(self, queryset=None):
+        return self.object.thesis.registration.responseexaminationboard
+
+    def get_colloquium(self, queryset=None):
+        return Colloquium.objects.get_or_create(mentoring=self.object)[0]
+
+    def get_mentoringreport(self, queryset=None):
+        return MentoringReport.objects.get_or_create(mentoring=self.object)[0]
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_mentoring()
@@ -564,70 +816,15 @@ class TutorMentoringView(TutorMentoringReportView, TutorColloquiumView, ThesisRe
         pk = self.kwargs.get(self.pk_url_kwarg, None)
         return Mentoring.objects.get(pk=pk, tutor_1__user=self.request.user)
 
-    def get_mentoring(self):
-        pk = self.kwargs.get(self.pk_url_kwarg, None)
-        return Mentoring.objects.get(pk=pk, tutor_1__user=self.request.user)
-
-    def get_context_mentoring(self, data=None, **kwargs):
-        mentoring = self.get_mentoring()
-
-        c = {
-            'mentoring': mentoring,
-        }
-        c.update(self.get_context_examinationboard(data))
-        c.update(self.get_context_colloquium(data))
-        c.update(self.get_context_mentoringreport(data))
-        return c
-
-    def get_examinationboard(self, queryset=None):
-        return self.object.thesis.registration.responseexaminationboard
-
-    def get_colloquium(self, queryset=None):
-        return Colloquium.objects.get_or_create(mentoring=self.object)[0]
-
-    def get_mentoringreport(self, queryset=None):
-        return MentoringReport.objects.get_or_create(mentoring=self.object)[0]
-
     def get_success_url(self):
         return ''
 
-class TutorMentoringlistView(ListView):
-    model = Mentoring
-    template_name = 'tutor_mentoring_list.html'
 
-    def get_queryset(self):
-        return Mentoring.objects.filter(tutor_1__user=self.request.user)
-
-class StudentSettingsView(UpdateView):
-    model = Student
-    form_class = FormSettings
-    template_name = 'student_settings.html'
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        cd = self.get_context_data(request.POST)
-
-        if (cd.get('user_form').is_valid()
-            and cd.get('student_user_formset').is_valid()
-            and cd.get('student_address_formset').is_valid()):
-            cd.get('user_form').save()
-            cd.get('student_user_formset').save()
-            cd.get('student_address_formset').save()
-            return self.render_to_response(cd, status=200)
-        else:
-            return self.render_to_response(cd, status=400)
-
-    def get_context_data(self, data=None, **kwargs):
-        return super(StudentSettingsView, self).get_context_data(
-            user_form=FormSettings(data=data, instance=self.get_object().user),
-            student_user_formset=FormsetUserPortaluser(data=data, instance=self.get_object().user),
-            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object())
-        )
-
-    def get_object(self, queryset=None):
-        return Student.objects.get(user=self.request.user)
-
-class TutorSettingsView(UpdateView):
+class TutorSettingsFormView(UpdateView):
+    """
+    + Nutzer können ihre persönlichen Daten hinterlegen
+    + Nutzer können ihre persönlichen Daten ändern
+    """
     model = Tutor
     form_class = FormSettings
     template_name = 'tutor_settings.html'
@@ -644,7 +841,7 @@ class TutorSettingsView(UpdateView):
             return self.render_to_response(cd, status=400)
 
     def get_context_data(self, data=None, **kwargs):
-        return super(TutorSettingsView, self).get_context_data(
+        return super(TutorSettingsFormView, self).get_context_data(
             user_form=FormSettings(data=data, instance=self.get_object().user),
             tutor_user_formset=FormsetUserPortaluser(data=data, instance=self.get_object().user)
         )
@@ -652,46 +849,3 @@ class TutorSettingsView(UpdateView):
     def get_object(self, queryset=None):
         return Tutor.objects.get(user=self.request.user)
 
-
-class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, ThesisRegistrationUpdateView,
-                        ThesisRegistrationExaminationboardView):
-    template_name = 'student_index.html'
-    model = Student
-
-    def get(self, request, status=200, *args, **kwargs):
-        if not self.get_object():
-            return redirect('index')
-        else:
-            return super(StudentUpdateView, self).get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = {}
-        if self.get_object():
-            context['object'] = self.object
-            context_object_name = self.get_context_object_name(self.object)
-            if context_object_name:
-                context[context_object_name] = self.object
-            context.update(kwargs)
-            context.update(self.get_context_thesis())
-            context.update(self.get_context_placement())
-            context.update(self.get_context_registration())
-            context.update(self.get_context_examinationboard())
-            return context
-        else:
-            return None
-
-    def get_thesis(self):
-        return self.get_object().thesis if self.get_object() else None
-
-    def get_examinationboard(self, queryset=None):
-        return self.object.thesis.registration.responseexaminationboard
-
-    def get_placement(self):
-        return self.get_object().placement if self.get_object() else None
-
-    def get_registration(self):
-        return self.get_object().thesis.registration if self.get_object() else None
-
-    def get_object(self, queryset=None):
-        st = Student.objects.filter(user=self.request.user)
-        return st[0] if len(st) > 0 else None

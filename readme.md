@@ -87,6 +87,8 @@ Funktionert noch nicht mit LDAP
 + Absolventen können den Status der Betreuungsanfrage verfolgen 
 + Absolventen können ein vorausgefülltes Anmeldeformular herunterladen
 
++ Absolventen können erhaltene Antwort vom Prüfungsausschuss im System hinterlegen
+
 
 ### Gutachterfunktionen ###
 
@@ -99,7 +101,13 @@ Funktionert noch nicht mit LDAP
 + Gutachter können Verlaufsprotokoll pflegen
 + Gutachter können Abgabetermin festlegen
 
++ Gutachter können erhaltene Antwort vom Prüfungsausschuss im System hinterlegen
+
 #### Kolloquium ####
 
 + Gutachter können Kolloquiumstermin und Uhrzeit festlegen
 + Gutachter können Raum eintragen
+
+- TODO Gutachter können an E-Mail-Verteiler Einladungen zur Teilnhame versenden
+- TODO Gutachter können einen vorausgefüllten Begleitbogen für das Kolloquium ausdrucken
+- TODO Gutachten können nach gehaltenem Kolloquium die Note eingeben und die Abschlussarbeit abschließen
