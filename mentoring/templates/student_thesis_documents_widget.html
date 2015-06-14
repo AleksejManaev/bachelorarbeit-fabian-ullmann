@@ -1,0 +1,40 @@
+{% load material %}
+
+<ul id="dropdown_thesis" class="dropdown-content">
+    {% if not thesis.finished %}
+        <li><a href="{% url 'student-thesis-documents-update' %}" class="fancybox fancybox.iframe">Edit in Form</a></li>
+    {% else %}
+        <li><a href="{% url 'student-thesis-documents-preview' %}" class="fancybox fancybox.iframe">Preview</a></li>
+        <li><a href="{% url 'student-thesis-documents-update-todo' %}?editMode=true" class="reload">Edit Mode</a></li>
+    {% endif %}
+</ul>
+
+<div class="card todo-list">
+
+    {% if not thesis.finished %}
+        {% material_card_header title='Thesis' actions='dropdown_thesis' %}
+    {% else %}
+        <div class="card-header green white-text">
+            <div class="card-title">
+                <a href="{% url 'student-thesis-documents-preview' %}" class="fancybox fancybox.iframe white-text">Thesis
+                    <i
+                            class="mdi-action-done-all"></i></a>
+            </div>
+            <div class="actions">
+                <a href="{% url 'student-thesis-documents-update-todo' %}?editMode=true" class="reload"><i
+                        class="mdi-editor-border-color white-text"></i></a>
+                <a href="{% url 'student-thesis-documents-preview' %}" class="fancybox fancybox.iframe"><i
+                        class="mdi-av-my-library-books white-text"></i></a></div>
+        </div>
+    {% endif %}
+
+    <div class="card-content{% if thesis.finished %} hide{% endif %}">
+        {% material_todo_formfields thesis_documents_form %}
+    </div>
+    {% if not thesis.finished %}
+        <div class="card-action valign-wrapper">
+            <a href="#" type="submit" name="finish" class="col s12 center-align">Finish</a>
+        </div>
+    {% endif %}
+    {% material_todo_reveal %}
+</div>
