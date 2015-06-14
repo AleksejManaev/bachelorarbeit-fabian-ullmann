@@ -15,7 +15,6 @@ class DetailView(django.views.generic.DetailView):
     def get(self, request, *args, **kwargs):
         if request.GET.has_key('fancy'):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
-            print(request)
 
         return super(DetailView, self).get(request, *args, **kwargs)
 
@@ -92,6 +91,8 @@ class BothThesisExaminationboardFormView(UpdateView):
         return self.get_object()
 
     def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_examinationboard()
         if (request.GET.has_key('editMode')):
             self.object.finished = False
@@ -145,15 +146,16 @@ class StudentPlacementFormView(UpdateView):
         wird auch von erbenden Klassen genutzt
         """
         placement = self.get_placement()
+        workcompany = WorkCompany.objects.get_or_create(work=placement)[0]
         return {
             'placement': placement,
             'placement_form': FormPlacement(data, files=files, instance=placement, prefix='placement_form'),
-            'placement_company_form': FormCompany(data, parent=placement.workcompany,
-                                                  instance=placement.workcompany.company,
+            'placement_company_form': FormCompany(data, parent=workcompany,
+                                                  instance=workcompany.company,
                                                   prefix='placement_company_form'),
             'placement_company_formset': FormsetWorkCompany(data, instance=placement,
                                                             prefix='placement_company_formset'),
-            'placement_contact_formset': FormsetWorkCompanyContactdata(data, instance=placement.workcompany,
+            'placement_contact_formset': FormsetWorkCompanyContactdata(data, instance=workcompany,
                                                                        prefix='placement_contact_formset'),
         }
 
@@ -164,6 +166,8 @@ class StudentPlacementFormView(UpdateView):
         return self.get_object()
 
     def get(self, request, status=200, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_object()
 
         if (request.GET.has_key('editMode')):
@@ -268,6 +272,8 @@ class StudentThesisMentoringrequestFormView(UpdateView):
         return self.get_object()
 
     def get(self, request, status=200, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_object()
 
         if (request.GET.has_key('editMode') and not self.object.mentoringrequest.status == 'AC'):
@@ -330,7 +336,7 @@ class StudentThesisMentoringrequestView(DetailView):
     + Web-Ansicht der erstellten Anfrage
     """
     model = MentoringRequest
-    template_name = 'student_thesis_mentoringrequest.html'
+    template_name = 'student_thesis_mentoringrequest_index.html'
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis.mentoringrequest
@@ -343,6 +349,8 @@ class StudentThesisRegistrationFormView(UpdateView):
     target = 'attachment'
 
     def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_registration()
         if (request.GET.has_key('editMode')):
             self.object.finished = False
@@ -465,6 +473,12 @@ class StudentSettingsFormView(UpdateView):
     form_class = FormSettings
     template_name = 'student_settings.html'
 
+    def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+        return super(StudentSettingsFormView, self).get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         cd = self.get_context_data(request.POST)
@@ -520,6 +534,9 @@ class StudentThesisDocumentsFormView(UpdateView):
         return self.get_object()
 
     def get(self, request, status=200, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
         self.object = self.get_object()
 
         if (request.GET.has_key('editMode')):
@@ -576,6 +593,7 @@ class StudentThesisDocumentsIndexView(DetailView):
     """
     model = Placement
     template_name = 'student_thesis_documents_index.html'
+
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
@@ -673,6 +691,11 @@ class TutorMentoringListView(ListView):
     model = Mentoring
     template_name = 'tutor_mentoring_list.html'
 
+    def get(self, request, status=200, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+        return super(TutorMentoringListView, self).get(request, *args, **kwargs)
     def get_queryset(self):
         return Mentoring.objects.filter(tutor_1__user=self.request.user)
 
@@ -708,7 +731,12 @@ class TutorMentoringColloquiumFormView(UpdateView):
         """
         return self.get_object()
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, status=200, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_colloquium()
         c = self.get_context_colloquium()
         return self.render_to_response(c)
@@ -741,6 +769,11 @@ class TutorMentoringRequestListView(ListView):
     model = MentoringRequest
     template_name = 'tutor_mentoring_request_list.html'
 
+    def get(self, request, status=200, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+        return super(TutorMentoringRequestListView, self).get(request, *args, **kwargs)
     def get_queryset(self):
         return MentoringRequest.objects.filter(tutor_email=self.request.user.email)
 
@@ -771,6 +804,8 @@ class TutorMentoringRequestFormView(UpdateView):
         }
 
     def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_object()
         cd = self.get_context_data()
         cd.update(self.get_context_mentoringrequest())
@@ -854,6 +889,8 @@ class TutorMentoringReportFormView(UpdateView):
         }
 
     def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_mentoringreport()
         c = self.get_context_mentoringreport()
         return self.render_to_response(c)
@@ -861,12 +898,10 @@ class TutorMentoringReportFormView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_mentoringreport()
         c = self.get_context_mentoringreport(data=request.POST)
-        form = c['thesis_mentoringreport_form']
-        formset = c['thesis_mentoringreport_formset']
 
-        if form.is_valid() and formset.is_valid():
-            form.save()
-            formset.save()
+        if c['thesis_mentoringreport_form'].is_valid() and c['thesis_mentoringreport_formset'].is_valid():
+            c['thesis_mentoringreport_form'].save()
+            c['thesis_mentoringreport_formset'].save()
             return http.HttpResponseRedirect(self.get_success_url())
         else:
             cd = self.get_context_data()
@@ -925,6 +960,8 @@ class TutorMentoringFormView(TutorMentoringReportFormView, TutorMentoringColloqu
         return MentoringReport.objects.get_or_create(mentoring=self.object)[0]
 
     def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_mentoring()
         cd = self.get_context_data(form=self.get_form())
         cd.update(self.get_context_mentoring())
@@ -946,6 +983,12 @@ class TutorSettingsFormView(UpdateView):
     model = Tutor
     form_class = FormSettings
     template_name = 'tutor_settings.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+        return super(TutorSettingsFormView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

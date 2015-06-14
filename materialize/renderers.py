@@ -247,8 +247,6 @@ class MixedClassMeta(type):
 
 
 class CardRenderer(object):
-    # Todo Mehrere card_actions ermöglichen
-
     def __init__(self, form, *args, **kwargs):
         self.with_card = kwargs.get('with_card', True)
         self.title = kwargs.get('title', None)

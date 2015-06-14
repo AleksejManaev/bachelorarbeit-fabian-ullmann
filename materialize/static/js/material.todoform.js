@@ -96,6 +96,21 @@
                             Materialize.toast("pdf not generated!", 5000, 'red');
                         });
                 },
+                saveSubmit: function () {
+                    var postData = this.getPostData();
+                    this.sendForm(
+                        postData,
+                        function (data, textStatus, jqXHR) {
+                            //data: return data from server
+                            Materialize.toast("finished", 2000, 'green');
+                            form.setFinalSuccessData();
+                        },
+                        function (jqXHR, textStatus, errorThrown) {
+                            Materialize.toast("Not finished!", 5000, 'red');
+                            form.setFinalErrorData(jqXHR.responseText);
+
+                        });
+                },
                 saveFinal: function () {
                     // Todo onSuccess Finish-Button entfernen und actions aktualisieren
                     form.instance.find('input[name*=finished]').val('True');
@@ -107,10 +122,9 @@
                             //data: return data from server
                             Materialize.toast("finished", 2000, 'green');
                             form.setFinalSuccessData();
-                            location.reload()
+                            window.location.reload();
                         },
                         function (jqXHR, textStatus, errorThrown) {
-                            console.log(errorThrown);
                             Materialize.toast("Not finished!", 5000, 'red');
                             form.setFinalErrorData(jqXHR.responseText);
 

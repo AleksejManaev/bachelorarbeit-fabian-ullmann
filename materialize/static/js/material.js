@@ -129,10 +129,11 @@ $(document).ready(
             $(this).attr('href',$(this).attr('href')+'?fancy=true');
         });
         $('.fancybox').fancybox();
+        $('a.reload').off('click');
         $('a.reload').on('click', function (e) {
             $.ajax(e.target.href)
-                .done(location.reload())
-            return false
+                .done(location.reload());
+            return false;
         });
 
         $("form .card-action [type=submit]").on('click', function (e) {

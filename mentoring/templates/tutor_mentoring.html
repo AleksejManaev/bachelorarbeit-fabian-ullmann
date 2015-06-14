@@ -1,9 +1,28 @@
-{% extends 'base_portal.html' %}
+{% extends request.is_ajax|yesno:'base_ajax.html,base_portal.html' %}
 {% load material %}
 
 {% block material_content %}
 
 
+    <div class="row">
+        <div class="col s12 m8 right">
+            <form action="{% url 'tutor-mentoring-report' mentoringreport.mentoring.pk %}" method="post">
+                {% include 'tutor_mentoring_report_widget.html' %}
+            </form>
+
+        </div>
+        <div class="col s12 m4 left">
+            <form action="{% url 'thesis-registration-examinationboard' examinationboard.registration.pk %}"
+                  method="post">
+                {% csrf_token %}
+                {% include 'both_thesis_examinationboard_widget.html' %}
+            </form>
+            <form action="{% url 'tutor-mentoring-colloquium' mentoring.pk %}" method="post">
+                {% include 'tutor_mentoring_colloquium_widget.html' %}
+            </form>
+        </div>
+    </div>
+    {% material_divider %}
     <div class="row">
         <div class="col s12 m8">
             <div class="card">
@@ -84,25 +103,6 @@
             </div>
         </div>
 
-    </div>
-    {% material_divider %}
-    <div class="row">
-        <div class="col s12 m8 right">
-            <form action="{% url 'tutor-mentoring-report' mentoringreport.mentoring.pk %}" method="post">
-                {% include 'tutor_mentoring_report_widget.html' %}
-            </form>
-
-        </div>
-        <div class="col s12 m4 left">
-            <form action="{% url 'thesis-registration-examinationboard' examinationboard.registration.pk %}"
-                  method="post">
-                {% csrf_token %}
-                {% include 'both_thesis_examinationboard_widget.html' %}
-            </form>
-            <form action="{% url 'tutor-mentoring-colloquium' mentoring.pk %}" method="post">
-                {% include 'tutor_mentoring_colloquium_widget.html' %}
-            </form>
-        </div>
     </div>
 
 {% endblock %}

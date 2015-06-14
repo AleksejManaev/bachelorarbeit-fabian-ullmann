@@ -99,7 +99,6 @@ def material_card_header(title='', actions=None):
 
 @register.simple_tag
 def material_card_action(action_text='submit'):
-    # Todo Mehrere card_actions ermöglichen
     card_action = '<div class="card-action valign-wrapper"><a class="col s12 center-align">'
     card_action += action_text
     card_action += '</a></div>'

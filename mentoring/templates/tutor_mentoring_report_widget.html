@@ -1,6 +1,6 @@
 {% load material %}
 
-<div class="card todo-list">
+<div class="card todo-list" id="report-card">
     <div class="card-header">
         <span class="card-title blue-grey-text">Report</span>
     </div>
@@ -18,12 +18,14 @@
                     <div class="col s12 m2">{{ form.instance.created_on|date }}{{ form.id }}</div>
                     <div class="col s12{% if form.instance.pk %} m10{% endif %}">{% material_formfield form.subject %}</div>
                     <div class="col s12{% if form.instance.pk %} m10 offset-m2{% endif %}">{% material_formfield form.message %}</div>
+                    {% if form.instance.pk %}
+                        <div class="col s12 m10 offset-m2">{% material_formfield form.DELETE %}</div>{% endif %}
                 </div>
             {% endfor %}
 
         </div>
     </div>
     <div class="card-action valign-wrapper">
-        <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
+        <a href="" type="submit" name="finish" class="col s12 center-align">Save</a>
     </div>
 </div>
