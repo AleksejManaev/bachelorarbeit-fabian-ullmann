@@ -55,11 +55,14 @@ Werkzeug für die Manipulation von PDF-Dokumenten.
 Functions
 -------------
 
+### Systemfunktionen ###
+
++ TODO SSL
 
 ### Benutzerfunktionen ###
 #### Benutzerkennung ####
 
-Funktionert noch nicht mit LDAP
++ TODO LDAP-Anbindung
 
 
 #### Persönliche Daten ####

@@ -4,31 +4,38 @@
 
 {% block material_content %}
 
-    <form enctype="multipart/form-data" action="{% url 'placement-update' %}" method="post">
+    <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post">
         {% csrf_token %}
-        {% include 'student_placement_todo_widget.html' %}
+        {% include 'student_placement_widget.html' %}
     </form>
 
     <div class="row">
         <div class="
-                {% if student.thesis.mentoringrequest.status == 'NR' %}
+                {% if student.thesis.mentoringrequest.status != 'AC' %}
                    col s12
                 {% else %}
                     col s12 m8
                 {% endif %}
                 ">
-            <form action="{% url 'thesis-mentoringrequest-update' %}"
+            <form action="{% url 'student-thesis-mentoringrequest-update' %}"
                   method="post">
                 {% csrf_token %}
                 {% include 'student_thesis_mentoringrequest_widget.html' %}
             </form>
+            {% if student.thesis.mentoring %}
+                <form action="{% url 'student-thesis-documents-update' %}"
+                      method="post">
+                    {% csrf_token %}
+                    {% include 'student_thesis_documents_widget.html' %}
+                </form>
+            {% endif %}
 
         </div>
 
 
         {% if student.thesis.mentoring %}
             <div class="col s12 m4 ">
-                <form action="{% url 'thesis-registration-update' %}" method="post">
+                <form action="{% url 'student-thesis-registration-update' %}" method="post">
                     {% csrf_token %}
                     {% include 'student_thesis_registration_widget.html' %}
                 </form>
@@ -36,6 +43,7 @@
                 {% if student.thesis.registration.pdf_file %}
                     <form action="{% url 'thesis-registration-examinationboard' student.thesis.registration.pk %}"
                           method="post">
+                        {% csrf_token %}
                         {% include 'both_thesis_examinationboard_widget.html' %}
                     </form>
                 {% endif %}

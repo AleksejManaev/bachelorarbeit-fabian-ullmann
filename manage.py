@@ -5,7 +5,6 @@ import os
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bachelorarbeit-fabian-ullmann.settings")
-    # os.environ["DJANGO_SETTINGS_MODULE"] = "audi_mediamanager.settings_local"
 
     from django.core.management import execute_from_command_line
 

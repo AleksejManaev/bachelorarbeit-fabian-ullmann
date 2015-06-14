@@ -31,6 +31,6 @@ urlpatterns = [
                   url(r'^', include('mentoring.urls')),
                   url(r'^material/', include('materialize.urls')),
                   url(r'^admin/', include(admin.site.urls)),
-              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Todo file-Settings prüfen.

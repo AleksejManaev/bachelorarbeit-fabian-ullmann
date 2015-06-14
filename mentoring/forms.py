@@ -90,7 +90,6 @@ class FormPlacement(forms.ModelForm):
 
         if is_valid and req:
             self.instance.finished = True
-            print(self.instance.finished)
             self.instance.save()
 
         return is_valid
@@ -105,19 +104,63 @@ class FormPlacement(forms.ModelForm):
             'certificate': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
 
-class FormThesis(forms.ModelForm):
+
+class FormThesisDocuments(forms.ModelForm):
+    def is_valid(self):
+        """
+        Falls das Objekt bereits finalisiert wude -> invalid
+        """
+        if (self.instance.finished):
+            return False
+
+        """
+        Falls Thesis-Documents finalisiert werden soll, setze all Felder 'required'
+        """
+
+        req = True if self.data.has_key('finalize') and self.data['finalize'] == 'true' else False
+
+        for key, val in self.fields.iteritems():
+            if not key in ['public', 'finished']:
+                val.required = req
+            else:
+                val.required = False
+
+        is_valid = super(FormThesisDocuments, self).is_valid()
+
+        """
+        Falls Thesis-Documents valid und finalize -> Thesis.finished
+        """
+
+        if is_valid and req:
+            self.instance.finished = True
+            print(self.instance.finished)
+            self.instance.save()
+
+        return is_valid
+
+    class Meta:
+        model = Thesis
+        exclude = ['student', 'finished']
+        fields = '__all__'
+        widgets = {
+            'report': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'poster': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
+        }
+
+
+class FormThesisMentoringrequest(forms.ModelForm):
     def is_valid(self):
         req = True if self.data.has_key('finalize') else False
 
         for key, val in self.fields.iteritems():
             val.required = req
 
-        is_valid = super(FormThesis, self).is_valid()
+        is_valid = super(FormThesisMentoringrequest, self).is_valid()
         return is_valid
 
     class Meta:
         model = Thesis
-        exclude = ['student', 'finished']
+        exclude = ['student', 'finished', 'report', 'poster']
         fields = '__all__'
         widgets = {
             'description': forms.Textarea()
@@ -196,13 +239,13 @@ class FormRegistration(forms.ModelForm):
     class Meta:
         model = Registration
         fields = '__all__'
-        exclude = ['mentoring', 'permission_library_tutor', 'pdf_file']
+        exclude = ['mentoring', 'permission_library_tutor', 'pdf_file', 'finished']
 
 class FormRegistrationExamination(forms.ModelForm):
     class Meta:
         model = ResponseExaminationBoard
         fields = '__all__'
-        exclude = ['registration']
+        exclude = ['registration', 'finished']
 
 
 class FormColloquium(forms.ModelForm):

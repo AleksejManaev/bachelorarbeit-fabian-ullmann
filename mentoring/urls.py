@@ -44,6 +44,14 @@ urlpatterns = [
         StudentThesisRegistrationFormView.as_view(template_name='student_thesis_registration_form_todo.html'),
         name='student-thesis-registration-update-todo'),
 
+    url(r'^student/thesis/documents/update/$', StudentThesisDocumentsFormView.as_view(),
+        name='student-thesis-documents-update'),
+    url(r'^student/thesis/documents/update/todo/$',
+        StudentThesisDocumentsFormView.as_view(template_name='student_thesis_documents_form_todo.html'),
+        name='student-thesis-documents-update-todo'),
+    url(r'^student/thesis/documents/preview/$', StudentThesisIndexView.as_view(),
+        name='student-thesis-documents-preview'),
+
     url(r'^tutor/$', TutorView.as_view(), name='tutor-index'),
     url(r'^tutor/settings/$', login_required(TutorSettingsFormView.as_view()), name='tutor-settings'),
     url(r'^tutor/request/(?P<pk>\d+)/', TutorMentoringRequestFormView.as_view(), name='tutor-request'),

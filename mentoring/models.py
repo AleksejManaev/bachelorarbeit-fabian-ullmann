@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.utils.encoding import python_2_unicode_compatible
 import os
 
 from django.contrib.auth.models import User
@@ -25,6 +28,8 @@ class Degree(models.Model):
     def __str__(self):
         return self.description
 
+
+@python_2_unicode_compatible
 class Company(models.Model):
     name = models.CharField(_('company name'), max_length=100, unique=True)
 
@@ -68,11 +73,12 @@ class AbstractWork(models.Model):
 
 class Placement(AbstractWork):
     student = models.OneToOneField(Student, unique=True)
-    report = models.FileField(_('report'), upload_to=upload_to_report, blank=True, null=True,
+    report = models.FileField(_('report'), upload_to=upload_to_placement_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
-    presentation = models.FileField(_('presentation'), upload_to=upload_to_presentation, blank=True, null=True,
+    presentation = models.FileField(_('presentation'), upload_to=upload_to_placement_presentation, blank=True,
+                                    null=True,
                                     validators=[validate_pdf, validate_size])
-    certificate = models.FileField(_('certificate'), upload_to=upload_to_certificate, blank=True, null=True,
+    certificate = models.FileField(_('certificate'), upload_to=upload_to_placement_certificate, blank=True, null=True,
                                    validators=[validate_pdf, validate_size])
     public = models.BooleanField(_('public'), default=False)
 
@@ -84,7 +90,6 @@ class Placement(AbstractWork):
         super(Placement, self).save(force_insert, force_update, using, update_fields)
 
         # Loeschen alter Upload-Dateien
-
         for object in [self.report, self.presentation, self.certificate]:
             if (bool(object)):
                 dir = os.path.dirname(getattr(object, 'path'))
@@ -103,17 +108,15 @@ class ContactData(ContactModel):
     last_name = models.CharField(_('last name'), max_length=30)
     email = models.EmailField(_('email'))
 
-    def __str__(self):
-        return "{} {} {}".format(self.title, self.first_name, self.last_name)
-
 class CompanyContactData(ContactData):
     work_company = models.OneToOneField(WorkCompany)
 
-    def __str__(self):
-        return "{} {}".format(self.first_name, self.last_name)
-
 class Thesis(AbstractWork):
     student = models.OneToOneField(Student, unique=True)
+    report = models.FileField(_('report'), upload_to=upload_to_thesis_report, blank=True, null=True,
+                              validators=[validate_pdf, validate_size])
+    poster = models.FileField(_('poster'), upload_to=upload_to_thesis_poster, blank=True, null=True,
+                              validators=[validate_pdf, validate_size])
 
     def __str__(self):
         return ('Thesis {}'.format(self.student.user.username))
@@ -218,6 +221,7 @@ class ResponseExaminationBoard(models.Model):
     start_editing = models.DateField(_('start editing'), null=True, blank=True)
     stop_editing = models.DateField(_('stop editing'), null=True, blank=True)
     extend_to = models.DateField(_('extended to'), null=True, blank=True)
+    finished = models.BooleanField(default=False)
 
 class Colloquium(models.Model):
     mentoring = models.OneToOneField(Mentoring)
@@ -231,24 +235,26 @@ class CompanyRating(models.Model):
     comment = models.TextField(_('comment'))
     public = models.BooleanField(default=False)
 
-# @receiver(post_save, sender=Student)
-# def post_save_student(sender, instance, created, **kwargs):
-#     if created:
-#         placement = Placement.objects.get_or_create(student=instance)[0]
-#         thesis = Thesis.objects.get_or_create(student=instance)[0]
-#
-#         CompanyContactData.objects.get_or_create(
-#             work_company=WorkCompany.objects.get_or_create(
-#                 work=placement)[0])
-#         CompanyContactData.objects.get_or_create(
-#             work_company=WorkCompany.objects.get_or_create(
-#                 work=thesis)[0])
-#         mr = MentoringRequest(status='NR')
-#         mr.thesis = thesis
-#         mr.save()
-#         # Mentoring.objects.get_or_create(thesis=thesis, tutor_1=mr)
-#         Address.objects.get_or_create(portal_user=instance)
-#
-# @receiver(post_delete, sender=CompanyContactData)
-# def post_delete_contactdata(sender, instance, using, **kwargs):
-#     CompanyContactData.objects.get_or_create(work_company=instance.work_company)
+
+@receiver(post_save, sender=Student)
+def post_save_student(sender, instance, created, **kwargs):
+    if created:
+        placement = Placement.objects.get_or_create(student=instance)[0]
+        thesis = Thesis.objects.get_or_create(student=instance)[0]
+
+        CompanyContactData.objects.get_or_create(
+            work_company=WorkCompany.objects.get_or_create(
+                work=placement)[0])
+        CompanyContactData.objects.get_or_create(
+            work_company=WorkCompany.objects.get_or_create(
+                work=thesis)[0])
+        mr = MentoringRequest(status='NR')
+        mr.thesis = thesis
+        mr.save()
+        # Mentoring.objects.get_or_create(thesis=thesis, tutor_1=mr)
+        Address.objects.get_or_create(portal_user=instance)
+
+
+@receiver(post_delete, sender=CompanyContactData)
+def post_delete_contactdata(sender, instance, using, **kwargs):
+    CompanyContactData.objects.get_or_create(work_company=instance.work_company)

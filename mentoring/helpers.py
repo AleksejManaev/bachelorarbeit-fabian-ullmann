@@ -13,20 +13,29 @@ def createHash():
     return hash.hexdigest()[:10]
 
 
-def upload_to_report(instance, filename):
+def upload_to_placement_report(instance, filename):
     uri = '%s/placement/report/%s' % (instance.student.user, filename)
     return uri
 
 
-def upload_to_presentation(instance, filename):
+def upload_to_placement_presentation(instance, filename):
     uri = '%s/placement/presentation/%s' % (instance.student.user, filename)
     return uri
 
 
-def upload_to_certificate(instance, filename):
+def upload_to_placement_certificate(instance, filename):
     uri = '%s/placement/certificate/%s' % (instance.student.user, filename)
     return uri
 
+
+def upload_to_thesis_report(instance, filename):
+    uri = '%s/thesis/documents/report/%s' % (instance.student.user, filename)
+    return uri
+
+
+def upload_to_thesis_poster(instance, filename):
+    uri = '%s/thesis/documents/poster/%s' % (instance.student.user, filename)
+    return uri
 
 class ContentTypeRestrictedFileField(models.FileField):
     """

@@ -23,9 +23,10 @@
             <div class="card-title">Registration</div>
 
             <div class="actions">
-                <a href="{% url 'thesis-registration-update-todo' %}?editMode=true"
-                   class="fancybox fancybox.iframe"><i class="mdi-image-edit white-text"></i></a>
-                <a href="{% url 'thesis-mentoringrequest-preview' %}" class="fancybox fancybox.iframe"><i
+                <a href="{% url 'student-thesis-registration-update-todo' %}?editMode=true"
+                   class="fancybox fancybox.iframe"><i class="mdi-editor-border-color white-text"></i></a>
+                <a href="{% url 'thesis-registration-preview' thesis_registration_form.instance.pk %}"
+                   class="fancybox fancybox.iframe"><i
                         class="mdi-av-my-library-books white-text"></i></a>
             </div>
         </div>
