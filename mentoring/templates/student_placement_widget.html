@@ -5,7 +5,7 @@
         <li><a href="{% url 'student-placement-update' %}" class="fancybox fancybox.iframe">Edit in Form</a></li>
     {% else %}
         <li><a href="{% url 'student-placement-preview' %}" class="fancybox fancybox.iframe">Preview</a></li>
-        <li><a href="{% url 'student-placement-update-todo' %}?editMode=true" class="">Edit Mode</a></li>
+        <li><a href="{% url 'student-placement-update-todo' %}?editMode=true" class="reload">Edit Mode</a></li>
     {% endif %}
 </ul>
 
@@ -17,7 +17,7 @@
         <div class="card-header green white-text">
             <div class="card-title">Placement</div>
             <div class="actions">
-                <a href="{% url 'student-placement-update-todo' %}?editMode=true" class="fancybox fancybox.iframe"><i
+                <a href="{% url 'student-placement-update-todo' %}?editMode=true" class="reload"><i
                         class="mdi-editor-border-color white-text"></i></a>
                 <a href="{% url 'student-placement-preview' %}" class="fancybox fancybox.iframe"><i
                         class="mdi-av-my-library-books white-text"></i></a></div>

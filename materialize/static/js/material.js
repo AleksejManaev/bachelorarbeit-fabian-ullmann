@@ -126,6 +126,11 @@ $(document).ready(
         $("form").materialform();
         $(".dropdown-button").dropdown();
         $('.fancybox').fancybox();
+        $('a.reload').on('click', function (e) {
+            $.ajax(e.target.href)
+                .done(location.reload())
+            return false
+        });
 
         $("form .card-action [type=submit]").on('click', function (e) {
             $(this).parents('form').submit();
