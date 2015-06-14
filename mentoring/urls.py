@@ -45,7 +45,7 @@ urlpatterns = [
         ThesisRegistrationUpdateView.as_view(),
         name='thesis-registration-update'),
     url(r'^thesis/registration/update/todo/$',
-        ThesisRegistrationUpdateView.as_view(template_name='student/registration/registration_todo_form.html'),
+        ThesisRegistrationUpdateView.as_view(template_name='student/thesis/registration/registration_todo_form.html'),
         name='thesis-registration-update-todo'),
     url(r'^thesis/registration/(?P<pk>\d+)/preview/$', ThesisRegistrationPDFDownloadPreview.as_view(),
         name='thesis-registration-preview'),

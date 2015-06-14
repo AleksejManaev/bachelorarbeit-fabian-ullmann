@@ -208,6 +208,7 @@ class Registration(models.Model):
     permission_library = models.BooleanField(_('permission library'), default=False)
     permission_library_tutor = models.BooleanField(_('permission library tutor'), default=False)
     pdf_file = models.FileField(_('PDF File'), null=True, blank=True)
+    finished = models.BooleanField(default=False)
 
     def student(self):
         return self.mentoring.request.from_student()
@@ -217,7 +218,6 @@ class ResponseExaminationBoard(models.Model):
     start_editing = models.DateField(_('start editing'), null=True, blank=True)
     stop_editing = models.DateField(_('stop editing'), null=True, blank=True)
     extend_to = models.DateField(_('extended to'), null=True, blank=True)
-    delivery = models.DateField(_('delivery thesis'), null=True, blank=True)
 
 class Colloquium(models.Model):
     mentoring = models.OneToOneField(Mentoring)

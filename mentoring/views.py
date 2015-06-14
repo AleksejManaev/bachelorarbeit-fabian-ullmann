@@ -43,7 +43,6 @@ class PlacementUpdateView(UpdateView):
 
     def get(self, request, status=200, *args, **kwargs):
         self.object = self.get_object()
-        print(request.is_ajax())
         if (request.GET.has_key('editMode')):
             self.object.finished = False
             self.object.save()
@@ -183,7 +182,6 @@ class ThesisMentoringrequestUpdateView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
 
-
 class ThesisMentoringrequestView(DetailView):
     model = MentoringRequest
     template_name = 'student/thesis/mentoringrequest/mentoringrequest.html'
@@ -199,6 +197,11 @@ class ThesisRegistrationUpdateView(UpdateView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_registration()
+        if (request.GET.has_key('editMode')):
+            self.object.finished = False
+            self.object.save()
+            return redirect('./')
+
         cd = self.get_context_data()
         cd.update(self.get_context_registration())
         return self.render_to_response(cd)
@@ -220,6 +223,9 @@ class ThesisRegistrationUpdateView(UpdateView):
         with open(settings.BASE_DIR + settings.MEDIA_ROOT + self.object.pdf_file.name, 'r') as pdf:
             response = http.HttpResponse(pdf.read(), content_type='application/pdf')
             response['Content-Disposition'] = '{}; filename="Anmeldung_Abschlussarbeit.pdf"'.format(self.target)
+            self.object.finished = True
+            self.object.save();
+
             return response
         pdf.closed
 
@@ -310,7 +316,7 @@ class ThesisRegistrationPDFDownload(DetailView):
         if (hasattr(request.user.portaluser,
                     'student')) and not self.object.pk == request.user.portaluser.student.thesis.registration.pk:
             return http.HttpResponseForbidden()
-        print(self.object.pdf_file)
+
         with open(settings.BASE_DIR + settings.MEDIA_ROOT + self.object.pdf_file.name, 'r') as pdf:
             response = http.HttpResponse(pdf.read(), content_type='application/pdf')
             response['Content-Disposition'] = '{}; filename="Anmeldung_Abschlussarbeit.pdf"'.format(self.target)
@@ -326,42 +332,6 @@ class ThesisPreviewView(DetailView):
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
-
-class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, ThesisRegistrationUpdateView):
-    template_name = 'student/student_index.html'
-    model = Student
-
-    def get(self, request, status=200, *args, **kwargs):
-        if not self.get_object():
-            return redirect('index')
-        else:
-            return super(StudentUpdateView, self).get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = {}
-        if self.get_object():
-            context['object'] = self.object
-            context_object_name = self.get_context_object_name(self.object)
-            if context_object_name:
-                context[context_object_name] = self.object
-            context.update(kwargs)
-            context.update(self.get_context_thesis())
-            context.update(self.get_context_placement())
-            context.update(self.get_context_registration())
-            return context
-        else:
-            return None
-
-    def get_thesis(self):
-        return self.get_object().thesis if self.get_object() else None
-
-    def get_placement(self):
-        return self.get_object().placement if self.get_object() else None
-    def get_registration(self):
-        return self.get_object().thesis.registration if self.get_object() else None
-    def get_object(self, queryset=None):
-        st = Student.objects.filter(user=self.request.user)
-        return st[0] if len(st) > 0 else None
 
 class TutorView(DetailView):
     model = Tutor
@@ -533,7 +503,6 @@ class TutorColloquiumView(UpdateView):
     def get_success_url(self):
         return ''
 
-
 class TutorMentoringReportView(UpdateView):
     model = MentoringReport
     template_name = 'tutor/tutor_mentoring_report.html'
@@ -682,3 +651,47 @@ class TutorSettingsView(UpdateView):
 
     def get_object(self, queryset=None):
         return Tutor.objects.get(user=self.request.user)
+
+
+class StudentUpdateView(ThesisMentoringrequestUpdateView, PlacementUpdateView, ThesisRegistrationUpdateView,
+                        ThesisRegistrationExaminationboardView):
+    template_name = 'student/student_index.html'
+    model = Student
+
+    def get(self, request, status=200, *args, **kwargs):
+        if not self.get_object():
+            return redirect('index')
+        else:
+            return super(StudentUpdateView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        if self.get_object():
+            context['object'] = self.object
+            context_object_name = self.get_context_object_name(self.object)
+            if context_object_name:
+                context[context_object_name] = self.object
+            context.update(kwargs)
+            context.update(self.get_context_thesis())
+            context.update(self.get_context_placement())
+            context.update(self.get_context_registration())
+            context.update(self.get_context_examinationboard())
+            return context
+        else:
+            return None
+
+    def get_thesis(self):
+        return self.get_object().thesis if self.get_object() else None
+
+    def get_examinationboard(self, queryset=None):
+        return self.object.thesis.registration.responseexaminationboard
+
+    def get_placement(self):
+        return self.get_object().placement if self.get_object() else None
+
+    def get_registration(self):
+        return self.get_object().thesis.registration if self.get_object() else None
+
+    def get_object(self, queryset=None):
+        st = Student.objects.filter(user=self.request.user)
+        return st[0] if len(st) > 0 else None

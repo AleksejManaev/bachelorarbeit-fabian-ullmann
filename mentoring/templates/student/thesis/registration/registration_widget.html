@@ -7,16 +7,27 @@
     <li><a href="{% url 'thesis-registration-pdf' thesis_registration_form.instance.pk %}">Download</a></li>
 </ul>
 <div class="card todo-list">
+    {% if not registration.finished %}
+        {% material_card_header title='Thesis-Registration' actions='dropdown_thesis_registration' %}
 
+        <div class="card-content">
+            {% material_form thesis_registration_form %}
+        </div>
+        <div class="card-action valign-wrapper">
+            <a href="{% url 'thesis-registration-pdf' thesis_registration_form.instance.pk %}"
+               class="fancybox fancybox.iframe col s12 center-align"
+               type="submit" name="pdf">PDF</a>
+        </div>
+    {% else %}
+        <div class="card-header green white-text">
+            <div class="card-title">Registration</div>
 
-    {% material_card_header title='Thesis-Registration' actions='dropdown_thesis_registration' %}
-
-    <div class="card-content">
-        {% material_form thesis_registration_form %}
-    </div>
-    <div class="card-action valign-wrapper">
-        <a href="{% url 'thesis-registration-pdf' thesis_registration_form.instance.pk %}"
-           class="fancybox fancybox.iframe col s12 center-align"
-           type="submit" name="pdf">PDF</a>
-    </div>
+            <div class="actions">
+                <a href="{% url 'thesis-registration-update-todo' %}?editMode=true"
+                   class="fancybox fancybox.iframe"><i class="mdi-image-edit white-text"></i></a>
+                <a href="{% url 'thesis-mentoringrequest-preview' %}" class="fancybox fancybox.iframe"><i
+                        class="mdi-av-my-library-books white-text"></i></a>
+            </div>
+        </div>
+    {% endif %}
 </div>

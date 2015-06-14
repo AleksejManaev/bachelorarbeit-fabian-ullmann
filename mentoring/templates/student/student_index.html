@@ -32,8 +32,9 @@
                     {% csrf_token %}
                     {% include 'student/thesis/registration/registration_widget.html' %}
                 </form>
-                {% if student.thesis.mentoring.pdf_file %}
-                    <form action="{% url 'thesis-registration-examinationboard' examinationboard.registration.pk %}"
+
+                {% if student.thesis.registration.pdf_file %}
+                    <form action="{% url 'thesis-registration-examinationboard' student.thesis.registration.pk %}"
                           method="post">
                         {% include 'widget/thesis_examinationboard_widget.html' %}
                     </form>

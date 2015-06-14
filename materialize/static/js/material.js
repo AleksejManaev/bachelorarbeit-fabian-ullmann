@@ -127,10 +127,10 @@ $(document).ready(
         $(".dropdown-button").dropdown();
         $('.fancybox').fancybox();
 
-        //$("form .card-action [type=submit]").on('click', function (e) {
-        //    $(this).parents('form').submit();
-        //
-        //})
+        $("form .card-action [type=submit]").on('click', function (e) {
+            $(this).parents('form').submit();
+
+        })
 
 
 
