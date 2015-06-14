@@ -107,6 +107,7 @@ Functions
 + Gutachter können Abgabetermin festlegen
 
 + Gutachter können erhaltene Antwort vom Prüfungsausschuss im System hinterlegen
++ TODO Gutachter können zu gewünschtem Unternehmen Bewertungen sehen
 
 #### Kolloquium ####
 
