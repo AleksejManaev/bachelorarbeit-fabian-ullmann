@@ -391,7 +391,6 @@ class StudentThesisRegistrationFormView(UpdateView):
             return response
         pdf.closed
 
-
     def get_context_registration(self, data=None):
         registration = self.get_registration()
         return {
@@ -406,8 +405,6 @@ class StudentThesisRegistrationFormView(UpdateView):
         return Registration.objects.get_or_create(
             mentoring=self.request.user.portaluser.student.thesis.mentoringrequest.mentoring)[0]
 
-    def get_success_url(self):
-        return ''
 
     def save_pdf(self):
         """
@@ -464,7 +461,7 @@ class StudentThesisRegistrationFormView(UpdateView):
         # call command line
 
         os.system(
-            'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf output {directory}/{file}'.format(
+            'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf output {directory}/{file} flatten'.format(
                 mediaroot=settings.MEDIA_ROOT, directory=directory, file=filename))
 
         student.thesis.registration.pdf_file.name = '{}/thesis/registration/{}'.format(student.user, filename)
