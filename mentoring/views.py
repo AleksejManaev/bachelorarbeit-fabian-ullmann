@@ -406,7 +406,6 @@ class StudentThesisRegistrationFormView(UpdateView):
         return Registration.objects.get_or_create(
             mentoring=self.request.user.portaluser.student.thesis.mentoringrequest.mentoring)[0]
 
-
     def save_pdf(self):
         """
         Erstellt das Anmeldeformular
@@ -417,17 +416,17 @@ class StudentThesisRegistrationFormView(UpdateView):
         # Eingabefelder von 'files/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular'
 
         fields = [
-            ('Strasse', student.address.street),
-            ('PLZ_Ort', '{} {}'.format(student.address.zip_code, student.address.city)),
+            ('Strasse', "%s" % (student.address.street)),
+            ('PLZ_Ort', "%s %s" % (student.address.zip_code, student.address.city)),
             ('email_extern', student.extern_email),
             ('Absolventendatei', 0 if student.thesis.registration.permission_contact else 'Off'),
             ('Check Box4', 'Off'),
             ('Check Box4a', 'Off'),
             ('Studiengang', student.course),
-            ('Student_Name', student.user.get_full_name()),
+            ('Student_Name', "%s %s" % (student.user.first_name, student.user.last_name)),
             ('Matrikelnummer', student.matriculation_number),
-            ('p2_Strasse', student.address.street),
-            ('p2_PLZ_Ort', '{} {}'.format(student.address.zip_code, student.address.city)),
+            ('p2_Strasse', "%s" % (student.address.street)),
+            ('p2_PLZ_Ort', "%s %s" % (student.address.zip_code, student.address.city)),
             ('p2_email', student.user.email),
             ('Alumniarbeit', 'Ja' if student.thesis.registration.permission_contact else 'Off'),
             ('Infocus', 'Ja' if student.thesis.registration.permission_infocus else 'Off'),
@@ -435,18 +434,20 @@ class StudentThesisRegistrationFormView(UpdateView):
             ('PubServer', 'Ja' if student.thesis.registration.permission_public else 'Off'),
             ('PubServer_EG', 'Ja' if student.thesis.registration.permission_library_tutor else 'Off'),
             ('Bearbeitungszeit', student.course.get_editing_time_display()),
-            ('Thema der Abschlussarbeit', student.thesis.registration.subject),
-            ('Gutachter_1', student.thesis.mentoring.tutor_1),
-            ('Gutachter_2', student.thesis.mentoring.tutor_2),
+            ('Thema der Abschlussarbeit', "%s" % (student.thesis.registration.subject)),
+            ('Gutachter_1', "%s %s %s" % (
+            student.thesis.mentoring.tutor_1.title, student.thesis.mentoring.tutor_1.user.first_name,
+            student.thesis.mentoring.tutor_1.user.last_name)),
+            ('Gutachter_2', "%s %s %s" % (
+            student.thesis.mentoring.tutor_2.contact.title, student.thesis.mentoring.tutor_2.contact.first_name,
+            student.thesis.mentoring.tutor_2.contact.last_name)),
             ('Datum_Antrag', datetime.now().strftime("%d.%m.%Y"))
         ]
 
         # Where to save the registration-pdf
 
         directory = "{}/{}/thesis/registration/".format(settings.MEDIA_ROOT, self.request.user)
-        filename = 'Anmeldung-Abschlussarbeit-{firstn}-{lastn}.pdf'.format(directory=directory,
-                                                                           firstn=self.request.user.first_name,
-                                                                           lastn=self.request.user.last_name)
+        filename = 'Anmeldung-Abschlussarbeit.pdf'
 
         if not os.path.exists(directory):
             os.makedirs(directory)

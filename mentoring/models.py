@@ -48,7 +48,6 @@ class ContactModel(models.Model):
 class PortalUser(ContactModel):
     user = models.OneToOneField(User, primary_key=True)
 
-
 @python_2_unicode_compatible
 class Student(PortalUser):
     course = models.ForeignKey(Course)
@@ -159,6 +158,10 @@ class Tutor(PortalUser):
     @property
     def mentorings(self):
         return Mentoring.objects.filter(tutor_1=self)
+
+    @property
+    def get_full_name(self):
+        return "%s %s %s" % (self.title, self.user.first_name, self.user.last_name)
 
     def __str__(self):
         return u"{} {} {}".format(self.title, self.user.first_name, self.user.last_name)

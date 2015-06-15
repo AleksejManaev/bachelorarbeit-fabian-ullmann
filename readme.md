@@ -14,7 +14,7 @@ by Fabian Ullmann
 <http://ba.20null4.de/>
 
 
-Introduction
+Anleitung
 ------------
 Der aktuelle Entwicklungsstand kann unter <http://ba.20null4.de> betrachtet werden. 
 
@@ -52,8 +52,12 @@ Werkzeug für die Manipulation von PDF-Dokumenten.
 		apt-get install pdftk
 
 
-Functions
+Funktionen
 -------------
+
+### Darstellung ###
+
++ Für Smartphone, Tablet und Desktop optimiert
 
 ### Systemfunktionen ###
 
