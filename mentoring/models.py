@@ -10,6 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 from mentoring.helpers import *
 from mentoring.validators import *
 
+
+@python_2_unicode_compatible
 class Course(models.Model):
     TIME_CHOICES = (
         ('3', _('3 months')),
@@ -46,13 +48,15 @@ class ContactModel(models.Model):
 class PortalUser(ContactModel):
     user = models.OneToOneField(User, primary_key=True)
 
+
+@python_2_unicode_compatible
 class Student(PortalUser):
     course = models.ForeignKey(Course)
     matriculation_number = models.CharField(_('matriculation number'), max_length=8)
     extern_email = models.EmailField()
 
     def __str__(self):
-        return "{} ({})".format(self.user.get_full_name(), self.matriculation_number)
+        return u"{} ({})".format(self.user.get_full_name(), self.matriculation_number)
 
 class Address(models.Model):
     portal_user = models.OneToOneField(Student)
@@ -61,6 +65,7 @@ class Address(models.Model):
     zip_code = models.CharField(_('zip code'), max_length=30)
     location = models.CharField(_('location'), max_length=100)
     web_address = models.CharField(_('web address'), max_length=255, blank=True, null=True)
+
 
 class AbstractWork(models.Model):
     description = models.TextField(_('description'), blank=True, null=True)
@@ -71,6 +76,8 @@ class AbstractWork(models.Model):
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
 
+
+@python_2_unicode_compatible
 class Placement(AbstractWork):
     student = models.OneToOneField(Student, unique=True)
     report = models.FileField(_('report'), upload_to=upload_to_placement_report, blank=True, null=True,
@@ -83,7 +90,7 @@ class Placement(AbstractWork):
     public = models.BooleanField(_('public'), default=False)
 
     def __str__(self):
-        return "Placement {}".format(self.student.user.username)
+        return u"Placement {}".format(self.student.user.username)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -103,14 +110,21 @@ class WorkCompany(models.Model):
     company = models.ForeignKey(Company, null=True, blank=True)
     description = models.TextField(_('company description'), blank=False)
 
+
+@python_2_unicode_compatible
 class ContactData(ContactModel):
     first_name = models.CharField(_('first name'), max_length=30)
     last_name = models.CharField(_('last name'), max_length=30)
     email = models.EmailField(_('email'))
 
+    def __str__(self):
+        return u"{} {} {}".format(self.title, self.first_name, self.last_name)
+
 class CompanyContactData(ContactData):
     work_company = models.OneToOneField(WorkCompany)
 
+
+@python_2_unicode_compatible
 class Thesis(AbstractWork):
     student = models.OneToOneField(Student, unique=True)
     report = models.FileField(_('report'), upload_to=upload_to_thesis_report, blank=True, null=True,
@@ -119,7 +133,7 @@ class Thesis(AbstractWork):
                               validators=[validate_pdf, validate_size])
 
     def __str__(self):
-        return ('Thesis {}'.format(self.student.user.username))
+        return u'Thesis {}'.format(self.student.user.username)
 
     @property
     def mentoring(self):
@@ -132,6 +146,8 @@ class Thesis(AbstractWork):
         else:
             return None
 
+
+@python_2_unicode_compatible
 class Tutor(PortalUser):
     @property
     def new_requests(self):
@@ -145,8 +161,10 @@ class Tutor(PortalUser):
         return Mentoring.objects.filter(tutor_1=self)
 
     def __str__(self):
-        return "{} {} {}".format(self.title, self.user.first_name, self.user.last_name)
+        return u"{} {} {}".format(self.title, self.user.first_name, self.user.last_name)
 
+
+@python_2_unicode_compatible
 class MentoringRequest(models.Model):
     STATUS_CHOICES = (
         ('NR', 'not requested'),
@@ -162,7 +180,7 @@ class MentoringRequest(models.Model):
     answer = models.TextField(_('answer'), blank=True, null=True)
 
     def __str__(self):
-        return "Request for {}".format(self.tutor_email)
+        return u"Request for {}".format(self.tutor_email)
 
     def from_student(self):
         return self.thesis.student
@@ -180,12 +198,14 @@ class Mentoring(models.Model):
     def tutor_2(self):
         return self.tutor2contactdata
 
+
+@python_2_unicode_compatible
 class Tutor2ContactData(models.Model):
     mentoring = models.OneToOneField(Mentoring)
     contact = models.OneToOneField(ContactData)
 
     def __str__(self):
-        return "{} {} {}".format(self.contact.title, self.contact.first_name, self.contact.last_name)
+        return u"{} {} {}".format(self.contact.title, self.contact.first_name, self.contact.last_name)
 
 class MentoringReport(models.Model):
     mentoring = models.OneToOneField(Mentoring)
