@@ -129,14 +129,14 @@ $(document).ready(
             $(this).attr('href', $(this).attr('href') + '?fancy=true');
         });
         $('.fancybox').fancybox({
-            onClosed: function () {
+            afterClose: function () {
                 window.location.reload();
             }
         });
         $('a.reload').off('click');
         $('a.reload').on('click', function (e) {
-            $.ajax(e.target.href)
-                .done(location.reload());
+            $.ajax($(this).attr('href'))
+                .done(window.location.reload());
             return false;
         });
 
