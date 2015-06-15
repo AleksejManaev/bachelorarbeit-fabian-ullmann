@@ -2,7 +2,10 @@
 {% load material %}
 
 {% block material_content %}
-    <form action="{% url 'tutor-mentoring-report' mentoringreport.mentoring.pk %}" method="post">
+    <form action="
+            {% url 'tutor-mentoring-report' mentoringreport.mentoring.pk %}{{ request.is_ajax|yesno:"?fancy=true," }}"
+          method="post">
+        {% csrf_token %}
         {% include 'tutor_mentoring_report_widget.html' %}
     </form>
 {% endblock %}

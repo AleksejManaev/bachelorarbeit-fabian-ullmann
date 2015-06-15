@@ -18,6 +18,11 @@ class DetailView(django.views.generic.DetailView):
 
         return super(DetailView, self).get(request, *args, **kwargs)
 
+
+class UpdateView(django.views.generic.UpdateView):
+    def get_success_url(self):
+        return '?fancy=true' if self.request.GET.has_key('fancy') else ''
+
 class IndexView(RedirectView):
     """
     + prüft ob Tutor oder Student eingeloggt ist und leitet zur entsprechenden Index-Seite weiter
@@ -901,6 +906,11 @@ class TutorMentoringReportFormView(UpdateView):
         return self.render_to_response(c)
 
     def post(self, request, *args, **kwargs):
+        print request.GET
+        print request.POST
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
         self.object = self.get_mentoringreport()
         c = self.get_context_mentoringreport(data=request.POST)
 
@@ -922,9 +932,6 @@ class TutorMentoringReportFormView(UpdateView):
     def get_object(self, queryset=None):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
         return MentoringReport.objects.get_or_create(mentoring_id=pk)[0]
-
-    def get_success_url(self):
-        return ''
 
 
 class TutorMentoringFormView(TutorMentoringReportFormView, TutorMentoringColloquiumFormView,
