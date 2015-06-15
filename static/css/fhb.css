@@ -145,7 +145,7 @@ a.disabled {
 
 }
 
-.card-action.acceptdeny button {
+.card-action.acceptdeny input {
     background: none !important;
     border: none;
     padding: 0 !important;

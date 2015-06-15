@@ -251,16 +251,18 @@ class StudentThesisMentoringrequestFormView(UpdateView):
         wird auch von erbenden Klassen genutzt
         """
         thesis = self.get_thesis_mentoringrequest()
+        workcompany = WorkCompany.objects.get_or_create(work=thesis)[0]
+        mentoringrequest = MentoringRequest.objects.get_or_create(thesis=thesis)[0]
         return {
             'thesis': thesis,
             'thesis_mentoringrequest_form': FormThesisMentoringrequest(data, files=files, instance=thesis,
                                                                        prefix='thesis_mentoringrequest_form'),
-            'thesis_mentoringrequest_company_form': FormCompany(data, parent=thesis.workcompany,
-                                                                instance=thesis.workcompany.company,
+            'thesis_mentoringrequest_company_form': FormCompany(data, parent=workcompany,
+                                                                instance=workcompany.company,
                                                                 prefix='thesis_mentoringrequest_company_form'),
             'thesis_mentoringrequest_company_formset': FormsetWorkCompany(data, instance=thesis,
                                                                           prefix='thesis_mentoringrequest_company_formset'),
-            'thesis_mentoringrequest_contact_formset': FormsetWorkCompanyContactdata(data, instance=thesis.workcompany,
+            'thesis_mentoringrequest_contact_formset': FormsetWorkCompanyContactdata(data, instance=workcompany,
                                                                                      prefix='thesis_mentoringrequest_contact_formset'),
             'thesis_mentoringrequest_student_form': FormMentoringrequestStudent(data, instance=thesis.mentoringrequest,
                                                                                 prefix='thesis_mentoringrequest_student_form'), }
@@ -650,7 +652,9 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
         return Thesis.objects.get_or_create(student=self.get_object())[0]
 
     def get_examinationboard(self, queryset=None):
-        return ResponseExaminationBoard.objects.get_or_create(registration=self.get_registration())[0]
+        return self.get_object().thesis.registration.responseexaminationboard if hasattr(
+            self.get_thesis_mentoringrequest(),
+            'mentoring') else None
 
     def get_placement(self):
         return Placement.objects.get_or_create(student=self.get_object())[0]
@@ -696,6 +700,7 @@ class TutorMentoringListView(ListView):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
 
         return super(TutorMentoringListView, self).get(request, *args, **kwargs)
+
     def get_queryset(self):
         return Mentoring.objects.filter(tutor_1__user=self.request.user)
 
@@ -812,10 +817,11 @@ class TutorMentoringRequestFormView(UpdateView):
         return self.render_to_response(cd)
 
     def post(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_object()
         fmrt = FormMentoringrequestTutor(data=request.POST, instance=self.object, prefix='mentoringrequest_form')
-
-        if (request.POST.has_key('deny')):
+        if (request.POST.get('submit') == "Deny"):
             if (fmrt.is_valid()):
                 fmrt.instance.status = 'DE'
                 fmrt.instance.tutor_email = None
@@ -829,8 +835,7 @@ class TutorMentoringRequestFormView(UpdateView):
             cmr['mentoringrequest_form'] = fmrt
             cd.update(cmr)
             return self.render_to_response(cd, status=status)
-
-        elif (request.POST.has_key('accept')):
+        elif (request.POST.get('submit') == "Accept"):
             forms = self.get_context_mentoringrequest(data=request.POST)
             if (forms['mentoringrequest_form'].is_valid()
                 and forms['mentoringrequest_tutor2_form'].is_valid()):

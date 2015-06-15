@@ -125,10 +125,14 @@ $(document).ready(
 
         $("form").materialform();
         $(".dropdown-button").dropdown();
-        $.each($('.fancybox'), function(){
-            $(this).attr('href',$(this).attr('href')+'?fancy=true');
+        $.each($('.fancybox'), function () {
+            $(this).attr('href', $(this).attr('href') + '?fancy=true');
         });
-        $('.fancybox').fancybox();
+        $('.fancybox').fancybox({
+            onClosed: function () {
+                window.location.reload();
+            }
+        });
         $('a.reload').off('click');
         $('a.reload').on('click', function (e) {
             $.ajax(e.target.href)
@@ -140,7 +144,6 @@ $(document).ready(
             $(this).parents('form').submit();
 
         })
-
 
 
     }
