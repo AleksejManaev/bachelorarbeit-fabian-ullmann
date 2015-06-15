@@ -5,16 +5,18 @@
     <form action="" method="post">
         {% csrf_token %}
 
+        {{ tutor_user_formset.management_form }}
         {% for form in tutor_user_formset.forms %}
+            {% material_formfield form.user %}
             {% material_formfield form.title %}
         {% endfor %}
         {% material_formfield user_form.first_name %}
         {% material_formfield user_form.last_name %}
 
+
         {% for form in tutor_user_formset.forms %}
             {% material_formfield form.phone %}
         {% endfor %}
-
         <button type="submit">submit</button>
     </form>
 {% endblock %}
