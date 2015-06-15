@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div class="row grey lighten-5">
-                        <div class="col s8">
+                        <div class="col s12 m8">
                             <b>{{ object.thesis.workcompany.company }}</b>
                             {# TODO Link zu CompanyWorks  #}
                             ({{ object.thesis.workcompany.company.works|length|add:-1 }})
@@ -31,7 +31,7 @@
                                 <li><i> {{ object.thesis.workcompany.description|linebreaksbr }}</i></li>
                             </ul>
                         </div>
-                        <div class="col s4">
+                        <div class="col s12 m4">
                             <b>{{ object.thesis.workcompany.companycontactdata.title }} {{ object.thesis.workcompany.companycontactdata.first_name }} {{ object.thesis.workcompany.companycontactdata.last_name }}</b>
                             <ul>
                                 <li><i class="mdi-content-mail"></i> <a

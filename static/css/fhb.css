@@ -172,3 +172,24 @@ a.disabled {
     margin-top: 5px;
     margin-right: 2px;
 }
+
+@media only screen and (max-width: 992px) {
+    nav .brand-logo, nav .brand-logo.center {
+        left: inherit;
+        -webkit-transform: translateX(0);
+        -moz-transform: translateX(0);
+        -ms-transform: translateX(0);
+        -o-transform: translateX(0);
+        transform: translateX(0);
+        background-size: contain !important;
+        width: 100px !important;
+    }
+
+    nav ul a {
+        font-size: 1rem;
+        color: #fff;
+        display: block;
+        padding: 0 5px;
+    }
+}
+
