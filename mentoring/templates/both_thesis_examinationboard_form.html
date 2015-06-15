@@ -2,7 +2,9 @@
 {% load material %}
 
 {% block material_content %}
-    <form action="{% url 'thesis-registration-examinationboard' examinationboard.registration.pk %}" method="post">
+    <form action="
+            {% url 'thesis-registration-examinationboard' examinationboard.registration.pk %}{{ request.is_ajax|yesno:'?fancy=true,' }}"
+          method="post">
         {% csrf_token %}
         {% include 'both_thesis_examinationboard_widget.html' %}
     </form>

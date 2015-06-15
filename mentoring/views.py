@@ -21,6 +21,8 @@ class DetailView(django.views.generic.DetailView):
 
 class UpdateView(django.views.generic.UpdateView):
     def get_success_url(self):
+        print "get_succes_url"
+        print(self.request.GET.has_key('fancy'))
         return '?fancy=true' if self.request.GET.has_key('fancy') else ''
 
 class IndexView(RedirectView):
@@ -102,11 +104,13 @@ class BothThesisExaminationboardFormView(UpdateView):
         if (request.GET.has_key('editMode')):
             self.object.finished = False
             self.object.save()
-            return redirect('./')
+            return redirect('./?fancy=true' if request.GET.has_key('fancy') else './')
         c = self.get_context_examinationboard()
         return self.render_to_response(c)
 
     def post(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_examinationboard()
         c = self.get_context_examinationboard(data=request.POST)
         form = c['thesis_registration_examinationboard_form']
@@ -126,8 +130,6 @@ class BothThesisExaminationboardFormView(UpdateView):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
         return ResponseExaminationBoard.objects.get_or_create(registration_id=pk)[0]
 
-    def get_success_url(self):
-        return ''
 
 
 class StudentPlacementFormView(UpdateView):
