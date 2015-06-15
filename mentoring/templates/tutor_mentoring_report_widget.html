@@ -1,6 +1,6 @@
 {% load material %}
 
-<div class="card todo-list" id="report-card">
+<div class="card">
     <div class="card-header">
         <span class="card-title blue-grey-text">Report</span>
     </div>
@@ -9,7 +9,6 @@
 
         <div class="collection row">
             {{ thesis_mentoringreport_formset.management_form }}
-
             {% for form in thesis_mentoringreport_formset reversed %}
 
                 <div class="collection-item">
@@ -25,7 +24,7 @@
                     </div>
                 {% endif %}
             {% endfor %}
-
         </div>
+
     </div>
 </div>

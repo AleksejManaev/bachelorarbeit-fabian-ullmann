@@ -26,8 +26,8 @@ def material_css():
 @register.simple_tag
 def material_js(jquery=True):
     js = '<script type="text/javascript" src="{}"></script>'.format(jquery_url()) if jquery else ''
-    js += '<script type="text/javascript" src="{}"></script>'.format(fancybox_js())
     js += '<script type="text/javascript" src="{}"></script>'.format(materialize_js_url())
+    js += '<script type="text/javascript" src="{}"></script>'.format(fancybox_js())
     js += '<script type="text/javascript"src="{}"></script>'.format(material_js_url())
     return js
 

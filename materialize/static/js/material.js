@@ -128,11 +128,7 @@ $(document).ready(
         $.each($('.fancybox'), function () {
             $(this).attr('href', $(this).attr('href') + '?fancy=true');
         });
-        $('.fancybox').fancybox({
-            afterClose: function () {
-                window.location.reload();
-            }
-        });
+        $('.fancybox').fancybox();
         $('a.reload').off('click');
         $('a.reload').on('click', function (e) {
             $.ajax($(this).attr('href'))
@@ -142,7 +138,6 @@ $(document).ready(
 
         $("form .card-action [type=submit]").on('click', function (e) {
             $(this).parents('form').submit();
-
         })
 
 
