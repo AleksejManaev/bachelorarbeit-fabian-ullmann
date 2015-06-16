@@ -2,7 +2,8 @@
 
 <ul id="dropdown_placement" class="dropdown-content">
     {% if not placement.finished %}
-        <li><a href="{% url 'student-placement-update' %}" class="fancybox fancybox.iframe">Edit in Form</a></li>
+        <li><a href="{% url 'student-placement-update' %}" class="fancybox fancybox.iframe edit_form">Edit in Form</a>
+        </li>
     {% else %}
         <li><a href="{% url 'student-placement-preview' %}" class="fancybox fancybox.iframe">Preview</a></li>
         <li><a href="{% url 'student-placement-update-todo' %}?editMode=true" class="reload">Edit Mode</a></li>

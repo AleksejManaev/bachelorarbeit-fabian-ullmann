@@ -128,12 +128,8 @@ $(document).ready(
         $.each($('.fancybox'), function () {
             $(this).attr('href', $(this).attr('href') + '?fancy=true');
         });
-        $('.fancybox').fancybox({
-            helpers: {
-                overlay: {
-                    locked: false
-                }
-            },
+        $('.fancybox').fancybox({});
+        $('.fancybox.edit_form').fancybox({
             afterClose: function () {
                 window.location.reload();
             }
