@@ -128,7 +128,16 @@ $(document).ready(
         $.each($('.fancybox'), function () {
             $(this).attr('href', $(this).attr('href') + '?fancy=true');
         });
-        $('.fancybox').fancybox();
+        $('.fancybox').fancybox({
+            helpers: {
+                overlay: {
+                    locked: false
+                }
+            },
+            afterClose: function () {
+                window.location.reload();
+            }
+        });
         $('a.reload').off('click');
         $('a.reload').on('click', function (e) {
             $.ajax($(this).attr('href'))

@@ -5,14 +5,14 @@
 
 
     <div class="row">
-        <div class="col s12 m8 right">
+        <div class="col s12 m8">
 
             <form action="{% url 'tutor-mentoring-report' mentoringreport.mentoring.pk %}" method="post">
                 {% csrf_token %}
                 {% include 'tutor_mentoring_report_widget.html' %}
             </form>
         </div>
-        <div class="col s12 m4 left">
+        <div class="col s12 m4">
             <form action="{% url 'thesis-registration-examinationboard' examinationboard.registration.pk %}"
                   method="post">
                 {% csrf_token %}
@@ -24,88 +24,88 @@
             </form>
         </div>
     </div>
-    {#    {% material_divider %}#}
-    {#    <div class="row">#}
-    {#        <div class="col s12 m8">#}
-    {#            <div class="card">#}
-    {#                <div class="card-header">#}
-    {#                    <span class="card-title blue-grey-text">Thesis</span>#}
-    {#                </div>#}
-    {#                <div class="card-content">#}
-    {#                    <div class="row">#}
-    {#                        <div class="col s12">#}
-    {#                            <p>{{ object.thesis.description|linebreaksbr }}</p>#}
-    {#                        </div>#}
-    {#                    </div>#}
-    {#                    <div class="row grey lighten-5">#}
-    {#                        <div class="col s12 l8">#}
-    {#                            <b>{{ object.thesis.workcompany.company }}</b>#}
-                            {# TODO Link zu CompanyWorks  #}
-    {#                            ({{ object.thesis.workcompany.company.works|length|add:-1 }})#}
-    {#                            <ul>#}
-    {#                                <li><i> {{ object.thesis.workcompany.description|linebreaksbr }}</i></li>#}
-    {#                            </ul>#}
-    {#                        </div>#}
-    {#                        <div class="col s12 l4">#}
-    {#                            <b>{{ object.thesis.workcompany.companycontactdata.title }} {{ object.thesis.workcompany.companycontactdata.first_name }} {{ object.thesis.workcompany.companycontactdata.last_name }}</b>#}
-    {#                            <ul>#}
-    {#                                <li><i class="mdi-content-mail"></i> <a#}
-    {#                                        href="mailto:{{ object.thesis.workcompany.companycontactdata.email }}"> {{ object.thesis.workcompany.companycontactdata.email }}</a>#}
-    {#                                </li>#}
-    {#                                <li>#}
-    {#                                    <i class="mdi-communication-phone"></i>&emsp;{{ object.thesis.workcompany.companycontactdata.phone }}#}
-    {#                                </li>#}
-    {#                            </ul>#}
-    {#                        </div>#}
-    {#                    </div>#}
-    {##}
-    {#                </div>#}
-    {##}
-    {#            </div>#}
-    {#        </div>#}
-    {#        <div class="col s12 m4">#}
-    {#            <div class="card">#}
-    {#                <div class="card-header">#}
-    {#                    <span class="card-title blue-grey-text">Student</span>#}
-    {#                </div>#}
-    {#                <div class="card-content">#}
-    {#                    <ul>#}
-    {#                        <li>#}
-    {#                            <i class="mdi-communication-contacts"></i>&emsp;{{ object.thesis.student.user.get_full_name }}#}
-    {#                        </li>#}
-    {#                        <li><i class="mdi-communication-business"></i>&emsp;{{ object.thesis.student.course }}</li>#}
-    {#                        <li>#}
-    {#                            <i class="mdi-communication-vpn-key"></i>&emsp;{{ object.thesis.student.matriculation_number }}#}
-    {#                        </li>#}
-    {#                        <li>&nbsp;</li>#}
-    {#                        <li><i class="mdi-content-mail"></i>&emsp;<a#}
-    {#                                href="mailto:{{ object.thesis.student.user.email }}">{{ object.thesis.student.user.email }}</a>#}
-    {#                            <a href="mailto:{{ object.thesis.student.extern_email }}">{{ object.thesis.student.extern_email }}</a>#}
-    {#                        </li>#}
-    {#                        <li>#}
-    {#                            <i class="mdi-communication-phone"></i>&emsp;{{ object.thesis.student.phone }}#}
-    {#                        </li>#}
-    {##}
-    {#                    </ul>#}
-    {#                </div>#}
-    {#            </div>#}
-    {#            <div class="card">#}
-    {#                <div class="card-header">#}
-    {#                    <span class="card-title blue-grey-text">Registration</span>#}
-    {#                </div>#}
-    {#                <div class="card-content">#}
-    {#                    <i class="mdi-action-description"></i>#}
-    {#                    {% if object.thesis.registration.pdf_file %}#}
-    {#                        <a href="{% url 'thesis-registration-preview' object.thesis.registration.pk %}"#}
-    {#                           class="fancybox fancybox.iframe" name="pdf">PDF</a>#}
-    {#                    {% else %}#}
-    {#                        <small>not created</small>#}
-    {#                    {% endif %}#}
-    {#                </div>#}
-    {#            </div>#}
-    {#        </div>#}
-    {##}
-    {#    </div>#}
+    {% material_divider %}
+    <div class="row">
+        <div class="col s12 m8">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title blue-grey-text">Thesis</span>
+                </div>
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <p>{{ object.thesis.description|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                    <div class="row grey lighten-5">
+                        <div class="col s12 l8">
+                            <b>{{ object.thesis.workcompany.company }}</b>
+                            TODO Link zu CompanyWorks
+                            ({{ object.thesis.workcompany.company.works|length|add:-1 }})
+                            <ul>
+                                <li><i> {{ object.thesis.workcompany.description|linebreaksbr }}</i></li>
+                            </ul>
+                        </div>
+                        <div class="col s12 l4">
+                            <b>{{ object.thesis.workcompany.companycontactdata.title }} {{ object.thesis.workcompany.companycontactdata.first_name }} {{ object.thesis.workcompany.companycontactdata.last_name }}</b>
+                            <ul>
+                                <li><i class="mdi-content-mail"></i> <a
+                                        href="mailto:{{ object.thesis.workcompany.companycontactdata.email }}"> {{ object.thesis.workcompany.companycontactdata.email }}</a>
+                                </li>
+                                <li>
+                                    <i class="mdi-communication-phone"></i>&emsp;{{ object.thesis.workcompany.companycontactdata.phone }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col s12 m4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title blue-grey-text">Student</span>
+                </div>
+                <div class="card-content">
+                    <ul>
+                        <li>
+                            <i class="mdi-communication-contacts"></i>&emsp;{{ object.thesis.student.user.get_full_name }}
+                        </li>
+                        <li><i class="mdi-communication-business"></i>&emsp;{{ object.thesis.student.course }}</li>
+                        <li>
+                            <i class="mdi-communication-vpn-key"></i>&emsp;{{ object.thesis.student.matriculation_number }}
+                        </li>
+                        <li>&nbsp;</li>
+                        <li><i class="mdi-content-mail"></i>&emsp;<a
+                                href="mailto:{{ object.thesis.student.user.email }}">{{ object.thesis.student.user.email }}</a>
+                            <a href="mailto:{{ object.thesis.student.extern_email }}">{{ object.thesis.student.extern_email }}</a>
+                        </li>
+                        <li>
+                            <i class="mdi-communication-phone"></i>&emsp;{{ object.thesis.student.phone }}
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title blue-grey-text">Registration</span>
+                </div>
+                <div class="card-content">
+                    <i class="mdi-action-description"></i>
+                    {% if object.thesis.registration.pdf_file %}
+                        <a href="{% url 'thesis-registration-preview' object.thesis.registration.pk %}"
+                           class="fancybox fancybox.iframe" name="pdf">PDF</a>
+                    {% else %}
+                        <small>not created</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 {% endblock %}
 
