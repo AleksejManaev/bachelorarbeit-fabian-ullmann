@@ -140,7 +140,7 @@ class Thesis(AbstractWork):
 
     @property
     def registration(self):
-        return Registration.objects.get_or_create(thesis=self)[0]
+        return Registration.objects.get_or_create(mentoring=self.mentoringrequest.mentoring)[0]
 
 
 @python_2_unicode_compatible
