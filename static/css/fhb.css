@@ -145,7 +145,18 @@ a.disabled {
 
 }
 
-.card-action.acceptdeny input {
+.card .card-action a, .card .card-action input {
+    color: #ffab40;
+    margin-right: 20px;
+    -webkit-transition: color .3s ease;
+    -moz-transition: color .3s ease;
+    -o-transition: color .3s ease;
+    -ms-transition: color .3s ease;
+    transition: color .3s ease;
+    text-transform: uppercase;
+}
+
+.card .card-action a, .card .card-action input {
     background: none !important;
     border: none;
     padding: 0 !important;

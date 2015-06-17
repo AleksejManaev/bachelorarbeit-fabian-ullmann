@@ -1,17 +1,48 @@
 {% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
 {% load material %}
+{% load i18n %}
 {% block material_content %}
 
-<form enctype="multipart/form-data" action="" method="post">
-    {% csrf_token %}
-    {% material_form thesis_mentoringrequest_form %}
+    <div class="card">
+        {% trans 'Mentoring-Request' as mr %}
+        {% material_card_header title=mr %}
+        <div class="card-content">
+            <form enctype="multipart/form-data" action="" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col s12">
+                        {% material_form thesis_mentoringrequest_form %}
+                    </div>
+                </div>
 
-    {% material_form thesis_mentoringrequest_company_form %}
-    {% material_formset thesis_mentoringrequest_company_formset %}
-    {% material_formset thesis_mentoringrequest_contact_formset %}
-    {% material_form thesis_mentoringrequest_student_form %}
+                <div class="row">
+                    <div class="col s12">
+                        {% material_form thesis_mentoringrequest_company_form %}
+                        {% material_formset thesis_mentoringrequest_company_formset %}
+                    </div>
+                </div>
 
-    <input type="submit" name="finalize">
-</form>
+                <div class="row">
+                    <div class="col s12">
+                        <label>{% trans 'Contact-Data placement' %}</label>
+                        {% material_formset thesis_mentoringrequest_contact_formset %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <label>{% trans 'Contact-Data professor thesis' %}</label>
+                        {% material_form thesis_mentoringrequest_student_form %}
+                    </div>
+                </div>
+
+                <div class="card-action valign-wrapper">
+
+                    <input type="submit" name="finalize" value="{% trans 'Request' %}"/>
+                </div>
+            </form>
+        </div>
+
+    </div>
 
 {% endblock %}
