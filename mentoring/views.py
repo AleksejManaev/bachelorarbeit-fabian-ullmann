@@ -658,9 +658,7 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
         return Thesis.objects.get_or_create(student=self.get_object())[0]
 
     def get_examinationboard(self, queryset=None):
-        return self.get_object().thesis.registration.responseexaminationboard if hasattr(
-            self.get_thesis_mentoringrequest(),
-            'mentoring') else None
+        return ResponseExaminationBoard.objects.get_or_create(registration=self.get_object().thesis.registration)[0]
 
     def get_placement(self):
         return Placement.objects.get_or_create(student=self.get_object())[0]
