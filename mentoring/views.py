@@ -21,8 +21,6 @@ class DetailView(django.views.generic.DetailView):
 
 class UpdateView(django.views.generic.UpdateView):
     def get_success_url(self):
-        print "get_succes_url"
-        print(self.request.GET.has_key('fancy'))
         return '?fancy=true' if self.request.GET.has_key('fancy') else ''
 
 class IndexView(RedirectView):
@@ -114,17 +112,20 @@ class BothThesisExaminationboardFormView(UpdateView):
         self.object = self.get_examinationboard()
         c = self.get_context_examinationboard(data=request.POST)
         form = c['thesis_registration_examinationboard_form']
+        status = 200
 
-        if form.is_valid():
-            self.object = form.save()
+        if c['thesis_registration_examinationboard_form'].is_valid():
+            self.object = c['thesis_registration_examinationboard_form'].save()
             if self.object.start_editing and self.object.stop_editing:
                 self.object.finished = True
                 self.object.save()
-            return http.HttpResponseRedirect(self.get_success_url())
         else:
-            cd = self.get_context_data()
-            cd.update(c)
-            return self.render_to_response(cd)
+            status = 400
+
+        cd = self.get_context_data()
+        cd.update(c)
+
+        return self.render_to_response(cd, status=status)
 
     def get_object(self, queryset=None):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
