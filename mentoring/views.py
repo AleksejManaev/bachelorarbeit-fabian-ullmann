@@ -666,8 +666,7 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
         return Placement.objects.get_or_create(student=self.get_object())[0]
 
     def get_registration(self):
-        return self.get_object().thesis.registration if hasattr(self.get_thesis_mentoringrequest(),
-                                                                'mentoring') else None
+        return MentoringRequest.objects.get_or_create(thesis=self.get_thesis_mentoringrequest())
 
     def get_thesis_documents(self):
         return Thesis.objects.get_or_create(student=self.get_object())[0]
