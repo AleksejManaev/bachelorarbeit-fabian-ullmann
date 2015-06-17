@@ -79,14 +79,15 @@ class AbstractWork(models.Model):
 @python_2_unicode_compatible
 class Placement(AbstractWork):
     student = models.OneToOneField(Student, unique=True)
-    report = models.FileField(_('report'), upload_to=upload_to_placement_report, blank=True, null=True,
+    report = models.FileField(_('report placement'), upload_to=upload_to_placement_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
-    presentation = models.FileField(_('presentation'), upload_to=upload_to_placement_presentation, blank=True,
+    presentation = models.FileField(_('presentation placement'), upload_to=upload_to_placement_presentation, blank=True,
                                     null=True,
                                     validators=[validate_pdf, validate_size])
-    certificate = models.FileField(_('certificate'), upload_to=upload_to_placement_certificate, blank=True, null=True,
+    certificate = models.FileField(_('certificate placement'), upload_to=upload_to_placement_certificate, blank=True,
+                                   null=True,
                                    validators=[validate_pdf, validate_size])
-    public = models.BooleanField(_('public'), default=False)
+    public = models.BooleanField(_('public placement'), default=False)
 
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)
@@ -126,9 +127,9 @@ class CompanyContactData(ContactData):
 @python_2_unicode_compatible
 class Thesis(AbstractWork):
     student = models.OneToOneField(Student, unique=True)
-    report = models.FileField(_('report'), upload_to=upload_to_thesis_report, blank=True, null=True,
+    report = models.FileField(_('report thesis'), upload_to=upload_to_thesis_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
-    poster = models.FileField(_('poster'), upload_to=upload_to_thesis_poster, blank=True, null=True,
+    poster = models.FileField(_('poster thesis'), upload_to=upload_to_thesis_poster, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
 
     def __str__(self):
@@ -140,7 +141,8 @@ class Thesis(AbstractWork):
 
     @property
     def registration(self):
-        return Registration.objects.get_or_create(mentoring=self.mentoringrequest.mentoring)[0]
+        return Registration.objects.get_or_create(mentoring=self.mentoringrequest.mentoring)[0] if hasattr(
+            self.mentoringrequest, 'mentoring') else None
 
 
 @python_2_unicode_compatible

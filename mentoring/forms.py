@@ -3,6 +3,8 @@ from django import forms
 from django.forms.utils import ErrorList
 
 from mentoring.models import *
+from django.utils.translation import ugettext_lazy as _
+from mentoring.widgets import ClearableFileInput
 
 __author__ = 'ullmanfa'
 
@@ -74,8 +76,9 @@ class FormPlacement(forms.ModelForm):
         Falls Placement finalisiert werden soll, setze all Felder 'required'
         """
 
-        req = True if self.data.has_key('finalize') and self.data['finalize'] == 'true' else False
-
+        req = True if self.data.has_key('finalize') and (
+        self.data['finalize'] == 'true' or self.data['finalize'] == _('Finish')) else False
+        print('reg = {}'.format(self.data))
         for key, val in self.fields.iteritems():
             if not key in ['public', 'finished']:
                 val.required = req
@@ -99,9 +102,9 @@ class FormPlacement(forms.ModelForm):
         exclude = ['student', 'finished']
         fields = '__all__'
         widgets = {
-            'report': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'presentation': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'certificate': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'presentation': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'certificate': ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
 
 class FormThesisDocuments(forms.ModelForm):
@@ -142,8 +145,8 @@ class FormThesisDocuments(forms.ModelForm):
         exclude = ['student', 'finished']
         fields = '__all__'
         widgets = {
-            'report': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'poster': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'poster': ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
 
 class FormThesisMentoringrequest(forms.ModelForm):

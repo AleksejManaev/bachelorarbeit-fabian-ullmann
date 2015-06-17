@@ -33,12 +33,15 @@
                 </div>
             </div>
         {% else %}
-            {% material_card_header title='Mentoring-Request' actions='dropdown_thesis' %}
+            {% trans 'Mentoring-Request' as mr %}
+            {% material_card_header title=mr actions='dropdown_thesis' %}
         {% endif %}
         <div class="card-content">
             {% material_todo_formfields thesis_mentoringrequest_form %}
             {% material_todo_item_begin %}
-            {% material_todo_item_activator id='id_mentoringrequest_company_todo' label='Company' %}
+
+            {% trans 'Company thesis' as cp %}
+            {% material_todo_item_activator id='id_mentoringrequest_company_todo' label=cp %}
             <div class="input-group hide col s12">
                 {% material_form thesis_mentoringrequest_company_form %}
                 {% material_formset thesis_mentoringrequest_company_formset %}
@@ -47,7 +50,9 @@
 
 
             {% material_todo_item_begin %}
-            {% material_todo_item_activator id='id_mentoringrequest_workcompany_todo' label='Contact-Data' %}
+
+            {% trans 'Contact-Data thesis' as cd %}
+            {% material_todo_item_activator id='id_mentoringrequest_workcompany_todo' label=cd %}
             <div class="input-group hide col s12">
                 {% material_formset thesis_mentoringrequest_contact_formset %}
             </div>
@@ -55,7 +60,8 @@
 
 
             {% material_todo_item_begin %}
-            {% material_todo_item_activator id='id_mentoringrequest_mentoringrequest_todo' label='Contact-Data' %}
+            {% trans 'Contact-Data professor thesis' as cd2 %}
+            {% material_todo_item_activator id='id_mentoringrequest_mentoringrequest_todo' label=cd2 %}
             <div class="input-group hide col s12">
                 {% material_form thesis_mentoringrequest_student_form %}
             </div>

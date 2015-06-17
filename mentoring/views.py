@@ -191,7 +191,7 @@ class StudentPlacementFormView(UpdateView):
         if request.GET.has_key('fancy'):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_object()
-
+        print request.POST
         if self.object.finished:
             return self.get(request, status=405)
         else:
@@ -658,7 +658,10 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
         return Thesis.objects.get_or_create(student=self.get_object())[0]
 
     def get_examinationboard(self, queryset=None):
-        return ResponseExaminationBoard.objects.get_or_create(registration=self.get_object().thesis.registration)[0]
+        if hasattr(self.get_object().thesis, 'registration') and self.get_object().thesis.registration:
+            return ResponseExaminationBoard.objects.get_or_create(registration=self.get_object().thesis.registration)[0]
+        else:
+            return None
 
     def get_placement(self):
         return Placement.objects.get_or_create(student=self.get_object())[0]

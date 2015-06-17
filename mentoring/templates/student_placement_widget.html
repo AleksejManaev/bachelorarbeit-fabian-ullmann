@@ -23,7 +23,7 @@
         <div class="card-header green white-text">
             <div class="card-title">
                 <a href="{% url 'student-placement-preview' %}"
-                   class="fancybox fancybox.iframe white-text">{% trans 'Placement' %} <i
+                   class="fancybox fancybox.iframe white-text">{{ pl }} <i
                         class="mdi-action-done-all"></i></a></div>
             <div class="actions">
                 <a href="{% url 'student-placement-update-todo' %}?editMode=true" class="reload"><i
@@ -36,7 +36,8 @@
     <div class="card-content{% if placement.finished %} hide{% endif %}">
         {% material_todo_formfields placement_form exclude='public' %}
         {% material_todo_item_begin %}
-        {% material_todo_item_activator id='id_placement_company_todo' label='Company' %}
+        {% trans 'company placement' as cp %}
+        {% material_todo_item_activator id='id_placement_company_todo' label=cp %}
         <div class="input-group hide col s12">
             {% material_form placement_company_form %}
             {% material_formset placement_company_formset %}
@@ -45,7 +46,8 @@
 
 
         {% material_todo_item_begin %}
-        {% material_todo_item_activator id='id_placement_workcompany_todo' label='Contact-Data' %}
+        {% trans 'Contact-Data placement' as cd %}
+        {% material_todo_item_activator id='id_placement_workcompany_todo' label=cd %}
         <div class="input-group hide col s12">
             {% material_formset placement_contact_formset %}
         </div>
