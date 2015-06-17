@@ -4,6 +4,6 @@
 
 {# Todo Preview-Seite erstellen #}
 {% block material_content %}
-    <p><a href="{{ MEDIA_URL }}{{ object.report }}">Report</a></p>
-    <p><a href="{{ MEDIA_URL }}{{ object.poster }}">Presentation</a></p>
+    <p><a href="{{ MEDIA_URL }}{{ object.report }}">{% trans 'Report' %}</a></p>
+    <p><a href="{{ MEDIA_URL }}{{ object.poster }}">{% trans 'Presentation' %}</a></p>
 {% endblock %}

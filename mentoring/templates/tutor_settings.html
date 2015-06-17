@@ -1,5 +1,6 @@
 {% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
 {% load material %}
+{% load i18n %}
 
 {% block material_content %}
     <form action="" method="post">
@@ -17,6 +18,6 @@
         {% for form in tutor_user_formset.forms %}
             {% material_formfield form.phone %}
         {% endfor %}
-        <button type="submit">submit</button>
+        <button type="submit">{% trans 'submit' %}</button>
     </form>
 {% endblock %}

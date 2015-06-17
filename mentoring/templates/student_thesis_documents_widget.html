@@ -1,12 +1,15 @@
 {% load material %}
+{% load i18n %}
 
 <ul id="dropdown_thesis" class="dropdown-content">
     {% if not thesis.finished %}
-        <li><a href="{% url 'student-thesis-documents-update' %}" class="fancybox fancybox.iframe  edit_form">Edit in
-            Form</a></li>
+        <li><a href="{% url 'student-thesis-documents-update' %}"
+               class="fancybox fancybox.iframe  edit_form">{% trans 'Edit in Form' %}</a></li>
     {% else %}
-        <li><a href="{% url 'student-thesis-documents-preview' %}" class="fancybox fancybox.iframe">Preview</a></li>
-        <li><a href="{% url 'student-thesis-documents-update-todo' %}?editMode=true" class="reload">Edit Mode</a></li>
+        <li><a href="{% url 'student-thesis-documents-preview' %}"
+               class="fancybox fancybox.iframe">{% trans 'Preview' %}</a></li>
+        <li><a href="{% url 'student-thesis-documents-update-todo' %}?editMode=true"
+               class="reload">{% trans 'Edit Mode' %}</a></li>
     {% endif %}
 </ul>
 
@@ -17,7 +20,8 @@
     {% else %}
         <div class="card-header green white-text">
             <div class="card-title">
-                <a href="{% url 'student-thesis-documents-preview' %}" class="fancybox fancybox.iframe white-text">Thesis
+                <a href="{% url 'student-thesis-documents-preview' %}"
+                   class="fancybox fancybox.iframe white-text">{% trans 'Thesis' %}
                     <i
                             class="mdi-action-done-all"></i></a>
             </div>
@@ -34,7 +38,7 @@
     </div>
     {% if not thesis.finished %}
         <div class="card-action valign-wrapper">
-            <a href="#" type="submit" name="finish" class="col s12 center-align">Finish</a>
+            <a href="#" type="submit" name="finish" class="col s12 center-align">{% trans 'Finish' %}</a>
         </div>
     {% endif %}
     {% material_todo_reveal %}

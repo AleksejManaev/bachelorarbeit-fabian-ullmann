@@ -1,6 +1,7 @@
 {% extends request.is_ajax|yesno:'base_ajax.html,base_portal.html' %}
 {% load material %}
 {% load filter %}
+{% load i18n %}
 
 {% block material_content %}
     {# BEGIN MENTORING REQUESTS  #}
@@ -8,7 +9,8 @@
         <div class="col s12">
 
             <ul id="dropdown_requests" class="dropdown-content">
-                <li><a href="{% url 'tutor-requests' %}" class="fancybox fancybox.iframe">Show all</a></li>
+                <li><a href="{% url 'tutor-requests' %}" class="fancybox fancybox.iframe">{% trans 'Show all' %}</a>
+                </li>
             </ul>
 
             <div class="card">
@@ -40,7 +42,7 @@
                                 </a>
                             </li>
                         {% empty %}
-                            <small class="center-align col s12">no requests</small>
+                            <small class="center-align col s12">{% trans 'no requests' %}</small>
                         {% endfor %}
                     </ul>
                 </div>
@@ -54,7 +56,8 @@
         <div class="col s12">
 
             <ul id="dropdown_mentorings" class="dropdown-content">
-                <li><a href="{% url 'tutor-mentorings' %}" class="fancybox fancybox.iframe">Show all</a></li>
+                <li><a href="{% url 'tutor-mentorings' %}" class="fancybox fancybox.iframe">{% trans 'Show all' %}</a>
+                </li>
             </ul>
 
             <div class="card">
@@ -74,27 +77,27 @@
                                         <div class="row"></div>
                                     </a>
                                     <ul class="lv-attrs">
-                                        <li>2. Tutor: {{ mentoring.tutor2contactdata }}</li>
+                                        <li>{% trans '2. Tutor' %}: {{ mentoring.tutor2contactdata }}</li>
                                         <li>
                                             <a href="{% url 'tutor-mentoring-report' mentoring.pk %}"
                                                class="fancybox fancybox.iframe">
-                                                Report: {{ mentoring.mentoringreport.items|length }}
+                                                {% trans 'Report' %}: {{ mentoring.mentoringreport.items|length }}
                                             </a>
                                         </li>
                                         <li>
                                             <a href="{% url 'tutor-mentoring-colloquium' mentoring.thesis.registration.pk %}"
                                                class="fancybox fancybox.iframe">
-                                                Colloquium: {{ mentoring.colloquium.date|date }}</a></li>
+                                                {% trans 'Colloquium' %}: {{ mentoring.colloquium.date|date }}</a></li>
                                         <li>
                                             <a href="{% url 'thesis-registration-examinationboard' mentoring.thesis.registration.pk %}"
                                                class="fancybox fancybox.iframe">Examination
-                                                Board: {{ mentoring.thesis.registration.responseexaminationboard.stop_editing|date }}</a>
+                                                {% trans 'Board' %}: {{ mentoring.thesis.registration.responseexaminationboard.stop_editing|date }}</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
                         {% empty %}
-                            <small class="center-align col s12">no requests</small>
+                            <small class="center-align col s12">{% trans 'no mentorings' %}</small>
                         {% endfor %}
                     </ul>
                 </div>

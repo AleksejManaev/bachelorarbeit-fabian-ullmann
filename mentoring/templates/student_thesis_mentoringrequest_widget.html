@@ -1,15 +1,16 @@
 {% load material %}
 {% load filter %}
+{% load i18n %}
 
 <ul id="dropdown_thesis" class="dropdown-content">
     {% if thesis.mentoringrequest.status == 'NR' %}
-        <li><a href="{% url 'student-thesis-mentoringrequest-update' %}" class="fancybox fancybox.iframe">Edit in
-            Form</a></li>
+        <li><a href="{% url 'student-thesis-mentoringrequest-update' %}"
+               class="fancybox fancybox.iframe">{% trans 'Edit in Form' %}</a></li>
     {% else %}
-        <li><a href="{% url 'thesis-preview' %}" class="fancybox fancybox.iframe">Preview</a></li>
+        <li><a href="{% url 'thesis-preview' %}" class="fancybox fancybox.iframe">{% trans 'Preview' %}</a></li>
         {% if thesis.mentoringrequest.status != 'AC' %}
-            <li><a href="{% url 'student-thesis-mentoringrequest-update-todo' %}?editMode=true" class="reload">Edit
-                Mode</a>
+            <li><a href="{% url 'student-thesis-mentoringrequest-update-todo' %}?editMode=true"
+                   class="reload">{% trans 'Edit Mode' %}</a>
             </li>
         {% endif %}
     {% endif %}
@@ -18,14 +19,14 @@
     {% if thesis.mentoringrequest.status|for_request %}
         {% if thesis.mentoringrequest.status == 'DE' %}
             <div class="card-header red white-text">
-                <div class="card-title">Mentoring<br/>
+                <div class="card-title">{% trans 'Mentoring' %}<br/>
                     <ul>
                         <li><i class="mdi-content-send"></i> {{ thesis.mentoringrequest.requested_on|date:"D d M Y" }}
                         </li>
                         <li><i class="mdi-communication-import-export"></i> {{ thesis.mentoringrequest.status|state }}
                         </li>
                     </ul>
-                    <label class="white-text">Answer</label>
+                    <label class="white-text">{% trans 'Answer' %}</label>
                     <blockquote><i>
                         <small>{{ thesis.mentoringrequest.answer|safe }}</small>
                     </i></blockquote>
@@ -62,14 +63,14 @@
 
         </div>
         <div class="card-action valign-wrapper">
-            <a href="#" type="submit" name="finish" class="col s12 center-align">Request</a>
+            <a href="#" type="submit" name="finish" class="col s12 center-align">{% trans 'Request' %}</a>
         </div>
         {% material_todo_reveal %}
     {% else %}
         <div class="card-header{% if thesis.mentoringrequest.status == 'AC' %} green{% else %} orange{% endif %} white-text">
             <div class="card-title">
                 <a href="{% url 'student-thesis-mentoringrequest-preview' %}"
-                   class="fancybox fancybox.iframe white-text">Mentoring <i
+                   class="fancybox fancybox.iframe white-text">{% trans 'Mentoring' %} <i
                         class="mdi-action-done-all"></i></a><br/>
                 <ul>
                     <li><i class="mdi-content-send"></i> {{ thesis.mentoringrequest.requested_on|date:"D d M Y" }}</li>
@@ -89,7 +90,7 @@
             <div class="card-content">
                 <div class="row">
                     <div class="col s12">
-                        <label>Answer</label>
+                        <label>{% trans 'Answer' %}</label>
 
                         <p>{{ thesis.mentoringrequest.answer|safe }}</p>
                     </div>
@@ -97,7 +98,7 @@
                 {% material_divider %}
                 <div class="row">
                     <div class="col s12 m6">
-                        <label class="center">1. Tutor</label>
+                        <label class="center">{% trans '1. Tutor' %}</label>
                         <h6>{{ thesis.mentoring.tutor_1 }}</h6>
                         <ul>
                             <li><i class="mdi-content-mail"></i> <a
@@ -108,7 +109,7 @@
                         </ul>
                     </div>
                     <div class="col s12 m6">
-                        <label class="center">2. Tutor</label>
+                        <label class="center">{% trans '2. Tutor' %}</label>
                         <h6>{{ thesis.mentoring.tutor2contactdata.contact }}</h6>
                         <ul>
                             <li><i class="mdi-content-mail"></i> <a
@@ -123,7 +124,7 @@
                 {% material_divider %}
                 <div class="row">
                     <div class="col s12 center-align grey lighten-4">
-                        <b>Deadline:</b> {{ student.thesis.mentoring.mentoringreport.date_deadline|date }}
+                        <b>{% trans 'Deadline' %}:</b> {{ student.thesis.mentoring.mentoringreport.date_deadline|date }}
                     </div>
                 </div>
             </div>

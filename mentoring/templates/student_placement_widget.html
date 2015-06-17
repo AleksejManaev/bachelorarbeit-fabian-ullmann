@@ -2,11 +2,14 @@
 
 <ul id="dropdown_placement" class="dropdown-content">
     {% if not placement.finished %}
-        <li><a href="{% url 'student-placement-update' %}" class="fancybox fancybox.iframe edit_form">Edit in Form</a>
+        <li><a href="{% url 'student-placement-update' %}"
+               class="fancybox fancybox.iframe edit_form">{% trans 'Edit in Form' %}</a>
         </li>
     {% else %}
-        <li><a href="{% url 'student-placement-preview' %}" class="fancybox fancybox.iframe">Preview</a></li>
-        <li><a href="{% url 'student-placement-update-todo' %}?editMode=true" class="reload">Edit Mode</a></li>
+        <li><a href="{% url 'student-placement-preview' %}" class="fancybox fancybox.iframe">{% trans 'Preview' %}</a>
+        </li>
+        <li><a href="{% url 'student-placement-update-todo' %}?editMode=true" class="reload">
+            {% trans 'Edit Mode' %}</a></li>
     {% endif %}
 </ul>
 
@@ -17,7 +20,8 @@
     {% else %}
         <div class="card-header green white-text">
             <div class="card-title">
-                <a href="{% url 'student-placement-preview' %}" class="fancybox fancybox.iframe white-text">Placement <i
+                <a href="{% url 'student-placement-preview' %}"
+                   class="fancybox fancybox.iframe white-text">{% trans 'Placement' %} <i
                         class="mdi-action-done-all"></i></a></div>
             <div class="actions">
                 <a href="{% url 'student-placement-update-todo' %}?editMode=true" class="reload"><i
@@ -46,11 +50,11 @@
         {% material_todo_item_end %}
 
         {% material_formfield placement_form.public %}
-        {# {% material_todo_formsetfields placement_contact_formset item_group=True %}#}
-        </div>
+
+    </div>
     {% if not placement.finished %}
         <div class="card-action valign-wrapper">
-            <a href="#" type="submit" name="finish" class="col s12 center-align">Finish</a>
+            <a href="#" type="submit" name="finish" class="col s12 center-align">{% trans 'Finish' %}</a>
         </div>
     {% endif %}
     {% material_todo_reveal %}

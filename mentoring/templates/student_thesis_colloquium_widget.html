@@ -1,9 +1,10 @@
 {% load material %}
+{% load i18n %}
 <div class="card">
     <div class="picker__box">
         <div class="picker__date-display">
             <div class="card-header left-align">
-                <span class="card-title">Colloquium</span>
+                <span class="card-title">{% trans 'Colloquium' %}</span>
             </div>
             {% if request.user.portaluser.student.thesis.mentoring.colloquium.date %}
                 <div class="picker__weekday-display">

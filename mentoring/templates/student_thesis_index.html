@@ -1,11 +1,12 @@
 {% extends request.is_ajax|yesno:'base_ajax.html,base_portal.html' %}
 {% load staticfiles %}
 {% load material %}
+{% load i18n %}
 
 {% block material_content %}
     <div class="card">
         <div class="card-header">
-            <span class="card-title blue-grey-text">{{ object.student }} - Thesis<br/><small>{{ object.from_student.course }}</small></span>
+            <span class="card-title blue-grey-text">{{ object.student }} - {% trans 'Thesis' %}<br/><small>{{ object.from_student.course }}</small></span>
         </div>
         <div class="card-content">
             <div class="row">
@@ -36,7 +37,7 @@
             {% material_divider %}
             <div class="row">
                 <div class="col s12 m6">
-                    <label class="center">1. Tutor</label>
+                    <label class="center">{% trans '1. Tutor' %}</label>
                     <h6>{{ thesis.mentoring.tutor_1 }}</h6>
                     <ul>
                         <li><i class="mdi-content-mail"></i> <a
@@ -47,7 +48,7 @@
                     </ul>
                 </div>
                 <div class="col s12 m6">
-                    <label class="center">2. Tutor</label>
+                    <label class="center">{% trans '2. Tutor' %}</label>
                     <h6>{{ thesis.mentoring.tutor2contactdata.contact }}</h6>
                     <ul>
                         <li><i class="mdi-content-mail"></i> <a
@@ -65,7 +66,7 @@
                     <a href="{{ MEDIA_URL }}{{ object.report }}" class="fancybox fancybox.iframe">
                         <div class="card">
                             <div class="card-header">
-                                <span class="card-title blue-grey-text">Report</span>
+                                <span class="card-title blue-grey-text">{% trans 'Report' %}</span>
                             </div>
                             <div class="card-content green-text center-align"><i
                                     class="mdi-file-cloud-done large"></i>
@@ -77,7 +78,7 @@
                     <a href="{{ MEDIA_URL }}{{ object.poster }}" class="fancybox fancybox.iframe">
                         <div class="card">
                             <div class="card-header">
-                                <span class="card-title blue-grey-text">Poster</span>
+                                <span class="card-title blue-grey-text">{% trans 'Poster' %}</span>
                             </div>
                             <div class="card-content green-text center-align">
                                 <i

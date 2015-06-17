@@ -1,8 +1,8 @@
 {% load material %}
-
+{% load i18n %}
 <div class="card">
     <div class="card-header">
-        <span class="card-title blue-grey-text">Report</span>
+        <span class="card-title blue-grey-text">{% trans 'Report' %}</span>
     </div>
     <div class="card-content">
         {% material_form thesis_mentoringreport_form %}
@@ -20,7 +20,7 @@
                 </div>
                 {% if not form.instance.pk %}
                     <div class="card-action valign-wrapper" style="border-bottom: 1px solid rgba(160, 160, 160, 0.2);">
-                        <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
+                        <a href="#" type="submit" name="finish" class="col s12 center-align">{% trans 'Save' %}</a>
                     </div>
                 {% endif %}
             {% endfor %}

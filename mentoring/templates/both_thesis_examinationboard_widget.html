@@ -1,19 +1,20 @@
 {% load material %}
+{% load i18n %}
 
 <div class="card todo-list">
     {% if not examinationboard.finished %}
         <div class="card-header">
-            <span class="card-title blue-grey-text">Response Examination Board</span>
+            <span class="card-title blue-grey-text">{% trans 'Response Examination Board' %}</span>
         </div>
         <div class="card-content">
             {% material_form thesis_registration_examinationboard_form %}
         </div>
         <div class="card-action valign-wrapper">
-            <a href="#" type="submit" name="finish" class="col s12 center-align">Save</a>
+            <a href="#" type="submit" name="finish" class="col s12 center-align">{% trans 'Save' %}</a>
         </div>
     {% else %}
         <div class="card-header green white-text">
-            <span class="card-title">Response Examination Board</span>
+            <span class="card-title">{% trans 'Response Examination Board' %}</span>
 
             <div class="actions">
                 <a href="{% url 'thesis-registration-examinationboard' examinationboard.registration.pk %}?editMode=true"
@@ -22,18 +23,18 @@
         </div>
         <div class="card-content row">
             <div class="col s6">
-                <label>Start editing</label>
+                <label>{% trans 'Start editing' %}</label>
 
                 <p>{{ examinationboard.start_editing }}</p>
             </div>
             <div class="col s6">
-                <label>Stop editing</label>
+                <label>{% trans 'Stop editing' %}</label>
 
                 <p>{{ examinationboard.start_editing }}</p>
             </div>
             {% if examinationboard.extend_to %}
                 <div class="col s12">
-                    <label>Extended to</label>
+                    <label>{% trans 'Extended to' %}</label>
 
                     <p>{{ examinationboard.extend_to }}</p>
                 </div>

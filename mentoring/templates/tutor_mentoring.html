@@ -1,6 +1,6 @@
 {% extends request.is_ajax|yesno:'base_ajax.html,base_portal.html' %}
 {% load material %}
-
+{% load i18n %}
 {% block material_content %}
 
 
@@ -29,7 +29,7 @@
         <div class="col s12 m8">
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title blue-grey-text">Thesis</span>
+                    <span class="card-title blue-grey-text">{% trans 'Thesis' %}</span>
                 </div>
                 <div class="card-content">
                     <div class="row">
@@ -40,7 +40,7 @@
                     <div class="row grey lighten-5">
                         <div class="col s12 l8">
                             <b>{{ object.thesis.workcompany.company }}</b>
-                            TODO Link zu CompanyWorks
+                            {#                            TODO Link zu CompanyWorks#}
                             ({{ object.thesis.workcompany.company.works|length|add:-1 }})
                             <ul>
                                 <li><i> {{ object.thesis.workcompany.description|linebreaksbr }}</i></li>
@@ -66,7 +66,7 @@
         <div class="col s12 m4">
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title blue-grey-text">Student</span>
+                    <span class="card-title blue-grey-text">{% trans 'Student' %}</span>
                 </div>
                 <div class="card-content">
                     <ul>
@@ -91,15 +91,15 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title blue-grey-text">Registration</span>
+                    <span class="card-title blue-grey-text">{% trans 'Registration' %}</span>
                 </div>
                 <div class="card-content">
                     <i class="mdi-action-description"></i>
                     {% if object.thesis.registration.pdf_file %}
                         <a href="{% url 'thesis-registration-preview' object.thesis.registration.pk %}"
-                           class="fancybox fancybox.iframe" name="pdf">PDF</a>
+                           class="fancybox fancybox.iframe" name="pdf">{% trans 'PDF' %}</a>
                     {% else %}
-                        <small>not created</small>
+                        <small>{% trans 'not created' %}</small>
                     {% endif %}
                 </div>
             </div>

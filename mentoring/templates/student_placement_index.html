@@ -2,11 +2,12 @@
 {% load staticfiles %}
 {% load material %}
 {% load filter %}
+{% load i18n %}
 
 {% block material_content %}
     <div class="card">
         <div class="card-header">
-            <span class="card-title blue-grey-text">{{ object.student }} - Placement<br/><small>{{ object.from_student.course }}</small></span>
+            <span class="card-title blue-grey-text">{{ object.student }} - {% trans 'Placement' %}<br/><small>{{ object.from_student.course }}</small></span>
         </div>
         <div class="card-content">
             <div class="row">
@@ -39,7 +40,7 @@
                     <a href="{{ MEDIA_URL }}{{ object.report }}" class="fancybox fancybox.iframe">
                         <div class="card">
                             <div class="card-header">
-                                <span class="card-title blue-grey-text">Report</span>
+                                <span class="card-title blue-grey-text">{% trans 'Report' %}</span>
                             </div>
                             <div class="card-content green-text center-align"><i
                                     class="mdi-file-cloud-done large"></i>
@@ -51,7 +52,7 @@
                     <a href="{{ MEDIA_URL }}{{ object.presentation }}" class="fancybox fancybox.iframe">
                         <div class="card">
                             <div class="card-header">
-                                <span class="card-title blue-grey-text">Presentation</span>
+                                <span class="card-title blue-grey-text">{% trans 'Presentation' %}</span>
                             </div>
                             <div class="card-content green-text center-align">
                                 <i
@@ -64,7 +65,7 @@
                     <a href="{{ MEDIA_URL }}{{ object.certificate }}" class="fancybox fancybox.iframe">
                         <div class="card">
                             <div class="card-header">
-                                <span class="card-title blue-grey-text">Certificate</span>
+                                <span class="card-title blue-grey-text">{% trans 'Certificate' %}</span>
                             </div>
                             <div class="card-content green-text center-align"><i
                                     class="mdi-file-cloud-done large"></i>

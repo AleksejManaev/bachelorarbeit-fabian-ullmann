@@ -1,7 +1,7 @@
 {% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
 {% load material %}
 {% load filter %}
-
+{% load i18n %}
 {% block material_content %}
 
     <div class="row">
@@ -55,7 +55,7 @@
                         <div class="col">&nbsp;</div>
                     </div>
                     <div class="input-group">
-                        <span class="card-title blue-grey-text">Tutor 2</span>
+                        <span class="card-title blue-grey-text">{% trans 'Tutor 2' %}</span>
                         {% material_form mentoringrequest_tutor2_form %}
                         {% material_formfield mentoringrequest_form.permission %}
                     </div>
@@ -65,7 +65,7 @@
                     {% if not object.status == 'RE' %}
                         {% material_divider %}
                         {% if object.status == 'AC' %}
-                            <span class="green-text">{{ object.status|state }} on {{ object.mentoring.created_on|date }}</span>
+                            <span class="green-text">{{ object.status|state }} {% trans 'on' %} {{ object.mentoring.created_on|date }}</span>
                         {% else %}
                             <span class="red-text">{{ object.status|state }}</span>
                         {% endif %}
@@ -85,11 +85,6 @@
         </div>
     </div>
 
-
-    <form action="{{ form_action }}" method="post" reveal-name="accept" class="col s12">
-        {% csrf_token %}
-
-    </form>
 {% endblock %}
 
 
