@@ -140,10 +140,7 @@ class Thesis(AbstractWork):
 
     @property
     def registration(self):
-        if hasattr(self.mentoringrequest, 'mentoring'):
-            return self.mentoringrequest.mentoring.registration
-        else:
-            return None
+        return Registration.objects.get_or_create(thesis=self)[0]
 
 
 @python_2_unicode_compatible
