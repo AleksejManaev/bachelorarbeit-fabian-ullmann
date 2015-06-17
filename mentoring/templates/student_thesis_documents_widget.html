@@ -16,7 +16,8 @@
 <div class="card todo-list">
 
     {% if not thesis.finished %}
-        {% material_card_header title='Thesis' actions='dropdown_thesis' %}
+        {% trans 'Thesis' as t %}
+        {% material_card_header title=t actions='dropdown_thesis' %}
     {% else %}
         <div class="card-header green white-text">
             <div class="card-title">

@@ -55,7 +55,7 @@ class BothThesisRegistrationPDFDownload(DetailView):
                     'student')) and not self.object.pk == request.user.portaluser.student.thesis.registration.pk:
             return http.HttpResponseForbidden()
 
-        with open(settings.MEDIA_ROOT + '/' + self.object.pdf_file.name, 'r') as pdf:
+        with open(settings.MEDIA_ROOT + '/' + self.object.pdf_file, 'r') as pdf:
             response = http.HttpResponse(pdf.read(), content_type='application/pdf')
             response['Content-Disposition'] = '{}; filename="Anmeldung_Abschlussarbeit.pdf"'.format(self.target)
             return response
@@ -384,7 +384,7 @@ class StudentThesisRegistrationFormView(UpdateView):
         examinationboard = ResponseExaminationBoard.objects.get_or_create(registration=self.object)[0]
         examinationboard.save()
 
-        with open(settings.MEDIA_ROOT + '/' + self.object.pdf_file.name, 'r') as pdf:
+        with open(settings.MEDIA_ROOT + "/" + self.object.pdf_file, 'r') as pdf:
             response = http.HttpResponse(pdf.read(), content_type='application/pdf')
             response['Content-Disposition'] = '{}; filename="Anmeldung_Abschlussarbeit.pdf"'.format(self.target)
             self.object.finished = True
@@ -464,11 +464,10 @@ class StudentThesisRegistrationFormView(UpdateView):
         # call command line
 
         os.system(
-            'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf output {directory}/{file} flatten'.format(
+            'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf output {directory}{file} flatten'.format(
                 mediaroot=settings.MEDIA_ROOT, directory=directory, file=filename))
 
-        student.thesis.registration.pdf_file.name = '{}/thesis/registration/{}'.format(student.user, filename)
-        student.thesis.registration.save()
+        self.object.pdf_file = "{user}/thesis/registration/{file}".format(user=self.request.user, file=filename)
 
 
 class StudentSettingsFormView(UpdateView):
@@ -667,7 +666,7 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
         return Placement.objects.get_or_create(student=self.get_object())[0]
 
     def get_registration(self):
-        return MentoringRequest.objects.get_or_create(thesis=self.get_thesis_mentoringrequest())[0]
+        return self.get_object().thesis.registration
 
     def get_thesis_documents(self):
         return Thesis.objects.get_or_create(student=self.get_object())[0]

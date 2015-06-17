@@ -137,12 +137,12 @@ class Thesis(AbstractWork):
 
     @property
     def mentoring(self):
-        return self.mentoringrequest.mentoring
+        return self.mentoringrequest.mentoring if hasattr(self.mentoringrequest, 'mentoring') else None
 
     @property
     def registration(self):
         return Registration.objects.get_or_create(mentoring=self.mentoringrequest.mentoring)[0] if hasattr(
-            self.mentoringrequest, 'mentoring') else None
+            self.mentoringrequest, 'mentoring') and self.mentoringrequest.mentoring else None
 
 
 @python_2_unicode_compatible
@@ -232,7 +232,7 @@ class Registration(models.Model):
     permission_public = models.BooleanField(_('permission public'), default=False)
     permission_library = models.BooleanField(_('permission library'), default=False)
     permission_library_tutor = models.BooleanField(_('permission library tutor'), default=False)
-    pdf_file = models.FileField(_('PDF File'), null=True, blank=True)
+    pdf_file = models.TextField(_('PDF File'), null=True, blank=True)
     finished = models.BooleanField(default=False)
 
     def student(self):
