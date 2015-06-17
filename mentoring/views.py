@@ -9,6 +9,7 @@ from django.views.generic import *
 from fdfgen import forge_fdf
 from mentoring.forms import *
 from mentoring.models import Student, Placement
+from django.utils.translation import ugettext_lazy as _
 
 
 class DetailView(django.views.generic.DetailView):
@@ -824,7 +825,7 @@ class TutorMentoringRequestFormView(UpdateView):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_object()
         fmrt = FormMentoringrequestTutor(data=request.POST, instance=self.object, prefix='mentoringrequest_form')
-        if (request.POST.get('submit') == "Deny"):
+        if (request.POST.get('submit') == _("Deny")):
             if (fmrt.is_valid()):
                 fmrt.instance.status = 'DE'
                 fmrt.instance.tutor_email = None
@@ -838,7 +839,7 @@ class TutorMentoringRequestFormView(UpdateView):
             cmr['mentoringrequest_form'] = fmrt
             cd.update(cmr)
             return self.render_to_response(cd, status=status)
-        elif (request.POST.get('submit') == "Accept"):
+        elif (request.POST.get('submit') == _("Accept")):
             forms = self.get_context_mentoringrequest(data=request.POST)
             if (forms['mentoringrequest_form'].is_valid()
                 and forms['mentoringrequest_tutor2_form'].is_valid()):

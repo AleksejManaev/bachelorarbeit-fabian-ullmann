@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
 import os
-
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-
 from mentoring.helpers import *
 from mentoring.validators import *
 
@@ -50,7 +46,6 @@ class PortalUser(ContactModel):
 
 @python_2_unicode_compatible
 class Student(PortalUser):
-    course = models.ForeignKey(Course)
     matriculation_number = models.CharField(_('matriculation number'), max_length=8)
     extern_email = models.EmailField()
 
@@ -67,6 +62,7 @@ class Address(models.Model):
 
 
 class AbstractWork(models.Model):
+    course = models.ForeignKey(Course)
     description = models.TextField(_('description'), blank=True, null=True)
     created_on = models.DateTimeField(_('date joined'), auto_created=True, auto_now_add=True)
     updated_on = models.DateTimeField(_('date updated'), auto_now=True, null=True)
@@ -126,7 +122,7 @@ class CompanyContactData(ContactData):
 
 @python_2_unicode_compatible
 class Thesis(AbstractWork):
-    student = models.OneToOneField(Student, unique=True)
+    student = models.ForeignKey(Student)
     report = models.FileField(_('report thesis'), upload_to=upload_to_thesis_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
     poster = models.FileField(_('poster thesis'), upload_to=upload_to_thesis_poster, blank=True, null=True,
@@ -174,7 +170,7 @@ class MentoringRequest(models.Model):
         ('AC', 'accepted'),
         ('DE', 'denied'),
     )
-    thesis = models.OneToOneField(Thesis)
+    thesis = models.ForeignKey(Thesis)
     tutor_email = models.EmailField(_('Tutor email'), blank=True, null=True)
     requested_on = models.DateTimeField(_('requested on'), null=True, editable=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='NR')
@@ -188,7 +184,8 @@ class MentoringRequest(models.Model):
         return self.thesis.student
 
 class Mentoring(models.Model):
-    request = models.OneToOneField(MentoringRequest)
+    # request = models.OneToOneField(MentoringRequest)
+    thesis = models.OneToOneField(Thesis)
     tutor_1 = models.ForeignKey(Tutor)
     created_on = models.DateTimeField(auto_created=True, auto_now_add=True)
 
@@ -204,7 +201,7 @@ class Mentoring(models.Model):
 @python_2_unicode_compatible
 class Tutor2ContactData(models.Model):
     mentoring = models.OneToOneField(Mentoring)
-    contact = models.OneToOneField(ContactData)
+    contact = models.ForeignKey(ContactData)
 
     def __str__(self):
         return u"{} {} {}".format(self.contact.title, self.contact.first_name, self.contact.last_name)
@@ -257,26 +254,3 @@ class CompanyRating(models.Model):
     comment = models.TextField(_('comment'))
     public = models.BooleanField(default=False)
 
-
-@receiver(post_save, sender=Student)
-def post_save_student(sender, instance, created, **kwargs):
-    if created:
-        placement = Placement.objects.get_or_create(student=instance)[0]
-        thesis = Thesis.objects.get_or_create(student=instance)[0]
-
-        CompanyContactData.objects.get_or_create(
-            work_company=WorkCompany.objects.get_or_create(
-                work=placement)[0])
-        CompanyContactData.objects.get_or_create(
-            work_company=WorkCompany.objects.get_or_create(
-                work=thesis)[0])
-        mr = MentoringRequest(status='NR')
-        mr.thesis = thesis
-        mr.save()
-        # Mentoring.objects.get_or_create(thesis=thesis, tutor_1=mr)
-        Address.objects.get_or_create(portal_user=instance)
-
-
-@receiver(post_delete, sender=CompanyContactData)
-def post_delete_contactdata(sender, instance, using, **kwargs):
-    CompanyContactData.objects.get_or_create(work_company=instance.work_company)
