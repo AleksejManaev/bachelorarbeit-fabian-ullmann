@@ -8,7 +8,6 @@
         {% csrf_token %}
         {% include 'student_placement_widget.html' %}
     </form>
-
     <div class="row">
         <div class="
                 {% if student.thesis.mentoringrequest.status != 'AC' %}
@@ -35,11 +34,7 @@
 
         {% if student.thesis.mentoring %}
             <div class="col s12 m4 ">
-                <form action="{% url 'student-thesis-registration-update' %}" method="post">
-                    {% csrf_token %}
-                    {% include 'student_thesis_registration_widget.html' %}
-                </form>
-
+                {% include 'student_thesis_colloquium_widget.html' %}
                 {% if student.thesis.registration.pdf_file %}
                     <form action="{% url 'thesis-registration-examinationboard' student.thesis.registration.pk %}"
                           method="post">
@@ -47,9 +42,10 @@
                         {% include 'both_thesis_examinationboard_widget.html' %}
                     </form>
                 {% endif %}
-
-
-                {% include 'student_thesis_colloquium_widget.html' %}
+                <form action="{% url 'student-thesis-registration-update' %}" method="post">
+                    {% csrf_token %}
+                    {% include 'student_thesis_registration_widget.html' %}
+                </form>
             </div>
         {% endif %}
     </div>

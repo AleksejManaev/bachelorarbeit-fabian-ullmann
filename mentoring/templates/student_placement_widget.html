@@ -1,4 +1,5 @@
 {% load material %}
+{% load i18n %}
 
 <ul id="dropdown_placement" class="dropdown-content">
     {% if not placement.finished %}
@@ -16,7 +17,8 @@
 <div class="card todo-list">
 
     {% if not placement.finished %}
-        {% material_card_header title='Placement' actions='dropdown_placement' %}
+        {% trans 'Placement' as pl %}
+        {% material_card_header title=pl actions='dropdown_placement' %}
     {% else %}
         <div class="card-header green white-text">
             <div class="card-title">

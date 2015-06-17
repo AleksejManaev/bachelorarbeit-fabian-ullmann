@@ -10,7 +10,8 @@
 </ul>
 <div class="card todo-list">
     {% if not registration.finished %}
-        {% material_card_header title='Thesis-Registration' actions='dropdown_thesis_registration' %}
+        {% trans 'Registration' as tr %}
+        {% material_card_header title=tr actions='dropdown_thesis_registration' %}
 
         <div class="card-content">
             {% material_form thesis_registration_form %}

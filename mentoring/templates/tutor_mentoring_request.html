@@ -72,10 +72,10 @@
                     {% else %}
                         <div class="card-action acceptdeny">
                             <div class="col s6 green white-text valign-wrapper">
-                                <input type="submit" name="submit" value="Accept"/>
+                                <input type="submit" name="submit" value="{% trans 'Accept' %}"/>
                             </div>
                             <div class="col s6 red white-text valign-wrapper">
-                                <input type="submit" name="submit" value="Deny"/>
+                                <input type="submit" name="submit" value="{% trans 'Deny' %}"/>
                             </div>
                         </div>
                     {% endif %}
