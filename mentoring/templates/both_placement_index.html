@@ -23,15 +23,9 @@
                     </ul>
                 </div>
                 <div class="col s12 m4">
-                    <b>{{ object.workcompany.companycontactdata.title }} {{ object.workcompany.companycontactdata.first_name }} {{ object.thesis.workcompany.companycontactdata.last_name }}</b>
-                    <ul>
-                        <li><i class="mdi-content-mail lar"></i> <a
-                                href="mailto:{{ object.workcompany.companycontactdata.email }}"> {{ object.workcompany.companycontactdata.email }}</a>
-                        </li>
-                        <li>
-                            <i class="mdi-communication-phone"></i> {{ object.workcompany.companycontactdata.phone }}
-                        </li>
-                    </ul>
+                    {% with companycontactdata=object.workcompany.companycontactdata %}
+                        {% include 'companycontactdata_widget.html' %}
+                    {% endwith %}
                 </div>
             </div>
             <div class="divider"></div>
@@ -42,8 +36,8 @@
                             <div class="card-header">
                                 <span class="card-title blue-grey-text">{% trans 'Report' %}</span>
                             </div>
-                            <div class="card-content green-text center-align"><i
-                                    class="mdi-file-cloud-done large"></i>
+                            <div class="card-content{% if object.report %} green-text{% else %} red-text{% endif %} center-align">
+                                <i class="mdi-file-cloud-done medium"></i>
                             </div>
                         </div>
                     </a>
@@ -54,9 +48,8 @@
                             <div class="card-header">
                                 <span class="card-title blue-grey-text">{% trans 'Presentation' %}</span>
                             </div>
-                            <div class="card-content green-text center-align">
-                                <i
-                                        class="mdi-file-cloud-done large"></i>
+                            <div class="card-content{% if object.presentation %} green-text{% else %} red-text{% endif %} center-align">
+                                <i class="mdi-file-cloud-done medium"></i>
                             </div>
                         </div>
                     </a>
@@ -67,8 +60,8 @@
                             <div class="card-header">
                                 <span class="card-title blue-grey-text">{% trans 'Certificate' %}</span>
                             </div>
-                            <div class="card-content green-text center-align"><i
-                                    class="mdi-file-cloud-done large"></i>
+                            <div class="card-content{% if object.certificate %} green-text{% else %} red-text{% endif %} center-align">
+                                <i class="mdi-file-cloud-done medium"></i>
                             </div>
                         </div>
                     </a>

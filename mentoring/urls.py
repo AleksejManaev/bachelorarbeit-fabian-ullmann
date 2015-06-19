@@ -24,11 +24,15 @@ urlpatterns = [
     url(r'^student/$', login_required(StudentFormView.as_view()), name='student-index'),
     url(r'^student/settings/$', login_required(StudentSettingsFormView.as_view()), name='student-settings'),
 
+    url(r'^student/placements/$', StudentPlacementListView.as_view(), name='student-placements'),
     url(r'^student/placement/update/$', StudentPlacementFormView.as_view(), name='student-placement-update'),
     url(r'^student/placement/update/todo/$',
         StudentPlacementFormView.as_view(template_name='student_placement_form_todo.html'),
         name='student-placement-update-todo'),
-    url(r'^student/placement/preview/', StudentPlacementIndexView.as_view(), name='student-placement-preview'),
+    url(r'^student/placement/(?P<pk>\d+)/$', StudentPlacementIndexView.as_view(), name='student-placement-preview'),
+    url(r'^student/placement/create/$', studentPlacementCreate, name='student-placement-create'),
+    url(r'^student/placement/(?P<pk>\d+)/editable/$', studentPlacementEditable, name='student-placement-editable'),
+    url(r'^student/placement/(?P<pk>\d+)/delete/$', studentPlacementDelete, name='student-placement-delete'),
 
     url(r'^student/thesis/request/update/$', StudentThesisMentoringrequestFormView.as_view(),
         name='student-thesis-mentoringrequest-update'),
@@ -54,6 +58,21 @@ urlpatterns = [
 
     url(r'^tutor/$', TutorView.as_view(), name='tutor-index'),
     url(r'^tutor/settings/$', login_required(TutorSettingsFormView.as_view()), name='tutor-settings'),
+    url(r'^tutor/placements/$', TutorPlacementListView.as_view(), name='tutor-placements'),
+    url(r'^tutor/placements/course/(?P<pk>\d+)/$', TutorPlacementCourseView.as_view(), name='tutor-placement-course'),
+    url(r'^tutor/placements/course/(?P<pk>\d+)/registrations/$', TutorPlacementCourseRegistrationView.as_view(),
+        name='tutor-placement-course-registrations'),
+    url(r'^tutor/placements/course/(?P<pk>\d+)/registrations/confirmed$',
+        TutorPlacementCourseRegistrationView.as_view(), {'confirmed': True},
+        name='tutor-placement-course-registrations-confirmed'),
+    url(r'^tutor/placements/course/(?P<pk>\d+)/registrations/notconfirmed$',
+        TutorPlacementCourseRegistrationView.as_view(), {'confirmed': False},
+        name='tutor-placement-course-registrations-notconfirmed'),
+    url(r'^tutor/placements/course/(?P<pk>\d+)/addevent/$', TutorPlacementCourseEventView.as_view(),
+        name='tutor-placement-course-addevent'),
+    url(r'^tutor/placement/(?P<pk>\d+)/$', TutorPlacementView.as_view(), name='tutor-placement-preview'),
+    url(r'^tutor/placement/(?P<pk>\d+)/confirm$', tutorPlacementConfirm, name='tutor-placement-confirm'),
+
     url(r'^tutor/request/(?P<pk>\d+)/', TutorMentoringRequestFormView.as_view(), name='tutor-request'),
     url(r'^tutor/requests/', TutorMentoringRequestListView.as_view(), name='tutor-requests'),
     url(r'^tutor/mentorings/', TutorMentoringListView.as_view(), name='tutor-mentorings'),
@@ -69,5 +88,5 @@ urlpatterns = [
         name='thesis-registration-pdf'),
     url(r'^thesis/registration/(?P<pk>\d+)/examinationboard/', BothThesisExaminationboardFormView.as_view(),
         name='thesis-registration-examinationboard'),
-    url(r'^thesis/preview/$', StudentThesisIndexView.as_view(), name='thesis-preview'),
+    url(r'^thesis/preview/$', StudentThesisIndexView.as_view(), name='thesis-preview')
 ]

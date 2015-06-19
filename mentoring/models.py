@@ -1,11 +1,21 @@
 # -*- coding: utf-8 -*-
+
+from datetime import datetime
 from django.utils.encoding import python_2_unicode_compatible
-import os
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from mentoring.helpers import *
 from mentoring.validators import *
 
+app_label = 'mentoring'
+
+STATUS_CHOICES = (
+    ('NR', 'not requested'),
+    ('RE', 'requested'),
+    ('AC', 'accepted'),
+    ('DE', 'denied'),
+    ('CD', 'canceled'),
+)
 
 @python_2_unicode_compatible
 class Course(models.Model):
@@ -15,7 +25,7 @@ class Course(models.Model):
         ('8', _('8 weeks')),
     )
     editing_time = models.CharField(_('editing time thesis'), max_length=1, choices=TIME_CHOICES, default='3')
-    description = models.CharField(_('description'), max_length=255)
+    description = models.CharField(_('description'), max_length=50)
 
     def __str__(self):
         return self.description
@@ -45,6 +55,26 @@ class PortalUser(ContactModel):
     user = models.OneToOneField(User, primary_key=True)
 
 @python_2_unicode_compatible
+class Tutor(PortalUser):
+    placement_courses = models.ManyToManyField(Course)
+
+    @property
+    def new_requests(self):
+        return MentoringRequest.objects.filter(tutor_email=self.user.email, status='RE').order_by('-requested_on')
+
+    @property
+    def requests(self):
+        return MentoringRequest.objects.filter(tutor_email=self.user.email).order_by('-requested_on')
+
+    @property
+    def get_full_name(self):
+        return "%s %s %s" % (self.title, self.user.first_name, self.user.last_name)
+
+    def __str__(self):
+        return u"{} {} {}".format(self.title, self.user.first_name, self.user.last_name)
+
+
+@python_2_unicode_compatible
 class Student(PortalUser):
     matriculation_number = models.CharField(_('matriculation number'), max_length=8)
     extern_email = models.EmailField()
@@ -62,19 +92,49 @@ class Address(models.Model):
 
 
 class AbstractWork(models.Model):
-    course = models.ForeignKey(Course)
+
     description = models.TextField(_('description'), blank=True, null=True)
     created_on = models.DateTimeField(_('date joined'), auto_created=True, auto_now_add=True)
     updated_on = models.DateTimeField(_('date updated'), auto_now=True, null=True)
-    finished = models.BooleanField(_('finished'), default=False)
+    sent_on = models.DateTimeField(_('date sent'), blank=True, null=True)
+
+    state = models.CharField(max_length=2, choices=STATUS_CHOICES, default='NR')
+
+    @property
+    def finished(self):
+        return bool(self.sent_on) and not self.state == 'NR'
+
+    def __setattr__(self, key, value):
+        if not key == 'finished':
+            super(AbstractWork, self).__setattr__(key, value)
+        elif value == True:
+            self.sent_on = datetime.now()
+            self.state = 'RE'
+        else:
+            self.sent_on = None
+            self.state = 'NR'
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
 
 
+class Event(models.Model):
+    date = models.DateField(_('date'))
+    time = models.TimeField(_('time'), null=True, blank=True)
+    room = models.CharField(_('room'), max_length=100, null=True, blank=True)
+
+
+class PlacementEvent(Event):
+    course = models.ForeignKey(Course)
+    tutor = models.ForeignKey(Tutor)
+
+    def __str__(self):
+        return "Am %s um %s in %s bei %s" % (self.date, self.time, self.room, self.tutor)
+
 @python_2_unicode_compatible
 class Placement(AbstractWork):
-    student = models.OneToOneField(Student, unique=True)
+    student = models.ForeignKey(Student)
+    course = models.ForeignKey(Course, verbose_name=_('course placement'), blank=True, null=True)
     report = models.FileField(_('report placement'), upload_to=upload_to_placement_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
     presentation = models.FileField(_('presentation placement'), upload_to=upload_to_placement_presentation, blank=True,
@@ -85,6 +145,7 @@ class Placement(AbstractWork):
                                    validators=[validate_pdf, validate_size])
     public = models.BooleanField(_('public placement'), default=False)
 
+
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)
 
@@ -93,13 +154,24 @@ class Placement(AbstractWork):
         super(Placement, self).save(force_insert, force_update, using, update_fields)
 
         # Loeschen alter Upload-Dateien
-        for object in [self.report, self.presentation, self.certificate]:
-            if (bool(object)):
-                dir = os.path.dirname(getattr(object, 'path'))
-                for file in os.listdir(dir):
-                    samefile = os.path.samefile(getattr(object, 'path'), os.path.join(dir, file))
-                    if not samefile:
-                        os.remove(os.path.join(dir, file))
+        # for object in [self.report, self.presentation, self.certificate]:
+        #     if (bool(object)):
+        #         dir = os.path.dirname(getattr(object, 'path'))
+        #         for file in os.listdir(dir):
+        #             samefile = os.path.samefile(getattr(object, 'path'), os.path.join(dir, file))
+        #             if not samefile:
+        #                 os.remove(os.path.join(dir, file))
+
+
+class PlacementEventRegistration(models.Model):
+    placement = models.OneToOneField(Placement)
+    event = models.ForeignKey(PlacementEvent, null=True, blank=False)
+    confirmed = models.BooleanField(default=False)
+
+
+class StudentActivePlacement(models.Model):
+    student = models.OneToOneField(Student)
+    placement = models.OneToOneField(Placement, null=True)
 
 class WorkCompany(models.Model):
     work = models.OneToOneField(AbstractWork, primary_key=True)
@@ -123,6 +195,7 @@ class CompanyContactData(ContactData):
 @python_2_unicode_compatible
 class Thesis(AbstractWork):
     student = models.ForeignKey(Student)
+    course = models.ForeignKey(Course, blank=True, null=True)
     report = models.FileField(_('report thesis'), upload_to=upload_to_thesis_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
     poster = models.FileField(_('poster thesis'), upload_to=upload_to_thesis_poster, blank=True, null=True,
@@ -141,35 +214,10 @@ class Thesis(AbstractWork):
             self.mentoringrequest, 'mentoring') and self.mentoringrequest.mentoring else None
 
 
-@python_2_unicode_compatible
-class Tutor(PortalUser):
-    @property
-    def new_requests(self):
-        return MentoringRequest.objects.filter(tutor_email=self.user.email, status='RE').order_by('-requested_on')
-    @property
-    def requests(self):
-        return MentoringRequest.objects.filter(tutor_email=self.user.email).order_by('-requested_on')
-
-    @property
-    def mentorings(self):
-        return Mentoring.objects.filter(tutor_1=self)
-
-    @property
-    def get_full_name(self):
-        return "%s %s %s" % (self.title, self.user.first_name, self.user.last_name)
-
-    def __str__(self):
-        return u"{} {} {}".format(self.title, self.user.first_name, self.user.last_name)
 
 
 @python_2_unicode_compatible
 class MentoringRequest(models.Model):
-    STATUS_CHOICES = (
-        ('NR', 'not requested'),
-        ('RE', 'requested'),
-        ('AC', 'accepted'),
-        ('DE', 'denied'),
-    )
     thesis = models.ForeignKey(Thesis)
     tutor_email = models.EmailField(_('Tutor email'), blank=True, null=True)
     requested_on = models.DateTimeField(_('requested on'), null=True, editable=False)
@@ -188,10 +236,6 @@ class Mentoring(models.Model):
     thesis = models.OneToOneField(Thesis)
     tutor_1 = models.ForeignKey(Tutor)
     created_on = models.DateTimeField(auto_created=True, auto_now_add=True)
-
-    @property
-    def thesis(self):
-        return self.request.thesis
 
     @property
     def tutor_2(self):
@@ -242,15 +286,12 @@ class ResponseExaminationBoard(models.Model):
     extend_to = models.DateField(_('extended to'), null=True, blank=True)
     finished = models.BooleanField(default=False)
 
-class Colloquium(models.Model):
+
+class Colloquium(Event):
     mentoring = models.OneToOneField(Mentoring)
-    date = models.DateField(_('date'), null=True, blank=True)
-    time = models.TimeField(_('time'), null=True, blank=True)
-    room = models.TextField(_('room'), null=True, blank=True, max_length=100)
 
 class CompanyRating(models.Model):
     rate = models.PositiveSmallIntegerField(_('rate'))
     thesis = models.ForeignKey(Thesis)
     comment = models.TextField(_('comment'))
     public = models.BooleanField(default=False)
-

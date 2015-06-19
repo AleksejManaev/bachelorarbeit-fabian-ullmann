@@ -78,7 +78,6 @@ class FormPlacement(forms.ModelForm):
 
         req = True if self.data.has_key('finalize') and (
         self.data['finalize'] == 'true' or self.data['finalize'] == _('Finish')) else False
-        print('reg = {}'.format(self.data))
         for key, val in self.fields.iteritems():
             if not key in ['public', 'finished']:
                 val.required = req
@@ -99,13 +98,33 @@ class FormPlacement(forms.ModelForm):
 
     class Meta:
         model = Placement
-        exclude = ['student', 'finished']
-        fields = '__all__'
+        exclude = ['student', 'finished', 'state', 'sent_on']
+        fields = ['course', 'description', 'report', 'presentation', 'certificate', 'public']
         widgets = {
             'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
             'presentation': ClearableFileInput(attrs={'accept': 'application/pdf'}),
             'certificate': ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
+
+
+class FormPlacementEventRegistration(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(FormPlacementEventRegistration, self).__init__(*args, **kwargs)
+        self.fields['event'].queryset = self.fields['event'].queryset.filter(course=self.instance.placement.course)
+
+    class Meta:
+        model = PlacementEventRegistration
+        fields = ['event']
+        widgets = {
+            'event': forms.RadioSelect(),
+        }
+
+
+class FormEvent(forms.ModelForm):
+    class Meta:
+        model = PlacementEvent
+        fields = ['date', 'time', 'room']
+
 
 class FormThesisDocuments(forms.ModelForm):
     def is_valid(self):
@@ -135,7 +154,6 @@ class FormThesisDocuments(forms.ModelForm):
 
         if is_valid and req:
             self.instance.finished = True
-            print(self.instance.finished)
             self.instance.save()
 
         return is_valid
@@ -223,12 +241,22 @@ class FormMentoringTutor(forms.ModelForm):
 FormsetMentoringTutor2 = forms.inlineformset_factory(Mentoring, Tutor2ContactData, fields='__all__', extra=1)
 
 # Todo FormStudent alternative E-Mail anpassen
-class FormSettings(forms.ModelForm):
+class FormSettingsUser(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name']
 
-FormsetUserPortaluser = forms.inlineformset_factory(User, PortalUser, fields='__all__', extra=1, can_delete=False)
+
+class FormSettingsTutor(forms.ModelForm):
+    class Meta:
+        model = Tutor
+        fields = '__all__'
+
+
+FormsetUserTutor = forms.inlineformset_factory(User, Tutor,
+                                               fields=['user', 'title', 'phone', 'placement_courses', 'portaluser_ptr'],
+                                               extra=1, can_delete=False,
+                                               widgets={'placement_courses': forms.CheckboxSelectMultiple()})
 
 FormsetStudentAddress = forms.inlineformset_factory(Student, Address, fields='__all__', extra=1, can_delete=False)
 

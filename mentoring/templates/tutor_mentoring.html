@@ -69,24 +69,9 @@
                     <span class="card-title blue-grey-text">{% trans 'Student' %}</span>
                 </div>
                 <div class="card-content">
-                    <ul>
-                        <li>
-                            <i class="mdi-communication-contacts"></i>&emsp;{{ object.thesis.student.user.get_full_name }}
-                        </li>
-                        <li><i class="mdi-communication-business"></i>&emsp;{{ object.thesis.student.course }}</li>
-                        <li>
-                            <i class="mdi-communication-vpn-key"></i>&emsp;{{ object.thesis.student.matriculation_number }}
-                        </li>
-                        <li>&nbsp;</li>
-                        <li><i class="mdi-content-mail"></i>&emsp;<a
-                                href="mailto:{{ object.thesis.student.user.email }}">{{ object.thesis.student.user.email }}</a>
-                            <a href="mailto:{{ object.thesis.student.extern_email }}">{{ object.thesis.student.extern_email }}</a>
-                        </li>
-                        <li>
-                            <i class="mdi-communication-phone"></i>&emsp;{{ object.thesis.student.phone }}
-                        </li>
-
-                    </ul>
+                    {% with student=object.thesis.student course=object.thesis.course %}
+                        {% include 'student_contactdata_widget.html' %}
+                    {% endwith %}
                 </div>
             </div>
             <div class="card">

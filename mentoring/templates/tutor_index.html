@@ -4,6 +4,13 @@
 {% load i18n %}
 
 {% block material_content %}
+    <div class="row">
+        <div class="col s12">
+            {% with object.placement_courses.all as object_list %}
+                {% include 'tutor_placements_widget.html' %}
+            {% endwith %}
+        </div>
+    </div>
     {# BEGIN MENTORING REQUESTS  #}
     <div class="row">
         <div class="col s12">
@@ -64,7 +71,7 @@
                 {% material_card_header title='Mentoring' actions='dropdown_mentorings' %}
                 <div class="card-content">
                     <ul class="collection">
-                        {% for mentoring in object.mentorings %}
+                        {% for mentoring in object.mentoring_set.all %}
                             <li class="collection-item row">
                                 <div class="request-message col s12">
                                     <a href="{% url 'tutor-mentoring' mentoring.pk %}" class="fancybox fancybox.iframe">

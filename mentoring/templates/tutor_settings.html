@@ -3,21 +3,32 @@
 {% load i18n %}
 
 {% block material_content %}
-    <form action="" method="post">
-        {% csrf_token %}
+    <div class="card">
+        <form action="" method="post">
+            {% trans 'Settings Tutor' as st %}
+            {% material_card_header title=st %}
+            <div class="card-content">
+                {% csrf_token %}
 
-        {{ tutor_user_formset.management_form }}
-        {% for form in tutor_user_formset.forms %}
-            {% material_formfield form.user %}
-            {% material_formfield form.title %}
-        {% endfor %}
-        {% material_formfield user_form.first_name %}
-        {% material_formfield user_form.last_name %}
+                {{ tutor_user_formset.management_form }}
+                {% for form in tutor_user_formset.forms %}
+                    {% material_formfield form.user %}
+                    {% material_formfield form.title %}
+                {% endfor %}
+                {% material_formfield user_form.first_name %}
+                {% material_formfield user_form.last_name %}
 
+                {% for form in tutor_user_formset.forms %}
+                    {% material_formfield form.phone %}
+                    {% material_formfield form.placement_courses %}
+                    {% material_formfield form.portaluser_ptr %}
+                {% endfor %}
 
-        {% for form in tutor_user_formset.forms %}
-            {% material_formfield form.phone %}
-        {% endfor %}
-        <button type="submit">{% trans 'submit' %}</button>
-    </form>
+            </div>
+            <div class="card-action valign-wrapper">
+
+                <input type="submit" name="finalize" value="{% trans 'Finish' %}"/>
+            </div>
+        </form>
+    </div>
 {% endblock %}

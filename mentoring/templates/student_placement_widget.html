@@ -1,65 +1,89 @@
 {% load material %}
 {% load i18n %}
-
-<ul id="dropdown_placement" class="dropdown-content">
-    {% if not placement.finished %}
-        <li><a href="{% url 'student-placement-update' %}"
-               class="fancybox fancybox.iframe edit_form">{% trans 'Edit in Form' %}</a>
-        </li>
-    {% else %}
-        <li><a href="{% url 'student-placement-preview' %}" class="fancybox fancybox.iframe">{% trans 'Preview' %}</a>
-        </li>
-        <li><a href="{% url 'student-placement-update-todo' %}?editMode=true" class="reload">
-            {% trans 'Edit Mode' %}</a></li>
-    {% endif %}
-</ul>
-
-<div class="card todo-list">
-
-    {% if not placement.finished %}
-        {% trans 'Placement' as pl %}
-        {% material_card_header title=pl actions='dropdown_placement' %}
-    {% else %}
-        <div class="card-header green white-text">
-            <div class="card-title">
-                <a href="{% url 'student-placement-preview' %}"
-                   class="fancybox fancybox.iframe white-text">{{ pl }} <i
-                        class="mdi-action-done-all"></i></a></div>
-            <div class="actions">
-                <a href="{% url 'student-placement-update-todo' %}?editMode=true" class="reload"><i
-                        class="mdi-editor-border-color white-text"></i></a>
-                <a href="{% url 'student-placement-preview' %}" class="fancybox fancybox.iframe"><i
-                        class="mdi-av-my-library-books white-text"></i></a></div>
-        </div>
-    {% endif %}
-
-    <div class="card-content{% if placement.finished %} hide{% endif %}">
-        {% material_todo_formfields placement_form exclude='public' %}
-        {% material_todo_item_begin %}
-        {% trans 'company placement' as cp %}
-        {% material_todo_item_activator id='id_placement_company_todo' label=cp %}
-        <div class="input-group hide col s12">
-            {% material_form placement_company_form %}
-            {% material_formset placement_company_formset %}
-        </div>
-        {% material_todo_item_end %}
+{% load filter %}
+{% trans 'Placement' as placement_title %}
+{% trans 'Placement new' as placement_title_new %}
+{% trans 'Edit in Form' as edit_form %}
+{% trans 'Finish' as finish %}
+{% trans 'Preview' as preview %}
+{% trans 'For course' as for_course %}
+{% trans 'company placement' as company %}
+{% trans 'Contact-Data placement' as contactdata %}
+{% trans 'Event placement' as event %}
+{% trans 'Delete' as delete %}
 
 
-        {% material_todo_item_begin %}
-        {% trans 'Contact-Data placement' as cd %}
-        {% material_todo_item_activator id='id_placement_workcompany_todo' label=cd %}
-        <div class="input-group hide col s12">
-            {% material_formset placement_contact_formset %}
-        </div>
-        {% material_todo_item_end %}
+{% if placement.state == 'NR' %}
+    {% include 'student_placement_nr_widget.html' %}
+{% elif placement.state == 'RE' %}
+    {% include 'student_placement_re_widget.html' %}
+{% elif placement.state == 'AC' %}
+    {% include 'student_placement_ac_widget.html' %}
+{% else %}
+    {% include 'student_placement_de_widget.html' %}
+{% endif %}
 
-        {% material_formfield placement_form.public %}
 
-    </div>
-    {% if not placement.finished %}
-        <div class="card-action valign-wrapper">
-            <a href="#" type="submit" name="finish" class="col s12 center-align">{% trans 'Finish' %}</a>
-        </div>
-    {% endif %}
-    {% material_todo_reveal %}
-</div>
+{#<ul id="dropdown_placement" class="dropdown-content">#}
+{#    {% if not placement.finished %}#}
+{#        <li><a href="{% url 'student-placement-update' %}"#}
+{#               class="fancybox fancybox.iframe edit_form">{% trans 'Edit in Form' %}</a>#}
+{#        </li>#}
+{#    {% else %}#}
+{#        <li><a href="{% url 'student-placement-preview' placement.pk %}"#}
+{#               class="fancybox fancybox.iframe">{% trans 'Preview' %}</a>#}
+{#        </li>#}
+{#        <li><a href="{% url 'student-placement-editable' %}" class="reload">#}
+{#            {% trans 'Edit Mode' %}</a></li>#}
+{#    {% endif %}#}
+{#</ul>#}
+{##}
+{#<div class="card todo-list">#}
+{##}
+{##}
+{#    {% if not placement.finished %}#}
+{#        {% material_card_header title=pl actions='dropdown_placement' %}#}
+{#    {% else %}#}
+{#        <div class="card-header green white-text">#}
+{#            <div class="card-title">#}
+{#                <a href="{% url 'student-placement-preview' placement.pk %}"#}
+{#                   class="fancybox fancybox.iframe white-text">{{ pl }} <i#}
+{#                        class="mdi-action-done-all"></i></a></div>#}
+{#            <div class="actions">#}
+{#                <a href="{% url 'student-placement-editable' %}" class="reload"><i#}
+{#                        class="mdi-editor-border-color white-text"></i></a>#}
+{#                <a href="{% url 'student-placement-preview' placement.pk %}" class="fancybox fancybox.iframe"><i#}
+{#                        class="mdi-av-my-library-books white-text"></i></a></div>#}
+{#        </div>#}
+{#    {% endif %}#}
+{##}
+{#    <div class="card-content{% if placement.finished %} hide{% endif %}">#}
+{#        {% material_todo_formfields placement_form exclude='public' %}#}
+{#        {% material_todo_item_begin %}#}
+{#        {% trans 'company placement' as cp %}#}
+{#        {% material_todo_item_activator id='id_placement_company_todo' label=cp %}#}
+{#        <div class="input-group hide col s12">#}
+{#            {% material_form placement_company_form %}#}
+{#            {% material_formset placement_company_formset %}#}
+{#        </div>#}
+{#        {% material_todo_item_end %}#}
+{##}
+{##}
+{#        {% material_todo_item_begin %}#}
+{#        {% trans 'Contact-Data placement' as cd %}#}
+{#        {% material_todo_item_activator id='id_placement_workcompany_todo' label=cd %}#}
+{#        <div class="input-group hide col s12">#}
+{#            {% material_formset placement_contact_formset %}#}
+{#        </div>#}
+{#        {% material_todo_item_end %}#}
+{##}
+{#        {% material_formfield placement_form.public %}#}
+{##}
+{#    </div>#}
+{#    {% if not placement.finished %}#}
+{#        <div class="card-action valign-wrapper">#}
+{#            <a href="#" type="submit" name="finish" class="col s12 center-align">{% trans 'Finish' %}</a>#}
+{#        </div>#}
+{#    {% endif %}#}
+{#    {% material_todo_reveal %}#}
+{#</div>#}

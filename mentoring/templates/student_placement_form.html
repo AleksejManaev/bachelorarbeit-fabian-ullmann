@@ -11,6 +11,9 @@
                 {% csrf_token %}
                 <div class="row">
                     <div class="col s12">
+                        {% material_formfield placement_form.course %}
+                    </div>
+                    <div class="col s12">
                         {% material_formfield placement_form.description %}
                     </div>
                     <div class="col s12">
@@ -41,6 +44,12 @@
                     </div>
                 </div>
 
+
+                <div class="row">
+                    <div class="col s12">
+                        {% material_form placement_event_form %}
+                    </div>
+                </div>
                 <div class="card-action valign-wrapper">
 
                     <input type="submit" name="finalize" value="{% trans 'Finish' %}"/>

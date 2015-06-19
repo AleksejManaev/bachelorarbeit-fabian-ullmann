@@ -204,3 +204,6 @@ a.disabled {
     }
 }
 
+.card .card-header {
+    position: relative;
+}

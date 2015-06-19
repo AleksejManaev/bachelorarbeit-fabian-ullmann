@@ -44,7 +44,7 @@
                 getPostData: function () {
                     var postData = new FormData(),
                         mainData = this.instance.serializeArray(),
-                        input = reveal.content.find('input[id], textarea[id]');
+                        input = reveal.content.find('input[id], textarea[id], select[id]');
 
                     $.each(mainData, function (key, input) {
                         postData.append(input.name, input.value);
@@ -60,6 +60,9 @@
                 },
                 refresh: function () {
 
+                    if ($('select')[0]) {
+                        $('select').material_select();
+                    }
                     // File Input Path
                     $('.file-field').each(function () {
                         var path_input = $(this).find('input.file-path');
@@ -162,7 +165,7 @@
                 },
                 setPostData: function (post_data) {
                     response = $(post_data);
-                    $.each(response.find('input[id], textarea[id]'), function (a, b) {
+                    $.each(response.find('input[id], textarea[id], select[id]'), function (a, b) {
                         var name = $(b).attr('name') ? $(b).attr('name') : '';
                         if ($.inArray(name.split('-')[0], reveal.target_forms) >= 0) {
                             var tmp = "#id_" + name;
@@ -180,20 +183,19 @@
                 },
                 setFinalErrorData: function (post_data) {
                     response = $(post_data);
-                    $.each(response.find('input[id], textarea[id]'), function (a, b) {
+                    $.each(response.find('input[id], textarea[id], select[id]'), function (a, b) {
                         var name = $(b).attr('name') ? $(b).attr('name') : '';
                         var tmp = "#id_" + name;
                         if ($(b).parents('.input-field').length > 0 && form.instance.find(tmp).length > 0) {
                             var tmp = $(form.instance.find(tmp).parents('.input-field')[0]),
                                 tmp_classes = tmp.attr('class');
                             tmp.replaceWith($($(b).parents('.input-field')[0]).addClass(tmp_classes));
-                            console.log(tmp);
                         } else {
                             form.instance.find(tmp).replaceWith($(b));
                         }
 
                         form.instance.find('.red-text').parents('.todo-item').find('label').removeClass('red-text');
-                        form.instance.find('.has-error').parents('.todo-item').find('label').addClass('red-text');
+                        form.instance.find('.has-error, .invalid').parents('.todo-item').find('label').addClass('red-text');
                         form.refresh();
                     });
                 },
@@ -203,11 +205,9 @@
                             method: 'GET',
                             success: function (data, textStatus, jqXHR) {
                                 var response = jqXHR.responseText,
-                                    action = form.instance.attr('action')
+                                    action = form.instance.attr('action');
                                 form.instance.replaceWith($($(response).find('[action="' + action + '"]')[0]));
-                                console.log(_this.todoList);
                                 $.removeData(_this.todoList);
-                                console.log(_this.todoList);
                                 $.each($('form[action="' + action + '"] > .card.todo-list'), function () {
                                     $(this).todoList();
                                 });
@@ -358,7 +358,6 @@
                     }
                 },
                 show: function () {
-                    console.log(this.instance);
                     this.instance.css({display: 'block'}).velocity("stop", false).velocity({translateY: '-100%'}, {
                         duration: 300,
                         queue: false,

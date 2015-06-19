@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
 
 from django import http
 import django
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.generic import *
@@ -19,6 +19,13 @@ class DetailView(django.views.generic.DetailView):
 
         return super(DetailView, self).get(request, *args, **kwargs)
 
+
+class ListView(django.views.generic.ListView):
+    def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+        return super(ListView, self).get(request, *args, **kwargs)
 
 class UpdateView(django.views.generic.UpdateView):
     def get_success_url(self):
@@ -133,6 +140,13 @@ class BothThesisExaminationboardFormView(UpdateView):
         return ResponseExaminationBoard.objects.get_or_create(registration_id=pk)[0]
 
 
+class StudentPlacementListView(ListView):
+    model = Placement
+    template_name = 'student_placement_list.html'
+
+    def get_queryset(self):
+        return self.request.user.portaluser.student.placement_set.all()
+
 
 class StudentPlacementFormView(UpdateView):
     """
@@ -155,10 +169,12 @@ class StudentPlacementFormView(UpdateView):
         wird auch von erbenden Klassen genutzt
         """
         placement = self.get_placement()
-        workcompany = WorkCompany.objects.get_or_create(work=placement)[0]
+        workcompany = placement.workcompany
         return {
             'placement': placement,
             'placement_form': FormPlacement(data, files=files, instance=placement, prefix='placement_form'),
+            'placement_event_form': FormPlacementEventRegistration(data, instance=placement.placementeventregistration,
+                                                                   prefix='placement_event_form'),
             'placement_company_form': FormCompany(data, parent=workcompany,
                                                   instance=workcompany.company,
                                                   prefix='placement_company_form'),
@@ -172,17 +188,12 @@ class StudentPlacementFormView(UpdateView):
         """
         muss von erbender Klasse überschrieben werden
         """
-        return self.get_object()
+        return self.request.user.portaluser.student.studentactiveplacement.placement
 
     def get(self, request, status=200, *args, **kwargs):
         if request.GET.has_key('fancy'):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
-        self.object = self.get_object()
-
-        if (request.GET.has_key('editMode')):
-            self.object.finished = False
-            self.object.save()
-            return redirect('./')
+        self.object = self.get_placement()
 
         cd = self.get_context_data()
         cd.update(self.get_context_placement())
@@ -191,8 +202,7 @@ class StudentPlacementFormView(UpdateView):
     def post(self, request, *args, **kwargs):
         if request.GET.has_key('fancy'):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
-        self.object = self.get_object()
-        print request.POST
+        self.object = self.get_placement()
         if self.object.finished:
             return self.get(request, status=405)
         else:
@@ -219,11 +229,11 @@ class StudentPlacementFormView(UpdateView):
 
         cd = self.get_context_data()
         cd.update(self.placement)
+        print(cd)
         return self.render_to_response(cd, status=status)
 
     def get_object(self, queryset=None):
-        return self.request.user.portaluser.student.placement
-
+        return self.object
 
 class StudentPlacementIndexView(DetailView):
     """
@@ -231,11 +241,38 @@ class StudentPlacementIndexView(DetailView):
 
     """
     model = Placement
-    template_name = 'student_placement_index.html'
+    template_name = 'both_placement_index.html'
 
     def get_object(self, queryset=None):
-        return self.request.user.portaluser.student.placement
+        return self.request.user.portaluser.student.placement_set.get(pk=self.kwargs.get('pk'))
 
+
+def studentPlacementCreate(request):
+    if (not request.user.portaluser.student.studentactiveplacement.placement.state == 'NR'):
+        pl = Placement(student=request.user.portaluser.student)
+        pl.save()
+
+    return http.HttpResponseRedirect(reverse('student-index'))
+
+
+def studentPlacementDelete(request, pk):
+    pl = request.user.portaluser.student.placement_set.get(pk=pk)
+    if (pl.state == 'NR' and len(pl.student.placement_set.all()) > 1):
+        pl.delete()
+        return http.HttpResponseRedirect(reverse('student-index'))
+
+
+def studentPlacementEditable(request, pk):
+    if (request.user.portaluser.student.studentactiveplacement.placement.state == 'NR'):
+        request.user.portaluser.student.studentactiveplacement.placement.state = 'CD'
+        request.user.portaluser.student.studentactiveplacement.placement.save()
+    pl = request.user.portaluser.student.placement_set.get(pk=pk)
+    pl.finished = False
+    pl.save()
+    request.user.portaluser.student.studentactiveplacement.placement = pl
+    request.user.portaluser.student.studentactiveplacement.save()
+    return http.HttpResponseRedirect(
+        request.META.get('HTTP_REFERER') if request.META.get('HTTP_REFERER') else reverse('student-placement-update'))
 
 class StudentThesisMentoringrequestFormView(UpdateView):
     """
@@ -257,9 +294,9 @@ class StudentThesisMentoringrequestFormView(UpdateView):
 
         wird auch von erbenden Klassen genutzt
         """
-        thesis = self.get_thesis_mentoringrequest()
-        workcompany = WorkCompany.objects.get_or_create(work=thesis)[0]
-        mentoringrequest = MentoringRequest.objects.get_or_create(thesis=thesis)[0]
+        mentoringrequest = self.get_thesis_mentoringrequest()
+        thesis = mentoringrequest.thesis
+        workcompany = thesis.workcompany
         return {
             'thesis': thesis,
             'thesis_mentoringrequest_form': FormThesisMentoringrequest(data, files=files, instance=thesis,
@@ -271,24 +308,21 @@ class StudentThesisMentoringrequestFormView(UpdateView):
                                                                           prefix='thesis_mentoringrequest_company_formset'),
             'thesis_mentoringrequest_contact_formset': FormsetWorkCompanyContactdata(data, instance=workcompany,
                                                                                      prefix='thesis_mentoringrequest_contact_formset'),
-            'thesis_mentoringrequest_student_form': FormMentoringrequestStudent(data, instance=thesis.mentoringrequest,
+            'thesis_mentoringrequest_student_form': FormMentoringrequestStudent(data, instance=mentoringrequest,
                                                                                 prefix='thesis_mentoringrequest_student_form'), }
 
     def get_thesis_mentoringrequest(self):
         """
         muss von erbender Klasse überschrieben werden
         """
-        return self.get_object()
+        th = self.request.user.portaluser.student.thesis_set.last()
+        return th.mentoringrequest_set.last()
 
     def get(self, request, status=200, *args, **kwargs):
         if request.GET.has_key('fancy'):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
-        self.object = self.get_object()
+        self.object = self.get_thesis_mentoringrequest()
 
-        if (request.GET.has_key('editMode') and not self.object.mentoringrequest.status == 'AC'):
-            self.object.mentoringrequest.status = 'NR'
-            self.object.mentoringrequest.save()
-            return redirect('./')
 
         cd = self.get_context_data()
         cd.update(self.get_context_thesis_mentoringrequest())
@@ -298,7 +332,7 @@ class StudentThesisMentoringrequestFormView(UpdateView):
         if request.GET.has_key('fancy'):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
 
-        self.object = self.get_object()
+        self.object = self.get_thesis_mentoringrequest()
 
         if self.object.finished or self.object.mentoringrequest.status in ['RE', 'AC']:
             return self.get(request, status=405)
@@ -477,7 +511,7 @@ class StudentSettingsFormView(UpdateView):
     + Studenten können ihre persönlichen Daten ändern
     """
     model = Student
-    form_class = FormSettings
+    form_class = FormSettingsUser
     template_name = 'student_settings.html'
 
     def get(self, request, *args, **kwargs):
@@ -504,9 +538,8 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-            user_form=FormSettings(data=data, instance=self.get_object().user),
-            student_user_formset=FormsetUserPortaluser(data=data, instance=self.get_object().user),
-            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object())
+            user_form=FormSettingsUser(data=data, instance=self.get_object().user),
+            student_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user),
         )
 
     def get_object(self, queryset=None):
@@ -654,27 +687,8 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
         else:
             return None
 
-    def get_thesis_mentoringrequest(self):
-        return Thesis.objects.get_or_create(student=self.get_object())[0]
-
-    def get_examinationboard(self, queryset=None):
-        if hasattr(self.get_object().thesis, 'registration') and self.get_object().thesis.registration:
-            return ResponseExaminationBoard.objects.get_or_create(registration=self.get_object().thesis.registration)[0]
-        else:
-            return None
-
-    def get_placement(self):
-        return Placement.objects.get_or_create(student=self.get_object())[0]
-
-    def get_registration(self):
-        return self.get_object().thesis.registration
-
-    def get_thesis_documents(self):
-        return Thesis.objects.get_or_create(student=self.get_object())[0]
-
     def get_object(self, queryset=None):
-        st = Student.objects.filter(user=self.request.user)
-        return st[0] if len(st) > 0 else None
+        return self.request.user.portaluser.student
 
 class TutorView(DetailView):
     """
@@ -692,6 +706,67 @@ class TutorView(DetailView):
     def get_object(self, queryset=None):
         st = Tutor.objects.filter(user=self.request.user)
         return st[0] if len(st) > 0 else None
+
+
+class TutorPlacementListView(ListView):
+    model = Course
+    template_name = 'tutor_placements.html'
+
+    def get_queryset(self):
+        return self.request.user.portaluser.tutor.placement_courses.all()
+
+
+class TutorPlacementView(DetailView):
+    model = Placement
+    template_name = 'both_placement_index.html'
+
+
+def tutorPlacementConfirm(request, pk):
+    pl = PlacementEventRegistration.objects.get(pk=pk)
+    if request.POST.get('submit') == _('Accept placement'):
+        pl.confirmed = True
+        pl.placement.state = 'AC'
+    else:
+        pl.confirmed = False
+    pl.save()
+
+    return http.HttpResponseRedirect(reverse('tutor-placement-course-registrations', kwargs={'pk': pl.event_id}))
+
+
+class TutorPlacementCourseView(DetailView):
+    model = Course
+    template_name = 'tutor_placement_course.html'
+
+
+class TutorPlacementCourseRegistrationView(ListView):
+    model = PlacementEventRegistration
+    template_name = 'tutor_placement_course_registration.html'
+
+    def get_queryset(self):
+        self.confirmed = self.kwargs.get('confirmed', None)
+        print("self.confirmed = %s" % self.confirmed)
+        if self.confirmed == None:
+            return PlacementEventRegistration.objects.filter(event_id=self.kwargs.get('pk'))
+        else:
+            return PlacementEventRegistration.objects.filter(event_id=self.kwargs.get('pk'), confirmed=self)
+
+
+class TutorPlacementCourseEventView(CreateView):
+    model = PlacementEvent
+    form_class = FormEvent
+    template_name = 'tutor_placement_course_addevent.html'
+
+    def form_valid(self, form):
+        form.instance.tutor = self.request.user.portaluser.tutor
+        form.instance.course_id = self.kwargs.get('pk')
+        super(TutorPlacementCourseEventView, self).form_valid(form)
+        return http.HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('tutor-placement-course', kwargs={'pk': self.kwargs.get('pk')})
+
+    def get_queryset(self):
+        return super(TutorPlacementCourseEventView, self).get_queryset().order_by('date')
 
 
 class TutorMentoringListView(ListView):
@@ -855,7 +930,6 @@ class TutorMentoringRequestFormView(UpdateView):
 
                 if request.POST.has_key('mentoringrequest_form-permission') and request.POST.get(
                         'mentoringrequest_form-permission') == 'on':
-                    print "has permission"
                     reg = Registration.objects.get_or_create(mentoring=mentoring)[0]
                     reg.permission_library_tutor = True
                     reg.save()
@@ -990,7 +1064,7 @@ class TutorSettingsFormView(UpdateView):
     + Nutzer können ihre persönlichen Daten ändern
     """
     model = Tutor
-    form_class = FormSettings
+    form_class = FormSettingsTutor
     template_name = 'tutor_settings.html'
 
     def get(self, request, *args, **kwargs):
@@ -1014,10 +1088,9 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-            user_form=FormSettings(data=data, instance=self.get_object().user),
-            tutor_user_formset=FormsetUserPortaluser(data=data, instance=self.get_object().user)
+            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user, prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
-        return Tutor.objects.get(user=self.request.user)
-
+        return self.request.user.portaluser.tutor

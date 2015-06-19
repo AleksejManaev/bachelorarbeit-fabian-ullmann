@@ -1,54 +1,75 @@
 {% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
 {% load material %}
 {% load filter %}
+{% load i18n %}
 
 {% block material_content %}
 
-    <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post">
-        {% csrf_token %}
-        {% include 'student_placement_widget.html' %}
-    </form>
-    <div class="row">
-        <div class="
-                {% if student.thesis.mentoringrequest.status != 'AC' %}
-                   col s12
-                {% else %}
-                    col s12 m8
-                {% endif %}
-                ">
-            <form action="{% url 'student-thesis-mentoringrequest-update' %}"
-                  method="post">
-                {% csrf_token %}
-                {% include 'student_thesis_mentoringrequest_widget.html' %}
-            </form>
-            {% if student.thesis.mentoring %}
-                <form action="{% url 'student-thesis-documents-update' %}"
-                      method="post">
-                    {% csrf_token %}
-                    {% include 'student_thesis_documents_widget.html' %}
-                </form>
-            {% endif %}
+    <div class="card">
+        <div class="card-header white">
+            <div class="card-title blue-grey-text">{% trans 'Placements' %}</div>
 
+            <div class="actions">
+                <a href="{% url 'student-placement-create' %}"><i
+                        class="mdi-content-add"></i></a></div>
         </div>
+        <div class="card-content">
+            <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post">
+                {% csrf_token %}
+                {% include 'student_placement_widget.html' %}
+            </form>
 
-
-        {% if student.thesis.mentoring %}
-            <div class="col s12 m4 ">
-                {% include 'student_thesis_colloquium_widget.html' %}
-                {% if student.thesis.registration.pdf_file %}
-                    <form action="{% url 'thesis-registration-examinationboard' student.thesis.registration.pk %}"
-                          method="post">
-                        {% csrf_token %}
-                        {% include 'both_thesis_examinationboard_widget.html' %}
-                    </form>
-                {% endif %}
-                <form action="{% url 'student-thesis-registration-update' %}" method="post">
-                    {% csrf_token %}
-                    {% include 'student_thesis_registration_widget.html' %}
-                </form>
-            </div>
-        {% endif %}
+            {% with placement as org %}
+                {% for placement in object.placement_set.all %}
+                    {% if not placement.pk == org.pk %}
+                        {% include 'student_placement_widget.html' %}
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
+        </div>
     </div>
+
+    {#    <div class="row">#}
+    {#        <div class="#}
+    {#                {% if student.thesis.mentoringrequest.status != 'AC' %}#}
+    {#                   col s12#}
+    {#                {% else %}#}
+    {#                    col s12 m8#}
+    {#                {% endif %}#}
+    {#                ">#}
+    {#            <form action="{% url 'student-thesis-mentoringrequest-update' %}"#}
+    {#                  method="post">#}
+    {#                {% csrf_token %}#}
+    {#                {% include 'student_thesis_mentoringrequest_widget.html' %}#}
+    {#            </form>#}
+    {#            {% if student.thesis.mentoring %}#}
+    {#                <form action="{% url 'student-thesis-documents-update' %}"#}
+    {#                      method="post">#}
+    {#                    {% csrf_token %}#}
+    {#                    {% include 'student_thesis_documents_widget.html' %}#}
+    {#                </form>#}
+    {#            {% endif %}#}
+    {##}
+    {#        </div>#}
+    {##}
+    {##}
+    {#        {% if student.thesis.mentoring %}#}
+    {#            <div class="col s12 m4 ">#}
+    {#                {% include 'student_thesis_colloquium_widget.html' %}#}
+    {#                {% if student.thesis.registration.pdf_file %}#}
+    {#                    <form action="{% url 'thesis-registration-examinationboard' student.thesis.registration.pk %}"#}
+    {#                          method="post">#}
+    {#                        {% csrf_token %}#}
+    {#                        {% include 'both_thesis_examinationboard_widget.html' %}#}
+    {#                    </form>#}
+    {#                {% endif %}#}
+    {#                <form action="{% url 'student-thesis-registration-update' %}" method="post">#}
+    {#                    {% csrf_token %}#}
+    {#                    {% include 'student_thesis_registration_widget.html' %}#}
+    {#                </form>#}
+    {#            </div>#}
+    {#        {% endif %}#}
+    {#    </div>#}
 {% endblock %}
 
 {% block material_extra_script %}
