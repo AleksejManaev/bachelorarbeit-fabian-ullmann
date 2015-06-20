@@ -1,0 +1,88 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
+{% load material %}
+{% load filter %}
+{% load i18n %}
+{% block material_content %}
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title blue-grey-text">{% trans 'Placement course' %} {{ object }}</span>
+
+                    <div class="actions">
+                        <a href="{% url 'tutor-placement-course-addevent' object.pk %}"
+                           class="fancybox fancybox.iframe"><i
+                                class="mdi-content-add medium"></i></a>
+
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="collection">
+                        {% for event in object.placementevent_set.all|dictsortreversed:'date' %}
+                            <div class="collection-item">
+                                <div class="card">
+                                    <div class="card-header white">
+                                        <div class="actions">
+                                            <a href="{% url 'tutor-placement-course-editevent' event.pk %}"
+                                               class="fancybox fancybox.iframe"><i
+                                                    class="mdi-content-create medium"></i></a>
+                                            {% if not event.placementeventregistration_set.all|length > 0 %}
+                                                <a href="{% url 'tutor-placement-course-deleteevent' object.pk event.pk %}"><i
+                                                        class="mdi-content-remove medium"></i></a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="col s12 m6">
+                                            <ul>
+                                                <li><i class="mdi-action-event"></i>&emsp;{{ event.date|date:'d. M Y' }}
+                                                </li>
+                                                <li><i class="mdi-action-schedule"></i>&emsp;{{ event.time|date:'H:i' }}
+                                                </li>
+                                                <li>
+                                                    <i class="mdi-communication-business"></i>&emsp;{{ event.room|safe }}
+                                                </li>
+                                                <li>
+                                                    <i class="mdi-social-person"></i>&emsp;{{ event.placementevent.tutor|safe }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col s12 m6">
+                                            <ul>
+                                                <li><a href="{% url 'tutor-placement-course-registrations' event.pk %}"
+                                                       class="fancybox fancybox.iframe"><i
+                                                        class="mdi-social-people"></i>&emsp;{{ event.placementeventregistration_set.all|length }}
+                                                </a></li>
+                                                <li>
+                                                    <a href="{% url 'tutor-placement-course-registrations-confirmed' event.pk %}"
+                                                       class="fancybox fancybox.iframe"><i
+                                                            class="mdi-action-done-all"></i>&emsp;{{ event.placementeventregistration_set.all|confirmed|length }}
+                                                    </a></li>
+                                                <li>
+                                                    <a href="{% url 'tutor-placement-course-registrations-notconfirmed' event.pk %}"
+                                                       class="fancybox fancybox.iframe"><i
+                                                            class="mdi-action-trending-up"></i>&emsp;{{ event.placementeventregistration_set.all|not_confirmed|length }}
+                                                    </a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% empty %}
+                            {% trans 'no events' %}
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+                {#            Todo AddEvent-Button neu positionieren #}
+                <div class="card-action valign-wrapper">
+                    <a href="{% url 'tutor-placement-course-addevent' object.pk %}"
+                       class="fancybox fancybox.iframe">{% trans 'Add event' %}</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+<ul>
+    <li>
+        <i class="mdi-communication-contacts"></i>&emsp;{{ student.user.get_full_name }}
+    </li>
+    <li>
+        <i class="mdi-communication-business"></i>&emsp;{{ course }}
+    </li>
+    <li>
+        <i class="mdi-communication-vpn-key"></i>&emsp;{{ student.matriculation_number }}
+    </li>
+    <li>&nbsp;</li>
+    <li><i class="mdi-content-mail"></i>&emsp;<a
+            href="mailto:{{ student.user.email }}">{{ student.user.email }}</a>
+        <a href="mailto:{{ student.extern_email }}">{{ student.extern_email }}</a>
+    </li>
+    <li>
+        <i class="mdi-communication-phone"></i>&emsp;{{ student.phone }}
+    </li>
+
+</ul>

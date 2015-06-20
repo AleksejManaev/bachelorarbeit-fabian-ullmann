@@ -1,0 +1,17 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
+{% load material %}
+{% load filter %}
+{% load i18n %}
+
+{% block material_content %}
+
+    {% for placement in object_list %}
+        <a href="{% url 'student-placement-update' %}">{{ placement }}</a>
+        {% if not placement.studentactiveplacement.placement == placement %}
+            <a href="{% url 'student-placement-activate' placement.pk %}">aktivieren</a>
+        {% endif %}
+    {% empty %}
+        {% trans 'no placements' %}
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% load material %}
+{% load filter %}
+{% load i18n %}
+
+<div class="card todo-list">
+    <div class="card-header green white-text">
+        <div class="card-title">
+            <a href="{% url 'student-placement-preview' placement.pk %}"
+               class="fancybox fancybox.iframe white-text">{{ placement_title }} {{ for_course }} {{ placement.course }}
+                <i
+                        class="mdi-action-done-all"></i></a></div>
+        <div class="actions">
+            <a href="{% url 'student-placement-preview' placement.pk %}" class="fancybox fancybox.iframe"><i
+                    class="mdi-av-my-library-books white-text"></i></a></div>
+    </div>
+    <div class="card-content">
+        <div class="row">
+            <div class="col s4">
+                <ul>
+                    <li><i class="mdi-social-school"></i>&emsp;{{ placement.course }}</li>
+                    <li><i class="mdi-content-send"></i>&emsp;{{ placement.sent_on|date:'d. M Y' }}</li>
+                    <li><i class="mdi-communication-import-export"></i>&emsp;{{ placement.state|state }}</li>
+                </ul>
+            </div>
+            <div class="col s4">
+                <label>{% trans 'Event placement' %}</label>
+                <ul>
+                    <li>
+                        <i class="mdi-notification-event-note"></i>&emsp;{{ placement.placementeventregistration.event.date|date:'d. M Y' }}
+                    </li>
+                    <li><i class="mdi-action-schedule"></i>&emsp;{{ placement.event.time|date:'H:i' }}</li>
+                    <li><i class="mdi-communication-business"></i>&emsp;{{ placement.event.room }}</li>
+                </ul>
+            </div>
+            <div class="col s4">
+                <label class="center">{% trans 'Tutor placement' %}</label>
+                <h6>{{ placement.event.tutor }}</h6>
+                <ul>
+                    <li><i class="mdi-content-mail"></i> <a
+                            href="mailto:{{ placement.event.tutor.user.email }}"> {{ placement.event.tutor.user.email }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>

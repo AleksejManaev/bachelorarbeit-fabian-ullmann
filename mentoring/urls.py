@@ -70,6 +70,10 @@ urlpatterns = [
         name='tutor-placement-course-registrations-notconfirmed'),
     url(r'^tutor/placements/course/(?P<pk>\d+)/addevent/$', TutorPlacementCourseEventView.as_view(),
         name='tutor-placement-course-addevent'),
+    url(r'^tutor/placements/course/(?P<pk>\d+)/editevent/$', TutorPlacementCourseEventFormView.as_view(),
+        name='tutor-placement-course-editevent'),
+    url(r'^tutor/placements/course/(?P<pk>\d+)/deleteevent/(?P<ev>\d+)/$', tutorPlacementCourseEventDelete,
+        name='tutor-placement-course-deleteevent'),
     url(r'^tutor/placement/(?P<pk>\d+)/$', TutorPlacementView.as_view(), name='tutor-placement-preview'),
     url(r'^tutor/placement/(?P<pk>\d+)/confirm$', tutorPlacementConfirm, name='tutor-placement-confirm'),
 

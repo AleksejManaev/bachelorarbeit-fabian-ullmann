@@ -27,9 +27,40 @@ class ListView(django.views.generic.ListView):
 
         return super(ListView, self).get(request, *args, **kwargs)
 
+
 class UpdateView(django.views.generic.UpdateView):
+    def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+        return super(UpdateView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+        return super(UpdateView, self).post(request, *args, **kwargs)
+
     def get_success_url(self):
         return '?fancy=true' if self.request.GET.has_key('fancy') else ''
+
+
+class CreateView(django.views.generic.CreateView):
+    def get(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+        return super(CreateView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if request.GET.has_key('fancy'):
+            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+
+        return super(CreateView, self).post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return '?fancy=true' if self.request.GET.has_key('fancy') else ''
+
 
 class IndexView(RedirectView):
     """
@@ -235,6 +266,7 @@ class StudentPlacementFormView(UpdateView):
     def get_object(self, queryset=None):
         return self.object
 
+
 class StudentPlacementIndexView(DetailView):
     """
     + Web-Ansicht des erstellten Praktikums
@@ -251,7 +283,6 @@ def studentPlacementCreate(request):
     if (not request.user.portaluser.student.studentactiveplacement.placement.state == 'NR'):
         pl = Placement(student=request.user.portaluser.student)
         pl.save()
-
     return http.HttpResponseRedirect(reverse('student-index'))
 
 
@@ -273,6 +304,7 @@ def studentPlacementEditable(request, pk):
     request.user.portaluser.student.studentactiveplacement.save()
     return http.HttpResponseRedirect(
         request.META.get('HTTP_REFERER') if request.META.get('HTTP_REFERER') else reverse('student-placement-update'))
+
 
 class StudentThesisMentoringrequestFormView(UpdateView):
     """
@@ -322,7 +354,6 @@ class StudentThesisMentoringrequestFormView(UpdateView):
         if request.GET.has_key('fancy'):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_thesis_mentoringrequest()
-
 
         cd = self.get_context_data()
         cd.update(self.get_context_thesis_mentoringrequest())
@@ -472,11 +503,11 @@ class StudentThesisRegistrationFormView(UpdateView):
             ('Bearbeitungszeit', student.course.get_editing_time_display()),
             ('Thema der Abschlussarbeit', "%s" % (student.thesis.registration.subject)),
             ('Gutachter_1', "%s %s %s" % (
-            student.thesis.mentoring.tutor_1.title, student.thesis.mentoring.tutor_1.user.first_name,
-            student.thesis.mentoring.tutor_1.user.last_name)),
+                student.thesis.mentoring.tutor_1.title, student.thesis.mentoring.tutor_1.user.first_name,
+                student.thesis.mentoring.tutor_1.user.last_name)),
             ('Gutachter_2', "%s %s %s" % (
-            student.thesis.mentoring.tutor_2.contact.title, student.thesis.mentoring.tutor_2.contact.first_name,
-            student.thesis.mentoring.tutor_2.contact.last_name)),
+                student.thesis.mentoring.tutor_2.contact.title, student.thesis.mentoring.tutor_2.contact.first_name,
+                student.thesis.mentoring.tutor_2.contact.last_name)),
             ('Datum_Antrag', datetime.now().strftime("%d.%m.%Y"))
         ]
 
@@ -635,7 +666,6 @@ class StudentThesisDocumentsIndexView(DetailView):
     model = Placement
     template_name = 'student_thesis_documents_index.html'
 
-
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.thesis
 
@@ -652,8 +682,8 @@ class StudentThesisIndexView(DetailView):
 
 
 class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequestFormView, StudentPlacementFormView,
-                        StudentThesisRegistrationFormView,
-                        BothThesisExaminationboardFormView):
+                      StudentThesisRegistrationFormView,
+                      BothThesisExaminationboardFormView):
     """
     Zeigt alle Studenten-Formulare in einer Seite an
     """
@@ -689,6 +719,7 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student
+
 
 class TutorView(DetailView):
     """
@@ -762,11 +793,26 @@ class TutorPlacementCourseEventView(CreateView):
         super(TutorPlacementCourseEventView, self).form_valid(form)
         return http.HttpResponseRedirect(self.get_success_url())
 
-    def get_success_url(self):
-        return reverse('tutor-placement-course', kwargs={'pk': self.kwargs.get('pk')})
+    # def get_success_url(self):
+    #     return reverse('tutor-placement-course', kwargs={'pk': self.kwargs.get('pk')})
 
     def get_queryset(self):
         return super(TutorPlacementCourseEventView, self).get_queryset().order_by('date')
+
+
+class TutorPlacementCourseEventFormView(UpdateView):
+    model = PlacementEvent
+    form_class = FormEvent
+    template_name = 'tutor_placement_course_addevent.html'
+
+
+def tutorPlacementCourseEventDelete(request, pk, ev):
+    if (request.user.portaluser.tutor.placementevent_set.filter(pk=ev)):
+        event = request.user.portaluser.tutor.placementevent_set.get(pk=ev)
+        if not len(event.placementeventregistration_set.all()) > 0:
+            event.delete()
+            return http.HttpResponseRedirect(reverse('tutor-placement-course', kwargs={'pk': pk}))
+    return http.HttpResponseRedirect(reverse('tutor-placement-course', kwargs={'pk': pk}))
 
 
 class TutorMentoringListView(ListView):
@@ -846,6 +892,7 @@ class TutorMentoringColloquiumFormView(UpdateView):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
         return Colloquium.objects.get_or_create(mentoring_id=pk)[0]
 
+
 class TutorMentoringRequestListView(ListView):
     """
     Listet alle Betreuungsanfragen auf, die an Professor gerichtet sind
@@ -858,6 +905,7 @@ class TutorMentoringRequestListView(ListView):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
 
         return super(TutorMentoringRequestListView, self).get(request, *args, **kwargs)
+
     def get_queryset(self):
         return MentoringRequest.objects.filter(tutor_email=self.request.user.email)
 
@@ -1006,7 +1054,7 @@ class TutorMentoringReportFormView(UpdateView):
 
 
 class TutorMentoringFormView(TutorMentoringReportFormView, TutorMentoringColloquiumFormView,
-                         BothThesisExaminationboardFormView):
+                             BothThesisExaminationboardFormView):
     """
     Zeigt alle Betreuungs-Formulare in einer Seite an
     """

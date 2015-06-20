@@ -14,6 +14,7 @@ MATERIALIZE_DEFAULTS = {
     'material_js_url': '/static/js/material.js',
     'materialize_form_todolist_js_url': '/static/js/material.todoform.js',
     'jquery_url': '//code.jquery.com/jquery-latest.min.js',
+    'bootstrap_url': '/static/js/bootstrap.min.js',
     'jquery_ui_url': '//code.jquery.com/ui/1.11.4/jquery-ui.js',
     'jquery_ui_css_url': '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css',
     'jquery_offline': '/static/js/jquery-2.1.1.min.js',
@@ -87,6 +88,9 @@ def jquery_url():
     return get_materialize_setting('jquery_url') if not get_materialize_setting(
         'offline_mode') else get_materialize_setting('jquery_offline')
 
+
+def bootstrap_url():
+    return get_materialize_setting('bootstrap_url')
 
 def jquery_ui_url():
     return get_materialize_setting('jquery_ui_url')

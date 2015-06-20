@@ -53,6 +53,21 @@ body.login-body:before {
     position: relative;
 }
 
+@media (max-width: 768px) {
+    .login-content .lc-block {
+        padding: 10px 30px 20px 10px;
+        width: 100%;
+    }
+
+    .login-content {
+        width: 90%;
+    }
+
+    body.login-body:before {
+        background-size: 200px;
+    }
+}
+
 .login-content > *:not(.toggled) {
     display: none;
 }

@@ -1,0 +1,7 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
+{% load material %}
+{% load filter %}
+{% load i18n %}
+{% block material_content %}
+    {% include 'tutor_placements_widget.html' %}
+{% endblock %}
