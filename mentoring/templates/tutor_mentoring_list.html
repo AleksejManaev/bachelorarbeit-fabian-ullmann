@@ -22,13 +22,13 @@
                                         <p class="request-desc">{{ request.comment }}</p>
 
                                         <p>&nbsp;</p>
-                                        {% if not request.status == 'RE' %}
+                                        {% if not request.state == 'RE' %}
                                             <div class="col s12 center-align">
-                                                {% if request.status == 'AC' %}
-                                                    <small class="green-text">{{ request.status|state }}
+                                                {% if request.state == 'AC' %}
+                                                    <small class="green-text">{{ request.state|state }}
                                                         {% trans 'on' %} {{ request.mentoring.created_on|date }}</small>
                                                 {% else %}
-                                                    <small class="red-text">{{ request.status|state }}</small>
+                                                    <small class="red-text">{{ request.state|state }}</small>
                                                     </div>
                                                 {% endif %}
                                         {% endif %}

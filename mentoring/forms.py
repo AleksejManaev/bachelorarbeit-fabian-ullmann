@@ -153,14 +153,14 @@ class FormThesisDocuments(forms.ModelForm):
         """
 
         if is_valid and req:
-            self.instance.finished = True
+            self.instance.documents_finished = True
             self.instance.save()
 
         return is_valid
 
     class Meta:
         model = Thesis
-        exclude = ['student', 'finished']
+        exclude = ['student', 'finished', 'sent_on', 'state', 'course', 'documents_finished']
         fields = '__all__'
         widgets = {
             'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
@@ -179,7 +179,7 @@ class FormThesisMentoringrequest(forms.ModelForm):
 
     class Meta:
         model = Thesis
-        exclude = ['student', 'finished', 'report', 'poster']
+        exclude = ['student', 'finished', 'report', 'poster', 'sent_on', 'state', 'documents_finished']
         fields = '__all__'
         widgets = {
             'description': forms.Textarea()
@@ -199,7 +199,7 @@ class FormMentoringrequestStudent(forms.ModelForm):
         """
         Falls das Objekt bereits angefragt wurde -> invalid
         """
-        if (self.instance.status in ['RE', 'AC']):
+        if (self.instance.state in ['RE', 'AC']):
             return False
 
         req = True if self.data.has_key('finalize') else False
@@ -231,7 +231,7 @@ class FormMentoringrequestTutor(forms.ModelForm):
     class Meta:
         model = MentoringRequest
         fields = ['answer', 'permission']
-        exclude = ['status']
+        exclude = ['state']
 
 class FormMentoringTutor(forms.ModelForm):
     class Meta:
@@ -247,17 +247,14 @@ class FormSettingsUser(forms.ModelForm):
         fields = ['first_name', 'last_name']
 
 
-class FormSettingsTutor(forms.ModelForm):
-    class Meta:
-        model = Tutor
-        fields = '__all__'
-
 
 FormsetUserTutor = forms.inlineformset_factory(User, Tutor,
                                                fields=['user', 'title', 'phone', 'placement_courses', 'portaluser_ptr'],
                                                extra=1, can_delete=False,
                                                widgets={'placement_courses': forms.CheckboxSelectMultiple()})
-
+FormsetUserStudent = forms.inlineformset_factory(User, Student,
+                                                 fields='__all__',
+                                                 extra=1, can_delete=False)
 FormsetStudentAddress = forms.inlineformset_factory(Student, Address, fields='__all__', extra=1, can_delete=False)
 
 class FormRegistration(forms.ModelForm):

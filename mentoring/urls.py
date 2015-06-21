@@ -34,6 +34,11 @@ urlpatterns = [
     url(r'^student/placement/(?P<pk>\d+)/editable/$', studentPlacementEditable, name='student-placement-editable'),
     url(r'^student/placement/(?P<pk>\d+)/delete/$', studentPlacementDelete, name='student-placement-delete'),
 
+    url(r'^student/theses/$', StudentThesisListView.as_view(), name='student-theses'),
+    url(r'^student/thesis/preview/$', StudentThesisIndexView.as_view(), name='student-thesis-preview'),
+    url(r'^student/thesis/create/$', studentThesisCreate, name='student-thesis-create'),
+    url(r'^student/thesis/(?P<pk>\d+)/editable/$', studentThesisEditable, name='student-thesis-editable'),
+    url(r'^student/thesis/(?P<pk>\d+)/delete/$', studentThesisDelete, name='student-thesis-delete'),
     url(r'^student/thesis/request/update/$', StudentThesisMentoringrequestFormView.as_view(),
         name='student-thesis-mentoringrequest-update'),
     url(r'^student/thesis/request/update/todo/$',
@@ -92,5 +97,5 @@ urlpatterns = [
         name='thesis-registration-pdf'),
     url(r'^thesis/registration/(?P<pk>\d+)/examinationboard/', BothThesisExaminationboardFormView.as_view(),
         name='thesis-registration-examinationboard'),
-    url(r'^thesis/preview/$', StudentThesisIndexView.as_view(), name='thesis-preview')
+    url(r'^thesis/preview/$', StudentThesisIndexView.as_view(), name='thesis-preview'),
 ]

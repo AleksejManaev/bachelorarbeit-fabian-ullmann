@@ -25,13 +25,17 @@ def post_save_thesis(sender, instance, created, **kwargs):
     if created:
         post_save_abstractwork(sender, instance, created, **kwargs)
         MentoringRequest.objects.get_or_create(thesis=instance)
+        sat = StudentActiveThesis.objects.get_or_create(student=instance.student)[0]
+        sat.thesis = instance
+        sat.save()
 
 
 @receiver(post_save, sender=MentoringRequest)
 def post_save_mentoringrequest(sender, instance, created, **kwargs):
     print("post_save_mentoringrequest")
-    if instance.status == 'AC':
-        Mentoring.objects.get_or_create(thesis=instance.thesis)
+    if instance.state == 'AC':
+        pass
+        # Mentoring.objects.get_or_create(thesis=instance.thesis)
 
 
 @receiver(post_save, sender=Mentoring)

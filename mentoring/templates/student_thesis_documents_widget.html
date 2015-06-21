@@ -2,9 +2,9 @@
 {% load i18n %}
 
 <ul id="dropdown_thesis" class="dropdown-content">
-    {% if not thesis.finished %}
+    {% if not thesis.documents_finished %}
         <li><a href="{% url 'student-thesis-documents-update' %}"
-               class="fancybox fancybox.iframe  edit_form">{% trans 'Edit in Form' %}</a></li>
+               class="fancybox fancybox.iframe edit_form">{% trans 'Edit in Form' %}</a></li>
     {% else %}
         <li><a href="{% url 'student-thesis-documents-preview' %}"
                class="fancybox fancybox.iframe">{% trans 'Preview' %}</a></li>
@@ -15,7 +15,7 @@
 
 <div class="card todo-list">
 
-    {% if not thesis.finished %}
+    {% if not thesis.documents_finished %}
         {% trans 'Thesis' as t %}
         {% material_card_header title=t actions='dropdown_thesis' %}
     {% else %}
@@ -34,10 +34,10 @@
         </div>
     {% endif %}
 
-    <div class="card-content{% if thesis.finished %} hide{% endif %}">
+    <div class="card-content{% if thesis.documents_finished %} hide{% endif %}">
         {% material_todo_formfields thesis_documents_form %}
     </div>
-    {% if not thesis.finished %}
+    {% if not thesis.documents_finished %}
         <div class="card-action valign-wrapper">
             <a href="#" type="submit" name="finish" class="col s12 center-align">{% trans 'Finish' %}</a>
         </div>

@@ -129,6 +129,7 @@ $(document).ready(
             $(this).attr('href', $(this).attr('href') + '?fancy=true');
         });
         $('.fancybox').fancybox({});
+        //todo in templates integrieren
         $('.fancybox.edit_form').fancybox({
             afterClose: function () {
                 window.location.reload();
@@ -136,6 +137,7 @@ $(document).ready(
         });
         $('a.reload').off('click');
         $('a.reload').on('click', function (e) {
+            console.log("a.reload");
             $.ajax($(this).attr('href'))
                 .done(window.location.reload());
             return false;
@@ -144,6 +146,11 @@ $(document).ready(
         $("form .card-action [type=submit]").on('click', function (e) {
             $(this).parents('form').submit();
         })
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // save the latest tab; use cookies if you like 'em better:
+            localStorage.setItem('lastTab', $(this).attr('href'));
+        });
 
 
     }

@@ -2,9 +2,8 @@
 {% load i18n %}
 {% load filter %}
 
-
 <div class="card todo-list">
-    <div class="card-header orange white-text">
+    <div class="card-header red white-text">
         <div class="card-title">
             <a href="{% url 'student-placement-preview' placement.pk %}"
                class="fancybox fancybox.iframe white-text">{{ placement_title }} {{ for_course }} {{ placement.course }}
@@ -18,6 +17,6 @@
                     class="mdi-av-my-library-books white-text"></i></a></div>
     </div>
 
+    {% include 'student_placement_widget_content.html' %}
 
-    {% include 'student_placement_content_widget.html' %}
 </div>

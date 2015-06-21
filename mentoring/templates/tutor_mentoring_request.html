@@ -46,7 +46,7 @@
 
                 </div>
 
-                <form action="{% if object.status == 'RE' %}{{ form_action }}{% endif %}" method="post"
+                <form action="{% if object.state == 'RE' %}{{ form_action }}{% endif %}" method="post"
                       class="col s12 grey lighten-4"
                       style="border-top: 1px #607d8b solid">
                     {% csrf_token %}
@@ -62,12 +62,12 @@
                     <div class="row">
                         <div class="col">&nbsp;</div>
                     </div>
-                    {% if not object.status == 'RE' %}
+                    {% if not object.state == 'RE' %}
                         {% material_divider %}
-                        {% if object.status == 'AC' %}
-                            <span class="green-text">{{ object.status|state }} {% trans 'on' %} {{ object.mentoring.created_on|date }}</span>
+                        {% if object.state == 'AC' %}
+                            <span class="green-text">{{ object.state|state }} {% trans 'on' %} {{ object.mentoring.created_on|date }}</span>
                         {% else %}
-                            <span class="red-text">{{ object.status|state }}</span>
+                            <span class="red-text">{{ object.state|state }}</span>
                         {% endif %}
                     {% else %}
                         <div class="card-action acceptdeny">

@@ -516,3 +516,8 @@ tr > td {
 .card-header ul {
     font-size: 0.8em;
 }
+
+.card .card-content .card-title {
+  line-height: 1.5em;
+    margin-right: 40px;
+}

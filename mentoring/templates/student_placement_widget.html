@@ -14,11 +14,11 @@
 
 
 {% if placement.state == 'NR' %}
-    {% include 'student_placement_nr_widget.html' %}
+    {% include 'student_placement_widget_nr.html' %}
 {% elif placement.state == 'RE' %}
-    {% include 'student_placement_re_widget.html' %}
+    {% include 'student_placement_widget_re.html' %}
 {% elif placement.state == 'AC' %}
-    {% include 'student_placement_ac_widget.html' %}
+    {% include 'student_placement_widget_ac.html' %}
 {% else %}
-    {% include 'student_placement_de_widget.html' %}
+    {% include 'student_placement_widget_de.html' %}
 {% endif %}

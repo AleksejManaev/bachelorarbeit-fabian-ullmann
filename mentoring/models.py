@@ -60,7 +60,7 @@ class Tutor(PortalUser):
 
     @property
     def new_requests(self):
-        return MentoringRequest.objects.filter(tutor_email=self.user.email, status='RE').order_by('-requested_on')
+        return MentoringRequest.objects.filter(tutor_email=self.user.email, state='RE').order_by('-requested_on')
 
     @property
     def requests(self):
@@ -76,14 +76,23 @@ class Tutor(PortalUser):
 
 @python_2_unicode_compatible
 class Student(PortalUser):
-    matriculation_number = models.CharField(_('matriculation number'), max_length=8)
-    extern_email = models.EmailField()
+    matriculation_number = models.CharField(_('matriculation number'), max_length=8, null=True, blank=True)
+    extern_email = models.EmailField(null=True, blank=True)
 
     def __str__(self):
         return u"{} ({})".format(self.user.get_full_name(), self.matriculation_number)
 
+    @property
+    def thesis(self):
+        return self.student.studentactivethesis.thesis
+
+    @property
+    def placement(self):
+        return self.student.studentactiveplacement.placement
+
+
 class Address(models.Model):
-    portal_user = models.OneToOneField(Student)
+    student = models.OneToOneField(Student)
     street = models.CharField(_('street'), max_length=255)
     city = models.CharField(_('city'), max_length=255)
     zip_code = models.CharField(_('zip code'), max_length=30)
@@ -119,7 +128,7 @@ class AbstractWork(models.Model):
 
 
 class Event(models.Model):
-    date = models.DateField(_('date'))
+    date = models.DateField(_('date'), null=True, blank=True)
     time = models.TimeField(_('time'), null=True, blank=True)
     room = models.CharField(_('room'), max_length=100, null=True, blank=True)
 
@@ -200,9 +209,11 @@ class Thesis(AbstractWork):
                               validators=[validate_pdf, validate_size])
     poster = models.FileField(_('poster thesis'), upload_to=upload_to_thesis_poster, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
+    documents_finished = models.BooleanField(default=False)
 
     def __str__(self):
         return u'Thesis {}'.format(self.student.user.username)
+
 
     @property
     def mentoring(self):
@@ -214,25 +225,28 @@ class Thesis(AbstractWork):
             self.mentoringrequest, 'mentoring') and self.mentoringrequest.mentoring else None
 
 
+class StudentActiveThesis(models.Model):
+    student = models.OneToOneField(Student)
+    thesis = models.OneToOneField(Thesis, null=True)
 
 
 @python_2_unicode_compatible
 class MentoringRequest(models.Model):
-    thesis = models.ForeignKey(Thesis)
+    thesis = models.OneToOneField(Thesis)
     tutor_email = models.EmailField(_('Tutor email'), blank=True, null=True)
     requested_on = models.DateTimeField(_('requested on'), null=True, editable=False)
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='NR')
+    state = models.CharField(max_length=2, choices=STATUS_CHOICES, default='NR')
     comment = models.TextField(_('comment'), blank=True, null=True)
     answer = models.TextField(_('answer'), blank=True, null=True)
 
     def __str__(self):
-        return u"Request for {}".format(self.tutor_email)
+        return u"Request for {} from {}".format(self.tutor_email, self.thesis.student)
 
     def from_student(self):
         return self.thesis.student
 
 class Mentoring(models.Model):
-    # request = models.OneToOneField(MentoringRequest)
+    request = models.OneToOneField(MentoringRequest)
     thesis = models.OneToOneField(Thesis)
     tutor_1 = models.ForeignKey(Tutor)
     created_on = models.DateTimeField(auto_created=True, auto_now_add=True)
@@ -245,7 +259,7 @@ class Mentoring(models.Model):
 @python_2_unicode_compatible
 class Tutor2ContactData(models.Model):
     mentoring = models.OneToOneField(Mentoring)
-    contact = models.ForeignKey(ContactData)
+    contact = models.ForeignKey(ContactData, null=True, blank=True)
 
     def __str__(self):
         return u"{} {} {}".format(self.contact.title, self.contact.first_name, self.contact.last_name)
@@ -267,7 +281,7 @@ class MentoringReportItem(models.Model):
 class Registration(models.Model):
     mentoring = models.OneToOneField(Mentoring)
     subject = models.TextField(_('subject'), max_length=250, default='')
-    date = models.DateField(_('date'), auto_now=True)
+    date = models.DateField(_('date'), null=True, auto_now=True)
     permission_contact = models.BooleanField(_('permission contact'), default=False)
     permission_infocus = models.BooleanField(_('permission INFOCUS'), default=False)
     permission_public = models.BooleanField(_('permission public'), default=False)

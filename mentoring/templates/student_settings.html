@@ -1,13 +1,37 @@
 {% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
 {% load material %}
+{% load i18n %}
+
 
 {% block material_content %}
-    <form action="" method="post">
-        {% csrf_token %}
-        {% material_form user_form %}
-        {% material_formset student_user_formset %}
-        {% material_formset student_address_formset %}
+    <div class="card">
+        <form action="" method="post">
+            {% trans 'Settings Student' as st %}
+            {% material_card_header title=st %}
+            <div class="card-content">
+                {% csrf_token %}
 
-        <button type="submit">{% trans 'submit' %}</button>
-    </form>
+                {{ student_user_formset.management_form }}
+                {% for form in student_user_formset.forms %}
+                    {% material_formfield form.title %}
+                    {% material_formfield form.user %}
+                {% endfor %}
+                {% material_formfield user_form.first_name %}
+                {% material_formfield user_form.last_name %}
+
+                {% for form in student_user_formset.forms %}
+                    {% material_formfield form.matriculation_number %}
+                    {% material_formfield form.phone %}
+                    {% material_formfield form.extern_email %}
+                    {% material_formfield form.portaluser_ptr %}
+                {% endfor %}
+                {% material_formset student_address_formset %}
+
+            </div>
+            <div class="card-action valign-wrapper">
+
+                <input type="submit" name="finalize" value="{% trans 'Finish' %}"/>
+            </div>
+        </form>
+    </div>
 {% endblock %}

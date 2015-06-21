@@ -145,6 +145,9 @@ a.disabled {
 
 }
 
+.card .card-action.acceptdeny a, .card .card-action.acceptdeny input {
+    color: white;
+}
 .card .card-action a, .card .card-action input {
     color: #ffab40;
     margin-right: 20px;
@@ -346,3 +349,4 @@ a.disabled {
 .tab-content {
     padding: 20px 0;
 }
+

@@ -33,7 +33,7 @@ def post_save_thesis(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=MentoringRequest)
 def post_save_mentoringrequest(sender, instance, created, **kwargs):
-    if instance.status == 'AC':
+    if instance.state == 'AC':
         print("post_save_mentoringrequest")
         m = AutoFixture(Mentoring, field_values={'thesis': instance.thesis}, overwrite_defaults=True)
 

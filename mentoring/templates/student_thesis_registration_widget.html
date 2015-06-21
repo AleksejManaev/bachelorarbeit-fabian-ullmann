@@ -2,36 +2,32 @@
 {% load filter %}
 {% load i18n %}
 
-<ul id="dropdown_thesis_registration" class="dropdown-content">
-    <li><a href="{% url 'thesis-registration-preview' thesis_registration_form.instance.pk %}"
-           class="fancybox fancybox.iframe">{% trans 'Preview' %}</a></li>
-    <li><a href="{% url 'thesis-registration-pdf' thesis_registration_form.instance.pk %}">{% trans 'Download' %}</a>
-    </li>
-</ul>
 <div class="card todo-list">
     {% if not registration.finished %}
         {% trans 'Registration' as tr %}
-        {% material_card_header title=tr actions='dropdown_thesis_registration' %}
+        {% material_card_header title=tr %}
 
         <div class="card-content">
+            {#        {{ thesis_registration_form }}#}
             {% material_form thesis_registration_form %}
         </div>
+        {#    todo Rückmeldung, falls Benutzerdaten nicht erfasst wurden    #}
         <div class="card-action valign-wrapper">
-            <a href="{% url 'thesis-registration-pdf' thesis_registration_form.instance.pk %}"
+            <a href="{% url 'thesis-registration-pdf' thesis.registration.pk %}"
                class="fancybox fancybox.iframe col s12 center-align"
                type="submit" name="pdf">{% trans 'PDF' %}</a>
         </div>
     {% else %}
         <div class="card-header green white-text">
             <div class="card-title"><a
-                    href="{% url 'thesis-registration-preview' thesis_registration_form.instance.pk %}"
+                    href="{% url 'thesis-registration-preview' thesis.registration.pk %}"
                     class="fancybox fancybox.iframe white-text">{% trans 'Registration' %} <i
                     class="mdi-action-done-all"></i></a></div>
 
             <div class="actions">
                 <a href="{% url 'student-thesis-registration-update-todo' %}?editMode=true"
                    class="reload"><i class="mdi-editor-border-color white-text"></i></a>
-                <a href="{% url 'thesis-registration-preview' thesis_registration_form.instance.pk %}"
+                <a href="{% url 'thesis-registration-preview' thesis.registration.pk %}"
                    class="fancybox fancybox.iframe"><i
                         class="mdi-av-my-library-books white-text"></i></a>
             </div>

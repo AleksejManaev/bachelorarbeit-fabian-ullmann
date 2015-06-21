@@ -2,39 +2,39 @@
 {% load filter %}
 {% load i18n %}
 
-<ul id="dropdown_thesis" class="dropdown-content">
-    {% if thesis.mentoringrequest.status == 'NR' %}
-        <li><a href="{% url 'student-thesis-mentoringrequest-update' %}"
-               class="fancybox fancybox.iframe">{% trans 'Edit in Form' %}</a></li>
-    {% else %}
-        <li><a href="{% url 'thesis-preview' %}" class="fancybox fancybox.iframe">{% trans 'Preview' %}</a></li>
-        {% if thesis.mentoringrequest.status != 'AC' %}
-            <li><a href="{% url 'student-thesis-mentoringrequest-update-todo' %}?editMode=true"
-                   class="reload">{% trans 'Edit Mode' %}</a>
-            </li>
-        {% endif %}
-    {% endif %}
-</ul>
+{#<ul id="dropdown_thesis" class="dropdown-content">#}
+{#    {% if thesis.mentoringrequest.status == 'NR' %}#}
+{#        <li><a href="{% url 'student-thesis-mentoringrequest-update' %}"#}
+{#               class="fancybox fancybox.iframe">{% trans 'Edit in Form' %}</a></li>#}
+{#    {% else %}#}
+{#        <li><a href="{% url 'thesis-preview' %}" class="fancybox fancybox.iframe">{% trans 'Preview' %}</a></li>#}
+{#        {% if thesis.mentoringrequest.status != 'AC' %}#}
+{#            <li><a href="{% url 'student-thesis-mentoringrequest-update-todo' %}?editMode=true"#}
+{#                   class="reload">{% trans 'Edit Mode' %}</a>#}
+{#            </li>#}
+{#        {% endif %}#}
+{#    {% endif %}#}
+{#</ul>#}
 <div class="card todo-list">
-    {% if thesis.mentoringrequest.status|for_request %}
-        {% if thesis.mentoringrequest.status == 'DE' %}
-            <div class="card-header red white-text">
-                <div class="card-title">{% trans 'Mentoring' %}<br/>
-                    <ul>
-                        <li><i class="mdi-content-send"></i> {{ thesis.mentoringrequest.requested_on|date:"D d M Y" }}
-                        </li>
-                        <li><i class="mdi-communication-import-export"></i> {{ thesis.mentoringrequest.status|state }}
-                        </li>
-                    </ul>
-                    <label class="white-text">{% trans 'Answer' %}</label>
-                    <blockquote><i>
-                        <small>{{ thesis.mentoringrequest.answer|safe }}</small>
-                    </i></blockquote>
-                </div>
-            </div>
+    {% if thesis.mentoringrequest.state|for_request %}
+        {% if thesis.mentoringrequest.state == 'DE' %}
+            {#            <div class="card-header red white-text">#}
+            {#                <div class="card-title">{% trans 'Mentoring' %}<br/>#}
+            {#                    <ul>#}
+            {#                        <li><i class="mdi-content-send"></i> {{ thesis.mentoringrequest.requested_on|date:"D d M Y" }}#}
+            {#                        </li>#}
+            {#                        <li><i class="mdi-communication-import-export"></i> {{ thesis.mentoringrequest.status|state }}#}
+            {#                        </li>#}
+            {#                    </ul>#}
+            {#                    <label class="white-text">{% trans 'Answer' %}</label>#}
+            {#                    <blockquote><i>#}
+            {#                        <small>{{ thesis.mentoringrequest.answer|safe }}</small>#}
+            {#                    </i></blockquote>#}
+            {#                </div>#}
+            {#            </div>#}
         {% else %}
-            {% trans 'Mentoring-Request' as mr %}
-            {% material_card_header title=mr actions='dropdown_thesis' %}
+            {#            {% trans 'Mentoring-Request' as mr %}#}
+            {#            {% material_card_header title=mr actions='dropdown_thesis' %}#}
         {% endif %}
         <div class="card-content">
             {% material_todo_formfields thesis_mentoringrequest_form %}
@@ -73,7 +73,7 @@
         </div>
         {% material_todo_reveal %}
     {% else %}
-        <div class="card-header{% if thesis.mentoringrequest.status == 'AC' %} green{% else %} orange{% endif %} white-text">
+        <div class="card-header{% if thesis.mentoringrequest.state == 'AC' %} green{% else %} orange{% endif %} white-text">
             <div class="card-title">
                 <a href="{% url 'student-thesis-mentoringrequest-preview' %}"
                    class="fancybox fancybox.iframe white-text">{% trans 'Mentoring' %} <i
@@ -84,7 +84,7 @@
                 </ul>
             </div>
             <div class="actions">
-                {% if thesis.mentoringrequest.status != 'AC' %}
+                {% if thesis.mentoringrequest.state != 'AC' %}
                     <a href="{% url 'student-thesis-mentoringrequest-update-todo' %}?editMode=true"
                        class="reload"><i class="mdi-editor-border-color white-text"></i></a>
                 {% endif %}
@@ -92,7 +92,7 @@
                         class="mdi-av-my-library-books white-text"></i></a>
             </div>
         </div>
-        {% if thesis.mentoringrequest.status != 'RE' %}
+        {% if thesis.mentoringrequest.state != 'RE' %}
             <div class="card-content">
                 <div class="row">
                     <div class="col s12">

@@ -14,7 +14,8 @@
                     <ul class="collection">
                         {% for request in object_list %}
                             <li class="collection-item row">
-                                <a href="{% url 'tutor-request' request.pk %}" class="fancybox fancybox.iframe">
+                                <a href="{% url 'tutor-request' request.pk %}"
+                                   class="fancybox fancybox.iframe edit_form">
                                     <div class="request-message col s12">
                                         <span class="title">{{ request.from_student }}</span>
 
@@ -23,13 +24,13 @@
                                         <p class="request-desc">{{ request.comment }}</p>
 
                                         <p>&nbsp;</p>
-                                        {% if not request.status == 'RE' %}
+                                        {% if not request.state == 'RE' %}
                                             <div class="col s12 center-align">
-                                                {% if request.status == 'AC' %}
-                                                    <small class="green-text">{{ request.status|state }}
+                                                {% if request.state == 'AC' %}
+                                                    <small class="green-text">{{ request.state|state }}
                                                         on {{ request.mentoring.created_on|date }}</small>
                                                 {% else %}
-                                                    <small class="red-text">{{ request.status|state }}</small>
+                                                    <small class="red-text">{{ request.state|state }}</small>
                                                     </div>
                                                 {% endif %}
                                         {% endif %}

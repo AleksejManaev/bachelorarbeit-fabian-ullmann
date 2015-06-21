@@ -37,6 +37,7 @@
                         form.saveFinal();
                     });
                     $(this.instance).find('.card-action [name=pdf]').on('click', function (e) {
+                        console.log('pdf click');
                         form.savePDF(e);
                         return false;
                     });
@@ -97,6 +98,7 @@
                         },
                         function (jqXHR, textStatus, errorThrown) {
                             Materialize.toast("pdf not generated!", 5000, 'red');
+                            form.setFinalErrorData(jqXHR.responseText);
                         });
                 },
                 saveSubmit: function () {
@@ -389,6 +391,8 @@ $(document).ready(function () {
     if ($('.card-reveal')[0]) {
         $('.card-reveal').show();
         $.each($('.card-reveal .card-content'), function (a, b) {
+            console.log(a)
+            console.log(b)
             $(b).css('min-height', $(b).parent().outerHeight() - $(b).parent().find('.card-header').outerHeight() - $(b).parent().find('.card-action').outerHeight());
         });
         $('.card-reveal').hide();
@@ -396,5 +400,13 @@ $(document).ready(function () {
     $.each($('form > .card.todo-list'), function () {
         $(this).todoList();
     });
+    $('.tab-pane.active:not(:first-child)').removeClass('active');
+
+    //
+    //// go to the latest tab, if it exists:
+    var lastTab = localStorage.getItem('lastTab');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
 
 })
