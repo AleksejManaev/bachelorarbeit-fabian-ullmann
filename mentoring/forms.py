@@ -243,16 +243,15 @@ FormsetMentoringTutor2 = forms.inlineformset_factory(Mentoring, Tutor2ContactDat
 # Todo FormStudent alternative E-Mail anpassen
 class FormSettingsUser(forms.ModelForm):
     class Meta:
-        model = User
+        model = MentoringUser
         fields = ['first_name', 'last_name']
 
 
-
-FormsetUserTutor = forms.inlineformset_factory(User, Tutor,
+FormsetUserTutor = forms.inlineformset_factory(MentoringUser, Tutor,
                                                fields=['user', 'title', 'phone', 'placement_courses', 'portaluser_ptr'],
                                                extra=1, can_delete=False,
                                                widgets={'placement_courses': forms.CheckboxSelectMultiple()})
-FormsetUserStudent = forms.inlineformset_factory(User, Student,
+FormsetUserStudent = forms.inlineformset_factory(MentoringUser, Student,
                                                  fields='__all__',
                                                  extra=1, can_delete=False)
 FormsetStudentAddress = forms.inlineformset_factory(Student, Address, fields='__all__', extra=1, can_delete=False)

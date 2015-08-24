@@ -1,0 +1,36 @@
+{% load material %}
+{% load filter %}
+{% load i18n %}
+
+<div class="row">
+    <div class="col s12">
+        {% with thesis as object %}
+            {% include 'student_thesis_preview_widget.html' %}
+        {% endwith %}
+
+    </div>
+    {% if thesis.registration.pdf_file %}
+        <div class="col s12">
+            <form action="{% url 'student-thesis-documents-update' %}"
+                  method="post">
+                {% csrf_token %}
+                {% include 'student_thesis_documents_widget.html' %}
+            </form>
+        </div>
+        <div class="col s12">
+            {% with thesis.registration.responseexaminationboard as examinationboard %}
+                <form action="{% url 'thesis-registration-examinationboard' thesis.registration.pk %}"
+                      method="post">
+                    {% csrf_token %}
+                    {% include 'both_thesis_examinationboard_widget.html' %}
+                </form>
+            {% endwith %}
+        </div>
+    {% endif %}
+    <div class="col s12">
+        <form action="{% url 'student-thesis-registration-update' %}" method="post">
+            {% csrf_token %}
+            {% include 'student_thesis_registration_widget.html' %}
+        </form>
+    </div>
+</div>

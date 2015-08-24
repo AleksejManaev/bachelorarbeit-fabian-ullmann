@@ -1,0 +1,40 @@
+{% load material %}
+{% load i18n %}
+{% load filter %}
+
+<div class="card-content">
+    <div class="row">
+        <div class="col s12 m4">
+            <ul>
+                <li><i class="mdi-social-school"></i>&emsp;{{ placement.course }}</li>
+                <li><i class="mdi-content-send"></i>&emsp;{{ placement.sent_on|date:'d. M Y' }}</li>
+                <li><i class="mdi-communication-import-export"></i>&emsp;{{ placement.state|state }}</li>
+            </ul>
+        </div>
+        <div class="col s12 m4">
+            <label>{% trans 'Event placement' %}</label>
+            <ul>
+                <li>
+                    <i class="mdi-notification-event-note"></i>&emsp;{{ placement.placementeventregistration.event.date|date:'d. M Y' }}
+                </li>
+                <li>
+                    <i class="mdi-action-schedule"></i>&emsp;{{ placement.placementeventregistration.event.time|date:'H:i' }}
+                </li>
+                <li>
+                    <i class="mdi-communication-business"></i>&emsp;{{ placement.placementeventregistration.event.room|safe }}
+                </li>
+            </ul>
+        </div>
+        <div class="col s12c m4">
+            <label class="center">{% trans 'Tutor placement' %}</label>
+            <ul>
+                <li><i class="mdi-social-person"></i>&emsp;{{ placement.placementeventregistration.event.tutor|safe }}
+                </li>
+                <li><i class="mdi-content-mail"></i> <a
+                        href="mailto:{{ placement.placementeventregistration.event.tutor.user.email }}">&emsp;{{ placement.placementeventregistration.event.tutor.user.email }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>

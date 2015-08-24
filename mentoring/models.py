@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from django.utils.encoding import python_2_unicode_compatible
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from mentoring.helpers import *
 from mentoring.validators import *
@@ -16,6 +16,10 @@ STATUS_CHOICES = (
     ('DE', 'denied'),
     ('CD', 'canceled'),
 )
+
+
+class MentoringUser(AbstractUser):
+    gidNumber = models.IntegerField(null=True)
 
 @python_2_unicode_compatible
 class Course(models.Model):
@@ -51,12 +55,13 @@ class ContactModel(models.Model):
     title = models.CharField(_('title'), max_length=30, null=True, blank=True)
     phone = models.CharField(_('phone'), max_length=30, blank=True, null=True)
 
+
 class PortalUser(ContactModel):
-    user = models.OneToOneField(User, primary_key=True)
+    user = models.OneToOneField(MentoringUser, primary_key=True)
 
 @python_2_unicode_compatible
 class Tutor(PortalUser):
-    placement_courses = models.ManyToManyField(Course)
+    placement_courses = models.ManyToManyField(Course, blank=True, null=True)
 
     @property
     def new_requests(self):
@@ -134,7 +139,7 @@ class Event(models.Model):
 
 
 class PlacementEvent(Event):
-    course = models.ForeignKey(Course)
+    course = models.ForeignKey(Course, verbose_name=_('course placement'))
     tutor = models.ForeignKey(Tutor)
 
     def __str__(self):
@@ -204,7 +209,7 @@ class CompanyContactData(ContactData):
 @python_2_unicode_compatible
 class Thesis(AbstractWork):
     student = models.ForeignKey(Student)
-    course = models.ForeignKey(Course, blank=True, null=True)
+    course = models.ForeignKey(Course, verbose_name=_('course placement'), blank=True, null=True)
     report = models.FileField(_('report thesis'), upload_to=upload_to_thesis_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
     poster = models.FileField(_('poster thesis'), upload_to=upload_to_thesis_poster, blank=True, null=True,

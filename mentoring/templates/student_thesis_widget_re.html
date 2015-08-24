@@ -1,0 +1,40 @@
+{% load material %}
+{% load i18n %}
+{% load filter %}
+
+
+<div class="card todo-list">
+    <div class="card-header orange white-text">
+        <div class="card-title">
+            <a href="{% url 'student-thesis-mentoringrequest-preview' %}"
+               class="fancybox fancybox.iframe white-text">{% trans 'Mentoring' %} <i
+                    class="mdi-action-done-all"></i></a><br/>
+            <ul>
+                <li><i class="mdi-content-send"></i> {{ thesis.mentoringrequest.requested_on|date:"D d M Y" }}</li>
+                <li><i class="mdi-communication-import-export"></i> {{ thesis.mentoringrequest.state|state }}</li>
+            </ul>
+        </div>
+        <div class="actions">
+
+            <a href="{% url 'student-thesis-editable' thesis.pk %}"><i
+                    class="mdi-editor-border-color white-text"></i></a>
+            <a href="{% url 'student-thesis-mentoringrequest-preview' %}" class="fancybox fancybox.iframe"><i
+                    class="mdi-av-my-library-books white-text"></i></a>
+        </div>
+    </div>
+    <div class="card-content">
+        <div class="row">
+            <div class="col s12">
+                <ul>
+                    <li>
+                        <i class="mdi-social-person"></i>&emsp;{{ thesis.mentoringrequest.tutor_email|safe }}
+                    </li>
+                    <li><i class="mdi-content-send"></i>&emsp;{{ thesis.mentoringrequest.requested_on|date:"D d M Y" }}
+                    </li>
+                    <li><i class="mdi-communication-import-export"></i>&emsp;{{ thesis.mentoringrequest.state|state }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

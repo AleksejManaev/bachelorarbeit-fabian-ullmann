@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 import os
 
 from django import http
@@ -193,6 +194,7 @@ class StudentThesisIndexView(DetailView):
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student.studentactivethesis.thesis
 
+
 class StudentPlacementListView(ListView):
     model = Placement
     template_name = 'student_placement_list.html'
@@ -285,7 +287,6 @@ class StudentPlacementFormView(UpdateView):
         return self.render_to_response(cd, status=status)
 
 
-
 class StudentPlacementIndexView(DetailView):
     """
     + Web-Ansicht des erstellten Praktikums
@@ -360,6 +361,7 @@ class StudentThesisListView(ListView):
 
     def get_queryset(self):
         return self.request.user.portaluser.student.studentactivethesis.thesis_set.all()
+
 
 class StudentThesisMentoringrequestFormView(UpdateView):
     """
@@ -453,6 +455,7 @@ class StudentThesisMentoringrequestFormView(UpdateView):
         cd = self.get_context_data()
         cd.update(self.thesis_cd)
         return self.render_to_response(cd, status=status)
+
 
 class StudentThesisMentoringrequestView(DetailView):
     """
@@ -561,26 +564,20 @@ class StudentThesisRegistrationFormView(UpdateView):
             ('Datum_Antrag', datetime.now().strftime("%d.%m.%Y"))
         ]
 
-        # Where to save the registration-pdf
-
         directory = "{}/{}/thesis/registration/".format(settings.MEDIA_ROOT, self.request.user)
         filename = 'Anmeldung-Abschlussarbeit.pdf'
 
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-
-        # write formular data to file
-
         fdf = forge_fdf("", fields, [], [], [])
         fdf_file = open("{}/data.fdf".format(directory), "wb")
         fdf_file.write(fdf)
         fdf_file.close()
 
-        # call command line
-
         os.system(
-            'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf output {directory}{file} flatten'.format(
+            'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf '
+            'output {directory}{file} flatten'.format(
                 mediaroot=settings.MEDIA_ROOT, directory=directory, file=filename))
 
         self.object.pdf_file = "{user}/thesis/registration/{file}".format(user=self.request.user, file=filename)
@@ -708,7 +705,6 @@ class StudentThesisDocumentsFormView(UpdateView):
         cd = self.get_context_data()
         cd.update(self.thesis)
         return self.render_to_response(cd, status=status)
-
 
 
 class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequestFormView, StudentPlacementFormView,

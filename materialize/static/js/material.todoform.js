@@ -391,8 +391,6 @@ $(document).ready(function () {
     if ($('.card-reveal')[0]) {
         $('.card-reveal').show();
         $.each($('.card-reveal .card-content'), function (a, b) {
-            console.log(a)
-            console.log(b)
             $(b).css('min-height', $(b).parent().outerHeight() - $(b).parent().find('.card-header').outerHeight() - $(b).parent().find('.card-action').outerHeight());
         });
         $('.card-reveal').hide();

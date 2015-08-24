@@ -20,10 +20,10 @@ Der aktuelle Entwicklungsstand kann unter <http://ba.20null4.de> betrachtet werd
 
 Zur Anmeldung am System stehen folgende User zur Verfügung: 
 
-+ student1 (pass: student1)
-+ student2 (pass: student2)
-+ tutor1 (pass: tutor1, email for request: tutor1@fh-brandenburg.de)
-+ tutor2 (pass: tutor2, email for request: tutor2@fh-brandenburg.de)
++ student1 (pass: student)
++ student2 (pass: student)
++ tutor1 (pass: tutor, email for request: tutor1@fh-brandenburg.de)
++ tutor2 (pass: tutor, email for request: tutor2@fh-brandenburg.de)
 
 
 

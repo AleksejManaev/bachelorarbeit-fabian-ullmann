@@ -7,6 +7,8 @@ from .models import *
 admin.site.register(AbstractWork)
 admin.site.register(Course)
 admin.site.register(Placement)
+admin.site.register(StudentActivePlacement)
+admin.site.register(StudentActiveThesis)
 admin.site.register(PortalUser)
 admin.site.register(Student)
 
@@ -23,3 +25,4 @@ admin.site.register(Tutor)
 
 admin.site.register(Mentoring)
 admin.site.register(MentoringRequest)
+admin.site.register(MentoringUser)
