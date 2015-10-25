@@ -43,7 +43,7 @@ class Degree(models.Model):
 
 @python_2_unicode_compatible
 class Company(models.Model):
-    name = models.CharField(_('company name'), max_length=100, unique=True)
+    name = models.CharField(_('company name'), max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.name
