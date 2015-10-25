@@ -28,6 +28,7 @@ class UserFixture(AutoFixture):
     * ``date_joined`` and ``last_login`` are always in the past and it is
       assured that ``date_joined`` will be lower than ``last_login``.
     '''
+
     class Values(object):
         username = generators.StringGenerator(
             max_length=30,
@@ -95,6 +96,14 @@ class UsernameGenerator(StaticGenerator):
         return "%s%s" % (super(UsernameGenerator, self).generate(), post)
 
 
+class EmailGenerator(StaticGenerator):
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def generate(self):
+        return 'test{number}@mail.de'.format(number=(len(User.objects.all()) + 1))
+
+
 class CourseFixture(AutoFixture):
     field_values = {
         'editing_time': generators.ChoicesGenerator(choices=Course.TIME_CHOICES)
@@ -110,6 +119,7 @@ class MyUserFixture(UserFixture):
         if self.username:
             self.field_values['username'] = UsernameGenerator(
                 self.username, type=self.type)
+        self.field_values['email'] = EmailGenerator()
 
 
 class PlacementFixture(AutoFixture):
@@ -134,7 +144,6 @@ class MyTutorFixture(AutoFixture):
         'user': MyUserFixture(User, username='tutor', password='tutor', type='tutor'),
         'title': 'Prof. Dr.',
         'phone': '03092751522',
-
     }
 
 
