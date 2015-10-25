@@ -8,4 +8,4 @@ class AppConfig(AppConfig):
 
     def ready(self):
         pass
-        # import mentoring.signals_autofixture
+        import mentoring.signals
