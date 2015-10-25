@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'bachelorarbeit-fabian-ullmann',
     'account',
-    # 'ldap_login',
+    'ldap_login',
     'materialize',
     'mentoring',
     'autofixture'
@@ -169,11 +169,9 @@ AUTH_USER_MODEL = 'mentoring.MentoringUser'
 # Use LDAP group membership to calculate group permissions.
 # AUTH_LDAP_FIND_GROUP_PERMS = True
 
-AUTHENTICATION_BACKENDS = (
+# AUTHENTICATION_BACKENDS = (
     # 'django_auth_ldap.backend.LDAPBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
+    # 'django.contrib.auth.backends.ModelBackend',
+# )
 
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login'
 
