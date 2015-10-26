@@ -1,30 +1,23 @@
-Bachelorarbeit Fabian Ullmann
+Master-Projekt
 ========
 Fachhochschule Brandenburg
 
 University of Applied Science
 
-Fachbereich Informatik & Medien 
+Fachbereich Informatik & Medien
 
-
-
-Version 0.0.1 - 31.05.2015
-
-by Fabian Ullmann 
-<http://ba.20null4.de/>
-
+Allgemeines
+------------
+Das Projekt setzt die Entwicklung der Bachelorarbeit von Fabian Ullmann fort.
+Zu finden unter: <https://bitbucket.org/fhb_fabian/bachelorarbeit-fabian-ullmann/>
 
 Anleitung
-------------
-Der aktuelle Entwicklungsstand kann unter <http://ba.20null4.de> betrachtet werden. 
-
-Zur Anmeldung am System stehen folgende User zur Verfügung: 
-
-+ student1 (pass: student)
-+ student2 (pass: student)
-+ tutor1 (pass: tutor, email for request: tutor1@fh-brandenburg.de)
-+ tutor2 (pass: tutor, email for request: tutor2@fh-brandenburg.de)
-
+---------
+Es wird eine teilweise gefüllte Datenbank mitgelifiert.
+Ein Student und ein Tutor können sich mit folgenden Zugangsdaten anmelden:
++ student1 : student
++ tutor1 : tutor
++ Email des Tutors: test2@fh-brandenburg.de
 
 
 Installation and Requirements
