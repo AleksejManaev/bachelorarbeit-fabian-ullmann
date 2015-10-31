@@ -1,6 +1,15 @@
-{% extends 'material_base.html' %}
-{% load staticfiles %}
-{% block material_extra_head %}
-<link href="{% static 'css/fhb.css' %}" media="all" rel="stylesheet">
+<!DOCTYPE html>
+<head>
+    {% load bootstrap3 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
 
+    {% load staticfiles %}
+    <link href="{% static 'img/logo_fhb.css' %}" media="all" rel="stylesheet">
+</head>
+
+<body>
+{% block content %}
 {% endblock %}
+</body>
+
