@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-31 20:58+0100\n"
+"POT-Creation-Date: 2015-11-01 10:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\ldap_login\templates\ldap_login.html:26
+msgid "Please sign in with your FHB account!"
+msgstr "Bitte loggen Sie sich mit Ihrem FHB-Konto ein!"
+
+#: .\ldap_login\templates\ldap_login.html:34
+msgid "Sign in"
+msgstr "Anmelden"
 
 #: .\mentoring\forms.py:80
 #: .\mentoring\templates\student_placement_form.html:55

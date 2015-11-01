@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
     {% load bootstrap3 %}
-    {% load i18n %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
+    {% load i18n %}
 
     {% load staticfiles %}
     <link href="{% static 'css/fhb.css' %}" media="all" rel="stylesheet">
@@ -23,15 +25,17 @@
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Bitte loggen Sie sich mit Ihrem FHB-Konto ein!</h3>
+                    <h3 class="panel-title">{% trans 'Please sign in with your FHB account!' %}</h3>
                 </div>
                 <div class="panel-body">
-                    <form action="" method="post">
+                    <form action="" method="post" class="form">
                         {% csrf_token %}
-                        {% bootstrap_form form %}
+                        {% bootstrap_form_errors form %}
+                        {% bootstrap_field form.username bound_css_class=' ' %}
+                        {% bootstrap_field form.password bound_css_class=' ' %}
                         {% buttons %}
                             <button type="submit" class="btn btn-primary">
-                                Anmelden
+                                {% trans 'Sign in' %}
                             </button>
                         {% endbuttons %}
                     </form>
