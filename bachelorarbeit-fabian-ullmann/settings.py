@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'ldap_login',
     'bootstrap3',
     'mentoring',
-    'autofixture'
+    'autofixture',
 )
 
 MIDDLEWARE_CLASSES = (

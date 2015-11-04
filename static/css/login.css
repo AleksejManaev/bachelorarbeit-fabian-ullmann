@@ -1,0 +1,20 @@
+body#login-body::before {
+    height: 50%;
+    width: 100%;
+    position: absolute;
+    background: #00BAE5;
+    content: "";
+}
+
+.top-offset-50px {
+    margin-top: 50px;
+}
+
+.center-vertically {
+    min-height: 100%;
+    min-height: 100vh;
+    display: flex;
+    /*align-items: center;*/
+    justify-content: center;
+    flex-direction: column;
+}

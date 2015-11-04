@@ -1,62 +1,72 @@
-{% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
-{% load material %}
-{% load i18n %}
-{% block material_content %}
+{#{% extends "base.html" %}#}
+{#{% load bootstrap3 %}#}
+{#{% load i18n %}#}
 
-    <div class="card">
-        {% trans 'Placement' as pl %}
-        {% material_card_header title=pl %}
-        <div class="card-content">
-            <form enctype="multipart/form-data" action="" method="post">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col s12">
-                        {% material_formfield placement_form.course %}
-                    </div>
-                    <div class="col s12">
-                        {% material_formfield placement_form.description %}
-                    </div>
-                    <div class="col s12">
-                        <label>{% trans 'report placement' %}</label>
-                        {% material_formfield placement_form.report %}
-                    </div>
-                    <div class="col s12">
-                        <label>{% trans 'presentation placement' %}</label>
-                        {% material_formfield placement_form.presentation %}
-                    </div>
-                    <div class="col s12">
-                        <label>{% trans 'certificate placement' %}</label>
-                        {% material_formfield placement_form.certificate %}
-                    </div>
-                </div>
+{#{% block content %}#}
+{#    <form enctype="multipart/form-data" action="" method="post" class="form">#}
+{#        {% csrf_token %}#}
+{#        {% bootstrap_form_errors placement_form %}#}
+{#        {% bootstrap_field placement_form.course %}#}
+{#        {% buttons %}#}
+{#            <button type="submit" class="btn btn-primary">#}
+{#                {% trans 'Finish' %}#}
+{#            </button>#}
+{#        {% endbuttons %}#}
+{#    </form>#}
 
-                <div class="row">
-                    <div class="col s12">
-                        {% material_form placement_company_form %}
-                        {% material_formset placement_company_formset %}
-                    </div>
-                </div>
+{#        <div class="card">#}
+{#            {% trans 'Placement' as pl %}#}
+{#            <div class="card-content">#}
+{#                <form enctype="multipart/form-data" action="" method="post">#}
+{#                    {% csrf_token %}#}
+{#                    {{ form. }}#}
+{#                    <div class="row">#}
+{#                        <div class="col s12">#}
+{#                            {% bootstrap_field placement_form.course %}#}
+{#                        </div>#}
+{#                        <div class="col s12">#}
+{#                            {% bootstrap_field placement_form.description %}#}
+{#                        </div>#}
+{#                        <div class="col s12">#}
+{#                            <label>{% trans 'report placement' %}</label>#}
+{#                            {% bootstrap_field placement_form.report %}#}
+{#                        </div>#}
+{#                        <div class="col s12">#}
+{#                            <label>{% trans 'presentation placement' %}</label>#}
+{#                            {% bootstrap_field placement_form.presentation %}#}
+{#                        </div>#}
+{#                        <div class="col s12">#}
+{#                            <label>{% trans 'certificate placement' %}</label>#}
+{#                            {% bootstrap_field placement_form.certificate %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#    #}
+{#                    <div class="row">#}
+{#                        <div class="col s12">#}
+{#                            {% bootstrap_form placement_company_form %}#}
+{#                            {% bootstrap_formset placement_company_formset %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#    #}
+{#                    <div class="row">#}
+{#                        <div class="col s12">#}
+{#                            <label>{% trans 'Contact-Data placement' %}</label>#}
+{#                            {% bootstrap_formset placement_contact_formset %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#    #}
+{#    #}
+{#                    <div class="row">#}
+{#                        <div class="col s12">#}
+{#                            {% bootstrap_form placement_event_form %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-action valign-wrapper">#}
+{#    #}
+{#                        <input type="submit" name="finalize" value="{% trans 'Finish' %}"/>#}
+{#                    </div>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
 
-                <div class="row">
-                    <div class="col s12">
-                        <label>{% trans 'Contact-Data placement' %}</label>
-                        {% material_formset placement_contact_formset %}
-                    </div>
-                </div>
-
-
-                <div class="row">
-                    <div class="col s12">
-                        {% material_form placement_event_form %}
-                    </div>
-                </div>
-                <div class="card-action valign-wrapper">
-
-                    <input type="submit" name="finalize" value="{% trans 'Finish' %}"/>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-{% endblock %}
+{#{% endblock %}#}

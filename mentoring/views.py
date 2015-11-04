@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 import os
-
 from django import http
 import django
 from django.core.urlresolvers import reverse
@@ -215,7 +214,7 @@ class StudentPlacementFormView(UpdateView):
 
     model = Placement
     form_class = FormPlacement
-    template_name = 'student_placement_form.html'
+    # template_name = 'student_placement_form.html'
 
     def get_context_placement(self, data=None, files=None, **kwargs):
         """
@@ -266,6 +265,7 @@ class StudentPlacementFormView(UpdateView):
         form_target = request.POST.get('target_form').split(',') if request.POST.has_key('target_form') else [i for i, v
                                                                                                               in
                                                                                                               self.placement.iteritems()]
+
         status = 200
         if 'placement' in form_target:
             form_target.remove('placement')
@@ -708,8 +708,7 @@ class StudentThesisDocumentsFormView(UpdateView):
 
 
 class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequestFormView, StudentPlacementFormView,
-                      StudentThesisRegistrationFormView,
-                      BothThesisExaminationboardFormView):
+                      StudentThesisRegistrationFormView):
     """
     Zeigt alle Studenten-Formulare in einer Seite an
     """
@@ -739,7 +738,6 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
             context.update(self.get_context_thesis_documents())
             context.update(self.get_context_registration())
             context.update(self.get_context_placement())
-            context.update(self.get_context_examinationboard())
             return context
         else:
             return None
@@ -1078,8 +1076,7 @@ class TutorMentoringReportFormView(UpdateView):
         return MentoringReport.objects.get_or_create(mentoring_id=pk)[0]
 
 
-class TutorMentoringFormView(TutorMentoringReportFormView, TutorMentoringColloquiumFormView,
-                             BothThesisExaminationboardFormView):
+class TutorMentoringFormView(TutorMentoringReportFormView, TutorMentoringColloquiumFormView):
     """
     Zeigt alle Betreuungs-Formulare in einer Seite an
     """

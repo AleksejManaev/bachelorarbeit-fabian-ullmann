@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-01 10:35+0100\n"
+"POT-Creation-Date: 2015-11-01 21:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\ldap_login\templates\ldap_login.html:26
+#: .\ldap_login\templates\ldap_login.html:28
 msgid "Please sign in with your FHB account!"
 msgstr "Bitte loggen Sie sich mit Ihrem FHB-Konto ein!"
 
-#: .\ldap_login\templates\ldap_login.html:34
+#: .\ldap_login\templates\ldap_login.html:38
 msgid "Sign in"
 msgstr "Anmelden"
 
-#: .\mentoring\forms.py:80
+#: .\mentoring\forms.py:80 .\mentoring\templates\student_index.html:35
 #: .\mentoring\templates\student_placement_form.html:55
 #: .\mentoring\templates\student_placement_widget.html:7
 #: .\mentoring\templates\student_settings.html:33
@@ -293,14 +293,6 @@ msgstr "Antwort vom Prüfungsausschuss"
 #: .\mentoring\templates\tutor_mentoring_report_widget.html:23
 msgid "Save"
 msgstr "Speichern"
-
-#: .\mentoring\templates\student_index.html:15
-msgid "Placement tab"
-msgstr "Praktikum"
-
-#: .\mentoring\templates\student_index.html:21
-msgid "Thesis tab"
-msgstr "Abschlussarbeit"
 
 #: .\mentoring\templates\student_placement_form.html:42
 #: .\mentoring\templates\student_placement_widget.html:11
@@ -621,6 +613,20 @@ msgstr "Anfrage abgebrochen"
 #: .\mentoring\templatetags\filter.py:26
 msgid "error"
 msgstr ""
+
+#: .\templates\base.html:30
+msgid "Profile"
+msgstr "Profil"
+
+#: .\templates\base.html:37
+msgid "Logout"
+msgstr "Abmelden"
+
+#~ msgid "Placement tab"
+#~ msgstr "Praktikum"
+
+#~ msgid "Thesis tab"
+#~ msgstr "Abschlussarbeit"
 
 #~ msgid "Test123"
 #~ msgstr "Deutsch"
