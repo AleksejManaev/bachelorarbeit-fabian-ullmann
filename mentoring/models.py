@@ -21,6 +21,7 @@ STATUS_CHOICES = (
 class MentoringUser(AbstractUser):
     gidNumber = models.IntegerField(null=True)
 
+
 @python_2_unicode_compatible
 class Course(models.Model):
     TIME_CHOICES = (
@@ -33,6 +34,7 @@ class Course(models.Model):
 
     def __str__(self):
         return self.description
+
 
 class Degree(models.Model):
     description = models.CharField(_('description'), max_length=255)
@@ -51,6 +53,7 @@ class Company(models.Model):
     def works(self):
         return WorkCompany.objects.filter(company=self)
 
+
 class ContactModel(models.Model):
     title = models.CharField(_('title'), max_length=30, null=True, blank=True)
     phone = models.CharField(_('phone'), max_length=30, blank=True, null=True)
@@ -58,6 +61,7 @@ class ContactModel(models.Model):
 
 class PortalUser(ContactModel):
     user = models.OneToOneField(MentoringUser, primary_key=True)
+
 
 @python_2_unicode_compatible
 class Tutor(PortalUser):
@@ -106,7 +110,6 @@ class Address(models.Model):
 
 
 class AbstractWork(models.Model):
-
     description = models.TextField(_('description'), blank=True, null=True)
     created_on = models.DateTimeField(_('date joined'), auto_created=True, auto_now_add=True)
     updated_on = models.DateTimeField(_('date updated'), auto_now=True, null=True)
@@ -145,6 +148,7 @@ class PlacementEvent(Event):
     def __str__(self):
         return "Am %s um %s in %s bei %s" % (self.date, self.time, self.room, self.tutor)
 
+
 @python_2_unicode_compatible
 class Placement(AbstractWork):
     student = models.ForeignKey(Student)
@@ -158,7 +162,6 @@ class Placement(AbstractWork):
                                    null=True,
                                    validators=[validate_pdf, validate_size])
     public = models.BooleanField(_('public placement'), default=False)
-
 
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)
@@ -187,20 +190,22 @@ class StudentActivePlacement(models.Model):
     student = models.OneToOneField(Student)
     placement = models.OneToOneField(Placement, null=True)
 
+
 class WorkCompany(models.Model):
     work = models.OneToOneField(AbstractWork, primary_key=True)
     company = models.ForeignKey(Company, null=True, blank=True)
-    description = models.TextField(_('company description'), blank=False)
+    description = models.TextField(_('company description'), null=True, blank=True)
 
 
 @python_2_unicode_compatible
 class ContactData(ContactModel):
-    first_name = models.CharField(_('first name'), max_length=30)
-    last_name = models.CharField(_('last name'), max_length=30)
-    email = models.EmailField(_('email'))
+    first_name = models.CharField(_('first name'), max_length=30, null=True, blank=True)
+    last_name = models.CharField(_('last name'), max_length=30, null=True, blank=True)
+    email = models.EmailField(_('email'), null=True, blank=True)
 
     def __str__(self):
         return u"{} {} {}".format(self.title, self.first_name, self.last_name)
+
 
 class CompanyContactData(ContactData):
     work_company = models.OneToOneField(WorkCompany)
@@ -218,7 +223,6 @@ class Thesis(AbstractWork):
 
     def __str__(self):
         return u'Thesis {}'.format(self.student.user.username)
-
 
     @property
     def mentoring(self):
@@ -250,6 +254,7 @@ class MentoringRequest(models.Model):
     def from_student(self):
         return self.thesis.student
 
+
 class Mentoring(models.Model):
     request = models.OneToOneField(MentoringRequest)
     thesis = models.OneToOneField(Thesis)
@@ -269,6 +274,7 @@ class Tutor2ContactData(models.Model):
     def __str__(self):
         return u"{} {} {}".format(self.contact.title, self.contact.first_name, self.contact.last_name)
 
+
 class MentoringReport(models.Model):
     mentoring = models.OneToOneField(Mentoring)
     date_initial_meeting = models.DateField(_('date initial meeting'), null=True, blank=True)
@@ -277,11 +283,13 @@ class MentoringReport(models.Model):
     def items(self):
         return MentoringReportItem.objects.filter(report=self)
 
+
 class MentoringReportItem(models.Model):
     report = models.ForeignKey(MentoringReport)
     subject = models.CharField(_('subject'), max_length=100)
     message = models.TextField(_('message'), null=True, blank=True)
     created_on = models.DateTimeField(auto_created=True, auto_now_add=True)
+
 
 class Registration(models.Model):
     mentoring = models.OneToOneField(Mentoring)
@@ -298,6 +306,7 @@ class Registration(models.Model):
     def student(self):
         return self.mentoring.request.from_student()
 
+
 class ResponseExaminationBoard(models.Model):
     registration = models.OneToOneField(Registration)
     start_editing = models.DateField(_('start editing'), null=True, blank=True)
@@ -308,6 +317,7 @@ class ResponseExaminationBoard(models.Model):
 
 class Colloquium(Event):
     mentoring = models.OneToOneField(Mentoring)
+
 
 class CompanyRating(models.Model):
     rate = models.PositiveSmallIntegerField(_('rate'))
