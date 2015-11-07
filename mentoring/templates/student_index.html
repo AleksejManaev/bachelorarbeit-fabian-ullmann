@@ -2,6 +2,7 @@
 {% load bootstrap3 %}
 {% load i18n %}
 {% load staticfiles %}
+{% load filter %}
 
 {% block content %}
     <div class="container center-vertically">
@@ -16,6 +17,8 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane active" id="placement">
+                        <div class="alert {{ placement.state|state_css }}" role="alert">Status: {{ placement.state|state }} </div>
+
                         <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post"
                               class="form">
                             {% csrf_token %}
@@ -26,7 +29,7 @@
                             <h3>{% trans 'Contact-Data placement' %}</h3>
                             {% bootstrap_formset placement_contact_formset %}
                             {#                                                        {% bootstrap_form placement_event_form %}#}
-                             {% buttons %}
+                            {% buttons %}
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">
                                     {% trans 'Finish' %}
                                 </button>

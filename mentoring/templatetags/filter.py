@@ -1,6 +1,5 @@
 from datetime import datetime
 import re
-
 from django import template
 from django.utils.translation import ugettext_lazy as _
 
@@ -24,6 +23,22 @@ def state(value, *args):
         return _('canceled')
     else:
         return _('error')
+
+
+@register.filter
+def state_css(value, *args):
+    if value == 'NR':
+        return 'alert-info'
+    elif value == 'RE':
+        return 'alert-warning'
+    elif value == 'AC':
+        return 'alert-success'
+    elif value == 'DE':
+        return 'alert-danger'
+    elif value == 'CD':
+        return 'alert-cancelled'
+    else:
+        return 'alert-info'
 
 
 @register.filter

@@ -2,6 +2,13 @@
     height: 100px;
 }
 
+.alert-cancelled {
+    color: #8e44ad;
+    background-color: #ecdbff;
+    border-color: #9b59b6;
+}
+
+/* FHB-Theme */
 .navbar-default {
     background-color: #66d6ef;
     border-color: #38aec8;

@@ -214,6 +214,7 @@ class StudentPlacementFormView(UpdateView):
 
     model = Placement
     form_class = FormPlacement
+
     # template_name = 'student_placement_form.html'
 
     def get_context_placement(self, data=None, files=None, **kwargs):
@@ -285,7 +286,7 @@ class StudentPlacementFormView(UpdateView):
         cd = self.get_context_data()
         cd.update(self.placement)
         return redirect('student-index')
-            # self.render_to_response(cd, status=status)
+        # self.render_to_response(cd, status=status)
 
 
 class StudentPlacementIndexView(DetailView):
