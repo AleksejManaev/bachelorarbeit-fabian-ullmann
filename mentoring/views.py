@@ -214,7 +214,7 @@ class StudentPlacementFormView(UpdateView):
 
     model = Placement
     form_class = FormPlacement
-    # template_name = 'student_placement_form.html'
+    template_name = 'student_placement_form.html'
 
     def get_context_placement(self, data=None, files=None, **kwargs):
         """
