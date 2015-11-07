@@ -66,31 +66,32 @@ class FormTutor2ContactData(forms.ModelForm):
 
 class FormPlacement(forms.ModelForm):
     def is_valid(self):
-        """
-        Falls das Objekt bereits finalisiert wude -> invalid
-        """
-        if (self.instance.finished):
-            return False
-
-        """
-        Falls Placement finalisiert werden soll, setze all Felder 'required'
-        """
-
-        req = True if self.data.has_key('finalize') and (
-        self.data['finalize'] == 'true' or self.data['finalize'] == _('Finish')) else False
-        for key, val in self.fields.iteritems():
-            if not key in ['public', 'finished']:
-                val.required = req
-            else:
-                val.required = False
+        # """
+        # Falls das Objekt bereits finalisiert wurde -> invalid
+        # """
+        # if (self.instance.finished):
+        #     return False
+        #
+        # """
+        # Falls Placement finalisiert werden soll, setze all Felder 'required'
+        # """
+        #
+        # req = True if self.data.has_key('finalize') and (
+        # self.data['finalize'] == 'true' or self.data['finalize'] == _('Finish')) else False
+        # for key, val in self.fields.iteritems():
+        #     if not key in ['public', 'finished']:
+        #         val.required = req
+        #     else:
+        #         val.required = False
 
         is_valid = super(FormPlacement, self).is_valid()
 
-        """
-        Falls Placement valid und finalize -> Placement.finished
-        """
+        # """
+        # Falls Placement valid und finalize -> Placement.finished
+        # """
 
-        if is_valid and req:
+        # if is_valid and req:
+        if is_valid:
             self.instance.finished = True
             self.instance.save()
 

@@ -214,7 +214,7 @@ class StudentPlacementFormView(UpdateView):
 
     model = Placement
     form_class = FormPlacement
-    # template_name = 'student_placement_form.html'
+    template_name = 'student_placement_form.html'
 
     def get_context_placement(self, data=None, files=None, **kwargs):
         """
@@ -227,8 +227,8 @@ class StudentPlacementFormView(UpdateView):
         return {
             'placement': placement,
             'placement_form': FormPlacement(data, files=files, instance=placement, prefix='placement_form'),
-            'placement_event_form': FormPlacementEventRegistration(data, instance=placement.placementeventregistration,
-                                                                   prefix='placement_event_form'),
+            # 'placement_event_form': FormPlacementEventRegistration(data, instance=placement.placementeventregistration,
+            #                                                        prefix='placement_event_form'),
             'placement_company_form': FormCompany(data, parent=workcompany,
                                                   instance=workcompany.company,
                                                   prefix='placement_company_form'),
@@ -257,10 +257,10 @@ class StudentPlacementFormView(UpdateView):
         if request.GET.has_key('fancy'):
             request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_placement()
-        if self.object.finished:
-            return self.get(request, status=405)
-        else:
-            self.placement = self.get_context_placement(request.POST, files=request.FILES)
+        # if self.object.finished:
+        #     return self.get(request, status=405)
+        # else:
+        self.placement = self.get_context_placement(request.POST, files=request.FILES)
 
         form_target = request.POST.get('target_form').split(',') if request.POST.has_key('target_form') else [i for i, v
                                                                                                               in
@@ -284,7 +284,8 @@ class StudentPlacementFormView(UpdateView):
 
         cd = self.get_context_data()
         cd.update(self.placement)
-        return self.render_to_response(cd, status=status)
+        return redirect('student-index')
+            # self.render_to_response(cd, status=status)
 
 
 class StudentPlacementIndexView(DetailView):

@@ -59,7 +59,7 @@ msgstr "Kurze Beschreibung erfassen"
 
 #: .\mentoring\models.py:46
 msgid "company name"
-msgstr "Informationen zum Unternehmen erfassen"
+msgstr "Name des Unternehmens"
 
 #: .\mentoring\models.py:55
 msgid "title"

@@ -16,51 +16,21 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane active" id="placement">
-                        <form enctype="multipart/form-data" action="" method="post" class="form">
+                        <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post"
+                              class="form">
                             {% csrf_token %}
                             {% bootstrap_form placement_form %}
-                            {% bootstrap_form_errors placement_company_form %}
-                            {% bootstrap_form_errors placement_event_form %}
-                            {% bootstrap_formset_errors placement_company_formset %}
-                            {% bootstrap_formset_errors placement_contact_formset %}
-{#                            {% bootstrap_field placement_form.course %}#}
-{#                            {% bootstrap_field placement_form.description %}#}
-{#                            {% bootstrap_field placement_form.report %}#}
-{#                            {% bootstrap_field placement_form.presentation %}#}
-{#                            {% bootstrap_field placement_form.certificate %}#}
+                            {#                            {% bootstrap_form_errors placement_event_form %}#}
                             {% bootstrap_form placement_company_form %}
                             {% bootstrap_formset placement_company_formset %}
+                            <h3>{% trans 'Contact-Data placement' %}</h3>
                             {% bootstrap_formset placement_contact_formset %}
-                            {% bootstrap_form placement_event_form %}
-                            <input type="submit" name="finalize" value="{% trans 'Finish' %}"/>
-                            <a onclick="test()">test</a>
-                            <script>
-                                function test() {
-                                    formdata = new FormData();
-                                    mainData = $('form').serializeArray();
-
-                                    $.each(mainData, function (key, input) {
-                                        console.log(input.name + " : " + input.value);
-                                        formdata.append(input.name, input.value);
-                                    });
-
-                                    $.ajax(
-                                            {
-                                                url: '/student/placement/update/',
-                                                data: formdata,
-                                                cache: false,
-                                                contentType: false,
-                                                processData: false,
-                                                type: 'POST',
-                                                success: function () {
-                                                    alert('success');
-                                                },
-                                                error: function () {
-                                                    alert('error');
-                                                },
-                                            });
-                                }
-                            </script>
+                            {#                                                        {% bootstrap_form placement_event_form %}#}
+                            {% buttons %}
+                                <button type="submit" class="btn btn-primary">
+                                    {% trans 'Finish' %}
+                                </button>
+                            {% endbuttons %}
                         </form>
                     </div>
                     <div class="tab-pane" id="thesis">
