@@ -10,17 +10,16 @@
             <div class="col-md-12">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs nav-justified" role="tablist">
-                    <li class="active"><a href="#placement" role="tab" data-toggle="tab">Praktikum</a></li>
-                    <li><a href="#thesis" role="tab" data-toggle="tab">Bachelorarbeit</a></li>
+                    <li class="active"><a href="#placement" role="tab" data-toggle="tab">{% trans 'Internship tab' %}</a></li>
+                    <li><a href="#thesis" role="tab" data-toggle="tab">{% trans 'Thesis tab' %}</a></li>
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane active" id="placement">
-                        <div class="alert {{ placement.state|state_css }}" role="alert">Status: {{ placement.state|state }} </div>
+                        <div class="alert {{ placement.state|state_css }}" role="alert">{% trans 'State: ' %} {{ placement.state|state }} </div>
 
-                        <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post"
-                              class="form">
+                        <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post" class="form">
                             {% csrf_token %}
                             {% bootstrap_form placement_form %}
                             {#                            {% bootstrap_form_errors placement_event_form %}#}
