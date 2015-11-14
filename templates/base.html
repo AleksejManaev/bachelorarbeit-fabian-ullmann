@@ -27,7 +27,21 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#" title="{% trans 'Profile' %}">
+                    <a href="{% url 'index' %}" title="{% trans 'Home' %}">
+                        <button type="button" class="btn btn-default  btn-lg">
+                            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                        </button>
+                    </a>
+                </li>
+                <li>
+                    <a href="
+                            {% if user.portaluser.student %}
+                                {% url 'student-settings' %}
+                            {% elif user.portaluser.tutor %}
+                                {% url 'tutor-settings' %}
+                            {% endif %}"
+                       title="{% trans 'Profile' %}">
+
                         <button type="button" class="btn btn-default  btn-lg">
                             <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         </button>

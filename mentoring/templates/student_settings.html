@@ -1,37 +1,41 @@
-{% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
-{% load material %}
+{% extends 'base.html' %}
+{% load bootstrap3 %}
 {% load i18n %}
 
 
-{% block material_content %}
-    <div class="card">
-        <form action="" method="post">
-            {% trans 'Settings Student' as st %}
-            {% material_card_header title=st %}
-            <div class="card-content">
-                {% csrf_token %}
+{% block content %}
+    <div class="container">
+        <div class="row ">
+            <div class="col-md-12">
+                <h1>{% trans 'Settings Student' %}</h1>
 
-                {{ student_user_formset.management_form }}
-                {% for form in student_user_formset.forms %}
-                    {% material_formfield form.title %}
-                    {% material_formfield form.user %}
-                {% endfor %}
-                {% material_formfield user_form.first_name %}
-                {% material_formfield user_form.last_name %}
+                <form action="{% url 'student-settings' %}" method="post" class="form">
+                    {% csrf_token %}
 
-                {% for form in student_user_formset.forms %}
-                    {% material_formfield form.matriculation_number %}
-                    {% material_formfield form.phone %}
-                    {% material_formfield form.extern_email %}
-                    {% material_formfield form.portaluser_ptr %}
-                {% endfor %}
-                {% material_formset student_address_formset %}
 
+                    {{ student_user_formset.management_form }}
+                    {% for form in student_user_formset.forms %}
+                        {% bootstrap_field form.title %}
+                        {% bootstrap_field form.user %}
+                    {% endfor %}
+                    {% bootstrap_field user_form.first_name %}
+                    {% bootstrap_field user_form.last_name %}
+
+                    {% for form in student_user_formset.forms %}
+                        {% bootstrap_field form.matriculation_number %}
+                        {% bootstrap_field form.phone %}
+                        {% bootstrap_field form.extern_email %}
+                        {% bootstrap_field form.portaluser_ptr %}
+                    {% endfor %}
+                    {% bootstrap_formset student_address_formset %}
+
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">
+                            {% trans 'Finish' %}
+                        </button>
+                    {% endbuttons %}
+                </form>
             </div>
-            <div class="card-action valign-wrapper">
-
-                <input type="submit" name="finalize" value="{% trans 'Finish' %}"/>
-            </div>
-        </form>
+        </div>
     </div>
 {% endblock %}
