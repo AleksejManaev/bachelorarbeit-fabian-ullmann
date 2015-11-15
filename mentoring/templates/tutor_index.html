@@ -1,160 +1,35 @@
-{% extends request.is_ajax|yesno:'base_ajax.html,base_portal.html' %}
-{% load material %}
-{% load filter %}
+{% extends 'base.html' %}
+{% load bootstrap3 %}
 {% load i18n %}
-{% block material_content %}
-    {% trans 'Mentoring Requests' as mr %}
-    {% trans 'Mentoring Tutor' as m %}
-    <div class="card">
-        <div class="card-body">
-            <ul class="tab-nav tn-justified tn-icon" role="tablist" tabindex="1"
-                style="overflow: hidden; outline: none;">
-                <li role="presentation" class="active">
-                    <a class="col s6" href="#tab-1" aria-controls="tab-1" role="tab" data-toggle="tab"
-                       aria-expanded="true">
-                        {% trans 'Placement tab tutor' %}
-                    </a>
-                </li>
-                <li role="presentation" class="">
-                    <a class="col s6" href="#tab-2" aria-controls="tab-2" role="tab" data-toggle="tab"
-                       aria-expanded="false">
-                        {% trans 'Thesis tab tutor' %}
-                    </a>
-                </li>
-            </ul>
+{% load staticfiles %}
+{% load filter %}
 
+{% block content %}
+    <div class="container center-vertically">
+        <div class="row ">
+            <div class="col-md-12">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs nav-justified" role="tablist">
+                    <li class="active"><a href="#placement" role="tab" data-toggle="tab">{% trans 'Internship tab' %}</a></li>
+                    <li><a href="#thesis" role="tab" data-toggle="tab">{% trans 'Thesis tab' %}</a></li>
+                </ul>
 
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane animated fadeIn active" id="tab-1">
-                    <div class="card-content">
-                        {% with object.placement_courses.all as object_list %}
-                            {% include 'tutor_placements_widget.html' %}
-                        {% endwith %}
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane active" id="placement">
+                        {% for placement in placements %}
+                            {{placement.student}} |
+                            {{placement.tutor }} |
+                            {{placement.course }} |
+                            {{placement.public }}
+                            <br>
+                        {% endfor %}
                     </div>
-                </div>
-
-
-                <div role="tabpanel" class="tab-pane animated fadeIn" id="tab-2">
-                    <div class="card-content">
-                        <div class="row">
-                            <div class="col s12">
-
-                                <ul id="dropdown_requests" class="dropdown-content">
-                                    <li><a href="{% url 'tutor-requests' %}"
-                                           class="fancybox fancybox.iframe">{% trans 'Show all' %}</a>
-                                    </li>
-                                </ul>
-
-                                <div class="card">
-                                    {% material_card_header title=mr actions='dropdown_requests' %}
-                                    <div class="card-content">
-                                        <ul class="collection">
-                                            {% for request in object.new_requests %}
-                                                <li class="collection-item row">
-                                                    <a href="{% url 'tutor-request' request.pk %}"
-                                                       class="fancybox fancybox.iframe edit_form">
-                                                        <div class="request-message col s12">
-                                                            <span class="title">{{ request.from_student }}<br/><small>{{ request.from_student.course }}</small></span>
-
-                                                            <small class="right">{{ request.requested_on|date }}</small>
-                                                            <div class="divider">&nbsp;</div>
-                                                            <p class="request-desc">{{ request.comment }}</p>
-
-                                                            <p>&nbsp;</p>
-                                                            {% if not request.state == 'RE' %}
-                                                                <div class="col s12 center-align">
-                                                                    {% if request.state == 'AC' %}
-                                                                        <small class="green-text">{{ request.state|state }}
-                                                                            on {{ request.mentoring.created_on|date }}</small>
-                                                                    {% else %}
-                                                                        <small class="red-text">{{ request.state|state }}</small>
-                                                                        </div>
-                                                                    {% endif %}
-                                                            {% endif %}
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                            {% empty %}
-                                                <small class="center-align col s12">{% trans 'no requests' %}</small>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        {# END MENTORING REQUESTS  #}
-                        {# BEGIN  MENTORINGS  #}
-                        <div class="row">
-                            <div class="col s12">
-
-                                <ul id="dropdown_mentorings" class="dropdown-content">
-                                    <li><a href="{% url 'tutor-mentorings' %}"
-                                           class="fancybox fancybox.iframe">{% trans 'Show all' %}</a>
-                                    </li>
-                                </ul>
-
-                                <div class="card">
-                                    {% material_card_header title=m actions='dropdown_mentorings' %}
-                                    <div class="card-content">
-                                        <ul class="collection">
-                                            {% for mentoring in object.mentoring_set.all %}
-                                                <li class="collection-item row">
-                                                    <div class="request-message col s12">
-                                                        <a href="{% url 'tutor-mentoring' mentoring.pk %}"
-                                                           class="fancybox fancybox.iframe">
-                                                            <span class="title"><b>{{ mentoring.thesis.student }}</b><br/><small>{{ mentoring.thesis.student.course }}</small></span>
-
-                                                            <small class="right">{{ mentoring.created_on|date }}</small>
-                                                            <div class="divider">&nbsp;</div>
-                                                            <p class="request-desc">{{ mentoring.thesis.registration.subject }}</p>
-
-                                                            <div class="row"></div>
-                                                        </a>
-                                                        <ul class="lv-attrs">
-                                                            <li>{% trans '2. Tutor' %}: {{ mentoring.tutor2contactdata }}</li>
-                                                            <li>
-                                                                <a href="{% url 'tutor-mentoring-report' mentoring.pk %}"
-                                                                   class="fancybox fancybox.iframe">
-                                                                    {% trans 'Report' %}: {{ mentoring.mentoringreport.items|length }}
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="{% url 'tutor-mentoring-colloquium' mentoring.thesis.registration.pk %}"
-                                                                   class="fancybox fancybox.iframe">
-                                                                    {% trans 'Colloquium' %}: {{ mentoring.colloquium.date|date }}</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="{% url 'thesis-registration-examinationboard' mentoring.thesis.registration.pk %}"
-                                                                   class="fancybox fancybox.iframe">Examination
-                                                                    {% trans 'Board' %}: {{ mentoring.thesis.registration.responseexaminationboard.stop_editing|date }}</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </li>
-                                            {% empty %}
-                                                <small class="center-align col s12">{% trans 'no mentorings' %}</small>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="tab-pane" id="thesis">
+                        TEST TEST TEST TEST TEST
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-{% endblock %}
-
-
-{% block material_extra_script %}
-    <script type="text/javascript">
-        var lastTab = localStorage.getItem('lastTab');
-        if (lastTab) {
-            $('[href="' + lastTab + '"]').tab('show');
-        }
-    </script>
 {% endblock %}

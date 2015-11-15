@@ -100,7 +100,7 @@ class FormPlacement(forms.ModelForm):
     class Meta:
         model = Placement
         exclude = ['student', 'finished', 'state', 'sent_on']
-        fields = ['course', 'description', 'report', 'presentation', 'certificate', 'public']
+        fields = ['course', 'tutor', 'description', 'report', 'presentation', 'certificate', 'public']
         widgets = {
             'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
             'presentation': ClearableFileInput(attrs={'accept': 'application/pdf'}),
