@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-08 21:37+0100\n"
+"POT-Creation-Date: 2015-11-15 19:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,7 +127,7 @@ msgstr "Mein Praktikumszeugnis hochladen"
 msgid "public placement"
 msgstr ""
 "Meine Praktikumsergebnisse dürfen auf den öffentlichen Seiten dieser "
-"Anwendung veröffentlicht werden. (optional)"
+"Anwendung veröffentlicht werden."
 
 #: .\mentoring\models.py:197
 msgid "company description"
@@ -301,7 +301,7 @@ msgstr "Ansprechpartner im Unternehmen"
 
 #: .\mentoring\templates\student_index.html:33
 #: .\mentoring\templates\student_placement_widget.html:7
-#: .\mentoring\templates\student_settings.html:33
+#: .\mentoring\templates\student_settings.html:34
 #: .\mentoring\templates\student_thesis_documents_widget.html:42
 #: .\mentoring\templates\student_thesis_widget.html:7
 #: .\mentoring\templates\student_thesis_widget_inactive.html:7
@@ -358,7 +358,7 @@ msgstr ""
 msgid "Tutor placement"
 msgstr "Praktika"
 
-#: .\mentoring\templates\student_settings.html:9
+#: .\mentoring\templates\student_settings.html:10
 msgid "Settings Student"
 msgstr "Einstellungen"
 
@@ -622,9 +622,13 @@ msgid "error"
 msgstr ""
 
 #: .\templates\base.html:30
+msgid "Home"
+msgstr ""
+
+#: .\templates\base.html:43
 msgid "Profile"
 msgstr "Profil"
 
-#: .\templates\base.html:37
+#: .\templates\base.html:51
 msgid "Logout"
 msgstr "Abmelden"
