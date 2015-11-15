@@ -4,7 +4,7 @@ import os
 from django import http
 import django
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic import *
 from fdfgen import forge_fdf
@@ -748,7 +748,7 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
         return self.request.user.portaluser.student
 
 
-class TutorView(DetailView):
+class TutorView(View):
     """
     Startseite der Professoren
     """
@@ -759,7 +759,8 @@ class TutorView(DetailView):
         if not self.get_object():
             return redirect('index')
         else:
-            return super(TutorView, self).get(request, *args, **kwargs)
+            placements = Placement.objects.filter(tutor=request.user.id)
+            return render(request, self.template_name, {'placements': placements})
 
     def get_object(self, queryset=None):
         st = Tutor.objects.filter(user=self.request.user)

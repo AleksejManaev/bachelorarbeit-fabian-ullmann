@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'users',
             },
             managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+                (b'objects', django.contrib.auth.models.UserManager()),
             ],
         ),
         migrations.CreateModel(
@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
             name='Company',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(unique=True, max_length=100, verbose_name='company name')),
+                ('name', models.CharField(max_length=100, null=True, verbose_name='company name', blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -213,9 +213,9 @@ class Migration(migrations.Migration):
             name='ContactData',
             fields=[
                 ('contactmodel_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='mentoring.ContactModel')),
-                ('first_name', models.CharField(max_length=30, verbose_name='first name')),
-                ('last_name', models.CharField(max_length=30, verbose_name='last name')),
-                ('email', models.EmailField(max_length=254, verbose_name='email')),
+                ('first_name', models.CharField(max_length=30, null=True, verbose_name='first name', blank=True)),
+                ('last_name', models.CharField(max_length=30, null=True, verbose_name='last name', blank=True)),
+                ('email', models.EmailField(max_length=254, null=True, verbose_name='email', blank=True)),
             ],
             bases=('mentoring.contactmodel',),
         ),
@@ -235,7 +235,7 @@ class Migration(migrations.Migration):
             name='PlacementEvent',
             fields=[
                 ('event_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='mentoring.Event')),
-                ('course', models.ForeignKey(to='mentoring.Course')),
+                ('course', models.ForeignKey(verbose_name='course placement', to='mentoring.Course')),
             ],
             bases=('mentoring.event',),
         ),
@@ -254,7 +254,7 @@ class Migration(migrations.Migration):
                 ('report', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_thesis_report, null=True, verbose_name='report thesis', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
                 ('poster', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_thesis_poster, null=True, verbose_name='poster thesis', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
                 ('documents_finished', models.BooleanField(default=False)),
-                ('course', models.ForeignKey(blank=True, to='mentoring.Course', null=True)),
+                ('course', models.ForeignKey(verbose_name='course placement', blank=True, to='mentoring.Course', null=True)),
             ],
             bases=('mentoring.abstractwork',),
         ),
@@ -262,7 +262,7 @@ class Migration(migrations.Migration):
             name='WorkCompany',
             fields=[
                 ('work', models.OneToOneField(primary_key=True, serialize=False, to='mentoring.AbstractWork')),
-                ('description', models.TextField(verbose_name='company description')),
+                ('description', models.TextField(null=True, verbose_name='company description', blank=True)),
                 ('company', models.ForeignKey(blank=True, to='mentoring.Company', null=True)),
             ],
         ),
@@ -375,6 +375,11 @@ class Migration(migrations.Migration):
             model_name='placement',
             name='student',
             field=models.ForeignKey(to='mentoring.Student'),
+        ),
+        migrations.AddField(
+            model_name='placement',
+            name='tutor',
+            field=models.ForeignKey(blank=True, to='mentoring.Tutor', null=True),
         ),
         migrations.AddField(
             model_name='mentoring',

@@ -153,6 +153,7 @@ class PlacementEvent(Event):
 class Placement(AbstractWork):
     student = models.ForeignKey(Student)
     course = models.ForeignKey(Course, verbose_name=_('course placement'), blank=True, null=True)
+    tutor = models.ForeignKey(Tutor, blank=True, null=True)
     report = models.FileField(_('report placement'), upload_to=upload_to_placement_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
     presentation = models.FileField(_('presentation placement'), upload_to=upload_to_placement_presentation, blank=True,
