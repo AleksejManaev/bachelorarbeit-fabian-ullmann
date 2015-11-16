@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.forms.utils import ErrorList
-
 from mentoring.models import *
 from django.utils.translation import ugettext_lazy as _
 from mentoring.widgets import ClearableFileInput
+from django.forms.widgets import DateInput
 
 __author__ = 'ullmanfa'
+
 
 # Todo TestForm kann gelöscht werden
 class TestForm(forms.Form):
@@ -29,6 +30,7 @@ class TestForm(forms.Form):
     range = forms.IntegerField(widget=forms.NumberInput(attrs={'type': 'range', 'min': '0', 'max': '100'}))
     integer = forms.IntegerField()
     date = forms.DateField()
+
 
 class FormCompany(forms.ModelForm):
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None,
@@ -54,15 +56,18 @@ class FormCompany(forms.ModelForm):
         model = Company
         fields = '__all__'
 
+
 class FormContactData(forms.ModelForm):
     class Meta:
         model = ContactData
         fields = ['title', 'first_name', 'last_name', 'email', 'phone']
 
+
 class FormTutor2ContactData(forms.ModelForm):
     class Meta:
         model = Tutor2ContactData
         fields = '__all__'
+
 
 class FormPlacement(forms.ModelForm):
     def is_valid(self):
@@ -100,8 +105,10 @@ class FormPlacement(forms.ModelForm):
     class Meta:
         model = Placement
         exclude = ['student', 'finished', 'state', 'sent_on']
-        fields = ['course', 'tutor', 'description', 'report', 'presentation', 'certificate', 'public']
+        fields = ['course', 'tutor', 'task', 'date_from', 'date_to', 'report', 'presentation', 'certificate', 'public']
         widgets = {
+            'date_from': DateInput(attrs={'class': 'datepicker'}),
+            'date_to': DateInput(attrs={'class': 'datepicker'}),
             'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
             'presentation': ClearableFileInput(attrs={'accept': 'application/pdf'}),
             'certificate': ClearableFileInput(attrs={'accept': 'application/pdf'}),
@@ -168,6 +175,7 @@ class FormThesisDocuments(forms.ModelForm):
             'poster': ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
 
+
 class FormThesisMentoringrequest(forms.ModelForm):
     def is_valid(self):
         req = True if self.data.has_key('finalize') else False
@@ -183,18 +191,22 @@ class FormThesisMentoringrequest(forms.ModelForm):
         exclude = ['student', 'finished', 'report', 'poster', 'sent_on', 'state', 'documents_finished']
         fields = '__all__'
         widgets = {
-            'description': forms.Textarea()
+            'task': forms.Textarea()
         }
+
 
 class FormStudent(forms.ModelForm):
     class Meta:
         model = Student
         fields = '__all__'
 
-FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fields=['description'], extra=1,
+
+FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fields=['address'], extra=1,
                                                  fk_name='work', can_delete=False)
 FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, CompanyContactData, fields='__all__', extra=1,
                                                             can_delete=False)
+
+
 class FormMentoringrequestStudent(forms.ModelForm):
     def is_valid(self):
         """
@@ -211,14 +223,13 @@ class FormMentoringrequestStudent(forms.ModelForm):
         is_valid = super(FormMentoringrequestStudent, self).is_valid()
         return is_valid
 
-
-
     class Meta:
         model = MentoringRequest
         fields = ['tutor_email', 'comment']
         widgets = {
             'comment': forms.Textarea()
         }
+
 
 class FormMentoringrequestTutor(forms.ModelForm):
     permission = forms.BooleanField()
@@ -234,12 +245,15 @@ class FormMentoringrequestTutor(forms.ModelForm):
         fields = ['answer', 'permission']
         exclude = ['state']
 
+
 class FormMentoringTutor(forms.ModelForm):
     class Meta:
         model = Mentoring
         fields = '__all__'
 
+
 FormsetMentoringTutor2 = forms.inlineformset_factory(Mentoring, Tutor2ContactData, fields='__all__', extra=1)
+
 
 # Todo FormStudent alternative E-Mail anpassen
 class FormSettingsUser(forms.ModelForm):
@@ -257,11 +271,13 @@ FormsetUserStudent = forms.inlineformset_factory(MentoringUser, Student,
                                                  extra=1, can_delete=False)
 FormsetStudentAddress = forms.inlineformset_factory(Student, Address, fields='__all__', extra=1, can_delete=False)
 
+
 class FormRegistration(forms.ModelForm):
     class Meta:
         model = Registration
         fields = '__all__'
         exclude = ['mentoring', 'permission_library_tutor', 'pdf_file', 'finished']
+
 
 class FormRegistrationExamination(forms.ModelForm):
     class Meta:

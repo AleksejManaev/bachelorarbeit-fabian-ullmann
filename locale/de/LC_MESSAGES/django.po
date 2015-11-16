@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-15 19:49+0100\n"
+"POT-Creation-Date: 2015-11-16 20:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgstr "8 Wochen"
 msgid "editing time thesis"
 msgstr "Beginn der Bearbeitungszeit"
 
-#: .\mentoring\models.py:33 .\mentoring\models.py:40 .\mentoring\models.py:113
+#: .\mentoring\models.py:33 .\mentoring\models.py:40
 msgid "description"
 msgstr "Kurze Beschreibung erfassen"
 
@@ -82,6 +82,10 @@ msgstr "Ort"
 msgid "web address"
 msgstr "Internetadresse"
 
+#: .\mentoring\models.py:113
+msgid "task"
+msgstr "Aufgabe"
+
 #: .\mentoring\models.py:114
 msgid "date joined"
 msgstr ""
@@ -94,7 +98,7 @@ msgstr ""
 msgid "date sent"
 msgstr "Abgabetermin"
 
-#: .\mentoring\models.py:139 .\mentoring\models.py:297
+#: .\mentoring\models.py:139 .\mentoring\models.py:300
 msgid "date"
 msgstr "Datum"
 
@@ -107,141 +111,149 @@ msgid "room"
 msgstr "Gebäude/Raum"
 
 #: .\mentoring\models.py:145 .\mentoring\models.py:155
-#: .\mentoring\models.py:217
+#: .\mentoring\models.py:220
 msgid "course placement"
 msgstr "Studiengang angeben"
 
-#: .\mentoring\models.py:156
+#: .\mentoring\models.py:157
+msgid "internship begin"
+msgstr "Praktikumsbeginn"
+
+#: .\mentoring\models.py:158
+msgid "internship end"
+msgstr "Praktikumsende"
+
+#: .\mentoring\models.py:159
 msgid "report placement"
 msgstr "Meinen Praktikumsbericht hochladen"
 
-#: .\mentoring\models.py:158
+#: .\mentoring\models.py:161
 msgid "presentation placement"
 msgstr "Meine Präsentation zum Praktikum hochladen"
 
-#: .\mentoring\models.py:161
+#: .\mentoring\models.py:164
 msgid "certificate placement"
 msgstr "Mein Praktikumszeugnis hochladen"
 
-#: .\mentoring\models.py:164
+#: .\mentoring\models.py:167
 msgid "public placement"
 msgstr ""
 "Meine Praktikumsergebnisse dürfen auf den öffentlichen Seiten dieser "
 "Anwendung veröffentlicht werden."
 
-#: .\mentoring\models.py:197
-msgid "company description"
-msgstr "Beschreibung des Unternehmens"
+#: .\mentoring\models.py:200
+msgid "company address"
+msgstr "Anschrift des Unternehmens"
 
-#: .\mentoring\models.py:202
+#: .\mentoring\models.py:205
 msgid "first name"
 msgstr "Vorname"
 
-#: .\mentoring\models.py:203
+#: .\mentoring\models.py:206
 msgid "last name"
 msgstr "Nachname"
 
-#: .\mentoring\models.py:204
+#: .\mentoring\models.py:207
 msgid "email"
 msgstr "E-Mail"
 
-#: .\mentoring\models.py:218
+#: .\mentoring\models.py:221
 #: .\mentoring\templates\student_thesis_documents_form.html:17
 msgid "report thesis"
 msgstr "Meine Abschlussarbeit hochladen"
 
-#: .\mentoring\models.py:220
+#: .\mentoring\models.py:223
 #: .\mentoring\templates\student_thesis_documents_form.html:21
 msgid "poster thesis"
 msgstr "Main Abschlussposter hochladen"
 
-#: .\mentoring\models.py:245
+#: .\mentoring\models.py:248
 msgid "Tutor email"
 msgstr "Gutachter E-Mail"
 
-#: .\mentoring\models.py:246
+#: .\mentoring\models.py:249
 msgid "requested on"
 msgstr "angefragt am"
 
-#: .\mentoring\models.py:248 .\mentoring\models.py:325
+#: .\mentoring\models.py:251 .\mentoring\models.py:328
 msgid "comment"
 msgstr "Nachricht"
 
-#: .\mentoring\models.py:249
+#: .\mentoring\models.py:252
 msgid "answer"
 msgstr "Antwort"
 
-#: .\mentoring\models.py:280
+#: .\mentoring\models.py:283
 msgid "date initial meeting"
 msgstr "Datum Erstgespräch"
 
-#: .\mentoring\models.py:281
+#: .\mentoring\models.py:284
 msgid "date deadline"
 msgstr "Abgabetermin"
 
-#: .\mentoring\models.py:289 .\mentoring\models.py:296
+#: .\mentoring\models.py:292 .\mentoring\models.py:299
 msgid "subject"
 msgstr "Thema"
 
-#: .\mentoring\models.py:290
+#: .\mentoring\models.py:293
 msgid "message"
 msgstr "Nachricht"
 
-#: .\mentoring\models.py:298
+#: .\mentoring\models.py:301
 msgid "permission contact"
 msgstr ""
 "Ich erkläre mich einverstanden,dass meine an der FHB erfassten Kontaktdaten "
 "(Adresse, E-Mail) nach meiner Exmatrikulation für dieKontaktaufnahme im "
 "Rahmen der Alumniarbeit genutzt werden dürfen."
 
-#: .\mentoring\models.py:299
+#: .\mentoring\models.py:302
 msgid "permission INFOCUS"
 msgstr ""
 "Bei erfolgreichem Studienabschluss wird der Veröffentlichung von Name, "
 "Vorname und Studiengangin der Hochschulzeitschrift INFOCUS zugestimmt."
 
-#: .\mentoring\models.py:300
+#: .\mentoring\models.py:303
 msgid "permission public"
 msgstr ""
 "Die Abschlussarbeit soll auf dem Publikationsserver der Hochschulbibliothek "
 "der FHB im Internetveröffentlicht werden. Das Dokument wird selbstständig "
 "hochgeladen bzw. als PDF-Version derHochschulbibliothek der FHB übergeben."
 
-#: .\mentoring\models.py:301
+#: .\mentoring\models.py:304
 msgid "permission library"
 msgstr ""
 "Die Abschlussarbeit kann in der Hochschulbibliothek der FHB allen Nutzern "
 "zur Verfügung gestelltwerden."
 
-#: .\mentoring\models.py:302
+#: .\mentoring\models.py:305
 msgid "permission library tutor"
 msgstr ""
 "Der/die Erstgutachter/in ist einverstanden, dass die Abschlussarbeit auf dem "
 "Publikationsserver derHochschulbibliothek im Internet veröffentlicht wird."
 
-#: .\mentoring\models.py:303
+#: .\mentoring\models.py:306
 msgid "PDF File"
 msgstr "PDF-Datei"
 
-#: .\mentoring\models.py:312
+#: .\mentoring\models.py:315
 #: .\mentoring\templates\both_thesis_examinationboard_widget.html:26
 #: .\mentoring\templates\student_thesis_preview_widget.html:86
 msgid "start editing"
 msgstr "Beginn der Bearbeitungszeit"
 
-#: .\mentoring\models.py:313
+#: .\mentoring\models.py:316
 #: .\mentoring\templates\both_thesis_examinationboard_widget.html:31
 #: .\mentoring\templates\student_thesis_preview_widget.html:91
 msgid "stop editing"
 msgstr "Ende der Bearbeitungszeit"
 
-#: .\mentoring\models.py:314
+#: .\mentoring\models.py:317
 #: .\mentoring\templates\both_thesis_examinationboard_widget.html:37
 #: .\mentoring\templates\student_thesis_preview_widget.html:98
 msgid "extended to"
 msgstr "Antrag verlängert bis"
 
-#: .\mentoring\models.py:323
+#: .\mentoring\models.py:326
 msgid "rate"
 msgstr "Bewertung"
 
@@ -254,7 +266,6 @@ msgstr "Praktikum"
 #: .\mentoring\templates\student_thesis_documents_index.html:7
 #: .\mentoring\templates\student_thesis_preview_widget.html:117
 #: .\mentoring\templates\student_thesis_preview_widget.html:128
-#: .\mentoring\templates\tutor_index.html:119
 #: .\mentoring\templates\tutor_mentoring_report_widget.html:5
 msgid "Report"
 msgstr "Abschlussbericht"
@@ -280,10 +291,12 @@ msgid "Save"
 msgstr "Speichern"
 
 #: .\mentoring\templates\student_index.html:13
+#: .\mentoring\templates\tutor_index.html:13
 msgid "Internship tab"
 msgstr "Praktikum"
 
 #: .\mentoring\templates\student_index.html:14
+#: .\mentoring\templates\tutor_index.html:14
 msgid "Thesis tab"
 msgstr "Abschlussarbeit"
 
@@ -364,7 +377,6 @@ msgstr "Einstellungen"
 
 #: .\mentoring\templates\student_thesis_colloquium_widget.html:7
 #: .\mentoring\templates\student_thesis_preview_widget.html:71
-#: .\mentoring\templates\tutor_index.html:125
 #: .\mentoring\templates\tutor_mentoring_colloquium_widget.html:6
 msgid "Colloquium"
 msgstr "Kolloquium"
@@ -432,7 +444,6 @@ msgstr "1. Gutachter"
 
 #: .\mentoring\templates\student_thesis_mentoringrequest_widget.html:87
 #: .\mentoring\templates\student_thesis_preview_widget.html:53
-#: .\mentoring\templates\tutor_index.html:115
 msgid "2. Tutor"
 msgstr "2. Gutachter"
 
@@ -471,43 +482,6 @@ msgstr "Abschlussarbeit"
 msgid "Answer from"
 msgstr "Antwort"
 
-#: .\mentoring\templates\tutor_index.html:6
-#: .\mentoring\templates\tutor_mentoring_list.html:10
-#: .\mentoring\templates\tutor_mentoring_request_list.html:11
-msgid "Mentoring Requests"
-msgstr "Betreuungsanfragen"
-
-#: .\mentoring\templates\tutor_index.html:7
-msgid "Mentoring Tutor"
-msgstr "Betreuung Abschlussarbeiten"
-
-#: .\mentoring\templates\tutor_index.html:15
-msgid "Placement tab tutor"
-msgstr "Praktika"
-
-#: .\mentoring\templates\tutor_index.html:21
-msgid "Thesis tab tutor"
-msgstr "Abschlussarbeiten"
-
-#: .\mentoring\templates\tutor_index.html:44
-#: .\mentoring\templates\tutor_index.html:93
-msgid "Show all"
-msgstr "Alle anzeigen"
-
-#: .\mentoring\templates\tutor_index.html:78
-#: .\mentoring\templates\tutor_mentoring_list.html:39
-#: .\mentoring\templates\tutor_mentoring_request_list.html:41
-msgid "no requests"
-msgstr "Keine Anfragen"
-
-#: .\mentoring\templates\tutor_index.html:130
-msgid "Board"
-msgstr "Prüfungsausschuss"
-
-#: .\mentoring\templates\tutor_index.html:136
-msgid "no mentorings"
-msgstr "Keine zu betreuenden Abschlussarbeiten"
-
 #: .\mentoring\templates\tutor_mentoring.html:69
 msgid "Student"
 msgstr ""
@@ -516,22 +490,32 @@ msgstr ""
 msgid "not created"
 msgstr "nicht erstellt"
 
+#: .\mentoring\templates\tutor_mentoring_list.html:10
+#: .\mentoring\templates\tutor_mentoring_request_list.html:11
+msgid "Mentoring Requests"
+msgstr "Betreuungsanfragen"
+
 #: .\mentoring\templates\tutor_mentoring_list.html:29
 #: .\mentoring\templates\tutor_mentoring_request.html:68
 msgid "on"
 msgstr "am"
+
+#: .\mentoring\templates\tutor_mentoring_list.html:39
+#: .\mentoring\templates\tutor_mentoring_request_list.html:41
+msgid "no requests"
+msgstr "Keine Anfragen"
 
 #: .\mentoring\templates\tutor_mentoring_request.html:58
 msgid "Tutor 2"
 msgstr "2. Gutachter"
 
 #: .\mentoring\templates\tutor_mentoring_request.html:75
-#: .\mentoring\views.py:989
+#: .\mentoring\views.py:990
 msgid "Accept"
 msgstr "Annehmen"
 
 #: .\mentoring\templates\tutor_mentoring_request.html:78
-#: .\mentoring\views.py:977
+#: .\mentoring\views.py:978
 msgid "Deny"
 msgstr "Ablehnen"
 
@@ -573,7 +557,7 @@ msgid "Certificate placement"
 msgstr "Praktikumszeugnis"
 
 #: .\mentoring\templates\tutor_placement_course_registration.html:69
-#: .\mentoring\views.py:784
+#: .\mentoring\views.py:785
 msgid "Accept placement"
 msgstr "Praktikum erfolgreich"
 
@@ -621,14 +605,14 @@ msgstr "Anfrage abgebrochen"
 msgid "error"
 msgstr ""
 
-#: .\templates\base.html:30
+#: .\templates\base.html:34
 msgid "Home"
 msgstr ""
 
-#: .\templates\base.html:43
+#: .\templates\base.html:47
 msgid "Profile"
 msgstr "Profil"
 
-#: .\templates\base.html:51
+#: .\templates\base.html:55
 msgid "Logout"
 msgstr "Abmelden"
