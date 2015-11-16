@@ -11,12 +11,12 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os  # , ldap
+import os #, ldap
+
 # from django_auth_ldap.config import LDAPSearch, GroupOfNamesType, PosixGroupType
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -28,7 +28,6 @@ SECRET_KEY = 'uz)8!2sb%q1tr^^qt)#3_z68kp6-5ayi7ys^@2b_042h4&t0$b'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -79,7 +78,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bachelorarbeit-fabian-ullmann.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -117,6 +115,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'materialize/static'),
     os.path.join(BASE_DIR, 'static'),
 )
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -197,34 +196,34 @@ BOOTSTRAP3 = {
 
 AUTH_USER_MODEL = 'mentoring.MentoringUser'
 
-
 # AUTH_LDAP_SERVER_URI = "ldap://fbi-ldap.fh-brandenburg.de"
-
+#
 # AUTH_LDAP_BIND_DN = ""
 # AUTH_LDAP_BIND_PASSWORD = ""
 # AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=people, ou=informatik,dc=fh-brandenburg,dc=de",
 #    ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
-
-
+#
+#
 # AUTH_LDAP_GROUP_SEARCH = LDAPSearch("ou=groups, ou=informatik,dc=fh-brandenburg,dc=de",
 #        ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)"
 # )
 # AUTH_LDAP_GROUP_TYPE = PosixGroupType(name_attr="cn")
-
-
+#
+#
 # AUTH_LDAP_USER_ATTR_MAP = {
 #    "first_name": "givenName",
 #    "last_name": "sn",
 #    "email": "mail",
 #    "gidNumber": "gidNumber"
 # }
-# This is the default, but I like to be explicit.
+#
+# # This is the default, but I like to be explicit.
 # AUTH_LDAP_ALWAYS_UPDATE_USER = True
 # AUTH_LDAP_MIRROR_GROUPS = True
-
-# Use LDAP group membership to calculate group permissions.
+#
+# # Use LDAP group membership to calculate group permissions.
 # AUTH_LDAP_FIND_GROUP_PERMS = True
-
+#
 # AUTHENTICATION_BACKENDS = (
 # 'django_auth_ldap.backend.LDAPBackend',
 # 'django.contrib.auth.backends.ModelBackend',
