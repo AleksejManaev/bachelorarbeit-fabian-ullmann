@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-16 20:56+0100\n"
+"POT-Creation-Date: 2015-11-17 15:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,6 +61,10 @@ msgstr "Telefon"
 #: .\mentoring\models.py:88
 msgid "matriculation number"
 msgstr "Matrikelnummer"
+
+#: .\mentoring\models.py:89
+msgid "extern email address"
+msgstr "Externe E-Mail-Adresse"
 
 #: .\mentoring\models.py:105
 msgid "street"
@@ -155,7 +159,7 @@ msgstr "Nachname"
 
 #: .\mentoring\models.py:207
 msgid "email"
-msgstr "E-Mail"
+msgstr "E-Mail-Adresse"
 
 #: .\mentoring\models.py:221
 #: .\mentoring\templates\student_thesis_documents_form.html:17
@@ -290,21 +294,21 @@ msgstr "Antwort vom Prüfungsausschuss"
 msgid "Save"
 msgstr "Speichern"
 
-#: .\mentoring\templates\student_index.html:13
+#: .\mentoring\templates\student_index.html:12
 #: .\mentoring\templates\tutor_index.html:13
 msgid "Internship tab"
 msgstr "Praktikum"
 
-#: .\mentoring\templates\student_index.html:14
+#: .\mentoring\templates\student_index.html:13
 #: .\mentoring\templates\tutor_index.html:14
 msgid "Thesis tab"
 msgstr "Abschlussarbeit"
 
-#: .\mentoring\templates\student_index.html:20
+#: .\mentoring\templates\student_index.html:19
 msgid "State: "
 msgstr "Status: "
 
-#: .\mentoring\templates\student_index.html:28
+#: .\mentoring\templates\student_index.html:27
 #: .\mentoring\templates\student_placement_widget.html:11
 #: .\mentoring\templates\student_thesis_mentoringrequest_form.html:27
 #: .\mentoring\templates\student_thesis_widget.html:11
@@ -312,7 +316,7 @@ msgstr "Status: "
 msgid "Contact-Data placement"
 msgstr "Ansprechpartner im Unternehmen"
 
-#: .\mentoring\templates\student_index.html:33
+#: .\mentoring\templates\student_index.html:32
 #: .\mentoring\templates\student_placement_widget.html:7
 #: .\mentoring\templates\student_settings.html:34
 #: .\mentoring\templates\student_thesis_documents_widget.html:42

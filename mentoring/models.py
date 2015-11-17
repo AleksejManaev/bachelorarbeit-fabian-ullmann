@@ -86,7 +86,7 @@ class Tutor(PortalUser):
 @python_2_unicode_compatible
 class Student(PortalUser):
     matriculation_number = models.CharField(_('matriculation number'), max_length=8, null=True, blank=True)
-    extern_email = models.EmailField(null=True, blank=True)
+    extern_email = models.EmailField(_('extern email address'), null=True, blank=True)
 
     def __str__(self):
         return u"{} ({})".format(self.user.get_full_name(), self.matriculation_number)
