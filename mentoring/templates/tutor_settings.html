@@ -1,34 +1,37 @@
-{% extends request.is_ajax|yesno:"base_ajax.html,base_portal.html" %}
-{% load material %}
+{% extends 'base.html' %}
+{% load bootstrap3 %}
 {% load i18n %}
 
-{% block material_content %}
-    <div class="card">
-        <form action="" method="post">
-            {% trans 'Settings Tutor' as st %}
-            {% material_card_header title=st %}
-            <div class="card-content">
-                {% csrf_token %}
+{% block content %}
+    <div class="container">
+        <div class="row ">
+            <div class="col-md-12">
+                <h1>{% trans 'Settings' %}</h1>
 
-                {{ tutor_user_formset.management_form }}
-                {% for form in tutor_user_formset.forms %}
-                    {% material_formfield form.user %}
-                    {% material_formfield form.title %}
-                {% endfor %}
-                {% material_formfield user_form.first_name %}
-                {% material_formfield user_form.last_name %}
+                <form action="{% url 'tutor-settings' %}" method="post" class="form">
+                    {% csrf_token %}
 
-                {% for form in tutor_user_formset.forms %}
-                    {% material_formfield form.phone %}
-                    {% material_formfield form.placement_courses %}
-                    {% material_formfield form.portaluser_ptr %}
-                {% endfor %}
+                    {{ tutor_user_formset.management_form }}
+                    {% for form in tutor_user_formset.forms %}
+                        {% bootstrap_field form.user %}
+                        {% bootstrap_field form.title %}
+                    {% endfor %}
+                    {% bootstrap_field user_form.first_name %}
+                    {% bootstrap_field user_form.last_name %}
 
+                    {% for form in tutor_user_formset.forms %}
+                        {% bootstrap_field form.phone %}
+                        {% bootstrap_field form.placement_courses %}
+                        {% bootstrap_field form.portaluser_ptr %}
+                    {% endfor %}
+
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">
+                            {% trans 'Finish' %}
+                        </button>
+                    {% endbuttons %}
+                </form>
             </div>
-            <div class="card-action valign-wrapper">
-
-                <input type="submit" name="finalize" value="{% trans 'Finish' %}"/>
-            </div>
-        </form>
+        </div>
     </div>
 {% endblock %}

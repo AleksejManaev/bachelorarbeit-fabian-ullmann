@@ -7,11 +7,10 @@
     <div class="container">
         <div class="row ">
             <div class="col-md-12">
-                <h1>{% trans 'Settings Student' %}</h1>
+                <h1>{% trans 'Settings' %}</h1>
 
                 <form action="{% url 'student-settings' %}" method="post" class="form">
                     {% csrf_token %}
-
 
                     {{ student_user_formset.management_form }}
                     {% for form in student_user_formset.forms %}

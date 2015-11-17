@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-17 16:47+0100\n"
+"POT-Creation-Date: 2015-11-17 18:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -312,7 +312,7 @@ msgstr "Ansprechpartner im Unternehmen"
 
 #: .\mentoring\templates\student_index.html:32
 #: .\mentoring\templates\student_placement_widget.html:7
-#: .\mentoring\templates\student_settings.html:34
+#: .\mentoring\templates\student_settings.html:33
 #: .\mentoring\templates\student_thesis_documents_widget.html:42
 #: .\mentoring\templates\student_thesis_widget.html:7
 #: .\mentoring\templates\student_thesis_widget_inactive.html:7
@@ -370,7 +370,8 @@ msgid "Tutor placement"
 msgstr "Praktika"
 
 #: .\mentoring\templates\student_settings.html:10
-msgid "Settings Student"
+#: .\mentoring\templates\tutor_settings.html:9
+msgid "Settings"
 msgstr "Einstellungen"
 
 #: .\mentoring\templates\student_thesis_colloquium_widget.html:7
@@ -574,10 +575,6 @@ msgstr "Vergangene Veranstaltungen"
 #: .\mentoring\templates\tutor_placements_widget.html:53
 msgid "no placement courses"
 msgstr "Keine Praktikumsbetreuung"
-
-#: .\mentoring\templates\tutor_settings.html:8
-msgid "Settings Tutor"
-msgstr "Einstellungen"
 
 #: .\mentoring\templatetags\filter.py:15
 msgid "not requested"
