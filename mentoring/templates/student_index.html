@@ -20,13 +20,40 @@
 
                         <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post" class="form">
                             {% csrf_token %}
-                            {% bootstrap_form placement_form %}
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{% trans 'General data' %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    {% bootstrap_form placement_form %}
+                                </div>
+                            </div>
+
                             {#                            {% bootstrap_form_errors placement_event_form %}#}
-                            {% bootstrap_form placement_company_form %}
-                            {% bootstrap_formset placement_company_formset %}
-                            <h3>{% trans 'Contact-Data placement' %}</h3>
-                            {% bootstrap_formset placement_contact_formset %}
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{% trans 'Company data' %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    {% bootstrap_form placement_company_form %}
+                                    {% bootstrap_formset placement_company_formset %}
+                                </div>
+                            </div>
+
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{% trans 'Contact person in the company' %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    {% bootstrap_formset placement_contact_formset %}
+                                </div>
+                            </div>
+
                             {#                                                        {% bootstrap_form placement_event_form %}#}
+
                             {% buttons %}
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">
                                     {% trans 'Finish' %}
@@ -34,6 +61,7 @@
                             {% endbuttons %}
                         </form>
                     </div>
+
                     <div class="tab-pane" id="thesis">
                         TEST TEST TEST TEST TEST
                     </div>

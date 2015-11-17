@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-17 18:49+0100\n"
+"POT-Creation-Date: 2015-11-17 19:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,7 +117,7 @@ msgstr "Gebäude/Raum"
 #: .\mentoring\models.py:145 .\mentoring\models.py:155
 #: .\mentoring\models.py:219
 msgid "course placement"
-msgstr "Studiengang angeben"
+msgstr "Studiengang"
 
 #: .\mentoring\models.py:157
 msgid "internship begin"
@@ -302,21 +302,25 @@ msgstr "Abschlussarbeit"
 msgid "State: "
 msgstr "Status: "
 
-#: .\mentoring\templates\student_index.html:27
-#: .\mentoring\templates\student_placement_widget.html:11
-#: .\mentoring\templates\student_thesis_mentoringrequest_form.html:27
-#: .\mentoring\templates\student_thesis_widget.html:11
-#: .\mentoring\templates\student_thesis_widget_inactive.html:11
-msgid "Contact-Data placement"
-msgstr "Ansprechpartner im Unternehmen"
+#: .\mentoring\templates\student_index.html:26
+msgid "General data"
+msgstr "Allgemeine Angaben"
 
-#: .\mentoring\templates\student_index.html:32
+#: .\mentoring\templates\student_index.html:37
+msgid "Company data"
+msgstr "Angaben zum Unternehmen"
+
+#: .\mentoring\templates\student_index.html:48
+msgid "Contact person in the company"
+msgstr "Ansprechparnter im Unternehmen"
+
+#: .\mentoring\templates\student_index.html:59
 #: .\mentoring\templates\student_placement_widget.html:7
-#: .\mentoring\templates\student_settings.html:33
+#: .\mentoring\templates\student_settings.html:38
 #: .\mentoring\templates\student_thesis_documents_widget.html:42
 #: .\mentoring\templates\student_thesis_widget.html:7
 #: .\mentoring\templates\student_thesis_widget_inactive.html:7
-#: .\mentoring\templates\tutor_settings.html:30
+#: .\mentoring\templates\tutor_settings.html:35
 msgid "Finish"
 msgstr "Abschließen"
 
@@ -354,6 +358,13 @@ msgstr "Studiengang angeben"
 msgid "company placement"
 msgstr "Informationen zum Unternehmen erfassen"
 
+#: .\mentoring\templates\student_placement_widget.html:11
+#: .\mentoring\templates\student_thesis_mentoringrequest_form.html:27
+#: .\mentoring\templates\student_thesis_widget.html:11
+#: .\mentoring\templates\student_thesis_widget_inactive.html:11
+msgid "Contact-Data placement"
+msgstr "Ansprechpartner im Unternehmen"
+
 #: .\mentoring\templates\student_placement_widget.html:12
 #: .\mentoring\templates\student_placement_widget_content.html:15
 msgid "Event placement"
@@ -369,8 +380,8 @@ msgstr ""
 msgid "Tutor placement"
 msgstr "Praktika"
 
-#: .\mentoring\templates\student_settings.html:10
-#: .\mentoring\templates\tutor_settings.html:9
+#: .\mentoring\templates\student_settings.html:13
+#: .\mentoring\templates\tutor_settings.html:12
 msgid "Settings"
 msgstr "Einstellungen"
 

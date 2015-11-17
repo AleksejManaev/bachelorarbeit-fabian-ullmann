@@ -7,33 +7,40 @@
     <div class="container">
         <div class="row ">
             <div class="col-md-12">
-                <h1>{% trans 'Settings' %}</h1>
 
-                <form action="{% url 'student-settings' %}" method="post" class="form">
-                    {% csrf_token %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">{% trans 'Settings' %}</h1>
+                    </div>
 
-                    {{ student_user_formset.management_form }}
-                    {% for form in student_user_formset.forms %}
-                        {% bootstrap_field form.title %}
-                        {% bootstrap_field form.user %}
-                    {% endfor %}
-                    {% bootstrap_field user_form.first_name %}
-                    {% bootstrap_field user_form.last_name %}
+                    <div class="panel-body">
+                        <form action="{% url 'student-settings' %}" method="post" class="form">
+                            {% csrf_token %}
 
-                    {% for form in student_user_formset.forms %}
-                        {% bootstrap_field form.matriculation_number %}
-                        {% bootstrap_field form.phone %}
-                        {% bootstrap_field form.extern_email %}
-                        {% bootstrap_field form.portaluser_ptr %}
-                    {% endfor %}
-                    {% bootstrap_formset student_address_formset %}
+                            {{ student_user_formset.management_form }}
+                            {% for form in student_user_formset.forms %}
+                                {% bootstrap_field form.title %}
+                                {% bootstrap_field form.user %}
+                            {% endfor %}
+                            {% bootstrap_field user_form.first_name %}
+                            {% bootstrap_field user_form.last_name %}
 
-                    {% buttons %}
-                        <button type="submit" class="btn btn-primary btn-lg btn-block">
-                            {% trans 'Finish' %}
-                        </button>
-                    {% endbuttons %}
-                </form>
+                            {% for form in student_user_formset.forms %}
+                                {% bootstrap_field form.matriculation_number %}
+                                {% bootstrap_field form.phone %}
+                                {% bootstrap_field form.extern_email %}
+                                {% bootstrap_field form.portaluser_ptr %}
+                            {% endfor %}
+                            {% bootstrap_formset student_address_formset %}
+
+                            {% buttons %}
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                    {% trans 'Finish' %}
+                                </button>
+                            {% endbuttons %}
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
