@@ -164,7 +164,6 @@ class Placement(AbstractWork):
     certificate = models.FileField(_('certificate placement'), upload_to=upload_to_placement_certificate, blank=True,
                                    null=True,
                                    validators=[validate_pdf, validate_size])
-    public = models.BooleanField(_('public placement'), default=False)
 
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)

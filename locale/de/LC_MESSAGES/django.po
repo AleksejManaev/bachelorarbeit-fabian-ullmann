@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-17 15:45+0100\n"
+"POT-Creation-Date: 2015-11-17 16:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,7 +102,7 @@ msgstr ""
 msgid "date sent"
 msgstr "Abgabetermin"
 
-#: .\mentoring\models.py:139 .\mentoring\models.py:300
+#: .\mentoring\models.py:139 .\mentoring\models.py:299
 msgid "date"
 msgstr "Datum"
 
@@ -115,7 +115,7 @@ msgid "room"
 msgstr "Gebäude/Raum"
 
 #: .\mentoring\models.py:145 .\mentoring\models.py:155
-#: .\mentoring\models.py:220
+#: .\mentoring\models.py:219
 msgid "course placement"
 msgstr "Studiengang angeben"
 
@@ -139,125 +139,119 @@ msgstr "Meine Präsentation zum Praktikum hochladen"
 msgid "certificate placement"
 msgstr "Mein Praktikumszeugnis hochladen"
 
-#: .\mentoring\models.py:167
-msgid "public placement"
-msgstr ""
-"Meine Praktikumsergebnisse dürfen auf den öffentlichen Seiten dieser "
-"Anwendung veröffentlicht werden."
-
-#: .\mentoring\models.py:200
+#: .\mentoring\models.py:199
 msgid "company address"
 msgstr "Anschrift des Unternehmens"
 
-#: .\mentoring\models.py:205
+#: .\mentoring\models.py:204
 msgid "first name"
 msgstr "Vorname"
 
-#: .\mentoring\models.py:206
+#: .\mentoring\models.py:205
 msgid "last name"
 msgstr "Nachname"
 
-#: .\mentoring\models.py:207
+#: .\mentoring\models.py:206
 msgid "email"
 msgstr "E-Mail-Adresse"
 
-#: .\mentoring\models.py:221
+#: .\mentoring\models.py:220
 #: .\mentoring\templates\student_thesis_documents_form.html:17
 msgid "report thesis"
 msgstr "Meine Abschlussarbeit hochladen"
 
-#: .\mentoring\models.py:223
+#: .\mentoring\models.py:222
 #: .\mentoring\templates\student_thesis_documents_form.html:21
 msgid "poster thesis"
 msgstr "Main Abschlussposter hochladen"
 
-#: .\mentoring\models.py:248
+#: .\mentoring\models.py:247
 msgid "Tutor email"
 msgstr "Gutachter E-Mail"
 
-#: .\mentoring\models.py:249
+#: .\mentoring\models.py:248
 msgid "requested on"
 msgstr "angefragt am"
 
-#: .\mentoring\models.py:251 .\mentoring\models.py:328
+#: .\mentoring\models.py:250 .\mentoring\models.py:327
 msgid "comment"
 msgstr "Nachricht"
 
-#: .\mentoring\models.py:252
+#: .\mentoring\models.py:251
 msgid "answer"
 msgstr "Antwort"
 
-#: .\mentoring\models.py:283
+#: .\mentoring\models.py:282
 msgid "date initial meeting"
 msgstr "Datum Erstgespräch"
 
-#: .\mentoring\models.py:284
+#: .\mentoring\models.py:283
 msgid "date deadline"
 msgstr "Abgabetermin"
 
-#: .\mentoring\models.py:292 .\mentoring\models.py:299
+#: .\mentoring\models.py:291 .\mentoring\models.py:298
 msgid "subject"
 msgstr "Thema"
 
-#: .\mentoring\models.py:293
+#: .\mentoring\models.py:292
 msgid "message"
 msgstr "Nachricht"
 
-#: .\mentoring\models.py:301
+#: .\mentoring\models.py:300
 msgid "permission contact"
 msgstr ""
 "Ich erkläre mich einverstanden,dass meine an der FHB erfassten Kontaktdaten "
 "(Adresse, E-Mail) nach meiner Exmatrikulation für dieKontaktaufnahme im "
 "Rahmen der Alumniarbeit genutzt werden dürfen."
 
-#: .\mentoring\models.py:302
+#: .\mentoring\models.py:301
 msgid "permission INFOCUS"
 msgstr ""
 "Bei erfolgreichem Studienabschluss wird der Veröffentlichung von Name, "
 "Vorname und Studiengangin der Hochschulzeitschrift INFOCUS zugestimmt."
 
-#: .\mentoring\models.py:303
+#: .\mentoring\models.py:302
 msgid "permission public"
 msgstr ""
 "Die Abschlussarbeit soll auf dem Publikationsserver der Hochschulbibliothek "
 "der FHB im Internetveröffentlicht werden. Das Dokument wird selbstständig "
 "hochgeladen bzw. als PDF-Version derHochschulbibliothek der FHB übergeben."
 
-#: .\mentoring\models.py:304
+#: .\mentoring\models.py:303
 msgid "permission library"
 msgstr ""
 "Die Abschlussarbeit kann in der Hochschulbibliothek der FHB allen Nutzern "
 "zur Verfügung gestelltwerden."
 
-#: .\mentoring\models.py:305
+#: .\mentoring\models.py:304
 msgid "permission library tutor"
 msgstr ""
 "Der/die Erstgutachter/in ist einverstanden, dass die Abschlussarbeit auf dem "
 "Publikationsserver derHochschulbibliothek im Internet veröffentlicht wird."
 
-#: .\mentoring\models.py:306
+#: .\mentoring\models.py:305
 msgid "PDF File"
 msgstr "PDF-Datei"
 
-#: .\mentoring\models.py:315
+#: .\mentoring\models.py:314
 #: .\mentoring\templates\both_thesis_examinationboard_widget.html:26
 #: .\mentoring\templates\student_thesis_preview_widget.html:86
 msgid "start editing"
 msgstr "Beginn der Bearbeitungszeit"
 
-#: .\mentoring\models.py:316
+#: .\mentoring\models.py:315
 #: .\mentoring\templates\both_thesis_examinationboard_widget.html:31
 #: .\mentoring\templates\student_thesis_preview_widget.html:91
 msgid "stop editing"
 msgstr "Ende der Bearbeitungszeit"
 
-#: .\mentoring\models.py:317
+#: .\mentoring\models.py:316
 #: .\mentoring\templates\both_thesis_examinationboard_widget.html:37
 #: .\mentoring\templates\student_thesis_preview_widget.html:98
 msgid "extended to"
 msgstr "Antrag verlängert bis"
 
-#: .\mentoring\models.py:326
+#: .\mentoring\models.py:325
 msgid "rate"
 msgstr "Bewertung"
 

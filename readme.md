@@ -14,10 +14,9 @@ Zu finden unter: <https://bitbucket.org/fhb_fabian/bachelorarbeit-fabian-ullmann
 Anleitung
 ---------
 Es wird eine teilweise gefüllte Datenbank mitgelifiert.
-Ein Student und ein Tutor können sich mit folgenden Zugangsdaten anmelden:
-+ student1 : student
-+ tutor1 : tutor
-+ Email des Tutors: test2@fh-brandenburg.de
+Zwei Studenten und zwei Tutoren können sich mit folgenden Zugangsdaten anmelden:
++ student1 : student, student2 : student 
++ tutor1 : tutor, tutor2 : tutor
 
 
 Installation and Requirements
