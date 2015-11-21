@@ -105,12 +105,11 @@ class FormPlacement(forms.ModelForm):
     class Meta:
         model = Placement
         exclude = ['student', 'finished', 'state', 'sent_on']
-        fields = ['course', 'tutor', 'task', 'date_from', 'date_to', 'report', 'presentation', 'certificate']
+        fields = ['course', 'tutor', 'task', 'date_from', 'date_to', 'report', 'certificate']
         widgets = {
             'date_from': DateInput(attrs={'class': 'datepicker'}),
             'date_to': DateInput(attrs={'class': 'datepicker'}),
             'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'presentation': ClearableFileInput(attrs={'accept': 'application/pdf'}),
             'certificate': ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
 
