@@ -36,8 +36,10 @@ Installation and Requirements
 + psycopg2==2.6
 + pytz==2015.4
 + six==1.9.0
++ django-tag-parser==2.1
 + django-bootstrap3
 + django-autofixture
+
 
 ### PDFTK-Server ###
 
