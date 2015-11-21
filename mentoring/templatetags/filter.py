@@ -15,12 +15,14 @@ def state(value, *args):
         return _('not requested')
     elif value == 'RE':
         return _('requested')
-    elif value == 'AC':
-        return _('accepted')
-    elif value == 'DE':
-        return _('denied')
-    elif value == 'CD':
-        return _('canceled')
+    elif value == 'MA':
+        return _('mentoring accepted')
+    elif value == 'MD':
+        return _('mentoring denied')
+    elif value == 'IA':
+        return _('internship accepted')
+    elif value == 'ID':
+        return _('internship denied')
     else:
         return _('error')
 
@@ -31,15 +33,24 @@ def state_css(value, *args):
         return 'alert-info'
     elif value == 'RE':
         return 'alert-warning'
-    elif value == 'AC':
+    elif value == 'MA':
         return 'alert-success'
-    elif value == 'DE':
+    elif value == 'MD':
         return 'alert-danger'
-    elif value == 'CD':
-        return 'alert-cancelled'
+    elif value == 'IA':
+        return 'alert-mentoring-accepted'
+    elif value == 'ID':
+        return 'alert-danger'
     else:
         return 'alert-info'
 
+
+@register.filter
+def state_checked(value, *args):
+    if value == 'MA' or value == 'IA':
+        return 'checked="checked"'
+    elif value == 'MD' or value == 'ID':
+        return ''
 
 @register.filter
 def for_request(value, *args):

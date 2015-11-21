@@ -12,9 +12,10 @@ app_label = 'mentoring'
 STATUS_CHOICES = (
     ('NR', 'not requested'),
     ('RE', 'requested'),
-    ('AC', 'accepted'),
-    ('DE', 'denied'),
-    ('CD', 'canceled'),
+    ('MA', 'mentoring accepted'),
+    ('MD', 'mentoring denied'),
+    ('IA', 'internship accepted'),
+    ('ID', 'internship denied'),
 )
 
 
@@ -85,7 +86,7 @@ class Tutor(PortalUser):
 
 @python_2_unicode_compatible
 class Student(PortalUser):
-    matriculation_number = models.CharField(_('matriculation number'), max_length=8, null=True, blank=True)
+    matriculation_number = models.CharField(_('Matriculation number'), max_length=8, null=True, blank=True)
     extern_email = models.EmailField(_('extern email address'), null=True, blank=True)
 
     def __str__(self):
@@ -156,9 +157,9 @@ class Placement(AbstractWork):
     tutor = models.ForeignKey(Tutor, blank=True, null=True)
     date_from = models.DateField(_('internship begin'), blank=True, null=True)
     date_to = models.DateField(_('internship end'), blank=True, null=True)
-    report = models.FileField(_('report placement'), upload_to=upload_to_placement_report, blank=True, null=True,
+    report = models.FileField(_('Upload placement report'), upload_to=upload_to_placement_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
-    certificate = models.FileField(_('certificate placement'), upload_to=upload_to_placement_certificate, blank=True,
+    certificate = models.FileField(_('Upload placement certificate'), upload_to=upload_to_placement_certificate, blank=True,
                                    null=True,
                                    validators=[validate_pdf, validate_size])
 
@@ -198,9 +199,9 @@ class WorkCompany(models.Model):
 
 @python_2_unicode_compatible
 class ContactData(ContactModel):
-    first_name = models.CharField(_('first name'), max_length=30, null=True, blank=True)
-    last_name = models.CharField(_('last name'), max_length=30, null=True, blank=True)
-    email = models.EmailField(_('email'), null=True, blank=True)
+    first_name = models.CharField(_('First name'), max_length=30, null=True, blank=True)
+    last_name = models.CharField(_('Last name'), max_length=30, null=True, blank=True)
+    email = models.EmailField(_('Email'), null=True, blank=True)
 
     def __str__(self):
         return u"{} {} {}".format(self.title, self.first_name, self.last_name)

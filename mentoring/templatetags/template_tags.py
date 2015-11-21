@@ -7,6 +7,7 @@ __author__ = 'preuss'
 from django import template
 from tag_parser import template_tag
 from tag_parser.basetags import BaseNode
+from django.utils.translation import ugettext
 
 register = template.Library()
 
@@ -18,7 +19,7 @@ class SortTableHeader(BaseNode):
 
     def render_tag(self, context, *tag_args, **tag_kwargs):
         field = tag_args[1]
-        ctx = {'name': tag_args[0], }
+        ctx = {'name': ugettext(tag_args[0])}
         request = context['request']
         new_query_dict = request.GET.copy()
         order_by = request.GET.get('order_by', 'id')

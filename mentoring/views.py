@@ -759,7 +759,11 @@ class TutorView(View):
         if not self.get_object():
             return redirect('index')
         else:
-            placements = Placement.objects.filter(tutor=request.user.id)
+            if request.GET.has_key('order_by'):
+                orderCriteria = request.GET.get('order_by')
+                placements = Placement.objects.filter(tutor=request.user.id).order_by(orderCriteria)
+            else:
+                placements = Placement.objects.filter(tutor=request.user.id)
             return render(request, self.template_name, {'placements': placements})
 
     def get_object(self, queryset=None):
