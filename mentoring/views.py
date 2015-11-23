@@ -255,19 +255,14 @@ class StudentPlacementFormView(UpdateView):
         return self.render_to_response(cd, status=status)
 
     def post(self, request, *args, **kwargs):
-        if request.GET.has_key('fancy'):
-            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+        show_tutor = request.POST.get('show_tutor')
         self.object = self.get_placement()
-        # if self.object.finished:
-        #     return self.get(request, status=405)
-        # else:
+
         self.placement = self.get_context_placement(request.POST, files=request.FILES)
 
-        form_target = request.POST.get('target_form').split(',') if request.POST.has_key('target_form') else [i for i, v
-                                                                                                              in
-                                                                                                              self.placement.iteritems()]
+        form_target = [i for i, v in self.placement.iteritems()]
 
-        status = 200
+        status = True
         if 'placement' in form_target:
             form_target.remove('placement')
 
@@ -275,18 +270,19 @@ class StudentPlacementFormView(UpdateView):
             if self.placement.has_key(t) and self.placement.get(t).is_valid():
                 self.placement.get(t).save()
             else:
-                status = 400
+                status = False
 
-        if status == 200:
+        if status:
             self.placement = self.get_context_placement()
-        else:
-            self.object.finished = False
-            self.object.save()
+
+            if self.object.state == 'NR' and show_tutor:
+                self.object.state = 'RE'
+                self.object.sent_on = datetime.now()
+                self.object.save()
 
         cd = self.get_context_data()
         cd.update(self.placement)
         return redirect('student-index')
-        # self.render_to_response(cd, status=status)
 
 
 class StudentPlacementIndexView(DetailView):

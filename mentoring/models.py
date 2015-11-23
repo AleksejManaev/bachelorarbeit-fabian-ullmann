@@ -118,19 +118,19 @@ class AbstractWork(models.Model):
 
     state = models.CharField(max_length=2, choices=STATUS_CHOICES, default='NR')
 
-    @property
-    def finished(self):
-        return bool(self.sent_on) and not self.state == 'NR'
+    # @property
+    # def finished(self):
+    #     return bool(self.sent_on) and not self.state == 'NR'
 
-    def __setattr__(self, key, value):
-        if not key == 'finished':
-            super(AbstractWork, self).__setattr__(key, value)
-        elif value == True:
-            self.sent_on = datetime.now()
-            self.state = 'RE'
-        else:
-            self.sent_on = None
-            self.state = 'NR'
+    # def __setattr__(self, key, value):
+    #     if not key == 'finished':
+    #         super(AbstractWork, self).__setattr__(key, value)
+    #     elif value == True:
+    #         self.sent_on = datetime.now()
+    #         self.state = 'RE'
+    #     else:
+    #         self.sent_on = None
+    #         self.state = 'NR'
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
@@ -159,7 +159,8 @@ class Placement(AbstractWork):
     date_to = models.DateField(_('internship end'), blank=True, null=True)
     report = models.FileField(_('Upload placement report'), upload_to=upload_to_placement_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
-    certificate = models.FileField(_('Upload placement certificate'), upload_to=upload_to_placement_certificate, blank=True,
+    certificate = models.FileField(_('Upload placement certificate'), upload_to=upload_to_placement_certificate,
+                                   blank=True,
                                    null=True,
                                    validators=[validate_pdf, validate_size])
 

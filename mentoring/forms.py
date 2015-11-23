@@ -42,15 +42,18 @@ class FormCompany(forms.ModelForm):
                                           empty_permitted=empty_permitted, instance=instance)
 
     def is_valid(self):
-        if not self['name'].value():
-            return False
-        else:
-            self.instance = Company.objects.get_or_create(name=self['name'].value())[0]
-            self.instance.save()
-            if self.parent:
-                self.parent.company = self.instance
-                self.parent.save()
-            return super(FormCompany, self).is_valid()
+        # TODO Validierung implementieren
+        return True
+
+        # if not self['name'].value():
+        #     return False
+        # else:
+        #     self.instance = Company.objects.get_or_create(name=self['name'].value())[0]
+        #     self.instance.save()
+        #     if self.parent:
+        #         self.parent.company = self.instance
+        #         self.parent.save()
+        #     return super(FormCompany, self).is_valid()
 
     class Meta:
         model = Company
@@ -97,7 +100,7 @@ class FormPlacement(forms.ModelForm):
 
         # if is_valid and req:
         if is_valid:
-            self.instance.finished = True
+            # self.instance.finished = True
             self.instance.save()
 
         return is_valid
@@ -138,8 +141,8 @@ class FormThesisDocuments(forms.ModelForm):
         """
         Falls das Objekt bereits finalisiert wude -> invalid
         """
-        if (self.instance.finished):
-            return False
+        # if (self.instance.finished):
+        #     return False
 
         """
         Falls Thesis-Documents finalisiert werden soll, setze all Felder 'required'
@@ -160,7 +163,7 @@ class FormThesisDocuments(forms.ModelForm):
         """
 
         if is_valid and req:
-            self.instance.documents_finished = True
+            # self.instance.documents_finished = True
             self.instance.save()
 
         return is_valid

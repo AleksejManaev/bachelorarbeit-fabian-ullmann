@@ -9,16 +9,19 @@
             <div class="col-md-12">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs nav-justified" role="tablist">
-                    <li class="active"><a href="#placement" role="tab" data-toggle="tab">{% trans 'Internship tab' %}</a></li>
+                    <li class="active"><a href="#placement" role="tab"
+                                          data-toggle="tab">{% trans 'Internship tab' %}</a></li>
                     <li><a href="#thesis" role="tab" data-toggle="tab">{% trans 'Thesis tab' %}</a></li>
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane active" id="placement">
-                        <div class="alert {{ placement.state|state_css }}" role="alert">{% trans 'State: ' %} {{ placement.state|state }} </div>
+                        <div class="alert {{ placement.state|state_css }}"
+                             role="alert">{% trans 'State: ' %} {{ placement.state|state }} </div>
 
-                        <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post" class="form">
+                        <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post"
+                              class="form">
                             {% csrf_token %}
 
                             <div class="panel panel-default">
@@ -51,6 +54,21 @@
                                     {% bootstrap_formset placement_contact_formset %}
                                 </div>
                             </div>
+                            {% if placement.state == 'NR' %}
+                            <div class="checkbox">
+                                <label>
+                                    <input name="show_tutor" type="checkbox" value="1">
+                                    Anfrage für den Betreuer sichtbar !!!
+                                </label>
+                            </div>
+                            {% else %}
+                              <div class="checkbox disabled">
+                                <label>
+                                    <input name="show_tutor" type="checkbox" value="1" disabled checked="checked">
+                                    Anfrage für den Betreuer sichtbar !!!
+                                </label>
+                            </div>
+                            {% endif %}
 
                             {#                                                        {% bootstrap_form placement_event_form %}#}
 
