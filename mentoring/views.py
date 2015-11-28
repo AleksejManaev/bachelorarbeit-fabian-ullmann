@@ -768,7 +768,6 @@ class TutorView(View):
 
 
 class StudentIndexView(View):
-    model = Student
     template_name = 'student_index.html'
 
     def get(self, request, status=200, *args, **kwargs):
