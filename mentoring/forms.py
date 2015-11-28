@@ -108,7 +108,8 @@ class FormPlacement(forms.ModelForm):
     class Meta:
         model = Placement
         exclude = ['student', 'finished', 'state', 'sent_on']
-        fields = ['course', 'tutor', 'task', 'date_from', 'date_to', 'report', 'certificate']
+        fields = ['course', 'tutor', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name',
+                  'company_address']
         widgets = {
             'date_from': DateInput(attrs={'class': 'datepicker'}),
             'date_to': DateInput(attrs={'class': 'datepicker'}),
@@ -203,10 +204,13 @@ class FormStudent(forms.ModelForm):
         fields = '__all__'
 
 
-FormsetWorkCompany = forms.inlineformset_factory(AbstractWork, WorkCompany, fields=['address'], extra=1,
+FormsetWorkCompany = forms.inlineformset_factory(Thesis, WorkCompany, fields=['address'], extra=1,
                                                  fk_name='work', can_delete=False)
 FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, CompanyContactData, fields='__all__', extra=1,
                                                             can_delete=False)
+
+FormsetPlacementContactdata = forms.inlineformset_factory(Placement, PlacementCompanyContactData, fields='__all__',
+                                                          extra=1, can_delete=False)
 
 
 class FormMentoringrequestStudent(forms.ModelForm):

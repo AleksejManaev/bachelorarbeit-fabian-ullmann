@@ -217,25 +217,20 @@ class StudentPlacementFormView(UpdateView):
 
     # template_name = 'student_placement_form.html'
 
-    def get_context_placement(self, data=None, files=None, **kwargs):
+    def get_context_placement(self, data=None, files=None):
         """
         enthält all nötigen Formulare, die an Template übergeben werden und validiert werden müssen
 
         wird auch von erbenden Klassen genutzt
         """
         placement = self.get_placement()
-        workcompany = placement.workcompany
         return {
             'placement': placement,
             'placement_form': FormPlacement(data, files=files, instance=placement, prefix='placement_form'),
-            # 'placement_event_form': FormPlacementEventRegistration(data, instance=placement.placementeventregistration,
+            # 'placement_event_form': FormPlacementEventRegistration(data,
+            #                                                        instance=placement.placementeventregistration,
             #                                                        prefix='placement_event_form'),
-            'placement_company_form': FormCompany(data, parent=workcompany,
-                                                  instance=workcompany.company,
-                                                  prefix='placement_company_form'),
-            'placement_company_formset': FormsetWorkCompany(data, instance=placement,
-                                                            prefix='placement_company_formset'),
-            'placement_contact_formset': FormsetWorkCompanyContactdata(data, instance=workcompany,
+            'placement_contact_formset': FormsetPlacementContactdata(data, instance=placement,
                                                                        prefix='placement_contact_formset'),
         }
 
@@ -245,35 +240,39 @@ class StudentPlacementFormView(UpdateView):
         """
         return self.request.user.portaluser.student.studentactiveplacement.placement
 
-    def get(self, request, status=200, *args, **kwargs):
-        if request.GET.has_key('fancy'):
-            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
-        self.object = self.get_placement()
-
-        cd = self.get_context_data()
-        cd.update(self.get_context_placement())
-        return self.render_to_response(cd, status=status)
+    # def get(self, request, status=200, *args, **kwargs):
+    #     if request.GET.has_key('fancy'):
+    #         request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+    #     self.object = self.get_placement()
+    #
+    #     cd = self.get_context_data()
+    #     cd.update(self.get_context_placement())
+    #     return self.render_to_response(cd, status=status)
 
     def post(self, request, *args, **kwargs):
         show_tutor = request.POST.get('show_tutor')
         self.object = self.get_placement()
 
-        self.placement = self.get_context_placement(request.POST, files=request.FILES)
+        placement_form_dict = self.get_context_placement(request.POST, files=request.FILES)
 
-        form_target = [i for i, v in self.placement.iteritems()]
+        form_target = [i for i, v in placement_form_dict.iteritems()]
 
-        status = True
         if 'placement' in form_target:
             form_target.remove('placement')
 
+        valid = True
         for t in form_target:
-            if self.placement.has_key(t) and self.placement.get(t).is_valid():
-                self.placement.get(t).save()
-            else:
-                status = False
+            in_placement_form_dict = t in placement_form_dict
+            form = placement_form_dict.get(t)
+            is_valid = form.is_valid()
 
-        if status:
-            self.placement = self.get_context_placement()
+            if in_placement_form_dict and is_valid:
+                placement_form_dict.get(t).save()
+            else:
+                valid = False
+
+        if valid:
+            placement_form_dict = self.get_context_placement()
 
             if self.object.state == 'NR' and show_tutor:
                 self.object.state = 'RE'
@@ -281,7 +280,7 @@ class StudentPlacementFormView(UpdateView):
                 self.object.save()
 
         cd = self.get_context_data()
-        cd.update(self.placement)
+        cd.update(placement_form_dict)
         return redirect('student-placement')
 
 

@@ -155,6 +155,8 @@ class Placement(AbstractWork):
     student = models.ForeignKey(Student)
     course = models.ForeignKey(Course, verbose_name=_('course placement'), blank=True, null=True)
     tutor = models.ForeignKey(Tutor, blank=True, null=True)
+    company_name = models.CharField(_('company name'), max_length=100, null=True, blank=True)
+    company_address = models.TextField(_('company address'), null=True, blank=True)
     date_from = models.DateField(_('internship begin'), blank=True, null=True)
     date_to = models.DateField(_('internship end'), blank=True, null=True)
     report = models.FileField(_('Upload placement report'), upload_to=upload_to_placement_report, blank=True, null=True,
@@ -192,12 +194,6 @@ class StudentActivePlacement(models.Model):
     placement = models.OneToOneField(Placement, null=True)
 
 
-class WorkCompany(models.Model):
-    work = models.OneToOneField(AbstractWork, primary_key=True)
-    company = models.ForeignKey(Company, null=True, blank=True)
-    address = models.TextField(_('company address'), null=True, blank=True)
-
-
 @python_2_unicode_compatible
 class ContactData(ContactModel):
     first_name = models.CharField(_('First name'), max_length=30, null=True, blank=True)
@@ -208,8 +204,8 @@ class ContactData(ContactModel):
         return u"{} {} {}".format(self.title, self.first_name, self.last_name)
 
 
-class CompanyContactData(ContactData):
-    work_company = models.OneToOneField(WorkCompany)
+class PlacementCompanyContactData(ContactData):
+    placement = models.OneToOneField(Placement, null=True)
 
 
 @python_2_unicode_compatible
@@ -233,6 +229,16 @@ class Thesis(AbstractWork):
     def registration(self):
         return Registration.objects.get_or_create(mentoring=self.mentoringrequest.mentoring)[0] if hasattr(
             self.mentoringrequest, 'mentoring') and self.mentoringrequest.mentoring else None
+
+
+class WorkCompany(models.Model):
+    work = models.OneToOneField(Thesis, primary_key=True)
+    company = models.ForeignKey(Company, null=True, blank=True)
+    address = models.TextField(_('company address'), null=True, blank=True)
+
+
+class CompanyContactData(ContactData):
+    work_company = models.OneToOneField(WorkCompany)
 
 
 class StudentActiveThesis(models.Model):

@@ -47,10 +47,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created_on', models.DateTimeField(auto_now_add=True, verbose_name='date joined', auto_created=True)),
-                ('description', models.TextField(null=True, verbose_name='description', blank=True)),
+                ('task', models.TextField(null=True, verbose_name='task', blank=True)),
                 ('updated_on', models.DateTimeField(auto_now=True, verbose_name='date updated', null=True)),
                 ('sent_on', models.DateTimeField(null=True, verbose_name='date sent', blank=True)),
-                ('state', models.CharField(default=b'NR', max_length=2, choices=[(b'NR', b'not requested'), (b'RE', b'requested'), (b'AC', b'accepted'), (b'DE', b'denied'), (b'CD', b'canceled')])),
+                ('state', models.CharField(default=b'NR', max_length=2, choices=[(b'NR', b'not requested'), (b'RE', b'requested'), (b'MA', b'mentoring accepted'), (b'MD', b'mentoring denied'), (b'IA', b'internship accepted'), (b'ID', b'internship denied')])),
             ],
         ),
         migrations.CreateModel(
@@ -144,7 +144,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('tutor_email', models.EmailField(max_length=254, null=True, verbose_name='Tutor email', blank=True)),
                 ('requested_on', models.DateTimeField(verbose_name='requested on', null=True, editable=False)),
-                ('state', models.CharField(default=b'NR', max_length=2, choices=[(b'NR', b'not requested'), (b'RE', b'requested'), (b'AC', b'accepted'), (b'DE', b'denied'), (b'CD', b'canceled')])),
+                ('state', models.CharField(default=b'NR', max_length=2, choices=[(b'NR', b'not requested'), (b'RE', b'requested'), (b'MA', b'mentoring accepted'), (b'MD', b'mentoring denied'), (b'IA', b'internship accepted'), (b'ID', b'internship denied')])),
                 ('comment', models.TextField(null=True, verbose_name='comment', blank=True)),
                 ('answer', models.TextField(null=True, verbose_name='answer', blank=True)),
             ],
@@ -213,9 +213,9 @@ class Migration(migrations.Migration):
             name='ContactData',
             fields=[
                 ('contactmodel_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='mentoring.ContactModel')),
-                ('first_name', models.CharField(max_length=30, null=True, verbose_name='first name', blank=True)),
-                ('last_name', models.CharField(max_length=30, null=True, verbose_name='last name', blank=True)),
-                ('email', models.EmailField(max_length=254, null=True, verbose_name='email', blank=True)),
+                ('first_name', models.CharField(max_length=30, null=True, verbose_name='First name', blank=True)),
+                ('last_name', models.CharField(max_length=30, null=True, verbose_name='Last name', blank=True)),
+                ('email', models.EmailField(max_length=254, null=True, verbose_name='Email', blank=True)),
             ],
             bases=('mentoring.contactmodel',),
         ),
@@ -223,10 +223,12 @@ class Migration(migrations.Migration):
             name='Placement',
             fields=[
                 ('abstractwork_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='mentoring.AbstractWork')),
-                ('report', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_placement_report, null=True, verbose_name='report placement', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
-                ('presentation', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_placement_presentation, null=True, verbose_name='presentation placement', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
-                ('certificate', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_placement_certificate, null=True, verbose_name='certificate placement', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
-                ('public', models.BooleanField(default=False, verbose_name='public placement')),
+                ('company_name', models.CharField(max_length=100, null=True, verbose_name='company name', blank=True)),
+                ('company_address', models.TextField(null=True, verbose_name='company address', blank=True)),
+                ('date_from', models.DateField(null=True, verbose_name='internship begin', blank=True)),
+                ('date_to', models.DateField(null=True, verbose_name='internship end', blank=True)),
+                ('report', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_placement_report, null=True, verbose_name='Upload placement report', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
+                ('certificate', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_placement_certificate, null=True, verbose_name='Upload placement certificate', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
                 ('course', models.ForeignKey(verbose_name='course placement', blank=True, to='mentoring.Course', null=True)),
             ],
             bases=('mentoring.abstractwork',),
@@ -254,17 +256,8 @@ class Migration(migrations.Migration):
                 ('report', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_thesis_report, null=True, verbose_name='report thesis', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
                 ('poster', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_thesis_poster, null=True, verbose_name='poster thesis', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
                 ('documents_finished', models.BooleanField(default=False)),
-                ('course', models.ForeignKey(verbose_name='course placement', blank=True, to='mentoring.Course', null=True)),
             ],
             bases=('mentoring.abstractwork',),
-        ),
-        migrations.CreateModel(
-            name='WorkCompany',
-            fields=[
-                ('work', models.OneToOneField(primary_key=True, serialize=False, to='mentoring.AbstractWork')),
-                ('description', models.TextField(null=True, verbose_name='company description', blank=True)),
-                ('company', models.ForeignKey(blank=True, to='mentoring.Company', null=True)),
-            ],
         ),
         migrations.AddField(
             model_name='mentoring',
@@ -285,7 +278,14 @@ class Migration(migrations.Migration):
             name='CompanyContactData',
             fields=[
                 ('contactdata_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='mentoring.ContactData')),
-                ('work_company', models.OneToOneField(to='mentoring.WorkCompany')),
+            ],
+            bases=('mentoring.contactdata',),
+        ),
+        migrations.CreateModel(
+            name='PlacementCompanyContactData',
+            fields=[
+                ('contactdata_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='mentoring.ContactData')),
+                ('placement', models.OneToOneField(null=True, to='mentoring.Placement')),
             ],
             bases=('mentoring.contactdata',),
         ),
@@ -293,8 +293,8 @@ class Migration(migrations.Migration):
             name='Student',
             fields=[
                 ('portaluser_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='mentoring.PortalUser')),
-                ('matriculation_number', models.CharField(max_length=8, null=True, verbose_name='matriculation number', blank=True)),
-                ('extern_email', models.EmailField(max_length=254, null=True, blank=True)),
+                ('matriculation_number', models.CharField(max_length=8, null=True, verbose_name='Matriculation number', blank=True)),
+                ('extern_email', models.EmailField(max_length=254, null=True, verbose_name='extern email address', blank=True)),
             ],
             bases=('mentoring.portaluser',),
         ),
@@ -306,10 +306,23 @@ class Migration(migrations.Migration):
             ],
             bases=('mentoring.portaluser',),
         ),
+        migrations.CreateModel(
+            name='WorkCompany',
+            fields=[
+                ('work', models.OneToOneField(primary_key=True, serialize=False, to='mentoring.Thesis')),
+                ('address', models.TextField(null=True, verbose_name='company address', blank=True)),
+                ('company', models.ForeignKey(blank=True, to='mentoring.Company', null=True)),
+            ],
+        ),
         migrations.AddField(
             model_name='tutor2contactdata',
             name='contact',
             field=models.ForeignKey(blank=True, to='mentoring.ContactData', null=True),
+        ),
+        migrations.AddField(
+            model_name='thesis',
+            name='course',
+            field=models.ForeignKey(verbose_name='course placement', blank=True, to='mentoring.Course', null=True),
         ),
         migrations.AddField(
             model_name='studentactivethesis',
@@ -385,6 +398,11 @@ class Migration(migrations.Migration):
             model_name='mentoring',
             name='tutor_1',
             field=models.ForeignKey(to='mentoring.Tutor'),
+        ),
+        migrations.AddField(
+            model_name='companycontactdata',
+            name='work_company',
+            field=models.OneToOneField(to='mentoring.WorkCompany'),
         ),
         migrations.AddField(
             model_name='address',

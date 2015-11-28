@@ -14,11 +14,11 @@ admin.site.register(Student)
 
 admin.site.register(Company)
 admin.site.register(CompanyContactData)
+admin.site.register(PlacementCompanyContactData)
 admin.site.register(ContactData)
 admin.site.register(Tutor2ContactData)
 admin.site.register(Address)
 admin.site.register(Degree)
-admin.site.register(WorkCompany)
 
 admin.site.register(Thesis)
 admin.site.register(Tutor)

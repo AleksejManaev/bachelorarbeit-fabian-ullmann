@@ -64,7 +64,8 @@ def post_save_registration(sender, instance, created, **kwargs):
 def post_save_placement(sender, instance, created, **kwargs):
     if created:
         print("post_save_placement")
-        post_save_abstractwork(sender, instance, created, **kwargs)
+        ccd = AutoFixture(PlacementCompanyContactData, field_values={'placement': instance}, overwrite_defaults=True)
+        ccd.create(1)
         sap = AutoFixture(StudentActivePlacement, field_values={'student': instance.student, 'placement': instance})
         sap.create(1)
         per = AutoFixture(PlacementEventRegistration, field_values={'placement': instance})

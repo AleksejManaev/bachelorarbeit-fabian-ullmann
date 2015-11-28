@@ -80,7 +80,7 @@ def post_save_registration(sender, instance, created, **kwargs):
 def post_save_placement(sender, instance, created, **kwargs):
     if created:
         print("post_save_placement")
-        post_save_abstractwork(sender, instance, created, **kwargs)
+        PlacementCompanyContactData.objects.get_or_create(placement=instance)
         sap = StudentActivePlacement.objects.get_or_create(student=instance.student)[0]
         sap.placement = instance
         sap.save()
