@@ -1,87 +1,21 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 {% load i18n %}
-{% load filter %}
 
 {% block content %}
     <div class="container center-vertically">
         <div class="row ">
             <div class="col-md-12">
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs nav-justified" role="tablist">
-                    <li class="active"><a href="#placement" role="tab"
-                                          data-toggle="tab">{% trans 'Internship tab' %}</a></li>
-                    <li><a href="#thesis" role="tab" data-toggle="tab">{% trans 'Thesis tab' %}</a></li>
-                </ul>
-
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div class="tab-pane active" id="placement">
-                        <div class="alert {{ placement.state|state_css }}"
-                             role="alert">{% trans 'State: ' %} {{ placement.state|state }} </div>
-
-                        <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post"
-                              class="form">
-                            {% csrf_token %}
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h1 class="panel-title">{% trans 'General data' %}</h1>
-                                </div>
-                                <div class="panel-body">
-                                    {% bootstrap_form placement_form %}
-                                </div>
-                            </div>
-
-                            {#                            {% bootstrap_form_errors placement_event_form %}#}
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h1 class="panel-title">{% trans 'Company data' %}</h1>
-                                </div>
-                                <div class="panel-body">
-                                    {% bootstrap_form placement_company_form %}
-                                    {% bootstrap_formset placement_company_formset %}
-                                </div>
-                            </div>
-
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h1 class="panel-title">{% trans 'Contact person in the company' %}</h1>
-                                </div>
-                                <div class="panel-body">
-                                    {% bootstrap_formset placement_contact_formset %}
-                                </div>
-                            </div>
-                            {% if placement.state == 'NR' %}
-                            <div class="checkbox">
-                                <label>
-                                    <input name="show_tutor" type="checkbox" value="1">
-                                    Anfrage für den Betreuer sichtbar !!!
-                                </label>
-                            </div>
-                            {% else %}
-                              <div class="checkbox disabled">
-                                <label>
-                                    <input name="show_tutor" type="checkbox" value="1" disabled checked="checked">
-                                    Anfrage für den Betreuer sichtbar !!!
-                                </label>
-                            </div>
-                            {% endif %}
-
-                            {#                                                        {% bootstrap_form placement_event_form %}#}
-
-                            {% buttons %}
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">
-                                    {% trans 'Finish' %}
-                                </button>
-                            {% endbuttons %}
-                        </form>
+                <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group" role="group">
+                        <a href="placement">
+                            <button type="button" class="btn btn-default">{% trans 'Placement' %}</button>
+                        </a>
                     </div>
-
-                    <div class="tab-pane" id="thesis">
-                        TEST TEST TEST TEST TEST
+                    <div class="btn-group" role="group">
+                        <a href="#">
+                            <button type="button" class="btn btn-default">{% trans 'Thesis' %}</button>
+                        </a>
                     </div>
                 </div>
             </div>

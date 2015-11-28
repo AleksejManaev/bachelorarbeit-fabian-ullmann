@@ -21,10 +21,10 @@ from mentoring.views import *
 urlpatterns = [
     url(r'^$', login_required(IndexView.as_view()), name='index'),
 
-    url(r'^student/$', login_required(StudentFormView.as_view()), name='student-index'),
+    url(r'^student/$', login_required(StudentIndexView.as_view()), name='student-index'),
     url(r'^student/settings/$', login_required(StudentSettingsFormView.as_view()), name='student-settings'),
 
-    url(r'^student/placements/$', StudentPlacementListView.as_view(), name='student-placements'),
+    url(r'^student/placement/$', StudentFormView.as_view(), name='student-placement'),
     url(r'^student/placement/update/$', StudentPlacementFormView.as_view(), name='student-placement-update'),
     url(r'^student/placement/update/todo/$',
         StudentPlacementFormView.as_view(template_name='student_placement_form_todo.html'),

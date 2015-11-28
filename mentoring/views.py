@@ -282,7 +282,7 @@ class StudentPlacementFormView(UpdateView):
 
         cd = self.get_context_data()
         cd.update(self.placement)
-        return redirect('student-index')
+        return redirect('student-placement')
 
 
 class StudentPlacementIndexView(DetailView):
@@ -710,7 +710,7 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
     """
     Zeigt alle Studenten-Formulare in einer Seite an
     """
-    template_name = 'student_index.html'
+    template_name = 'student_placement.html'
     model = Student
 
     def get(self, request, status=200, *args, **kwargs):
@@ -765,6 +765,20 @@ class TutorView(View):
     def get_object(self, queryset=None):
         st = Tutor.objects.filter(user=self.request.user)
         return st[0] if len(st) > 0 else None
+
+
+class StudentIndexView(View):
+    model = Student
+    template_name = 'student_index.html'
+
+    def get(self, request, status=200, *args, **kwargs):
+        if not self.get_object():
+            return redirect('index')
+        else:
+            return render(request, self.template_name)
+
+    def get_object(self, queryset=None):
+        return self.request.user.portaluser.student
 
 
 class TutorPlacementListView(ListView):
