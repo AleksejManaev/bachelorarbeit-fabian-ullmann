@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^student/$', login_required(StudentIndexView.as_view()), name='student-index'),
     url(r'^student/settings/$', login_required(StudentSettingsFormView.as_view()), name='student-settings'),
 
-    url(r'^student/placement/$', StudentFormView.as_view(), name='student-placement'),
+    url(r'^student/placement/$', login_required(StudentFormView.as_view()), name='student-placement'),
     url(r'^student/placement/update/$', StudentPlacementFormView.as_view(), name='student-placement-update'),
     url(r'^student/placement/update/todo/$',
         StudentPlacementFormView.as_view(template_name='student_placement_form_todo.html'),
@@ -60,7 +60,8 @@ urlpatterns = [
         name='student-thesis-documents-update-todo'),
     url(r'^student/thesis/documents/preview/$', StudentThesisIndexView.as_view(),
         name='student-thesis-documents-preview'),
-
+    url(r'^download/(?P<pk>\d+)/(?P<documenttype>\w+)$', login_required(DownloadView.as_view()), name='download'),
+    url(r'^tutor/placement/(?P<pk>\d+)/$', TutorPlacementView.as_view(template_name='tutor_placement_details.html'), name='placement-details'),
     url(r'^tutor/$', TutorView.as_view(), name='tutor-index'),
     url(r'^tutor/(?P<order_by>)$', TutorView.as_view(), name='order-by'),
     url(r'^tutor/settings/$', login_required(TutorSettingsFormView.as_view()), name='tutor-settings'),

@@ -11,7 +11,8 @@
             <div class="col-md-12">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs nav-justified" role="tablist">
-                    <li class="active"><a href="#placement" role="tab" data-toggle="tab">{% trans 'Internship tab' %}</a></li>
+                    <li class="active"><a href="#placement" role="tab"
+                                          data-toggle="tab">{% trans 'Internship tab' %}</a></li>
                     <li><a href="#thesis" role="tab" data-toggle="tab">{% trans 'Thesis tab' %}</a></li>
                 </ul>
 
@@ -23,6 +24,7 @@
                             <table class="table table-striped table-bordered table-hover table-condensed">
                                 <thead>
                                 <tr>
+                                    <th class="text-center">Info</th>
                                     {% sort_th "First name" "student__user__first_name" %}
                                     {% sort_th "Last name" "student__user__last_name" %}
                                     {% sort_th "Matriculation number" "student__matriculation_number" %}
@@ -36,13 +38,24 @@
                                 <tbody>
                                 {% for placement in placements %}
                                     <tr>
+                                        <td>
+                                            <a href="{% url 'placement-details' placement.id %}" title="{% trans 'Placement Details' %}">
+{#                                                <button type="button" class="btn btn-default  btn-sm">#}
+                                                <div class="text-center">
+                                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+{#                                                </button>#}
+                                                </div>
+                                            </a>
+                                        </td>
                                         <td>{{ placement.student.user.first_name }}</td>
                                         <td>{{ placement.student.user.last_name }}</td>
                                         <td>{{ placement.student.matriculation_number }}</td>
                                         <td>{{ placement.student.user.email }}</td>
                                         <td>{{ placement.state|state }}</td>
-                                        <td><input type="checkbox" {{ placement.state|state_checked|default_if_none:"" }}></td>
-                                        <td><input type="checkbox" {{ placement.state|state_checked|default_if_none:"" }}></td>
+                                        <td><input type="checkbox"
+                                                {{ placement.state|state_checked|default_if_none:"" }}></td>
+                                        <td><input type="checkbox"
+                                                {{ placement.state|state_checked|default_if_none:"" }}></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

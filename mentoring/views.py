@@ -13,6 +13,30 @@ from mentoring.models import Student, Placement
 from django.utils.translation import ugettext_lazy as _
 
 
+class DownloadView(View):
+    def get(self, request, pk, documenttype):
+        placement = Placement.objects.get(student=pk)
+        student_name = placement.student
+
+        # Tutor darf nur die Dokumente von seinen Studenten runterladen
+        if not (placement.tutor.user == request.user):
+            return http.HttpResponseNotFound()
+
+        if documenttype == 'certificate':
+            filepath = placement.certificate
+        elif documenttype == 'report':
+            filepath = placement.report
+        else:
+            return http.HttpResponseNotFound()
+
+        with open(settings.MEDIA_ROOT + '/' + filepath.__str__(), 'rb') as pdf:
+            response = http.HttpResponse(pdf.read(), content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="{student_name}-{documenttype}.pdf"' \
+                .format(student_name=student_name, documenttype=_(documenttype))
+            return response
+        pdf.closed
+
+
 class DetailView(django.views.generic.DetailView):
     def get(self, request, *args, **kwargs):
         if request.GET.has_key('fancy'):
@@ -231,7 +255,7 @@ class StudentPlacementFormView(UpdateView):
             #                                                        instance=placement.placementeventregistration,
             #                                                        prefix='placement_event_form'),
             'placement_contact_formset': FormsetPlacementContactdata(data, instance=placement,
-                                                                       prefix='placement_contact_formset'),
+                                                                     prefix='placement_contact_formset'),
         }
 
     def get_placement(self):
@@ -756,9 +780,9 @@ class TutorView(View):
         else:
             if request.GET.has_key('order_by'):
                 orderCriteria = request.GET.get('order_by')
-                placements = Placement.objects.filter(tutor=request.user.id).order_by(orderCriteria)
+                placements = Placement.objects.filter(tutor=request.user.id, state='RE').order_by(orderCriteria)
             else:
-                placements = Placement.objects.filter(tutor=request.user.id)
+                placements = Placement.objects.filter(tutor=request.user.id, state='RE')
             return render(request, self.template_name, {'placements': placements})
 
     def get_object(self, queryset=None):
@@ -789,7 +813,6 @@ class TutorPlacementListView(ListView):
 
 class TutorPlacementView(DetailView):
     model = Placement
-    template_name = 'both_placement_index.html'
 
 
 def tutorPlacementConfirm(request, pk):

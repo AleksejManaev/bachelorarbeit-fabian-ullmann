@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+{% load staticfiles %}
+{% load filter %}
+
+{% block content %}
+    <h1 class="text-center">{% trans 'Placement' %}</h1>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-condensed">
+            <tbody>
+            <tr>
+                <td>
+                    {% trans 'Student' %}
+                </td>
+                <td>
+                    {{ placement.student|default_if_none:"" }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% trans 'course placement' %}
+                </td>
+                <td>
+                    {{ placement.course|default_if_none:"" }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% trans 'task' %}
+                </td>
+                <td>
+                    {{ placement.task|default_if_none:"" }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% trans 'date from' %}
+                </td>
+                <td>
+                    {{ placement.date_from|default_if_none:"" }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% trans 'date to' %}
+                </td>
+                <td>
+                    {{ placement.date_to|default_if_none:"" }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% trans 'Report' %}
+                </td>
+                <td>
+                    {% if placement.report %}
+
+                        <a href="{% url 'download' placement.student.id 'report' %}">
+                            <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% trans 'certificate' %}
+                </td>
+                <td>
+                    {% if placement.certificate %}
+                        <a href="{% url 'download' placement.student.id 'certificate' %}">
+                            <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% trans 'Company Name' %}
+                </td>
+                <td>
+                    {{ placement.company_name|default_if_none:"" }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% trans 'Company Address' %}
+                </td>
+                <td>
+                    {{ placement.company_address|default_if_none:"" }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
