@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-10 19:02+0100\n"
+"POT-Creation-Date: 2015-12-10 20:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -145,21 +145,21 @@ msgstr "Meinen Praktikumsbericht hochladen"
 msgid "Upload placement certificate"
 msgstr "Mein Praktikumszeugnis hochladen"
 
-#: .\mentoring\models.py:168 .\mentoring\templates\tutor_index.html:41
+#: .\mentoring\models.py:168 .\mentoring\templates\tutor_index.html:40
 msgid "Seminars present"
 msgstr "Seminare anwesend"
 
 #: .\mentoring\models.py:169 .\mentoring\templates\both_placement_index.html:49
 #: .\mentoring\templates\student_thesis_documents_index.html:8
-#: .\mentoring\templates\tutor_index.html:42
+#: .\mentoring\templates\tutor_index.html:41
 msgid "Presentation"
 msgstr "Präsentation"
 
-#: .\mentoring\models.py:170 .\mentoring\templates\tutor_index.html:43
+#: .\mentoring\models.py:170 .\mentoring\templates\tutor_index.html:42
 msgid "Mentoring accepted"
 msgstr "Betreuung angenommen"
 
-#: .\mentoring\models.py:171 .\mentoring\templates\tutor_index.html:44
+#: .\mentoring\models.py:171 .\mentoring\templates\tutor_index.html:43
 msgid "Completed"
 msgstr "Bestanden"
 
@@ -302,7 +302,7 @@ msgid "Response Examination Board"
 msgstr "Antwort vom Prüfungsausschuss"
 
 #: .\mentoring\templates\both_thesis_examinationboard_widget.html:13
-#: .\mentoring\templates\tutor_index.html:45
+#: .\mentoring\templates\tutor_index.html:44
 #: .\mentoring\templates\tutor_mentoring_colloquium_widget.html:12
 #: .\mentoring\templates\tutor_mentoring_report_widget.html:23
 msgid "Save"
@@ -511,7 +511,7 @@ msgstr "Praktikum"
 msgid "Thesis tab"
 msgstr "Abschlussarbeit"
 
-#: .\mentoring\templates\tutor_index.html:54
+#: .\mentoring\templates\tutor_index.html:53
 msgid "Placement Details"
 msgstr "Praktikum"
 
@@ -544,12 +544,12 @@ msgid "Tutor 2"
 msgstr "2. Gutachter"
 
 #: .\mentoring\templates\tutor_mentoring_request.html:75
-#: .\mentoring\views.py:1035
+#: .\mentoring\views.py:1037
 msgid "Accept"
 msgstr "Annehmen"
 
 #: .\mentoring\templates\tutor_mentoring_request.html:78
-#: .\mentoring\views.py:1023
+#: .\mentoring\views.py:1025
 msgid "Deny"
 msgstr "Ablehnen"
 
@@ -591,7 +591,7 @@ msgid "Certificate placement"
 msgstr "Praktikumsbericht"
 
 #: .\mentoring\templates\tutor_placement_course_registration.html:69
-#: .\mentoring\views.py:830
+#: .\mentoring\views.py:832
 msgid "Accept placement"
 msgstr "Praktikum erfolgreich"
 

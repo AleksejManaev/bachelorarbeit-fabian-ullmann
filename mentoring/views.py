@@ -780,9 +780,9 @@ class TutorView(View):
         else:
             if request.GET.has_key('order_by'):
                 orderCriteria = request.GET.get('order_by')
-                placements = Placement.objects.filter(tutor=request.user.id, state='RE').order_by(orderCriteria)
+                placements = Placement.objects.filter(tutor=request.user.id).order_by(orderCriteria)
             else:
-                placements = Placement.objects.filter(tutor=request.user.id, state='RE')
+                placements = Placement.objects.filter(tutor=request.user.id)
             return render(request, self.template_name, {'placements': placements})
 
     def get_object(self, queryset=None):
@@ -791,8 +791,7 @@ class TutorView(View):
 
 
 class TutorUpdatePlacementView(View):
-
-    def post(self, request, pk,  *args, **kwargs):
+    def post(self, request, pk, *args, **kwargs):
         instance = Placement.objects.get(id=pk)
         form = FormTutorPlacement(request.POST or None, instance=instance)
         if form.is_valid():

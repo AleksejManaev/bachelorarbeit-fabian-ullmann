@@ -37,7 +37,6 @@
                                     {% sort_th "Last name" "student__user__last_name" %}
                                     {% sort_th "Matriculation number" "student__matriculation_number" %}
                                     {% sort_th "Email" "student__user__email" %}
-                                    {% sort_th "State" "state" %}
                                     <th>{% trans 'Seminars present' %}</th>
                                     <th>{% trans 'Presentation' %}</th>
                                     <th>{% trans 'Mentoring accepted' %}</th>
@@ -64,7 +63,6 @@
                                         <td>{{ placement.student.user.last_name }}</td>
                                         <td>{{ placement.student.matriculation_number }}</td>
                                         <td>{{ placement.student.user.email }}</td>
-                                        <td>{{ placement.state|state }}</td>
                                         <td><input type="number" name="number_seminars_present"
                                                    form="{{ placement.id }}"
                                                    value="{{ placement.number_seminars_present }}" min="0" max="3"></td>
