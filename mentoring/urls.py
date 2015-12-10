@@ -62,6 +62,7 @@ urlpatterns = [
         name='student-thesis-documents-preview'),
     url(r'^download/(?P<pk>\d+)/(?P<documenttype>\w+)$', login_required(DownloadView.as_view()), name='download'),
     url(r'^tutor/placement/(?P<pk>\d+)/$', TutorPlacementView.as_view(template_name='tutor_placement_details.html'), name='placement-details'),
+    url(r'^tutor/placement/update/(?P<pk>\d+)/$', login_required(TutorUpdatePlacementView.as_view()), name='tutor-placement-update'),
     url(r'^tutor/$', TutorView.as_view(), name='tutor-index'),
     url(r'^tutor/(?P<order_by>)$', TutorView.as_view(), name='order-by'),
     url(r'^tutor/settings/$', login_required(TutorSettingsFormView.as_view()), name='tutor-settings'),

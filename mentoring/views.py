@@ -790,6 +790,16 @@ class TutorView(View):
         return st[0] if len(st) > 0 else None
 
 
+class TutorUpdatePlacementView(View):
+
+    def post(self, request, pk,  *args, **kwargs):
+        instance = Placement.objects.get(id=pk)
+        form = FormTutorPlacement(request.POST or None, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('tutor-index')
+
+
 class StudentIndexView(View):
     template_name = 'student_index.html'
 

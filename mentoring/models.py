@@ -165,6 +165,10 @@ class Placement(AbstractWork):
                                    blank=True,
                                    null=True,
                                    validators=[validate_pdf, validate_size])
+    number_seminars_present = models.IntegerField(_('Seminars present'), null=True, blank=True)
+    presentation_done = models.BooleanField(_('Presentation'), default=False)
+    mentoring_accepted = models.BooleanField(_('Mentoring accepted'), default=False)
+    placement_completed = models.BooleanField(_('Completed'), default=False)
 
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)

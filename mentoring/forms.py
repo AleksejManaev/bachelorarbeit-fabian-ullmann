@@ -73,6 +73,13 @@ class FormTutor2ContactData(forms.ModelForm):
 
 
 class FormPlacement(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(FormPlacement, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance.mentoring_accepted is True:
+            self.fields['task'].widget.attrs['disabled'] = True
+            self.fields['tutor'].widget.attrs['disabled'] = True
+
     def is_valid(self):
         # """
         # Falls das Objekt bereits finalisiert wurde -> invalid
@@ -116,6 +123,18 @@ class FormPlacement(forms.ModelForm):
             'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
             'certificate': ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
+
+
+class FormTutorPlacement(forms.ModelForm):
+    def is_valid(self):
+        is_valid = super(FormTutorPlacement, self).is_valid()
+        return is_valid
+
+    class Meta:
+        model = Placement
+        exclude = ['student', 'finished', 'state', 'sent_on', 'course', 'tutor', 'task', 'date_form', 'date_to',
+                   'report', 'certificate', 'company_name', 'company_address']
+        fields = ['number_seminars_present', 'presentation_done', 'mentoring_accepted', 'placement_completed']
 
 
 class FormPlacementEventRegistration(forms.ModelForm):

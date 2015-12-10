@@ -52,6 +52,15 @@ def state_checked(value, *args):
     elif value == 'MD' or value == 'ID':
         return ''
 
+
+@register.filter
+def boolean_checked(value, *args):
+    if value is True:
+        return 'checked="checked"'
+    elif value is False:
+        return ''
+
+
 @register.filter
 def for_request(value, *args):
     return value in ['NR', 'DE']
