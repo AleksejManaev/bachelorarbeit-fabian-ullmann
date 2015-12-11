@@ -76,7 +76,7 @@ class FormPlacement(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FormPlacement, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
-        if instance.mentoring_accepted is True:
+        if instance.mentoring_accepted == 'MA':
             self.fields['task'].widget.attrs['disabled'] = True
             self.fields['tutor'].widget.attrs['disabled'] = True
 
