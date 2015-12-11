@@ -298,8 +298,8 @@ class StudentPlacementFormView(UpdateView):
         if valid:
             placement_form_dict = self.get_context_placement()
 
-            if self.object.state == 'NR' and show_tutor:
-                self.object.state = 'RE'
+            if self.object.mentoring_requested is False and show_tutor:
+                self.object.mentoring_requested = True
                 self.object.sent_on = datetime.now()
                 self.object.save()
 
@@ -783,7 +783,7 @@ class TutorView(View):
                 placements = Placement.objects.filter(tutor=request.user.id).order_by(orderCriteria)
             else:
                 placements = Placement.objects.filter(tutor=request.user.id)
-            return render(request, self.template_name, {'placements': placements})
+            return render(request, self.template_name, {'placements': placements, 'states': STATUS_CHOICES})
 
     def get_object(self, queryset=None):
         st = Tutor.objects.filter(user=self.request.user)

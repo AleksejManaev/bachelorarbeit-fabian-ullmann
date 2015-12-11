@@ -7,8 +7,14 @@
     <div class="container center-vertically">
         <div class="row ">
             <div class="col-md-12">
-                <div class="alert {{ placement.state|state_css }}"
-                     role="alert">{% trans 'State: ' %} {{ placement.state|state }} </div>
+                <div class="alert {% if placement.mentoring_requested %} {{ placement.mentoring_accepted|state_css }} {% else %} alert-info {% endif %}"
+                     role="alert">{% trans 'State: ' %}
+                    {% if placement.mentoring_requested %}
+                        {{ placement.mentoring_accepted|state }}
+                    {% else %}
+                        {% trans 'not requested' %}
+                    {% endif %}
+                </div>
 
                 <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post"
                       class="form">
@@ -50,17 +56,17 @@
                             {% bootstrap_formset placement_contact_formset %}
                         </div>
                     </div>
-                    {% if placement.state == 'NR' %}
-                        <div class="checkbox">
+                    {% if placement.mentoring_requested %}
+                        <div class="checkbox disabled">
                             <label>
-                                <input name="show_tutor" type="checkbox" value="1">
+                                <input name="show_tutor" type="checkbox" value="1" disabled checked="checked">
                                 Anfrage für den Betreuer sichtbar !!!
                             </label>
                         </div>
                     {% else %}
-                        <div class="checkbox disabled">
+                        <div class="checkbox">
                             <label>
-                                <input name="show_tutor" type="checkbox" value="1" disabled checked="checked">
+                                <input name="show_tutor" type="checkbox" value="1">
                                 Anfrage für den Betreuer sichtbar !!!
                             </label>
                         </div>

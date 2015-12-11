@@ -1,9 +1,12 @@
 from django.utils.translation import ugettext
 
 """
-Der Tag "sort_th" in "template_tags.py" verwendet ugettext(), um erst zur Laufzeit bekannte Texte zu übersetzen.
-Die Texte können nicht in "django.po" gespeichert werden, ohne dass "makemessages" diese auskommentiert.
-Die Texte werden in dieser Methode aufgeführt, damit makemessages diese in "django.po" aufnimmt.
+An einigen Stellen werden Texte übersetzt, die erst zur Laufzeit bekannt werden. Dies geschieht über den Aufruf der Methode ugettext() oder
+von {% trans %}. Die Texte können nicht in "django.po" gespeichert werden, ohne dass diese durch "makemessages" auskommentiert werden.
+Deshalb werden die Texte in dieser Methode aufgeführt, damit makemessages diese in "django.po" aufnimmt.
 """
+
+
 def makemessages_dummy():
     ugettext('State')
+    ugettext('not decided')

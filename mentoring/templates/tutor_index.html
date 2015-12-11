@@ -63,16 +63,25 @@
                                         <td>{{ placement.student.user.last_name }}</td>
                                         <td>{{ placement.student.matriculation_number }}</td>
                                         <td>{{ placement.student.user.email }}</td>
-                                        <td><input type="number" name="number_seminars_present"
-                                                   form="{{ placement.id }}"
+                                        <td><input type="number" name="number_seminars_present" form="{{ placement.id }}"
                                                    value="{{ placement.number_seminars_present }}" min="0" max="3"></td>
                                         <td><input type="checkbox" name="presentation_done" form="{{ placement.id }}"
                                                 {{ placement.presentation_done|boolean_checked|default_if_none:"" }}>
                                         </td>
-                                        <td><input type="checkbox" name="mentoring_accepted" form="{{ placement.id }}"
-                                                {{ placement.mentoring_accepted|boolean_checked|default_if_none:"" }}></td>
+                                        <td>
+                                            <select name="mentoring_accepted" form="{{ placement.id }}">
+                                                {% for state in states %}
+                                                    {% ifequal state.0 placement.mentoring_accepted %}
+                                                        <option value="{{ state.0 }}" selected="selected">{% trans state.1 %}</option>
+                                                    {% else %}
+                                                        <option value="{{ state.0 }}">{% trans state.1 %}</option>
+                                                    {% endifequal %}
+                                                {% endfor %}
+                                            </select>
+                                        </td>
                                         <td><input type="checkbox" name="placement_completed" form="{{ placement.id }}"
-                                                {{ placement.placement_completed|boolean_checked|default_if_none:"" }}></td>
+                                                {{ placement.placement_completed|boolean_checked|default_if_none:"" }}>
+                                        </td>
                                         <td>
                                             <button type="submit" class="btn btn-default" form="{{ placement.id }}">
                                                 <span class="glyphicon glyphicon-floppy-disk"></span></button>

@@ -10,39 +10,27 @@ numeric_test = re.compile("^\d+$")
 
 
 @register.filter
-def state(value, *args):
-    if value == 'NR':
-        return _('not requested')
-    elif value == 'RE':
-        return _('requested')
-    elif value == 'MA':
-        return _('mentoring accepted')
-    elif value == 'MD':
-        return _('mentoring denied')
-    elif value == 'IA':
-        return _('internship accepted')
-    elif value == 'ID':
-        return _('internship denied')
-    else:
-        return _('error')
-
-
-@register.filter
 def state_css(value, *args):
-    if value == 'NR':
-        return 'alert-info'
-    elif value == 'RE':
+    if value == 'ND':
         return 'alert-warning'
     elif value == 'MA':
         return 'alert-success'
     elif value == 'MD':
         return 'alert-danger'
-    elif value == 'IA':
-        return 'alert-mentoring-accepted'
-    elif value == 'ID':
-        return 'alert-danger'
     else:
         return 'alert-info'
+
+
+@register.filter
+def state(value, *args):
+    if value == 'ND':
+        return _('requested')
+    elif value == 'MA':
+        return _('mentoring accepted')
+    elif value == 'MD':
+        return _('mentoring denied')
+    else:
+        return _('error')
 
 
 @register.filter

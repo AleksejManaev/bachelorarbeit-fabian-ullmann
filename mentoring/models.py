@@ -10,12 +10,9 @@ from mentoring.validators import *
 app_label = 'mentoring'
 
 STATUS_CHOICES = (
-    ('NR', 'not requested'),
-    ('RE', 'requested'),
+    ('ND', 'not decided'),
     ('MA', 'mentoring accepted'),
     ('MD', 'mentoring denied'),
-    ('IA', 'internship accepted'),
-    ('ID', 'internship denied'),
 )
 
 
@@ -116,8 +113,6 @@ class AbstractWork(models.Model):
     updated_on = models.DateTimeField(_('date updated'), auto_now=True, null=True)
     sent_on = models.DateTimeField(_('date sent'), blank=True, null=True)
 
-    state = models.CharField(max_length=2, choices=STATUS_CHOICES, default='NR')
-
     # @property
     # def finished(self):
     #     return bool(self.sent_on) and not self.state == 'NR'
@@ -167,7 +162,8 @@ class Placement(AbstractWork):
                                    validators=[validate_pdf, validate_size])
     number_seminars_present = models.IntegerField(_('Seminars present'), null=True, blank=True)
     presentation_done = models.BooleanField(_('Presentation'), default=False)
-    mentoring_accepted = models.BooleanField(_('Mentoring accepted'), default=False)
+    mentoring_requested = models.BooleanField(_('Requested'), default=False)
+    mentoring_accepted = models.CharField(max_length=2, choices=STATUS_CHOICES, default='ND')
     placement_completed = models.BooleanField(_('Completed'), default=False)
 
     def __str__(self):
