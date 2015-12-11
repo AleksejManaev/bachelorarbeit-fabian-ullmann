@@ -796,7 +796,8 @@ class TutorUpdatePlacementView(View):
         form = FormTutorPlacement(request.POST or None, instance=instance)
         if form.is_valid():
             form.save()
-            return redirect('tutor-index')
+        
+        return redirect('tutor-index')
 
 
 class StudentIndexView(View):
