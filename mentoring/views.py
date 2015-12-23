@@ -759,9 +759,13 @@ class StudentFormView(StudentThesisDocumentsFormView, StudentThesisMentoringrequ
             context.update(self.get_context_thesis_documents())
             context.update(self.get_context_registration())
             context.update(self.get_context_placement())
+            context.update(self.get_denied_placements())
             return context
         else:
             return None
+
+    def get_denied_placements(self):
+        return {'denied_placements': Placement.objects.filter(student=self.request.user.portaluser.student, mentoring_accepted='MD')}
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.student
@@ -794,8 +798,17 @@ class TutorUpdatePlacementView(View):
     def post(self, request, pk, *args, **kwargs):
         instance = Placement.objects.get(id=pk)
         form = FormTutorPlacement(request.POST or None, instance=instance)
+
         if form.is_valid():
             form.save()
+
+            '''
+                Falls eine Betreuungsanfrage abgelehnt wurde, wird dem Studenten ein neues aktives Praktikum zugewiesen.
+                Das aktive Praktikum wird über wird über "post_save_placement" in "signals.py" zugewiesen.
+            '''
+            if form.cleaned_data['mentoring_accepted'] == 'MD':
+                active_placement = Placement(student=instance.student)
+                active_placement.save()
 
         return redirect('tutor-index')
 
