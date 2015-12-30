@@ -49,14 +49,10 @@
                                 {% for placement in placements %}
                                     <tr>
                                         <td>
-                                            <a href="{% url 'placement-details' placement.id %}"
-                                               title="{% trans 'Placement Details' %}">
-                                                {#                                                <button type="button" class="btn btn-default  btn-sm">#}
-                                                <div class="text-center">
-                                                    <span class="glyphicon glyphicon-info-sign"
-                                                          aria-hidden="true"></span>
-                                                    {#                                                </button>#}
-                                                </div>
+                                            <a href="{% url 'placement-details' placement.id %}" title="{% trans 'Placement Details' %}">
+                                                <button type="button" class="btn btn-default center-block">
+                                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                                </button>
                                             </a>
                                         </td>
                                         <td>{{ placement.student.user.first_name }}</td>
