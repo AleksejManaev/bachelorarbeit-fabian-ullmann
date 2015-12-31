@@ -101,4 +101,6 @@ urlpatterns = [
     url(r'^thesis/registration/(?P<pk>\d+)/examinationboard/', BothThesisExaminationboardFormView.as_view(),
         name='thesis-registration-examinationboard'),
     url(r'^thesis/preview/$', StudentThesisIndexView.as_view(), name='thesis-preview'),
+
+    url(r'^comments/placement/(?P<pk>\d+)$', login_required(PlacementCommentsView.as_view()), name='placements-comments'),
 ]

@@ -327,3 +327,9 @@ class FormMentoringReport(forms.ModelForm):
 
 FormsetReportItems = forms.inlineformset_factory(MentoringReport, MentoringReportItem, fields='__all__', extra=1,
                                                  can_delete=True)
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = '__all__'

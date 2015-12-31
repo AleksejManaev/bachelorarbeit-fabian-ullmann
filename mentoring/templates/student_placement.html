@@ -5,6 +5,7 @@
 
 {% block content %}
     <div class="container center-vertically">
+        <!-- Übersicht abgelehnte Betreuungsanfragen -->
         {% if denied_placements %}
             <div class="row">
                 <div class="col-lg-12">
@@ -15,10 +16,11 @@
 
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover table-condensed">
+                                <table class="table table-striped table-bordered table-condensed">
                                     <tr>
                                         <th>{% trans 'tutor' %}</th>
                                         <th>{% trans 'task' %}</th>
+                                        <th class="wrap-column">{% trans 'comments' %}</th>
                                     </tr>
 
                                     {% for denied_placement in denied_placements %}
@@ -28,6 +30,13 @@
                                             </td>
                                             <td>
                                                 {{ denied_placement.task }}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'placements-comments' denied_placement.id %}" title="{% trans 'comments' %}">
+                                                    <button type="button" class="btn btn-default center-block">
+                                                        <span class="glyphicon glyphicon-comment"></span>
+                                                    </button>
+                                                </a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -39,82 +48,103 @@
             </div>
         {% endif %}
 
+        <!-- Aktives Praktikum bzw. Betreuungsanfrage" -->
         <div class="row ">
             <div class="col-md-12">
-                <div class="alert {% if placement.mentoring_requested %} {{ placement.mentoring_accepted|state_css }} {% else %} alert-info {% endif %}"
-                     role="alert">
-                    {% trans 'State: ' %}
-                    {% if placement.mentoring_requested %}
-                        {{ placement.mentoring_accepted|state }}
-                    {% else %}
-                        {% trans 'not requested' %}
-                    {% endif %}
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">{% trans 'active placement' %}</h1>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <!-- Status -->
+                        <div class="alert {% if placement.mentoring_requested %} {{ placement.mentoring_accepted|state_css }} {% else %} alert-info {% endif %}"
+                             role="alert">
+                            <div class="row ">
+                                <div class="col-md-4">
+                                    {% trans 'State: ' %}
+                                    {% if placement.mentoring_requested %}
+                                        {{ placement.mentoring_accepted|state }}
+                                    {% else %}
+                                        {% trans 'not requested' %}
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-6"></div>
+
+                                <div class="col-md-2">
+                                    <a href="{% url 'placements-comments' placement.id %}" title="{% trans 'comments' %}">
+                                        <button class="btn btn-default">
+                                            {% trans 'comments' %} &nbsp;
+                                            <span class="glyphicon glyphicon-comment"></span>
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Formular -->
+                        <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post" class="form">
+                            {% csrf_token %}
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{% trans 'General data' %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    {% bootstrap_field placement_form.course %}
+                                    {% bootstrap_field placement_form.tutor %}
+                                    {% bootstrap_field placement_form.task %}
+                                    {% bootstrap_field placement_form.date_from %}
+                                    {% bootstrap_field placement_form.date_to %}
+                                    {% bootstrap_field placement_form.report %}
+                                    {% bootstrap_field placement_form.certificate %}
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{% trans 'Company data' %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    {% bootstrap_field placement_form.company_name %}
+                                    {% bootstrap_field placement_form.company_address %}
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{% trans 'Contact person in the company' %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    {% bootstrap_formset placement_contact_formset %}
+                                </div>
+                            </div>
+                            {% if placement.mentoring_requested %}
+                                <div class="checkbox disabled">
+                                    <label>
+                                        <input name="show_tutor" type="checkbox" value="1" disabled checked="checked">
+                                        Anfrage für den Betreuer sichtbar !!!
+                                    </label>
+                                </div>
+                            {% else %}
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="show_tutor" type="checkbox" value="1">
+                                        Anfrage für den Betreuer sichtbar !!!
+                                    </label>
+                                </div>
+                            {% endif %}
+
+                            {% buttons %}
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                    {% trans 'Finish' %}
+                                </button>
+                            {% endbuttons %}
+                        </form>
+                    </div>
                 </div>
-
-                <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post"
-                      class="form">
-                    {% csrf_token %}
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h1 class="panel-title">{% trans 'General data' %}</h1>
-                        </div>
-                        <div class="panel-body">
-                            {% bootstrap_field placement_form.course %}
-                            {% bootstrap_field placement_form.tutor %}
-                            {% bootstrap_field placement_form.task %}
-                            {% bootstrap_field placement_form.date_from %}
-                            {% bootstrap_field placement_form.date_to %}
-                            {% bootstrap_field placement_form.report %}
-                            {% bootstrap_field placement_form.certificate %}
-                        </div>
-                    </div>
-
-                    {#                            {% bootstrap_form_errors placement_event_form %}#}
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h1 class="panel-title">{% trans 'Company data' %}</h1>
-                        </div>
-                        <div class="panel-body">
-                            {% bootstrap_field placement_form.company_name %}
-                            {% bootstrap_field placement_form.company_address %}
-                        </div>
-                    </div>
-
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h1 class="panel-title">{% trans 'Contact person in the company' %}</h1>
-                        </div>
-                        <div class="panel-body">
-                            {% bootstrap_formset placement_contact_formset %}
-                        </div>
-                    </div>
-                    {% if placement.mentoring_requested %}
-                        <div class="checkbox disabled">
-                            <label>
-                                <input name="show_tutor" type="checkbox" value="1" disabled checked="checked">
-                                Anfrage für den Betreuer sichtbar !!!
-                            </label>
-                        </div>
-                    {% else %}
-                        <div class="checkbox">
-                            <label>
-                                <input name="show_tutor" type="checkbox" value="1">
-                                Anfrage für den Betreuer sichtbar !!!
-                            </label>
-                        </div>
-                    {% endif %}
-
-                    {#                                                        {% bootstrap_form placement_event_form %}#}
-
-                    {% buttons %}
-                        <button type="submit" class="btn btn-primary btn-lg btn-block">
-                            {% trans 'Finish' %}
-                        </button>
-                    {% endbuttons %}
-                </form>
             </div>
         </div>
     </div>

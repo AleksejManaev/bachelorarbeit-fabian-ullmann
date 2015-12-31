@@ -10,6 +10,7 @@ from django.views.generic import *
 from fdfgen import forge_fdf
 from mentoring.forms import *
 from mentoring.models import Student, Placement
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -317,7 +318,7 @@ class StudentPlacementIndexView(DetailView):
     template_name = 'both_placement_index.html'
 
     def get_object(self, queryset=None):
-        return self.request.user.portaluser.student.placement_set.get(pk=self.kwargs.get('pk'))
+        return self.request.user.portaluser.student.placement_set.get(id=self.kwargs.get('pk'))
 
 
 def studentPlacementCreate(request):
@@ -328,7 +329,7 @@ def studentPlacementCreate(request):
 
 
 def studentPlacementDelete(request, pk):
-    pl = request.user.portaluser.student.placement_set.get(pk=pk)
+    pl = request.user.portaluser.student.placement_set.get(id=pk)
     if (pl.state == 'NR' and len(pl.student.placement_set.all()) > 1):
         pl.delete()
         return http.HttpResponseRedirect(reverse('student-index'))
@@ -338,7 +339,7 @@ def studentPlacementEditable(request, pk):
     if (request.user.portaluser.student.studentactiveplacement.placement.state == 'NR'):
         request.user.portaluser.student.studentactiveplacement.placement.state = 'CD'
         request.user.portaluser.student.studentactiveplacement.placement.save()
-    pl = request.user.portaluser.student.placement_set.get(pk=pk)
+    pl = request.user.portaluser.student.placement_set.get(id=pk)
     pl.finished = False
     pl.save()
     request.user.portaluser.student.studentactiveplacement.placement = pl
@@ -355,7 +356,7 @@ def studentThesisCreate(request):
 
 
 def studentThesisDelete(request, pk):
-    th = request.user.portaluser.student.thesis_set.get(pk=pk)
+    th = request.user.portaluser.student.thesis_set.get(id=pk)
     if (th.state == 'NR' and len(th.student.thesis_set.all()) > 1):
         th.delete()
         return http.HttpResponseRedirect(reverse('student-index'))
@@ -365,7 +366,7 @@ def studentThesisEditable(request, pk):
     if (request.user.portaluser.student.studentactivethesis.thesis.mentoringrequest.state == 'NR'):
         request.user.portaluser.student.studentactivethesis.thesis.mentoringrequest.state = 'CD'
         request.user.portaluser.student.studentactivethesis.thesis.mentoringrequest.save()
-    th = request.user.portaluser.student.thesis_set.get(pk=pk)
+    th = request.user.portaluser.student.thesis_set.get(id=pk)
     if (th == request.user.portaluser.student.studentactivethesis.thesis and th.mentoringrequest.state == 'RE'):
         th.mentoringrequest.state = 'NR'
         th.mentoringrequest.save()
@@ -893,7 +894,7 @@ class TutorPlacementCourseEventFormView(UpdateView):
 
 def tutorPlacementCourseEventDelete(request, pk, ev):
     if (request.user.portaluser.tutor.placementevent_set.filter(pk=ev)):
-        event = request.user.portaluser.tutor.placementevent_set.get(pk=ev)
+        event = request.user.portaluser.tutor.placementevent_set.get(id=ev)
         if not len(event.placementeventregistration_set.all()) > 0:
             event.delete()
             return http.HttpResponseRedirect(reverse('tutor-placement-course', kwargs={'pk': pk}))
@@ -1225,3 +1226,33 @@ class TutorSettingsFormView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user.portaluser.tutor
+
+
+class PlacementCommentsView(View):
+    template_name = 'comments.html'
+    form_class = CommentForm
+
+    def get(self, request, pk):
+        # Nur der beteiligte Student und Tutor dürfen die Kommentare einsehen
+        if self.is_placement_allowed(pk):
+            comments = Comment.objects.filter(abstract_work=pk).order_by('timestamp')
+            comment_form = self.form_class()
+            return render(request, self.template_name, {'comments': comments, 'comment_form': comment_form})
+        else:
+            return http.HttpResponseNotFound()
+
+    def post(self, request, pk):
+        # Nur der beteiligte Student und Tutor dürfen Kommentare schreiben
+        if self.is_placement_allowed(pk):
+            comment = Comment()
+            comment.author = self.request.user.portaluser.user
+            comment.abstract_work = AbstractWork.objects.get(id=pk)
+            comment.message = request.POST.get('message')
+            comment.save()
+
+            return redirect('placements-comments', pk=pk)
+        else:
+            return http.HttpResponseNotFound()
+
+    def is_placement_allowed(self, pk):
+        return Placement.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(tutor=self.request.user.portaluser)).exists()

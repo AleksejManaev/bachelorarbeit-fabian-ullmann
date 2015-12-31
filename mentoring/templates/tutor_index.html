@@ -11,8 +11,7 @@
             <div class="col-md-12">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs nav-justified" role="tablist">
-                    <li class="active"><a href="#placement" role="tab"
-                                          data-toggle="tab">{% trans 'Internship tab' %}</a></li>
+                    <li class="active"><a href="#placement" role="tab" data-toggle="tab">{% trans 'Internship tab' %}</a></li>
                     <li><a href="#thesis" role="tab" data-toggle="tab">{% trans 'Thesis tab' %}</a></li>
                 </ul>
 
@@ -21,7 +20,6 @@
                     <div class="tab-pane active" id="placement">
 
                         <div class="table-responsive">
-
                             {% for placement in placements %}
                                 <form method="POST" id="{{ placement.id }}"
                                       action="{% url 'tutor-placement-update' placement.id %}">
@@ -32,7 +30,8 @@
                             <table class="table table-striped table-bordered table-hover table-condensed">
                                 <thead>
                                 <tr>
-                                    <th class="text-center">Info</th>
+                                    <th class="wrap-column">{% trans 'info' %}</th>
+                                    <th class="wrap-column">{% trans 'comments' %}</th>
                                     {% sort_th "First name" "student__user__first_name" %}
                                     {% sort_th "Last name" "student__user__last_name" %}
                                     {% sort_th "Matriculation number" "student__matriculation_number" %}
@@ -41,7 +40,7 @@
                                     <th>{% trans 'Presentation' %}</th>
                                     <th>{% trans 'Mentoring accepted' %}</th>
                                     <th>{% trans 'Completed' %}</th>
-                                    <th>{% trans 'Save' %}</th>
+                                    <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
                                 </thead>
 
@@ -52,6 +51,13 @@
                                             <a href="{% url 'placement-details' placement.id %}" title="{% trans 'Placement Details' %}">
                                                 <button type="button" class="btn btn-default center-block">
                                                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'placements-comments' placement.id %}" title="{% trans 'comments' %}">
+                                                <button type="button" class="btn btn-default center-block">
+                                                    <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
                                                 </button>
                                             </a>
                                         </td>
@@ -79,8 +85,9 @@
                                                 {{ placement.placement_completed|boolean_checked|default_if_none:"" }}>
                                         </td>
                                         <td>
-                                            <button type="submit" class="btn btn-default" form="{{ placement.id }}">
-                                                <span class="glyphicon glyphicon-floppy-disk"></span></button>
+                                            <button type="submit" class="btn btn-default center-block" form="{{ placement.id }}">
+                                                <span class="glyphicon glyphicon-floppy-disk"></span>
+                                            </button>
                                         </td>
                                     </tr>
                                 {% endfor %}

@@ -331,3 +331,11 @@ class CompanyRating(models.Model):
     thesis = models.ForeignKey(Thesis)
     comment = models.TextField(_('comment'))
     public = models.BooleanField(default=False)
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(MentoringUser)
+    abstract_work = models.ForeignKey(AbstractWork)
+    message = models.TextField(_('message'))
+    timestamp = models.DateTimeField(auto_now_add=True)
+

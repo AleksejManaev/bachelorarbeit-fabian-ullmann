@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+{% block content %}
+    <div class="container center-vertically">
+        <!-- Übersicht Bisherige Kommentare -->
+        <div class="row ">
+            <div class="col-md-2"></div>
+
+            <div class="col-md-8">
+                {% for comment in comments %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b>{{ comment.author.first_name }} {{ comment.author.last_name }}</b> {% trans 'wrote' %}:
+                            <div>
+                                <span class="label label-primary">{{ comment.timestamp }}</span>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            {{ comment.message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-2"></div>
+        </div>
+
+        <!-- Neues Kommentar - Formular -->
+        <div class="row ">
+            <div class="col-md-2"></div>
+
+            <div class="col-md-8">
+                <h3>{% trans 'Create a comment' %}</h3>
+
+                <form action="" method="post" class="form">
+                    {% csrf_token %}
+                    {% bootstrap_field comment_form.message show_label=False %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary">
+                            {% trans 'Send' %}
+                        </button>
+                    {% endbuttons %}
+                </form>
+            </div>
+
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+{% endblock %}
