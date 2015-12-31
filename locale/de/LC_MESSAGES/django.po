@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-31 03:19+0100\n"
+"POT-Creation-Date: 2015-12-31 03:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -374,7 +374,7 @@ msgstr "Angaben zum Unternehmen"
 
 #: .\mentoring\templates\student_placement.html:118
 msgid "Contact person in the company"
-msgstr "Ansprechparnter im Unternehmen"
+msgstr "Ansprechpartner im Unternehmen"
 
 #: .\mentoring\templates\student_placement.html:142
 #: .\mentoring\templates\student_placement_widget.html:7
