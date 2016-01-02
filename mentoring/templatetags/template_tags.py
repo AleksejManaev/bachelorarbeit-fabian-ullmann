@@ -19,7 +19,7 @@ class SortTableHeader(BaseNode):
 
     def render_tag(self, context, *tag_args, **tag_kwargs):
         field = tag_args[1]
-        ctx = {'name': ugettext(tag_args[0])}
+        ctx = {'name': ugettext(tag_args[0]).encode('utf-8')}
         request = context['request']
         new_query_dict = request.GET.copy()
         order_by = request.GET.get('order_by', 'id')

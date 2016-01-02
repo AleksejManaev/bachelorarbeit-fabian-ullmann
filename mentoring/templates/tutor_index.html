@@ -36,10 +36,10 @@
                                     {% sort_th "Last name" "student__user__last_name" %}
                                     {% sort_th "Matriculation number" "student__matriculation_number" %}
                                     {% sort_th "Email" "student__user__email" %}
-                                    <th>{% trans 'Seminars present' %}</th>
-                                    <th>{% trans 'Presentation' %}</th>
-                                    <th>{% trans 'Mentoring accepted' %}</th>
-                                    <th>{% trans 'Completed' %}</th>
+                                    {% sort_th "Seminars present" "number_seminars_present" %}
+                                    {% sort_th "Presentation" "presentation_done" %}
+                                    {% sort_th "Mentoring accepted" "mentoring_accepted" %}
+                                    {% sort_th "Completed" "placement_completed" %}
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
                                 </thead>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-31 03:37+0100\n"
+"POT-Creation-Date: 2016-01-02 17:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -149,13 +149,12 @@ msgstr "Meinen Praktikumsbericht hochladen"
 msgid "Upload placement certificate"
 msgstr "Mein Praktikumszeugnis hochladen"
 
-#: .\mentoring\models.py:163 .\mentoring\templates\tutor_index.html:39
+#: .\mentoring\models.py:163
 msgid "Seminars present"
 msgstr "Seminare anwesend"
 
 #: .\mentoring\models.py:164 .\mentoring\templates\both_placement_index.html:49
 #: .\mentoring\templates\student_thesis_documents_index.html:8
-#: .\mentoring\templates\tutor_index.html:40
 msgid "Presentation"
 msgstr "Präsentation"
 
@@ -163,7 +162,7 @@ msgstr "Präsentation"
 msgid "Requested"
 msgstr "Angefragt"
 
-#: .\mentoring\models.py:167 .\mentoring\templates\tutor_index.html:42
+#: .\mentoring\models.py:167
 msgid "Completed"
 msgstr "Bestanden"
 
@@ -556,10 +555,6 @@ msgstr "Abschlussarbeit"
 msgid "info"
 msgstr "Info"
 
-#: .\mentoring\templates\tutor_index.html:41
-msgid "Mentoring accepted"
-msgstr "Betreuung angenommen"
-
 #: .\mentoring\templates\tutor_index.html:51
 msgid "Placement Details"
 msgstr "Praktikum"
@@ -692,17 +687,20 @@ msgstr "Betreuung abgelehnt"
 msgid "error"
 msgstr "Fehler"
 
-#: .\templates\base.html:37
+#: .\templates\base.html:40
 msgid "Home"
 msgstr "Start"
 
-#: .\templates\base.html:50
+#: .\templates\base.html:53
 msgid "Profile"
 msgstr "Profil"
 
-#: .\templates\base.html:58
+#: .\templates\base.html:61
 msgid "Logout"
 msgstr "Abmelden"
+
+#~ msgid "Mentoring accepted"
+#~ msgstr "Betreuung angenommen"
 
 #~ msgid "internship accepted"
 #~ msgstr "Praktikum bestanden"

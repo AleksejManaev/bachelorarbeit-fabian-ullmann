@@ -160,7 +160,7 @@ class Placement(AbstractWork):
                                    blank=True,
                                    null=True,
                                    validators=[validate_pdf, validate_size])
-    number_seminars_present = models.IntegerField(_('Seminars present'), null=True, blank=True)
+    number_seminars_present = models.IntegerField(_('Seminars present'), default=0)
     presentation_done = models.BooleanField(_('Presentation'), default=False)
     mentoring_requested = models.BooleanField(_('Requested'), default=False)
     mentoring_accepted = models.CharField(max_length=2, choices=STATUS_CHOICES, default='ND')
@@ -228,7 +228,7 @@ class Thesis(AbstractWork):
     @property
     def registration(self):
         return Registration.objects.get_or_create(mentoring=self.mentoringrequest.mentoring)[0] if hasattr(
-            self.mentoringrequest, 'mentoring') and self.mentoringrequest.mentoring else None
+                self.mentoringrequest, 'mentoring') and self.mentoringrequest.mentoring else None
 
 
 class WorkCompany(models.Model):
@@ -338,4 +338,3 @@ class Comment(models.Model):
     abstract_work = models.ForeignKey(AbstractWork)
     message = models.TextField(_('message'))
     timestamp = models.DateTimeField(auto_now_add=True)
-
