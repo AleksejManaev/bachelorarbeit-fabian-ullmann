@@ -59,13 +59,15 @@
                     <div class="panel-body">
 
                         <!-- Status -->
-                        <div class="alert {% if placement.mentoring_requested %} {{ placement.mentoring_accepted|state_css }} {% else %} alert-info {% endif %}"
+                        <div class="alert {% if placement.mentoring_requested and not placement.placement_completed %} {{ placement.mentoring_accepted|state_css }} {% elif placement.placement_completed %} alert-placement-completed {% else %} alert-info {% endif %}"
                              role="alert">
                             <div class="row ">
                                 <div class="col-md-4">
                                     {% trans 'State: ' %}
-                                    {% if placement.mentoring_requested %}
+                                    {% if placement.mentoring_requested and not placement.placement_completed %}
                                         {{ placement.mentoring_accepted|state }}
+                                    {% elif placement.placement_completed %}
+                                        {% trans 'Completed' %}
                                     {% else %}
                                         {% trans 'not requested' %}
                                     {% endif %}
