@@ -38,7 +38,7 @@
                                     {% sort_th "Email" "student__user__email" %}
                                     {% sort_th "Seminars present" "number_seminars_present" %}
                                     {% sort_th "Presentation" "presentation_done" %}
-                                    {% sort_th "Mentoring accepted" "mentoring_accepted" %}
+                                    {% sort_th "mentoring accepted" "mentoring_accepted" %}
                                     {% sort_th "Completed" "placement_completed" %}
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
@@ -66,8 +66,14 @@
                                         <td>{{ placement.student.matriculation_number }}</td>
                                         <td>{{ placement.student.user.email }}</td>
                                         {% if placement.mentoring_accepted == 'MD' %}
-                                        <td><input disabled type="number" name="number_seminars_present" form="{{ placement.id }}"
-                                                   value="{{ placement.number_seminars_present }}" min="0" max="3"></td>
+                                        <td>
+                                            <input disabled type="number" name="number_seminars_present" form="{{ placement.id }}"
+                                                   value="{{ placement.number_seminars_present }}" min="0" max="3">
+                                        </td>
+                                        <td>
+                                            <input disabled type="checkbox" name="presentation_done" form="{{ placement.id }}"
+                                                {{ placement.presentation_done|boolean_checked|default_if_none:"" }}>
+                                        </td>
                                         <td>
                                             <select disabled name="mentoring_accepted" form="{{ placement.id }}">
                                                 {% for state in states %}
@@ -79,10 +85,8 @@
                                                 {% endfor %}
                                             </select>
                                         </td>
-                                        <td><input disabled type="checkbox" name="presentation_done" form="{{ placement.id }}"
-                                                {{ placement.presentation_done|boolean_checked|default_if_none:"" }}>
-                                        </td>
-                                         <td><input disabled type="checkbox" name="placement_completed" form="{{ placement.id }}"
+                                        <td>
+                                            <input disabled type="checkbox" name="placement_completed" form="{{ placement.id }}"
                                                 {{ placement.placement_completed|boolean_checked|default_if_none:"" }}>
                                         </td>
                                         <td>
@@ -91,8 +95,14 @@
                                             </button>
                                         </td>
                                         {% else %}
-                                        <td><input type="number" name="number_seminars_present" form="{{ placement.id }}"
-                                               value="{{ placement.number_seminars_present }}" min="0" max="3"></td>
+                                        <td>
+                                            <input type="number" name="number_seminars_present" form="{{ placement.id }}"
+                                               value="{{ placement.number_seminars_present }}" min="0" max="3">
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" name="presentation_done" form="{{ placement.id }}"
+                                                {{ placement.presentation_done|boolean_checked|default_if_none:"" }}>
+                                        </td>
                                         <td>
                                             <select name="mentoring_accepted" form="{{ placement.id }}">
                                                 {% for state in states %}
@@ -103,9 +113,6 @@
                                                     {% endifequal %}
                                                 {% endfor %}
                                             </select>
-                                        </td>
-                                        <td><input type="checkbox" name="presentation_done" form="{{ placement.id }}"
-                                                {{ placement.presentation_done|boolean_checked|default_if_none:"" }}>
                                         </td>
                                         <td><input type="checkbox" name="placement_completed" form="{{ placement.id }}"
                                                 {{ placement.placement_completed|boolean_checked|default_if_none:"" }}>
