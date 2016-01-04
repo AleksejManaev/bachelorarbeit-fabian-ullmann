@@ -64,7 +64,7 @@
                                         <td>{{ placement.student.user.first_name }}</td>
                                         <td>{{ placement.student.user.last_name }}</td>
                                         <td>{{ placement.student.matriculation_number }}</td>
-                                        <td>{{ placement.student.user.email }}</td>
+                                        <td><a href="mailto:{{ placement.student.user.email }}">{{ placement.student.user.email }}</a></td>
                                         {% if placement.mentoring_accepted == 'MD' %}
                                         <td>
                                             <input disabled type="number" name="number_seminars_present" form="{{ placement.id }}"
