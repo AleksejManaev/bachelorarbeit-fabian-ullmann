@@ -2,6 +2,11 @@
 {% load bootstrap3 %}
 {% load i18n %}
 {% load filter %}
+{% load staticfiles %}
+
+{% block head %}
+    <script src="{% static 'js/student_placement.js' %}"></script>
+{% endblock %}
 
 {% block content %}
     <div class="container center-vertically">
