@@ -345,7 +345,7 @@ def studentPlacementEditable(request, pk):
     request.user.portaluser.student.studentactiveplacement.placement = pl
     request.user.portaluser.student.studentactiveplacement.save()
     return http.HttpResponseRedirect(
-        request.META.get('HTTP_REFERER') if request.META.get('HTTP_REFERER') else reverse('student-placement-update'))
+            request.META.get('HTTP_REFERER') if request.META.get('HTTP_REFERER') else reverse('student-placement-update'))
 
 
 def studentThesisCreate(request):
@@ -374,7 +374,7 @@ def studentThesisEditable(request, pk):
     request.user.portaluser.student.studentactivethesis.thesis = th
     request.user.portaluser.student.studentactivethesis.save()
     return http.HttpResponseRedirect(
-        request.META.get('HTTP_REFERER') if request.META.get('HTTP_REFERER') else reverse('student-thesis-update'))
+            request.META.get('HTTP_REFERER') if request.META.get('HTTP_REFERER') else reverse('student-thesis-update'))
 
 
 class StudentThesisListView(ListView):
@@ -420,7 +420,7 @@ class StudentThesisMentoringrequestFormView(UpdateView):
             'thesis_mentoringrequest_contact_formset': FormsetWorkCompanyContactdata(data, instance=workcompany,
                                                                                      prefix='thesis_mentoringrequest_contact_formset'),
             'thesis_mentoringrequest_student_form': FormMentoringrequestStudent(data, instance=mentoringrequest,
-                                                                                prefix='thesis_mentoringrequest_student_form'), }
+                                                                                prefix='thesis_mentoringrequest_student_form'),}
 
     def get_thesis_mentoringrequest(self):
         if not hasattr(self.request.user.portaluser.student, 'studentactivethesis'):
@@ -598,9 +598,9 @@ class StudentThesisRegistrationFormView(UpdateView):
         fdf_file.close()
 
         os.system(
-            'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf '
-            'output {directory}{file} flatten'.format(
-                mediaroot=settings.MEDIA_ROOT, directory=directory, file=filename))
+                'pdftk {mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.pdf fill_form {directory}/data.fdf '
+                'output {directory}{file} flatten'.format(
+                        mediaroot=settings.MEDIA_ROOT, directory=directory, file=filename))
 
         self.object.pdf_file = "{user}/thesis/registration/{file}".format(user=self.request.user, file=filename)
         self.object.save()
@@ -639,11 +639,11 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
-                                                    prefix='student_user_formset'),
-            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
-                                                          prefix='student_address_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
+                                                        prefix='student_user_formset'),
+                student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
+                                                              prefix='student_address_formset')
         )
 
     def get_object(self, queryset=None):
@@ -783,11 +783,7 @@ class TutorView(View):
         if not self.get_object():
             return redirect('index')
         else:
-            if request.GET.has_key('order_by'):
-                orderCriteria = request.GET.get('order_by')
-                placements = Placement.objects.filter(tutor=request.user.id, mentoring_requested=True).order_by(orderCriteria)
-            else:
-                placements = Placement.objects.filter(tutor=request.user.id, mentoring_requested=True)
+            placements = Placement.objects.filter(tutor=request.user.id, mentoring_requested=True)
             return render(request, self.template_name, {'placements': placements, 'states': STATUS_CHOICES})
 
     def get_object(self, queryset=None):
@@ -1220,8 +1216,8 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user, prefix='tutor_user_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user, prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
