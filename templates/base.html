@@ -4,19 +4,24 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     {% load i18n %}
-
     {% load staticfiles %}
-    <link href="{% static 'css/fhb.css' %}" media="all" rel="stylesheet">
 
+    <!-- FHB CSS + JS -->
+    <link href="{% static 'css/fhb.css' %}" media="all" rel="stylesheet">
+    <script src="{% static 'js/fhb.js' %}"></script>
+
+    <!-- jQuery CSS + JS -->
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
     <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-    <script src="{% static 'js/fhb.js' %}"></script>
 
     <!-- Bootstrap ist responsive auf mobilen Geräten -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!-- UTF-8 für Umlaute in HTML aktivieren -->
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    {% block head %}
+    {% endblock %}
 </head>
 
 <body>
