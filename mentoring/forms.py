@@ -102,25 +102,6 @@ class FormTutorPlacement(forms.ModelForm):
         fields = ['number_seminars_present', 'presentation_done', 'placement_completed', 'mentoring_accepted']
 
 
-class FormThesisMentoringrequest(forms.ModelForm):
-    def is_valid(self):
-        req = True if self.data.has_key('finalize') else False
-
-        for key, val in self.fields.iteritems():
-            val.required = req
-
-        is_valid = super(FormThesisMentoringrequest, self).is_valid()
-        return is_valid
-
-    class Meta:
-        model = Thesis
-        exclude = ['student', 'finished', 'report', 'poster', 'sent_on', 'state', 'documents_finished']
-        fields = '__all__'
-        widgets = {
-            'task': forms.Textarea()
-        }
-
-
 FormsetWorkCompany = forms.inlineformset_factory(Thesis, WorkCompany, fields=['address'], extra=1,
                                                  fk_name='work', can_delete=False)
 FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, CompanyContactData, fields='__all__', extra=1,
@@ -128,51 +109,6 @@ FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, Company
 
 FormsetPlacementContactdata = forms.inlineformset_factory(Placement, PlacementCompanyContactData, fields='__all__',
                                                           extra=1, can_delete=False)
-
-
-class FormMentoringrequestStudent(forms.ModelForm):
-    def is_valid(self):
-        """
-        Falls das Objekt bereits angefragt wurde -> invalid
-        """
-        if (self.instance.state in ['RE', 'AC']):
-            return False
-
-        req = True if self.data.has_key('finalize') else False
-
-        for key, val in self.fields.iteritems():
-            val.required = True
-
-        is_valid = super(FormMentoringrequestStudent, self).is_valid()
-        return is_valid
-
-    class Meta:
-        model = MentoringRequest
-        fields = ['tutor_email', 'comment']
-        widgets = {
-            'comment': forms.Textarea()
-        }
-
-
-class FormMentoringrequestTutor(forms.ModelForm):
-    permission = forms.BooleanField()
-    permission.required = False
-
-    def is_valid(self):
-        # Todo Answer soll bei Accept nicht required sein
-        self.fields['answer'].required = True
-        return super(FormMentoringrequestTutor, self).is_valid()
-
-    class Meta:
-        model = MentoringRequest
-        fields = ['answer', 'permission']
-        exclude = ['state']
-
-
-class FormMentoringTutor(forms.ModelForm):
-    class Meta:
-        model = Mentoring
-        fields = '__all__'
 
 
 # Todo FormStudent alternative E-Mail anpassen
