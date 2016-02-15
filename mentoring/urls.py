@@ -23,11 +23,8 @@ urlpatterns = [
 
     url(r'^student/$', login_required(StudentIndexView.as_view()), name='student-index'),
     url(r'^student/settings/$', login_required(StudentSettingsFormView.as_view()), name='student-settings'),
-
     url(r'^student/placement/$', login_required(StudentFormView.as_view()), name='student-placement'),
     url(r'^student/placement/update/$', StudentPlacementFormView.as_view(), name='student-placement-update'),
-    url(r'^student/placement/update/todo/$', StudentPlacementFormView.as_view(template_name='student_placement_form_todo.html'),
-        name='student-placement-update-todo'),
 
     url(r'^download/(?P<pk>\d+)/(?P<documenttype>\w+)$', login_required(DownloadView.as_view()), name='download'),
 
