@@ -16,8 +16,8 @@ Including another URLconf
 """
 from account.views import LoginView
 from django.conf import settings
-from django.conf.urls.static import static
 from django.conf.urls import include, url
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
@@ -29,7 +29,5 @@ urlpatterns = [
                       {'next_page': reverse_lazy('index')},
                       name='logout'),
                   url(r'^', include('mentoring.urls')),
-                  url(r'^material/', include('materialize.urls')),
                   url(r'^admin/', include(admin.site.urls)),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
