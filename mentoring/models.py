@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import AbstractUser
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+
 from mentoring.helpers import *
 from mentoring.validators import *
 
@@ -228,7 +228,7 @@ class Thesis(AbstractWork):
     @property
     def registration(self):
         return Registration.objects.get_or_create(mentoring=self.mentoringrequest.mentoring)[0] if hasattr(
-                self.mentoringrequest, 'mentoring') and self.mentoringrequest.mentoring else None
+            self.mentoringrequest, 'mentoring') and self.mentoringrequest.mentoring else None
 
 
 class WorkCompany(models.Model):
@@ -324,13 +324,6 @@ class ResponseExaminationBoard(models.Model):
 
 class Colloquium(Event):
     mentoring = models.OneToOneField(Mentoring)
-
-
-class CompanyRating(models.Model):
-    rate = models.PositiveSmallIntegerField(_('rate'))
-    thesis = models.ForeignKey(Thesis)
-    comment = models.TextField(_('comment'))
-    public = models.BooleanField(default=False)
 
 
 class Comment(models.Model):
