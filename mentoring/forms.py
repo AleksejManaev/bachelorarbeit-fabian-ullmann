@@ -1,40 +1,11 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.forms.utils import ErrorList
 from django.forms.widgets import DateInput
 
 from mentoring.models import *
 from mentoring.widgets import ClearableFileInput
 
 __author__ = 'ullmanfa'
-
-
-class FormCompany(forms.ModelForm):
-    def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None,
-                 initial=None, error_class=ErrorList, label_suffix=None,
-                 empty_permitted=False, instance=None, parent=None):
-        self.parent = parent
-        super(FormCompany, self).__init__(data=data, files=files, auto_id=auto_id, prefix=prefix,
-                                          initial=initial, error_class=error_class, label_suffix=label_suffix,
-                                          empty_permitted=empty_permitted, instance=instance)
-
-    def is_valid(self):
-        # TODO Validierung implementieren
-        return True
-
-        # if not self['name'].value():
-        #     return False
-        # else:
-        #     self.instance = Company.objects.get_or_create(name=self['name'].value())[0]
-        #     self.instance.save()
-        #     if self.parent:
-        #         self.parent.company = self.instance
-        #         self.parent.save()
-        #     return super(FormCompany, self).is_valid()
-
-    class Meta:
-        model = Company
-        fields = '__all__'
 
 
 class FormPlacement(forms.ModelForm):
@@ -101,11 +72,6 @@ class FormTutorPlacement(forms.ModelForm):
                    'report', 'certificate', 'company_name', 'company_address']
         fields = ['number_seminars_present', 'presentation_done', 'placement_completed', 'mentoring_accepted']
 
-
-FormsetWorkCompany = forms.inlineformset_factory(Thesis, WorkCompany, fields=['address'], extra=1,
-                                                 fk_name='work', can_delete=False)
-FormsetWorkCompanyContactdata = forms.inlineformset_factory(WorkCompany, CompanyContactData, fields='__all__', extra=1,
-                                                            can_delete=False)
 
 FormsetPlacementContactdata = forms.inlineformset_factory(Placement, PlacementCompanyContactData, fields='__all__',
                                                           extra=1, can_delete=False)

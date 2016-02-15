@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-17 21:58+0100\n"
+"POT-Creation-Date: 2016-01-18 23:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -562,7 +562,6 @@ msgid "info"
 msgstr "Info"
 
 #: .\mentoring\templates\tutor_index.html:58
-#: .\mentoring\templates\tutor_index.html:157
 #: .\mentoring\templatetags\filter.py:29
 msgid "mentoring accepted"
 msgstr "Betreuung angenommen"
@@ -575,7 +574,6 @@ msgstr "Praktikum"
 #: .\mentoring\templates\tutor_index.html:152
 #: .\mentoring\templates\tutor_index.html:153
 #: .\mentoring\templates\tutor_index.html:154
-#: .\mentoring\templates\tutor_index.html:157
 msgid "Search"
 msgstr ""
 
