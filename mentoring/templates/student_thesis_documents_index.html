@@ -1,9 +1,0 @@
-{% extends request.is_ajax|yesno:'base_ajax.html,base_portal.html' %}
-{% load staticfiles %}
-{% load material %}
-
-{# Todo Preview-Seite erstellen #}
-{% block material_content %}
-    <p><a href="{{ MEDIA_URL }}{{ object.report }}">{% trans 'Report' %}</a></p>
-    <p><a href="{{ MEDIA_URL }}{{ object.poster }}">{% trans 'Presentation' %}</a></p>
-{% endblock %}
