@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 from django import http
 from django.db.models import Q
 from django.shortcuts import render, redirect
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
 
@@ -135,100 +135,6 @@ class StudentPlacementFormView(UpdateView):
         return redirect('student-placement')
 
 
-class StudentThesisMentoringrequestFormView(UpdateView):
-    """
-    + Absolventen können Abschlussarbeit anlegen
-    + Absolventen können die Abschlussarbeit beschreiben
-    + Absolventen können Informationen zum Unternehmen erfassen, für welches die Abschlussarbeit durchgeführt wurde.
-    + Absolventen können das erfasste Thema einem Dozenten zur Betreuung vorschlagen
-    + Absolventen können den Status der Betreuungsanfrage verfolgen
-    + Absolventen können ein vorausgefülltes Anmeldeformular herunterladen
-
-    """
-    model = Thesis
-    form_class = FormThesisMentoringrequest
-    template_name = 'student_thesis_mentoringrequest_form.html'
-
-    def get_context_thesis_mentoringrequest(self, data=None, files=None, **kwargs):
-        """
-        enthält all nötigen Formulare, die an Template übergeben werden und validiert werden müssen
-
-        wird auch von erbenden Klassen genutzt
-        """
-        mentoringrequest = self.get_thesis_mentoringrequest()
-        thesis = mentoringrequest.thesis
-        workcompany = thesis.workcompany
-        return {
-            'thesis': thesis,
-            'thesis_mentoringrequest_form': FormThesisMentoringrequest(data, files=files, instance=thesis,
-                                                                       prefix='thesis_mentoringrequest_form'),
-            'thesis_mentoringrequest_company_form': FormCompany(data, parent=workcompany,
-                                                                instance=workcompany.company,
-                                                                prefix='thesis_mentoringrequest_company_form'),
-            'thesis_mentoringrequest_company_formset': FormsetWorkCompany(data, instance=thesis,
-                                                                          prefix='thesis_mentoringrequest_company_formset'),
-            'thesis_mentoringrequest_contact_formset': FormsetWorkCompanyContactdata(data, instance=workcompany,
-                                                                                     prefix='thesis_mentoringrequest_contact_formset'),
-            'thesis_mentoringrequest_student_form': FormMentoringrequestStudent(data, instance=mentoringrequest,
-                                                                                prefix='thesis_mentoringrequest_student_form'),}
-
-    def get_thesis_mentoringrequest(self):
-        if not hasattr(self.request.user.portaluser.student, 'studentactivethesis'):
-            StudentActiveThesis.objects.get_or_create(student=self.request.user.portaluser.student,
-                                                      thesis=self.request.user.portaluser.student.thesis_set.last())
-        th = self.request.user.portaluser.student.studentactivethesis.thesis
-        return th.mentoringrequest
-
-    def get(self, request, status=200, *args, **kwargs):
-        if request.GET.has_key('fancy'):
-            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
-        self.object = self.get_thesis_mentoringrequest().thesis
-        cd = self.get_context_data()
-        cd.update(self.get_context_thesis_mentoringrequest())
-        return self.render_to_response(cd, status=status)
-
-    def post(self, request, *args, **kwargs):
-        if request.GET.has_key('fancy'):
-            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
-
-        self.object = self.get_thesis_mentoringrequest()
-
-        if self.object.thesis.finished or self.object.state in ['RE', 'AC']:
-            return self.get(request, status=405)
-        else:
-            self.thesis_cd = self.get_context_thesis_mentoringrequest(request.POST, files=request.FILES)
-
-        form_target = request.POST.get('target_form').split(',') if request.POST.has_key('target_form') else [i for i, v
-                                                                                                              in
-                                                                                                              self.thesis_cd.iteritems()]
-
-        if 'thesis' in form_target:
-            form_target.remove('thesis')
-
-        status = 200
-
-        for t in form_target:
-            if self.thesis_cd.has_key(t) and self.thesis_cd.get(t).is_valid():
-                self.thesis_cd.get(t).save()
-            else:
-                status = 400
-
-        if status == 200:
-            self.thesis_cd = self.get_context_thesis_mentoringrequest()
-            if request.POST.has_key('finalize'):
-                self.object.state = 'RE'
-                self.object.requested_on = timezone.now()
-                self.object.answer = ''
-                self.object.save()
-        else:
-            self.object.thesis.finished = False
-            self.object.thesis.save()
-
-        cd = self.get_context_data()
-        cd.update(self.thesis_cd)
-        return self.render_to_response(cd, status=status)
-
-
 class StudentSettingsFormView(UpdateView):
     """
     + Studenten können ihre persönlichen Daten hinterlegen
@@ -273,7 +179,7 @@ class StudentSettingsFormView(UpdateView):
         return Student.objects.get(user=self.request.user)
 
 
-class StudentFormView(StudentThesisMentoringrequestFormView, StudentPlacementFormView):
+class StudentFormView(StudentPlacementFormView):
     """
     Zeigt alle Studenten-Formulare in einer Seite an
     """
@@ -285,7 +191,9 @@ class StudentFormView(StudentThesisMentoringrequestFormView, StudentPlacementFor
             return redirect('index')
         else:
             self.object = self.get_object()
-            return super(UpdateView, self).get(request, *args, **kwargs)
+
+            return render(request, self.template_name, self.get_context_data())
+            # return super(UpdateView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """
@@ -299,7 +207,6 @@ class StudentFormView(StudentThesisMentoringrequestFormView, StudentPlacementFor
             if context_object_name:
                 context[context_object_name] = self.object
             context.update(kwargs)
-            # context.update(self.get_context_thesis_mentoringrequest())
             context.update(self.get_context_placement())
             context.update(self.get_denied_placements())
             return context
