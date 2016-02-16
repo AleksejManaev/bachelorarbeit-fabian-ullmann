@@ -3,7 +3,7 @@ from datetime import datetime
 
 from django import http
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
+from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
@@ -205,11 +205,14 @@ class StudentFormView(StudentPlacementFormView):
         if self.get_object():
             context['object'] = self.object
             context_object_name = self.get_context_object_name(self.object)
+
             if context_object_name:
                 context[context_object_name] = self.object
+
             context.update(kwargs)
             context.update(self.get_context_placement())
             context.update(self.get_denied_placements())
+            
             return context
         else:
             return None
@@ -348,8 +351,8 @@ class PlacementCommentsView(View):
             return HttpResponseNotFound()
 
     def is_placement_allowed(self, pk):
-        return Placement.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(
-            tutor=self.request.user.portaluser)).exists()
+        return Placement.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(tutor=self.request.user.portaluser)).exists()
+
 
 def togglePrivacy(request):
     id = request.POST.get('id')
