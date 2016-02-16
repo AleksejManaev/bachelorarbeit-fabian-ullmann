@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django import http
 from django.db.models import Q
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
@@ -334,12 +335,34 @@ class PlacementCommentsView(View):
             comment.author = self.request.user.portaluser.user
             comment.abstract_work = AbstractWork.objects.get(id=pk)
             comment.message = request.POST.get('message')
+
+            private = request.POST.get('private')
+            if private is None:
+                private = False
+            comment.private = private
+
             comment.save()
 
             return redirect('placements-comments', pk=pk)
         else:
-            return http.HttpResponseNotFound()
+            return HttpResponseNotFound()
 
     def is_placement_allowed(self, pk):
         return Placement.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(
             tutor=self.request.user.portaluser)).exists()
+
+def togglePrivacy(request):
+    id = request.POST.get('id')
+    comment = Comment.objects.get(pk=id)
+    private_text = ''
+
+    if comment.private:
+        comment.private = False
+        private_text = 'Not private'
+    else:
+        comment.private = True
+        private_text = 'Private'
+
+    comment.save()
+
+    return JsonResponse({'private_state': comment.private, 'private_text': str(_(private_text))})

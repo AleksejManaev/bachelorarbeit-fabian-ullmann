@@ -167,3 +167,4 @@ class Comment(models.Model):
     abstract_work = models.ForeignKey(AbstractWork)
     message = models.TextField(_('message'))
     timestamp = models.DateTimeField(auto_now_add=True)
+    private = models.BooleanField(_('Only visible for me'), default=False)

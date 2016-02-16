@@ -34,4 +34,5 @@ urlpatterns = [
     url(r'^tutor/settings/$', login_required(TutorSettingsFormView.as_view()), name='tutor-settings'),
 
     url(r'^comments/placement/(?P<pk>\d+)$', login_required(PlacementCommentsView.as_view()), name='placements-comments'),
+    url(r'^comments/placement/toggleprivacy$', login_required(togglePrivacy), name='placements-comments'),
 ]

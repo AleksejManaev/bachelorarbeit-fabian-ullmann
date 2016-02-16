@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 {% load i18n %}
+{% load staticfiles %}
+
+{% block head %}
+    <script type="text/javascript" src="{% static 'js/comments.js' %}"></script>
+{% endblock %}
 
 {% block content %}
     <div class="container center-vertically">
@@ -10,17 +15,43 @@
 
             <div class="col-md-8">
                 {% for comment in comments %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <b>{{ comment.author.first_name }} {{ comment.author.last_name }}</b> {% trans 'wrote' %}:
-                            <div>
-                                <span class="label label-primary">{{ comment.timestamp }}</span>
+                    {% if comment.author == request.user %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <b>{{ comment.author.first_name }} {{ comment.author.last_name }}</b> {% trans 'wrote' %}:
+                                <div>
+                                    <span class="label label-primary">{{ comment.timestamp }}</span>
+
+                                    <!-- Sichtbarkeit des Kommentars togglen -->
+                                    {% csrf_token %}
+                                    {% if comment.private %}
+                                        <button id="{{ comment.id }}" class="btn btn-warning btn-xs btn-privacy">
+                                            <b>{% trans 'Private' %}</b>
+                                        </button>
+                                    {% else %}
+                                        <button id="{{ comment.id }}" class="btn btn-danger btn-xs btn-privacy">
+                                            <b>{% trans 'Not private' %}</b>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                {{ comment.message }}
                             </div>
                         </div>
-                        <div class="panel-body">
-                            {{ comment.message }}
+                    {% elif not comment.author == request.user and not comment.private %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <b>{{ comment.author.first_name }} {{ comment.author.last_name }}</b> {% trans 'wrote' %}:
+                                <div>
+                                    <span class="label label-primary">{{ comment.timestamp }}</span>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                {{ comment.message }}
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
 
@@ -37,6 +68,7 @@
                 <form action="" method="post" class="form">
                     {% csrf_token %}
                     {% bootstrap_field comment_form.message show_label=False %}
+                    {% bootstrap_field comment_form.private %}
                     {% buttons %}
                         <button type="submit" class="btn btn-primary">
                             {% trans 'Send' %}
