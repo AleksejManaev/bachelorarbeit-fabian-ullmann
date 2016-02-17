@@ -26,8 +26,6 @@ urlpatterns = [
     url(r'^student/placement/$', login_required(StudentFormView.as_view()), name='student-placement'),
     url(r'^student/placement/update/$', StudentPlacementFormView.as_view(), name='student-placement-update'),
 
-    url(r'^download/(?P<pk>\d+)/(?P<documenttype>\w+)$', login_required(DownloadView.as_view()), name='download'),
-
     url(r'^tutor/placement/update/(?P<pk>\d+)/$', login_required(TutorUpdatePlacementView.as_view()), name='tutor-placement-update'),
     url(r'^tutor/placement/(?P<pk>\d+)/$', TutorPlacementView.as_view(template_name='tutor_placement_details.html'), name='placement-details'),
     url(r'^tutor/$', TutorView.as_view(), name='tutor-index'),

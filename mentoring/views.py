@@ -2,6 +2,7 @@
 from datetime import datetime
 
 from django import http
+from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
@@ -28,30 +29,6 @@ class IndexView(RedirectView):
         else:
             self.pattern_name = 'logout'
         return super(IndexView, self).get(request, *args, **kwargs)
-
-
-class DownloadView(View):
-    def get(self, request, pk, documenttype):
-        placement = Placement.objects.get(student=pk)
-        student_name = placement.student
-
-        # Tutor darf nur die Dokumente von seinen Studenten runterladen
-        if not (placement.tutor.user == request.user):
-            return http.HttpResponseNotFound()
-
-        if documenttype == 'certificate':
-            filepath = placement.certificate
-        elif documenttype == 'report':
-            filepath = placement.report
-        else:
-            return http.HttpResponseNotFound()
-
-        with open(settings.MEDIA_ROOT + '/' + filepath.__str__(), 'rb') as pdf:
-            response = http.HttpResponse(pdf.read(), content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="{student_name}-{documenttype}.pdf"' \
-                .format(student_name=student_name, documenttype=_(documenttype))
-            return response
-        pdf.closed
 
 
 class StudentPlacementFormView(UpdateView):
@@ -212,7 +189,7 @@ class StudentFormView(StudentPlacementFormView):
             context.update(kwargs)
             context.update(self.get_context_placement())
             context.update(self.get_denied_placements())
-            
+
             return context
         else:
             return None
@@ -314,8 +291,14 @@ class TutorSettingsFormView(UpdateView):
         return self.request.user.portaluser.tutor
 
 
-class TutorPlacementView(DetailView):
+class TutorPlacementView(UpdateView):
     model = Placement
+    fields = ['student', 'course', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
+    template_name = 'tutor_placement_details.html'
+    exclude = ['tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'placement_completed']
+
+    def get_success_url(self):
+        return reverse('placement-details', args=[self.object.id])
 
 
 class PlacementCommentsView(View):

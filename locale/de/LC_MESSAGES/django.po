@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-16 17:50+0100\n"
+"POT-Creation-Date: 2016-02-17 19:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,7 +92,6 @@ msgid "web address"
 msgstr "Internetadresse"
 
 #: .\mentoring\models.py:85 .\mentoring\templates\student_placement.html:27
-#: .\mentoring\templates\tutor_placement_details.html:30
 msgid "task"
 msgstr "Aufgabe"
 
@@ -109,7 +108,6 @@ msgid "date sent"
 msgstr "Abgabetermin"
 
 #: .\mentoring\models.py:111
-#: .\mentoring\templates\tutor_placement_details.html:22
 msgid "course placement"
 msgstr "Studiengang"
 
@@ -130,12 +128,14 @@ msgid "internship end"
 msgstr "Praktikumsende"
 
 #: .\mentoring\models.py:117
-msgid "Upload placement report"
-msgstr "Meinen Praktikumsbericht hochladen"
+#: .\mentoring\templates\tutor_placement_details.html:48
+msgid "Placement report"
+msgstr "Praktikumsbericht"
 
 #: .\mentoring\models.py:119
-msgid "Upload placement certificate"
-msgstr "Mein Praktikumszeugnis hochladen"
+#: .\mentoring\templates\tutor_placement_details.html:62
+msgid "Placement certificate"
+msgstr "Praktikumszeugnis"
 
 #: .\mentoring\models.py:123 .\mentoring\templates\tutor_index.html:56
 msgid "Seminars present"
@@ -199,7 +199,7 @@ msgid "Send"
 msgstr "Absenden"
 
 #: .\mentoring\templates\student_index.html:12
-#: .\mentoring\templates\tutor_placement_details.html:8
+#: .\mentoring\templates\tutor_placement_details.html:19
 msgid "Placement"
 msgstr "Praktikum"
 
@@ -291,33 +291,19 @@ msgstr "Praktikum"
 msgid "Search"
 msgstr ""
 
-#: .\mentoring\templates\tutor_placement_details.html:14
-msgid "Student"
+#: .\mentoring\templates\tutor_placement_details.html:52
+#: .\mentoring\templates\tutor_placement_details.html:66
+msgid "Currently"
 msgstr ""
 
-#: .\mentoring\templates\tutor_placement_details.html:38
-msgid "date from"
-msgstr "Beginn"
+#: .\mentoring\templates\tutor_placement_details.html:55
+#: .\mentoring\templates\tutor_placement_details.html:69
+msgid "Reset"
+msgstr "Zurücksetzen"
 
-#: .\mentoring\templates\tutor_placement_details.html:46
-msgid "date to"
-msgstr "Ende"
-
-#: .\mentoring\templates\tutor_placement_details.html:54
-msgid "Report"
-msgstr "Abschlussbericht"
-
-#: .\mentoring\templates\tutor_placement_details.html:67
-msgid "certificate"
-msgstr "Praktikumszeugnis"
-
-#: .\mentoring\templates\tutor_placement_details.html:79
-msgid "Company Name"
-msgstr "Name des Unternehmens"
-
-#: .\mentoring\templates\tutor_placement_details.html:87
-msgid "Company Address"
-msgstr "Anschrift des Unternehmens"
+#: .\mentoring\templates\tutor_placement_details.html:80
+msgid "Update"
+msgstr "Aktualisieren"
 
 #: .\mentoring\templatetags\filter.py:27
 msgid "requested"
@@ -343,8 +329,23 @@ msgstr "Profil"
 msgid "Logout"
 msgstr "Abmelden"
 
-#~ msgid "date"
-#~ msgstr "Datum"
+#~ msgid "date from"
+#~ msgstr "Beginn"
+
+#~ msgid "date to"
+#~ msgstr "Ende"
+
+#~ msgid "Report"
+#~ msgstr "Abschlussbericht"
+
+#~ msgid "certificate"
+#~ msgstr "Praktikumszeugnis"
+
+#~ msgid "Company Name"
+#~ msgstr "Name des Unternehmens"
+
+#~ msgid "Company Address"
+#~ msgstr "Anschrift des Unternehmens"
 
 #~ msgid "time"
 #~ msgstr "Uhrzeit"

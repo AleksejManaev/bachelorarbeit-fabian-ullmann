@@ -114,9 +114,9 @@ class Placement(AbstractWork):
     company_address = models.TextField(_('company address'), null=True, blank=True)
     date_from = models.DateField(_('internship begin'), blank=True, null=True)
     date_to = models.DateField(_('internship end'), blank=True, null=True)
-    report = models.FileField(_('Upload placement report'), upload_to=upload_to_placement_report, blank=True, null=True,
+    report = models.FileField(_('Placement report'), upload_to=upload_to_placement_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
-    certificate = models.FileField(_('Upload placement certificate'), upload_to=upload_to_placement_certificate,
+    certificate = models.FileField(_('Placement certificate'), upload_to=upload_to_placement_certificate,
                                    blank=True,
                                    null=True,
                                    validators=[validate_pdf, validate_size])
