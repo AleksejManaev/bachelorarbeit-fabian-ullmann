@@ -70,7 +70,7 @@ class FormTutorPlacement(forms.ModelForm):
         model = Placement
         exclude = ['student', 'finished', 'mentoring_requested', 'sent_on', 'course', 'tutor', 'task', 'date_form', 'date_to',
                    'report', 'certificate', 'company_name', 'company_address']
-        fields = ['number_seminars_present', 'presentation_done', 'placement_completed', 'mentoring_accepted']
+        fields = ['placement_completed', 'mentoring_accepted']
 
 
 FormsetPlacementContactdata = forms.inlineformset_factory(Placement, PlacementCompanyContactData, fields='__all__',

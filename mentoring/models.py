@@ -124,8 +124,6 @@ class Placement(AbstractWork):
                                    blank=True,
                                    null=True,
                                    validators=[validate_pdf, validate_size])
-    number_seminars_present = models.IntegerField(_('Seminars present'), default=0)
-    presentation_done = models.BooleanField(_('Presentation'), default=False)
     mentoring_requested = models.BooleanField(_('Requested'), default=False)
     mentoring_accepted = models.CharField(max_length=2, choices=STATUS_CHOICES, default='ND')
     placement_completed = models.BooleanField(_('Completed'), default=False)
