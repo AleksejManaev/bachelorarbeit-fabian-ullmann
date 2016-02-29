@@ -27,6 +27,7 @@
 
                             {% for form in student_user_formset.forms %}
                                 {% bootstrap_field form.matriculation_number %}
+                                {% bootstrap_field form.placement_year %}
                                 {% bootstrap_field form.phone %}
                                 {% bootstrap_field form.extern_email %}
                                 {% bootstrap_field form.portaluser_ptr %}

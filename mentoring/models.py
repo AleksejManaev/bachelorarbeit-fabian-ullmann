@@ -46,6 +46,7 @@ class PortalUser(ContactModel):
 @python_2_unicode_compatible
 class Tutor(PortalUser):
     placement_courses = models.ManyToManyField(Course, blank=True, null=True)
+    placement_reponsible = models.BooleanField(default=False, null=False, blank=False)
 
     @property
     def get_full_name(self):
@@ -59,6 +60,9 @@ class Tutor(PortalUser):
 class Student(PortalUser):
     matriculation_number = models.CharField(_('Matriculation number'), max_length=8, null=True, blank=True)
     extern_email = models.EmailField(_('extern email address'), null=True, blank=True)
+    placement_year = models.IntegerField(_('Placement year'), blank=True, null=True)
+    presentation_done = models.BooleanField(_('Presentation'), default=False)
+    placement_seminar_done = models.BooleanField(_('Placement seminar done'), default=False)
 
     def __str__(self):
         return u"{} ({})".format(self.user.get_full_name(), self.matriculation_number)
@@ -168,3 +172,13 @@ class Comment(models.Model):
     message = models.TextField(_('message'))
     timestamp = models.DateTimeField(auto_now_add=True)
     private = models.BooleanField(_('Only visible for me'), default=False)
+
+
+class PlacementSeminar(models.Model):
+    placement_year = models.IntegerField(_('Placement year'), blank=True, null=True)
+
+
+class PlacementSeminarEntry(models.Model):
+    date = models.DateTimeField(default=None, blank=True, null=True)
+    placement_seminar = models.ForeignKey(PlacementSeminar)
+    students = models.ManyToManyField(Student)

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+{% load staticfiles %}
+{% load filter %}
+
+
+{% block content %}
+    <div class="container center-vertically">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">{% trans 'Placement seminars' %}</h1>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            {% for placement_seminar in object_list %}
+                                <li>
+                                    <a href="{% url 'placement-seminar-update' placement_seminar.id %}">{{ placement_seminar.placement_year }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'placement-seminar-create' %}" class="btn btn-primary"
+                           role="button">{% trans 'Create seminar' %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

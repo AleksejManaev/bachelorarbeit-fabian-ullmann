@@ -10,6 +10,14 @@ numeric_test = re.compile("^\d+$")
 
 
 @register.filter
+def bool2string(value, *args):
+    if value:
+        return _('Yes')
+    else:
+        return _('No')
+
+
+@register.filter
 def state_css(value, *args):
     if value == 'ND':
         return 'alert-warning'

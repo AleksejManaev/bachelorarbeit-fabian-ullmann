@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+{% load staticfiles %}
+{% load filter %}
+
+
+{% block content %}
+    <div class="container center-vertically">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">{% trans 'Seminar' %}</h1>
+                    </div>
+                    <div class="panel-body">
+                        <form enctype="multipart/form-data" action="" method="post" class="form">
+                            {% csrf_token %}
+
+                            {% bootstrap_field form.placement_year bound_css_class=' ' %}
+
+                            {% buttons %}
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                    {% trans 'Create seminar' %}
+                                </button>
+                            {% endbuttons %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

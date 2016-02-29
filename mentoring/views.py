@@ -2,15 +2,16 @@
 from datetime import datetime
 
 from django import http
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseNotFound
+from django.http import JsonResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
 
 from mentoring.forms import *
 from mentoring.models import Student, Placement
+from django.db import transaction
 
 
 class IndexView(RedirectView):
@@ -146,11 +147,11 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
-                                                    prefix='student_user_formset'),
-            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
-                                                          prefix='student_address_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
+                                                        prefix='student_user_formset'),
+                student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
+                                                              prefix='student_address_formset')
         )
 
     def get_object(self, queryset=None):
@@ -283,8 +284,9 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user, prefix='tutor_user_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
+                                                    prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
@@ -293,9 +295,11 @@ class TutorSettingsFormView(UpdateView):
 
 class TutorPlacementView(UpdateView):
     model = Placement
-    fields = ['student', 'course', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
+    fields = ['student', 'course', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name',
+              'company_address']
     template_name = 'tutor_placement_details.html'
-    exclude = ['tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'placement_completed']
+    exclude = ['tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted',
+               'placement_completed']
 
     def get_success_url(self):
         return reverse('placement-details', args=[self.object.id])
@@ -334,7 +338,8 @@ class PlacementCommentsView(View):
             return HttpResponseNotFound()
 
     def is_placement_allowed(self, pk):
-        return Placement.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(tutor=self.request.user.portaluser)).exists()
+        return Placement.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(
+                tutor=self.request.user.portaluser)).exists()
 
 
 def togglePrivacy(request):
@@ -352,3 +357,120 @@ def togglePrivacy(request):
     comment.save()
 
     return JsonResponse({'private_state': comment.private, 'private_text': str(_(private_text))})
+
+
+class PlacementSeminarListView(ListView):
+    model = PlacementSeminar
+    template_name = 'placement_seminar_list.html'
+
+
+class PlacementSeminarCreateView(CreateView):
+    model = PlacementSeminar
+    template_name = 'placement_seminar_create.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('placement-seminar-list')
+
+
+class PlacementSeminarUpdateView(UpdateView):
+    model = PlacementSeminar
+    template_name = 'placement_seminar_update.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('placement-seminar-list')
+
+    def get_context_data(self, **kwargs):
+        context = super(PlacementSeminarUpdateView, self).get_context_data(**kwargs)
+        students = Student.objects.filter(placement_year=self.get_object().placement_year).order_by('matriculation_number')
+        entrys = PlacementSeminarEntry.objects.filter(placement_seminar=self.get_object().id).order_by('date')
+        numbers_present_dict = {}
+
+        for student in students:
+            numbers_present_dict[student.id] = 0
+
+        for entry in entrys:
+            for student in entry.students.all():
+                if student.id in numbers_present_dict:
+                    numbers_present = numbers_present_dict[student.id]
+                    numbers_present_dict[student.id] = numbers_present + 1
+
+        context['students'] = students
+        context['entrys'] = entrys
+        context['numbers_present_dict'] = numbers_present_dict
+        return context
+
+
+class PlacementSeminarEntryCreateView(CreateView):
+    model = PlacementSeminarEntry
+    template_name = 'placement_seminar_entry_create.html'
+    fields = ['date', 'placement_seminar']
+
+    def get_success_url(self):
+        return reverse('placement-seminar-update', args=[self.object.placement_seminar.id])
+
+    def get_context_data(self, **kwargs):
+        context = super(PlacementSeminarEntryCreateView, self).get_context_data(**kwargs)
+        context['placement_seminar_id'] = self.request.GET.get('placement_seminar')
+        return context
+
+
+class SeminarEntryProcessView(View):
+    @transaction.atomic
+    def post(self, request):
+        checked_student_entry_list = []
+        checked_student_presentaion_list = []
+        checked_student_placement_seminar_list = []
+        placement_seminar_id = int(request.POST.get('placement_seminar'))
+        placement_seminar = PlacementSeminar.objects.get(pk=placement_seminar_id)
+        all_seminar_students = Student.objects.filter(placement_year=placement_seminar.placement_year)
+        all_seminar_entrys = PlacementSeminarEntry.objects.filter(placement_seminar=placement_seminar_id)
+
+        for key in request.POST:
+            splitted_key = key.split('_')
+            if key != 'csrfmiddlewaretoken' and not key.startswith('presentation_done') and key != 'placement_seminar' and not key.startswith('placement_seminar_done'):
+                entry_id = int(splitted_key[0])
+                student_id = int(splitted_key[1])
+                checked_student_entry_list.append([student_id, entry_id])
+            if key.startswith('presentation_done'):
+                student_id = int(splitted_key[2])
+                checked_student_presentaion_list.append(student_id)
+            if key.startswith('placement_seminar_done'):
+                student_id = int(splitted_key[3])
+                checked_student_placement_seminar_list.append(student_id)
+
+        for student in all_seminar_students:
+            if student.id in checked_student_presentaion_list:
+                student.presentation_done = True
+            else:
+                student.presentation_done = False
+            if student.id in checked_student_placement_seminar_list:
+                student.placement_seminar_done = True
+            else:
+                student.placement_seminar_done = False
+            student.save()
+            for entry in all_seminar_entrys:
+                student_entry = [student.id, entry.id]
+                if student_entry in checked_student_entry_list:
+                    entry.students.add(student)
+                else:
+                    entry.students.remove(student)
+                entry.save()
+        return redirect('placement-seminar-update', pk=placement_seminar_id)
+
+
+class SeminarEntryDeleteView(DeleteView):
+    model = PlacementSeminarEntry
+    template = ''
+
+    def get_success_url(self):
+        return reverse('placement-seminar-update', args=[self.get_object().placement_seminar.id])
+
+    def delete(self, request, *args, **kwargs):
+        entry = self.get_object()
+        success_url = self.get_success_url()
+        entry.students.remove()
+        entry.delete()
+        return HttpResponseRedirect(success_url)
+

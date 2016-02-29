@@ -30,6 +30,13 @@ urlpatterns = [
     url(r'^tutor/placement/(?P<pk>\d+)/$', TutorPlacementView.as_view(template_name='tutor_placement_details.html'), name='placement-details'),
     url(r'^tutor/$', TutorView.as_view(), name='tutor-index'),
     url(r'^tutor/settings/$', login_required(TutorSettingsFormView.as_view()), name='tutor-settings'),
+    url(r'^tutor/placementseminar/$', login_required(PlacementSeminarListView.as_view()), name='placement-seminar-list'),
+    url(r'^tutor/placementseminar/create$', login_required(PlacementSeminarCreateView.as_view()), name='placement-seminar-create'),
+    url(r'^tutor/placementseminar/(?P<pk>\d+)/$', login_required(PlacementSeminarUpdateView.as_view()), name='placement-seminar-update'),
+    url(r'^tutor/placementseminarentry/create$', login_required(PlacementSeminarEntryCreateView.as_view()), name='placement-seminar-entry-create'),
+    url(r'^tutor/placementseminarentry/process$', login_required(SeminarEntryProcessView.as_view()), name='seminar-entry-process'),
+    url(r'^tutor/placementseminarentry/(?P<pk>\d+)/delete$', login_required(SeminarEntryDeleteView.as_view()), name='seminar-entry-delete'),
+
 
     url(r'^comments/placement/(?P<pk>\d+)$', login_required(PlacementCommentsView.as_view()), name='placements-comments'),
     url(r'^comments/placement/toggleprivacy$', login_required(togglePrivacy), name='placements-comments'),

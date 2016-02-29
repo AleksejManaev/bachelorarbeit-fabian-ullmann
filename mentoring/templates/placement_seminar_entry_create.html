@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+{% load staticfiles %}
+{% load filter %}
+
+{% block head %}
+    <script src="{% static 'js/datepicker.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container center-vertically">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">{% trans 'Appointment' %}</h1>
+                    </div>
+                    <div class="panel-body">
+                        <form enctype="multipart/form-data" action="" method="post" class="form">
+                            {% csrf_token %}
+                            <input type="hidden" id="id_placement_seminar" name="placement_seminar" value="{{ placement_seminar_id }}">
+                            <div class="form-group">
+                                <label class="control-label" for="date">{% trans 'Date' %}</label>
+                                <input class="form-control datepicker" id="date" name="date" placeholder="{% trans 'Date' %}"
+                                       title="" type="text"
+                                        {% if form.date %}
+                                       value="{{ form.date|date:"d.m.Y" }}"
+                                        {% endif %}
+                                >
+                            </div>
+                            {% buttons %}
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                    {% trans 'Create appointment' %}
+                                </button>
+                            {% endbuttons %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

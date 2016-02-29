@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-17 19:25+0100\n"
+"POT-Creation-Date: 2016-02-29 16:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,118 +62,128 @@ msgstr "Titel"
 msgid "phone"
 msgstr "Telefon"
 
-#: .\mentoring\models.py:60 .\mentoring\templates\tutor_index.html:54
+#: .\mentoring\models.py:61 .\mentoring\templates\tutor_index.html:54
 #: .\mentoring\templates\tutor_index.html:153
 msgid "Matriculation number"
 msgstr "Matrikelnummer"
 
-#: .\mentoring\models.py:61
+#: .\mentoring\models.py:62
 msgid "extern email address"
 msgstr "Externe E-Mail-Adresse"
 
-#: .\mentoring\models.py:77
+#: .\mentoring\models.py:63 .\mentoring\models.py:178
+msgid "Placement year"
+msgstr "Praktikumsjahr"
+
+#: .\mentoring\models.py:64 .\mentoring\models.py:128
+#: .\mentoring\templates\tutor_index.html:57
+msgid "Presentation"
+msgstr "Präsentation"
+
+#: .\mentoring\models.py:65
+#: .\mentoring\templates\placement_seminar_update.html:53
+msgid "Placement seminar done"
+msgstr "Seminar bestanden"
+
+#: .\mentoring\models.py:81
 msgid "street"
 msgstr "Straße"
 
-#: .\mentoring\models.py:78
+#: .\mentoring\models.py:82
 msgid "city"
 msgstr "Stadt"
 
-#: .\mentoring\models.py:79
+#: .\mentoring\models.py:83
 msgid "zip code"
 msgstr "PLZ"
 
-#: .\mentoring\models.py:80
+#: .\mentoring\models.py:84
 msgid "location"
 msgstr "Ort"
 
-#: .\mentoring\models.py:81
+#: .\mentoring\models.py:85
 msgid "web address"
 msgstr "Internetadresse"
 
-#: .\mentoring\models.py:85 .\mentoring\templates\student_placement.html:27
+#: .\mentoring\models.py:89 .\mentoring\templates\student_placement.html:27
 msgid "task"
 msgstr "Aufgabe"
 
-#: .\mentoring\models.py:86
+#: .\mentoring\models.py:90
 msgid "date joined"
 msgstr ""
 
-#: .\mentoring\models.py:87
+#: .\mentoring\models.py:91
 msgid "date updated"
 msgstr ""
 
-#: .\mentoring\models.py:88
+#: .\mentoring\models.py:92
 msgid "date sent"
 msgstr "Abgabetermin"
 
-#: .\mentoring\models.py:111
+#: .\mentoring\models.py:115
 msgid "course placement"
 msgstr "Studiengang"
 
-#: .\mentoring\models.py:113
+#: .\mentoring\models.py:117
 msgid "company name"
 msgstr "Name des Unternehmens"
 
-#: .\mentoring\models.py:114
+#: .\mentoring\models.py:118
 msgid "company address"
 msgstr "Anschrift des Unternehmens"
 
-#: .\mentoring\models.py:115
+#: .\mentoring\models.py:119
 msgid "internship begin"
 msgstr "Praktikumsbeginn"
 
-#: .\mentoring\models.py:116
+#: .\mentoring\models.py:120
 msgid "internship end"
 msgstr "Praktikumsende"
 
-#: .\mentoring\models.py:117
+#: .\mentoring\models.py:121
 #: .\mentoring\templates\tutor_placement_details.html:48
 msgid "Placement report"
 msgstr "Praktikumsbericht"
 
-#: .\mentoring\models.py:119
+#: .\mentoring\models.py:123
 #: .\mentoring\templates\tutor_placement_details.html:62
 msgid "Placement certificate"
 msgstr "Praktikumszeugnis"
 
-#: .\mentoring\models.py:123 .\mentoring\templates\tutor_index.html:56
+#: .\mentoring\models.py:127 .\mentoring\templates\tutor_index.html:56
 msgid "Seminars present"
 msgstr "Seminare anwesend"
 
-#: .\mentoring\models.py:124 .\mentoring\templates\tutor_index.html:57
-msgid "Presentation"
-msgstr "Präsentation"
-
-#: .\mentoring\models.py:125
+#: .\mentoring\models.py:129
 msgid "Requested"
 msgstr "Angefragt"
 
-#: .\mentoring\models.py:127 .\mentoring\templates\student_placement.html:75
+#: .\mentoring\models.py:131 .\mentoring\templates\student_placement.html:75
 #: .\mentoring\templates\tutor_index.html:59
 msgid "Completed"
 msgstr "Bestanden"
 
-#: .\mentoring\models.py:153 .\mentoring\templates\tutor_index.html:52
+#: .\mentoring\models.py:157 .\mentoring\templates\tutor_index.html:52
 #: .\mentoring\templates\tutor_index.html:151
 msgid "First name"
 msgstr "Vorname"
 
-#: .\mentoring\models.py:154 .\mentoring\templates\tutor_index.html:53
+#: .\mentoring\models.py:158 .\mentoring\templates\tutor_index.html:53
 #: .\mentoring\templates\tutor_index.html:152
 msgid "Last name"
 msgstr "Nachname"
 
-#: .\mentoring\models.py:155 .\mentoring\templates\tutor_index.html:55
+#: .\mentoring\models.py:159 .\mentoring\templates\tutor_index.html:55
 #: .\mentoring\templates\tutor_index.html:154
 msgid "Email"
 msgstr "E-Mail-Adresse"
 
-#: .\mentoring\models.py:168
+#: .\mentoring\models.py:172
 msgid "message"
 msgstr "Nachricht"
 
-#: .\mentoring\models.py:170
+#: .\mentoring\models.py:174
 msgid "Only visible for me"
 msgstr "Nur für mich sichtbar"
 
@@ -197,6 +207,57 @@ msgstr "Kommentar schreiben"
 #: .\mentoring\templates\comments.html:74
 msgid "Send"
 msgstr "Absenden"
+
+#: .\mentoring\templates\placement_seminar_create.html:14
+msgid "Seminar"
+msgstr "Seminar"
+
+#: .\mentoring\templates\placement_seminar_create.html:24
+#: .\mentoring\templates\placement_seminar_list.html:28
+msgid "Create seminar"
+msgstr "Erstelle Seminar"
+
+#: .\mentoring\templates\placement_seminar_entry_create.html:18
+msgid "Appointment"
+msgstr "Termin"
+
+#: .\mentoring\templates\placement_seminar_entry_create.html:25
+#: .\mentoring\templates\placement_seminar_entry_create.html:26
+msgid "Date"
+msgstr "Datum"
+
+#: .\mentoring\templates\placement_seminar_entry_create.html:35
+#: .\mentoring\templates\placement_seminar_update.html:100
+msgid "Create appointment"
+msgstr "Erstelle Termin"
+
+#: .\mentoring\templates\placement_seminar_list.html:14
+#: .\mentoring\templates\placement_seminar_update.html:14
+#: .\templates\base.html:46
+msgid "Placement seminars"
+msgstr "Praktikumsseminare"
+
+#: .\mentoring\templates\placement_seminar_update.html:24
+#: .\mentoring\templates\placement_seminar_update.html:96
+#: .\mentoring\templates\tutor_placement_details.html:80
+msgid "Update"
+msgstr "Aktualisieren"
+
+#: .\mentoring\templates\placement_seminar_update.html:32
+msgid "Placement appointments"
+msgstr "Praktikumstermine"
+
+#: .\mentoring\templates\placement_seminar_update.html:45
+msgid "Student"
+msgstr ""
+
+#: .\mentoring\templates\placement_seminar_update.html:51
+msgid "Presentation done"
+msgstr "Präsentation gehalten"
+
+#: .\mentoring\templates\placement_seminar_update.html:52
+msgid "Number appointments present"
+msgstr "Termine anwesend"
 
 #: .\mentoring\templates\student_index.html:12
 #: .\mentoring\templates\tutor_placement_details.html:19
@@ -249,7 +310,7 @@ msgid "Contact person in the company"
 msgstr "Ansprechpartner im Unternehmen"
 
 #: .\mentoring\templates\student_placement.html:149
-#: .\mentoring\templates\student_settings.html:38
+#: .\mentoring\templates\student_settings.html:39
 #: .\mentoring\templates\tutor_settings.html:35
 msgid "Finish"
 msgstr "Abschließen"
@@ -301,10 +362,6 @@ msgstr ""
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: .\mentoring\templates\tutor_placement_details.html:80
-msgid "Update"
-msgstr "Aktualisieren"
-
 #: .\mentoring\templatetags\filter.py:27
 msgid "requested"
 msgstr "angefragt"
@@ -317,17 +374,25 @@ msgstr "Betreuung abgelehnt"
 msgid "error"
 msgstr "Fehler"
 
-#: .\templates\base.html:44
+#: .\templates\base.html:54
 msgid "Home"
 msgstr "Start"
 
-#: .\templates\base.html:57
+#: .\templates\base.html:67
 msgid "Profile"
 msgstr "Profil"
 
-#: .\templates\base.html:65
+#: .\templates\base.html:75
 msgid "Logout"
 msgstr "Abmelden"
+
+#~ msgid "Create"
+#~ msgstr "Erstelle"
+
+#, fuzzy
+#~| msgid "Create seminar"
+#~ msgid "Create seminar entry"
+#~ msgstr "Erstelle Seminar"
 
 #~ msgid "date from"
 #~ msgstr "Beginn"
@@ -429,9 +494,6 @@ msgstr "Abmelden"
 
 #~ msgid "no placements"
 #~ msgstr "Keine Praktika"
-
-#~ msgid "Placement new"
-#~ msgstr "Praktikum"
 
 #~ msgid "Edit in Form"
 #~ msgstr "Als Formular"
