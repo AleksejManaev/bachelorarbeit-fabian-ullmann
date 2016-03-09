@@ -369,6 +369,8 @@ class PlacementSeminarCreateView(CreateView):
     template_name = 'placement_seminar_create.html'
     fields = '__all__'
 
+    # def form_valid(self, form):
+
     def get_success_url(self):
         return reverse('placement-seminar-list')
 

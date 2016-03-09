@@ -173,7 +173,10 @@ class Comment(models.Model):
 
 
 class PlacementSeminar(models.Model):
-    placement_year = models.IntegerField(_('Placement year'), blank=True, null=True)
+    placement_year = models.IntegerField(_('Placement year'), blank=True, null=True, unique=True)
+
+    class Meta:
+        verbose_name = _('Placement seminar')
 
 
 class PlacementSeminarEntry(models.Model):
