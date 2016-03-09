@@ -82,21 +82,33 @@
                                                 ({{ student.matriculation_number }})
                                             </td>
                                             {% for entry in entrys %}
-                                                <td><input name="{{ entry.id }}_{{ student.id }}" class="form-control"
+                                                <td>
+                                                    <input name="{{ entry.id }}_{{ student.id }}" class="form-control"
                                                            type="checkbox"
-                                                        {% for entry_student in entry.students.all %}
-                                                            {% if entry_student == student %}
+                                                            {% for entry_student in entry.seminar_students.all %}
+                                                                {% if entry_student == student %}
                                                            checked="checked"
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                ></td>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                    >
+                                                </td>
                                             {% endfor %}
-                                            <td><input name="presentation_done_{{ student.id }}" class="form-control"
-                                                       type="checkbox"
-                                                    {% if student.presentation_done %}
-                                                       checked="checked"
-                                                    {% endif %}
-                                            ></td>
+                                            <td>
+                                                <select name="presentation_done_{{ student.id }}" class="form-control">
+                                                    <option value="">-</option>
+                                                    {% for entry in entrys %}
+                                                        {% if student.presentation_date == entry %}
+                                                            <option value="{{ entry.id }}" selected>
+                                                                {{ entry.date|date:"d.m.Y" }}
+                                                            </option>
+                                                        {% else %}
+                                                            <option value="{{ entry.id }}">
+                                                                {{ entry.date|date:"d.m.Y" }}
+                                                            </option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
                                             {% for key, value in numbers_present_dict.items %}
                                                 {% if key == student.id %}
                                                     <td class="text-center"
