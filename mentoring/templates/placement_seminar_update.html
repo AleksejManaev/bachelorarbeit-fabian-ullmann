@@ -29,7 +29,9 @@
                 </div>
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h1 class="panel-title">{% trans 'Placement appointments' %}</h1>
+                        <h1 class="panel-title">{% trans 'Placement appointments' %} <a
+                                href="{% url 'placement-seminar-entry-create' %}?placement_seminar={{ form.instance.id }}"
+                                class="btn btn-success btn-sm" role="button"><b>{% trans 'Create appointment' %}</b></a></h1>
                     </div>
                     <div class="panel-body">
                         {% for entry in entrys %}
@@ -76,7 +78,9 @@
                                     {% for student in students %}
                                         <tr>
                                             <td class="text-center"
-                                                style="vertical-align: middle;">{{ student.user.first_name }} {{ student.user.last_name }} ({{ student.matriculation_number }})</td>
+                                                style="vertical-align: middle;">{{ student.user.first_name }} {{ student.user.last_name }}
+                                                ({{ student.matriculation_number }})
+                                            </td>
                                             {% for entry in entrys %}
                                                 <td><input name="{{ entry.id }}_{{ student.id }}" class="form-control"
                                                            type="checkbox"
@@ -117,8 +121,6 @@
                                     {% trans 'Update' %}
                                 </button>
                             {% endbuttons %}
-                            <a href="{% url 'placement-seminar-entry-create' %}?placement_seminar={{ form.instance.id }}"
-                               class="btn btn-primary" role="button">{% trans 'Create appointment' %}</a>
                         </form>
                     </div>
                 </div>
