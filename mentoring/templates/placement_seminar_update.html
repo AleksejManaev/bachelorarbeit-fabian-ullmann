@@ -33,7 +33,7 @@
                     </div>
                     <div class="panel-body">
                         {% for entry in entrys %}
-                            <form id="delete_form_{{entry.id}}" action="{% url 'seminar-entry-delete' entry.id %}" method="post">
+                            <form id="delete_form_{{ entry.id }}" action="{% url 'seminar-entry-delete' entry.id %}" method="post">
                                 {% csrf_token %}
                             </form>
                         {% endfor %}
@@ -76,7 +76,7 @@
                                     {% for student in students %}
                                         <tr>
                                             <td class="text-center"
-                                                style="vertical-align: middle;">{{ student.matriculation_number }}</td>
+                                                style="vertical-align: middle;">{{ student.user.first_name }} {{ student.user.last_name }} ({{ student.matriculation_number }})</td>
                                             {% for entry in entrys %}
                                                 <td><input name="{{ entry.id }}_{{ student.id }}" class="form-control"
                                                            type="checkbox"
