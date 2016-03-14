@@ -41,7 +41,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                {% if user.portaluser.tutor and user.portaluser.tutor.placement_reponsible %}
+                {% if user.portaluser.tutor and user.portaluser.tutor.placement_responsible %}
                 <li>
                     <a href="{% url 'placement-seminar-list' %}" title="{% trans 'Placement seminars' %}">
                         <button type="button" class="btn btn-default  btn-lg">

@@ -46,7 +46,7 @@ class PortalUser(ContactModel):
 @python_2_unicode_compatible
 class Tutor(PortalUser):
     placement_courses = models.ManyToManyField(Course, blank=True, null=True)
-    placement_reponsible = models.BooleanField(default=False, null=False, blank=False)
+    placement_responsible = models.BooleanField(default=False, null=False, blank=False)
 
     @property
     def get_full_name(self):

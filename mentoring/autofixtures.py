@@ -152,7 +152,7 @@ class MyTutorFixture(AutoFixture):
         'user': MyUserFixture(User, username='tutor', password='tutor', type='tutor'),
         'title': 'Prof. Dr.',
         'phone': '03092751522',
-        'placement_reponsible': True,
+        'placement_responsible': True,
     }
 
 
