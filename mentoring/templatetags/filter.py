@@ -1,5 +1,6 @@
-from datetime import datetime
 import re
+from datetime import datetime
+
 from django import template
 from django.utils.translation import ugettext_lazy as _
 
@@ -7,14 +8,6 @@ __author__ = 'ullmanfa'
 register = template.Library()
 
 numeric_test = re.compile("^\d+$")
-
-
-@register.filter
-def bool2string(value, *args):
-    if value:
-        return _('Yes')
-    else:
-        return _('No')
 
 
 @register.filter

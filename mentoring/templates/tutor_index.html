@@ -52,7 +52,8 @@
                                     <th> {% trans 'Last name' %}</th>
                                     <th> {% trans 'Matriculation number' %}</th>
                                     <th> {% trans 'Email' %}</th>
-                                    <th> {% trans 'Placement seminar done' %}</th>
+                                    <th>{% trans 'Seminars present' %}</th>
+                                    <th>{% trans 'Presentation' %}</th>
                                     <th> {% trans 'mentoring accepted' %}</th>
                                     <th> {% trans 'Completed' %}</th>
                                     <th class="wrap-column">{% trans 'Save' %}</th>
@@ -75,7 +76,10 @@
                                         <td><a href="mailto:{{ placement.student.user.email }}">{{ placement.student.user.email }}</a></td>
                                         {% if placement.mentoring_accepted == 'MD' %}
                                             <td>
-                                                {{ placement.student.placement_seminar_done|bool2string }}
+                                                {{ placement.student.placement_seminar_entries.all|length }}
+                                            </td>
+                                            <td>
+                                                {{ placement.student.presentation_date.date|date:"d.m.Y" }}
                                             </td>
                                             <td>
                                                 <select disabled name="mentoring_accepted" form="{{ placement.id }}">
@@ -99,7 +103,10 @@
                                             </td>
                                         {% else %}
                                             <td>
-                                                {{ placement.student.placement_seminar_done|bool2string }}
+                                                {{ placement.student.placement_seminar_entries.all|length }}
+                                            </td>
+                                            <td>
+                                                {{ placement.student.presentation_date.date|date:"d.m.Y" }}
                                             </td>
                                             <td>
                                                 <select name="mentoring_accepted" form="{{ placement.id }}">
@@ -132,6 +139,7 @@
                                     <th>{% trans 'Search' %} {% trans 'Last name' %}</th>
                                     <th>{% trans 'Search' %} {% trans 'Matriculation number' %}</th>
                                     <th>{% trans 'Search' %} {% trans 'Email' %}</th>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
