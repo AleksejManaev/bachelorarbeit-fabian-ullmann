@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 import autofixture
 # from autofixture.autofixtures import UserFixture
 from autofixture.generators import StaticGenerator
 # from django.contrib.auth.models import User
 from autofixture import AutoFixture
 from autofixture import generators
-from mentoring.models import Student, Course, Tutor, Placement, MentoringUser as User
+from mentoring.models import Student, Course, Tutor, Placement, MentoringUser as User, PlacementSeminar, PlacementSeminarEntry
 
 import string
-from datetime import datetime
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
+
+
+class PlacementSeminarFixture(AutoFixture):
+    field_values = {
+        'placement_year': 2017,
+    }
 
 
 class UserFixture(AutoFixture):
@@ -135,6 +142,7 @@ class MyStudentFixture(AutoFixture):
         'user': MyUserFixture(User, type='student', username='student', password='student'),
         'title': '',
         'phone': '03092751522',
+        'placement_year': 2017,
         'matriculation_number': generators.IntegerGenerator(min_value=20110000, max_value=20159999),
     }
 
@@ -144,6 +152,13 @@ class MyTutorFixture(AutoFixture):
         'user': MyUserFixture(User, username='tutor', password='tutor', type='tutor'),
         'title': 'Prof. Dr.',
         'phone': '03092751522',
+        'placement_reponsible': True,
+    }
+
+
+class PlacementSeminarEntryFixture(AutoFixture):
+    field_values = {
+        'date': generators.DateTimeGenerator(min_date=datetime(2017, 1, 1), max_date=datetime(2018, 12, 31)),
     }
 
 
@@ -152,3 +167,5 @@ autofixture.register(Course, CourseFixture)
 autofixture.register(Student, MyStudentFixture)
 autofixture.register(Tutor, MyTutorFixture)
 autofixture.register(Placement, PlacementFixture)
+autofixture.register(PlacementSeminar, PlacementSeminarFixture)
+autofixture.register(PlacementSeminarEntry, PlacementSeminarEntryFixture)
