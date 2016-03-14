@@ -40,8 +40,8 @@ class UserFixture(AutoFixture):
         username = generators.StringGenerator(
             max_length=30,
             chars=string.ascii_letters + string.digits + '_')
-        first_name = generators.LoremWordGenerator(1)
-        last_name = generators.LoremWordGenerator(1)
+        first_name = generators.FirstNameGenerator()
+        last_name = generators.LastNameGenerator()
         password = staticmethod(lambda: make_password(None))
         is_active = True
         # don't generate admin users
@@ -108,7 +108,7 @@ class EmailGenerator(StaticGenerator):
         pass
 
     def generate(self):
-        return 'test{number}@fh-brandenburg.de'.format(number=(len(User.objects.all()) + 1))
+        return 'test{number}@th-brandenburg.de'.format(number=(len(User.objects.all()) + 1))
 
 
 class CourseFixture(AutoFixture):
