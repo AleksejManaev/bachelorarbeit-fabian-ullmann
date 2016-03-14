@@ -316,7 +316,7 @@ class PlacementCommentsView(View):
             comment_form = self.form_class()
             return render(request, self.template_name, {'comments': comments, 'comment_form': comment_form})
         else:
-            return http.HttpResponseNotFound()
+            return HttpResponseNotFound()
 
     def post(self, request, pk):
         # Nur der beteiligte Student und Tutor dürfen Kommentare schreiben
@@ -338,8 +338,7 @@ class PlacementCommentsView(View):
             return HttpResponseNotFound()
 
     def is_placement_allowed(self, pk):
-        return Placement.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(
-            tutor=self.request.user.portaluser)).exists()
+        return Placement.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(tutor=self.request.user.portaluser)).exists()
 
 
 def togglePrivacy(request):

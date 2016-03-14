@@ -37,7 +37,6 @@ urlpatterns = [
     url(r'^tutor/placementseminarentry/process$', login_required(SeminarEntryProcessView.as_view()), name='seminar-entry-process'),
     url(r'^tutor/placementseminarentry/(?P<pk>\d+)/delete$', login_required(SeminarEntryDeleteView.as_view()), name='seminar-entry-delete'),
 
-
     url(r'^comments/placement/(?P<pk>\d+)$', login_required(PlacementCommentsView.as_view()), name='placements-comments'),
     url(r'^comments/placement/toggleprivacy$', login_required(togglePrivacy), name='placements-comments'),
 ]
