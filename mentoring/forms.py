@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from django import forms
 from django.forms.widgets import DateInput
 
@@ -43,7 +45,13 @@ class FormPlacement(forms.ModelForm):
 
         # if is_valid and req:
         if is_valid:
-            # self.instance.finished = True
+            # Wenn ein neuer Bericht hochgeladen wird, wird ein Zeitestempel gesetzt. Beim Löschen des Berichts wird der Zeitstempel gelöscht.
+            if 'report' in self.changed_data:
+                if self.cleaned_data['report']:
+                    self.instance.report_uploaded_date = datetime.now()
+                else:
+                    self.instance.report_uploaded_date = None
+
             self.instance.save()
 
         return is_valid

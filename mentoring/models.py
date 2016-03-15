@@ -133,6 +133,7 @@ class Placement(AbstractWork):
     date_to = models.DateField(_('internship end'), blank=True, null=True)
     report = models.FileField(_('Placement report'), upload_to=upload_to_placement_report, blank=True, null=True,
                               validators=[validate_pdf, validate_size])
+    report_uploaded_date = models.DateTimeField(blank=True, null=True)
     certificate = models.FileField(_('Placement certificate'), upload_to=upload_to_placement_certificate,
                                    blank=True,
                                    null=True,
