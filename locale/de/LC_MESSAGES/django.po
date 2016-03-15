@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-14 17:26+0100\n"
+"POT-Creation-Date: 2016-03-15 23:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,8 +70,8 @@ msgstr "Praktikumsjahr"
 msgid "Placement seminar"
 msgstr "Praktikumsseminar"
 
-#: .\mentoring\models.py:73 .\mentoring\templates\tutor_index.html:53
-#: .\mentoring\templates\tutor_index.html:140
+#: .\mentoring\models.py:73 .\mentoring\templates\tutor_index.html:54
+#: .\mentoring\templates\tutor_index.html:149
 msgid "Matriculation number"
 msgstr "Matrikelnummer"
 
@@ -145,40 +145,40 @@ msgstr "Praktikumsende"
 msgid "Placement report"
 msgstr "Praktikumsbericht"
 
-#: .\mentoring\models.py:136
+#: .\mentoring\models.py:137
 #: .\mentoring\templates\tutor_placement_details.html:62
 msgid "Placement certificate"
 msgstr "Praktikumszeugnis"
 
-#: .\mentoring\models.py:140
+#: .\mentoring\models.py:141
 msgid "Requested"
 msgstr "Angefragt"
 
-#: .\mentoring\models.py:142 .\mentoring\templates\student_placement.html:75
-#: .\mentoring\templates\tutor_index.html:58
+#: .\mentoring\models.py:143 .\mentoring\templates\student_placement.html:75
+#: .\mentoring\templates\tutor_index.html:59
 msgid "Completed"
 msgstr "Bestanden"
 
-#: .\mentoring\models.py:168 .\mentoring\templates\tutor_index.html:51
-#: .\mentoring\templates\tutor_index.html:138
+#: .\mentoring\models.py:169 .\mentoring\templates\tutor_index.html:52
+#: .\mentoring\templates\tutor_index.html:147
 msgid "First name"
 msgstr "Vorname"
 
-#: .\mentoring\models.py:169 .\mentoring\templates\tutor_index.html:52
-#: .\mentoring\templates\tutor_index.html:139
+#: .\mentoring\models.py:170 .\mentoring\templates\tutor_index.html:53
+#: .\mentoring\templates\tutor_index.html:148
 msgid "Last name"
 msgstr "Nachname"
 
-#: .\mentoring\models.py:170 .\mentoring\templates\tutor_index.html:54
-#: .\mentoring\templates\tutor_index.html:141
+#: .\mentoring\models.py:171 .\mentoring\templates\tutor_index.html:55
+#: .\mentoring\templates\tutor_index.html:150
 msgid "Email"
 msgstr "E-Mail-Adresse"
 
-#: .\mentoring\models.py:183
+#: .\mentoring\models.py:187
 msgid "message"
 msgstr "Nachricht"
 
-#: .\mentoring\models.py:185
+#: .\mentoring\models.py:189
 msgid "Only visible for me"
 msgstr "Nur für mich sichtbar"
 
@@ -280,7 +280,8 @@ msgstr "Tutor"
 #: .\mentoring\templates\student_placement.html:84
 #: .\mentoring\templates\student_placement.html:86
 #: .\mentoring\templates\tutor_index.html:50
-#: .\mentoring\templates\tutor_index.html:67
+#: .\mentoring\templates\tutor_index.html:68
+#: .\mentoring\templates\tutor_index.html:75
 msgid "comments"
 msgstr "Kommentare"
 
@@ -327,27 +328,31 @@ msgstr "Praktikum"
 msgid "Thesis tab"
 msgstr "Abschlussarbeit"
 
-#: .\mentoring\templates\tutor_index.html:55
+#: .\mentoring\templates\tutor_index.html:51
+msgid "Placement acknowledgement"
+msgstr "Praktikumsanerkennung"
+
+#: .\mentoring\templates\tutor_index.html:56
 msgid "Seminars present"
 msgstr "Seminare anwesend"
 
-#: .\mentoring\templates\tutor_index.html:56
+#: .\mentoring\templates\tutor_index.html:57
 msgid "Presentation"
 msgstr "Präsentation"
 
-#: .\mentoring\templates\tutor_index.html:57
+#: .\mentoring\templates\tutor_index.html:58
 #: .\mentoring\templatetags\filter.py:30
 msgid "mentoring accepted"
 msgstr "Betreuung angenommen"
 
-#: .\mentoring\templates\tutor_index.html:59
+#: .\mentoring\templates\tutor_index.html:60
 msgid "Save"
 msgstr "Speichern"
 
-#: .\mentoring\templates\tutor_index.html:138
-#: .\mentoring\templates\tutor_index.html:139
-#: .\mentoring\templates\tutor_index.html:140
-#: .\mentoring\templates\tutor_index.html:141
+#: .\mentoring\templates\tutor_index.html:147
+#: .\mentoring\templates\tutor_index.html:148
+#: .\mentoring\templates\tutor_index.html:149
+#: .\mentoring\templates\tutor_index.html:150
 msgid "Search"
 msgstr ""
 
@@ -384,6 +389,11 @@ msgstr "Profil"
 #: .\templates\base.html:75
 msgid "Logout"
 msgstr "Abmelden"
+
+#, fuzzy
+#~| msgid "Placement"
+#~ msgid "placement"
+#~ msgstr "Praktikum"
 
 #~ msgid "info"
 #~ msgstr "Info"

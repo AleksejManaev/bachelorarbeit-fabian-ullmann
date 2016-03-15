@@ -48,6 +48,7 @@
                                 <thead>
                                 <tr>
                                     <th class="wrap-column">{% trans 'comments' %}</th>
+                                    <th class="wrap-column">{% trans 'Placement acknowledgement' %}</th>
                                     <th> {% trans 'First name' %}</th>
                                     <th> {% trans 'Last name' %}</th>
                                     <th> {% trans 'Matriculation number' %}</th>
@@ -67,6 +68,13 @@
                                             <a href="{% url 'placements-comments' placement.id %}" title="{% trans 'comments' %}">
                                                 <button type="button" class="btn btn-default center-block">
                                                     <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'placement-pdf' placement.id %}" title="{% trans 'comments' %}">
+                                                <button type="button" class="btn btn-default center-block">
+                                                    <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
                                                 </button>
                                             </a>
                                         </td>
@@ -134,6 +142,7 @@
 
                                 <tfoot>
                                 <tr>
+                                    <th></th>
                                     <th></th>
                                     <th>{% trans 'Search' %} {% trans 'First name' %}</th>
                                     <th>{% trans 'Search' %} {% trans 'Last name' %}</th>

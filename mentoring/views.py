@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+import os
 
-from django import http
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseNotFound, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
+from fdfgen import forge_fdf
 
 from mentoring.forms import *
 from mentoring.models import Student, Placement
@@ -295,11 +295,9 @@ class TutorSettingsFormView(UpdateView):
 
 class TutorPlacementView(UpdateView):
     model = Placement
-    fields = ['student', 'course', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name',
-              'company_address']
+    fields = ['student', 'course', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
     template_name = 'tutor_placement_details.html'
-    exclude = ['tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted',
-               'placement_completed']
+    exclude = ['tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'placement_completed']
 
     def get_success_url(self):
         return reverse('placement-details', args=[self.object.id])
@@ -482,3 +480,54 @@ class SeminarEntryDeleteView(DeleteView):
         entry.seminar_students.remove()
         entry.delete()
         return HttpResponseRedirect(success_url)
+
+
+def generate_placement_pdf(self, pk):
+    placement = Placement.objects.get(id=pk)
+    student = placement.student
+
+    # Felder füllen
+    fields = [
+        ('Beginn', placement.date_from.strftime('%d.%m.%Y') if placement.date_from else ''),
+        ('Ende', placement.date_to.strftime('%d.%m.%Y') if placement.date_to else ''),
+        ('Name Vorname', "%s, %s" % (student.user.last_name, student.user.first_name)),
+        ('MatrNr', student.matriculation_number),
+        ('TelNr', student.phone),
+        ('Praktikumsbetreuer an der FHB', placement.tutor),
+        ('Name des Betriebes', placement.company_name),
+        ('Titel und Name des Betreuers', "%s" % placement.placementcompanycontactdata if placement.placementcompanycontactdata else ''),
+        (u'vollständige Anschrift der Firma', placement.company_address),
+        ('Aufgabe', placement.task),
+        (u'Vorlage des Tätigkeitsberichtes am', "%s" % placement.report_uploaded_date.strftime('%d.%m.%Y') if placement.report_uploaded_date else ''),
+        ('Vorstellung im Kolloquium am', student.presentation_date.date.strftime('%d.%m.%Y') if student.presentation_date else ''),
+        ('Datum', datetime.now().strftime("%d.%m.%Y")),
+    ]
+
+    # FDF-Datei erzeugen
+    directory = "{}/{}/placement/".format(settings.MEDIA_ROOT, student.matriculation_number)
+    filename = '{}-Praktikumsanerkennung.pdf'.format(student.matriculation_number)
+    filepath = '{directory}/{file}'.format(directory=directory, file=filename)
+
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    fdf = forge_fdf("", fields, [], [], [])
+    fdf_file = open("{}/data.fdf".format(directory), "wb")
+    fdf_file.write(fdf)
+    fdf_file.close()
+
+    # PDF-Datei erzeugen
+    os.system(
+        'pdftk {mediaroot}/docs/_Anerkennung_Praktikum_2014.pdf fill_form {directory}/data.fdf output {filepath} flatten'.format(mediaroot=settings.MEDIA_ROOT,
+                                                                                                                                 directory=directory,
+                                                                                                                                 filepath=filepath))
+
+    # PDF-Datei senden, wenn diese erfolgreich erzeugt wurde
+    if os.path.exists(filepath):
+        with open(filepath, 'rb') as pdf:
+            response = HttpResponse(pdf.read(), content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="{filename}"'.format(student_name=student, filename=filename)
+            return response
+        pdf.closed
+
+    return redirect('index')

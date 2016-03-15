@@ -171,7 +171,10 @@ class ContactData(ContactModel):
     email = models.EmailField(_('Email'), null=True, blank=True)
 
     def __str__(self):
-        return u"{} {} {}".format(self.title, self.first_name, self.last_name)
+        if self.first_name and self.last_name:
+            return u"{} {} {}".format(self.title if self.title else '', self.first_name, self.last_name)
+        else:
+            return ''
 
 
 class PlacementCompanyContactData(ContactData):

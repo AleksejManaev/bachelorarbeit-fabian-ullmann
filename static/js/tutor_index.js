@@ -10,11 +10,11 @@ $(document).ready(function () {
     <!-- Tabelleninitialisierung -->
     var table = $('#placements-table').DataTable({
         "columnDefs": [
-            {"searchable": false, "orderable": false, "targets": [0, 9]},
-            {"orderDataType": "dom-checkbox", "targets": 8},
-            {"orderDataType": "dom-select", "targets": 7}
+            {"searchable": false, "orderable": false, "targets": [0, 1, 10]},
+            {"orderDataType": "dom-checkbox", "targets": 9},
+            {"orderDataType": "dom-select", "targets": 8}
         ],
-        "order": [[8, "asc"]],
+        "order": [[9, "asc"]],
         "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',
         "language": {
             "zeroRecords": "Keine Einträge gefunden",
