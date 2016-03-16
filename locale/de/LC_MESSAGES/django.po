@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-16 14:54+0100\n"
+"POT-Creation-Date: 2016-03-16 19:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -378,6 +378,14 @@ msgstr "Betreuung abgelehnt"
 msgid "error"
 msgstr "Fehler"
 
+#: .\mentoring\views.py:344 .\mentoring\views.py:393 .\mentoring\views.py:400
+msgid "Show comments"
+msgstr "Kommentare anzeigen"
+
+#: .\mentoring\views.py:366
+msgid "You have unread comments."
+msgstr "Sie haben ungelesene Kommentare."
+
 #: .\templates\base.html:54
 msgid "Home"
 msgstr "Start"
@@ -389,6 +397,11 @@ msgstr "Profil"
 #: .\templates\base.html:75
 msgid "Logout"
 msgstr "Abmelden"
+
+#, fuzzy
+#~| msgid "comment"
+#~ msgid "New comment"
+#~ msgstr "Nachricht"
 
 #, fuzzy
 #~| msgid "Placement"
@@ -444,9 +457,6 @@ msgstr "Abmelden"
 
 #~ msgid "requested on"
 #~ msgstr "angefragt am"
-
-#~ msgid "comment"
-#~ msgstr "Nachricht"
 
 #~ msgid "answer"
 #~ msgstr "Antwort"

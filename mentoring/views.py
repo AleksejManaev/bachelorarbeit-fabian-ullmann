@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import Q
@@ -338,14 +339,19 @@ class PlacementCommentsView(View):
 
             comment.save()
 
-            # Kommentar als ungelesen für den anderen Gesprächspartner markieren (aber nicht bei privaten)
+            # Kommentar als ungelesen für den anderen Gesprächspartner markieren (aber nicht bei privaten) und E-Mail versenden
             if (hasattr(request.user, 'portaluser')):
+                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.placement.id, _('Show comments'))
+                placement = comment.placement
+
                 if (hasattr(request.user.portaluser, 'tutor')):
-                    if not private:
+                    if not private and placement.student:
                         Placement.objects.filter(id=pk).update(comment_unread_by_student=True)
+                        send_comment_email([placement.student.user.email], message)
                 elif (hasattr(request.user.portaluser, 'student')):
-                    if not private:
+                    if not private and placement.tutor:
                         Placement.objects.filter(id=pk).update(comment_unread_by_tutor=True)
+                        send_comment_email([placement.tutor.user.email], message)
 
             return redirect('placements-comments', pk=pk)
         else:
@@ -377,13 +383,24 @@ def togglePrivacy(request):
                 Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_student=False)
             else:
                 Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_student=True)
+                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.placement.id, _('Show comments'))
+                send_comment_email([comment.placement.student.user.email], message)
         elif (hasattr(request.user.portaluser, 'student')):
             if comment.private:
                 Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_tutor=False)
             else:
                 Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_tutor=True)
+                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.placement.id, _('Show comments'))
+                send_comment_email([comment.placement.tutor.user.email], message)
 
     return JsonResponse({'private_state': comment.private, 'private_text': str(_(private_text))})
+
+
+def send_comment_email(recipient_list, html_message):
+    try:
+        send_mail(_('You have unread comments.'), '', from_email='placement_thesis_service@gmx.de', recipient_list=recipient_list, html_message=html_message)
+    except:
+        pass
 
 
 class PlacementSeminarListView(ListView):
