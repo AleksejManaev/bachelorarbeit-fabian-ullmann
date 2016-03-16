@@ -108,7 +108,7 @@ class EmailGenerator(StaticGenerator):
         pass
 
     def generate(self):
-        return 'test{number}@th-brandenburg.de'.format(number=(len(User.objects.all()) + 1))
+        return 'test{number}@th-brb.de'.format(number=(len(User.objects.all()) + 1))
 
 
 class CourseFixture(AutoFixture):
