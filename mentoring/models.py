@@ -141,6 +141,8 @@ class Placement(AbstractWork):
     mentoring_requested = models.BooleanField(_('Requested'), default=False)
     mentoring_accepted = models.CharField(max_length=2, choices=STATUS_CHOICES, default='ND')
     placement_completed = models.BooleanField(_('Completed'), default=False)
+    comment_unread_by_student = models.BooleanField(default=False)
+    comment_unread_by_tutor = models.BooleanField(default=False)
 
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)
@@ -183,7 +185,7 @@ class PlacementCompanyContactData(ContactData):
 
 class Comment(models.Model):
     author = models.ForeignKey(MentoringUser)
-    abstract_work = models.ForeignKey(AbstractWork)
+    placement = models.ForeignKey(Placement)
     message = models.TextField(_('message'))
     timestamp = models.DateTimeField(auto_now_add=True)
     private = models.BooleanField(_('Only visible for me'), default=False)

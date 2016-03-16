@@ -38,7 +38,11 @@
                                             </td>
                                             <td>
                                                 <a href="{% url 'placements-comments' denied_placement.id %}" title="{% trans 'comments' %}">
-                                                    <button type="button" class="btn btn-default center-block">
+                                                    <button type="button" class="btn btn-default center-block"
+                                                            {% if denied_placement.comment_unread_by_student %}
+                                                            style="background-color:#ffff80;"
+                                                            {% endif %}
+                                                    >
                                                         <span class="glyphicon glyphicon-comment"></span>
                                                     </button>
                                                 </a>
@@ -82,7 +86,11 @@
 
                                 <div class="col-md-2">
                                     <a href="{% url 'placements-comments' placement.id %}" title="{% trans 'comments' %}">
-                                        <button class="btn btn-default">
+                                        <button class="btn btn-default"
+                                                {% if placement.comment_unread_by_student %}
+                                                style="background-color:#ffff80;"
+                                                {% endif %}
+                                        >
                                             {% trans 'comments' %} &nbsp;
                                             <span class="glyphicon glyphicon-comment"></span>
                                         </button>

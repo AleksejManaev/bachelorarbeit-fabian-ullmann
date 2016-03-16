@@ -49,14 +49,14 @@
                                 <tr>
                                     <th class="wrap-column">{% trans 'comments' %}</th>
                                     <th class="wrap-column">{% trans 'Placement acknowledgement' %}</th>
-                                    <th> {% trans 'First name' %}</th>
-                                    <th> {% trans 'Last name' %}</th>
-                                    <th> {% trans 'Matriculation number' %}</th>
-                                    <th> {% trans 'Email' %}</th>
+                                    <th>{% trans 'First name' %}</th>
+                                    <th>{% trans 'Last name' %}</th>
+                                    <th>{% trans 'Matriculation number' %}</th>
+                                    <th>{% trans 'Email' %}</th>
                                     <th>{% trans 'Seminars present' %}</th>
                                     <th>{% trans 'Presentation' %}</th>
-                                    <th> {% trans 'mentoring accepted' %}</th>
-                                    <th> {% trans 'Completed' %}</th>
+                                    <th>{% trans 'mentoring accepted' %}</th>
+                                    <th>{% trans 'Completed' %}</th>
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
                                 </thead>
@@ -66,7 +66,11 @@
                                     <tr>
                                         <td>
                                             <a href="{% url 'placements-comments' placement.id %}" title="{% trans 'comments' %}">
-                                                <button type="button" class="btn btn-default center-block">
+                                                <button type="button" class="btn btn-default center-block"
+                                                        {% if placement.comment_unread_by_tutor %}
+                                                        style="background-color:#ffff80;"
+                                                        {% endif %}
+                                                >
                                                     <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
                                                 </button>
                                             </a>

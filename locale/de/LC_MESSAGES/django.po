@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-15 23:35+0100\n"
+"POT-Creation-Date: 2016-03-16 14:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,7 @@ msgid "Placement seminar"
 msgstr "Praktikumsseminar"
 
 #: .\mentoring\models.py:73 .\mentoring\templates\tutor_index.html:54
-#: .\mentoring\templates\tutor_index.html:149
+#: .\mentoring\templates\tutor_index.html:153
 msgid "Matriculation number"
 msgstr "Matrikelnummer"
 
@@ -154,31 +154,31 @@ msgstr "Praktikumszeugnis"
 msgid "Requested"
 msgstr "Angefragt"
 
-#: .\mentoring\models.py:143 .\mentoring\templates\student_placement.html:75
+#: .\mentoring\models.py:143 .\mentoring\templates\student_placement.html:79
 #: .\mentoring\templates\tutor_index.html:59
 msgid "Completed"
 msgstr "Bestanden"
 
-#: .\mentoring\models.py:169 .\mentoring\templates\tutor_index.html:52
-#: .\mentoring\templates\tutor_index.html:147
+#: .\mentoring\models.py:171 .\mentoring\templates\tutor_index.html:52
+#: .\mentoring\templates\tutor_index.html:151
 msgid "First name"
 msgstr "Vorname"
 
-#: .\mentoring\models.py:170 .\mentoring\templates\tutor_index.html:53
-#: .\mentoring\templates\tutor_index.html:148
+#: .\mentoring\models.py:172 .\mentoring\templates\tutor_index.html:53
+#: .\mentoring\templates\tutor_index.html:152
 msgid "Last name"
 msgstr "Nachname"
 
-#: .\mentoring\models.py:171 .\mentoring\templates\tutor_index.html:55
-#: .\mentoring\templates\tutor_index.html:150
+#: .\mentoring\models.py:173 .\mentoring\templates\tutor_index.html:55
+#: .\mentoring\templates\tutor_index.html:154
 msgid "Email"
 msgstr "E-Mail-Adresse"
 
-#: .\mentoring\models.py:187
+#: .\mentoring\models.py:189
 msgid "message"
 msgstr "Nachricht"
 
-#: .\mentoring\models.py:189
+#: .\mentoring\models.py:191
 msgid "Only visible for me"
 msgstr "Nur für mich sichtbar"
 
@@ -277,39 +277,39 @@ msgstr "Tutor"
 
 #: .\mentoring\templates\student_placement.html:28
 #: .\mentoring\templates\student_placement.html:40
-#: .\mentoring\templates\student_placement.html:84
-#: .\mentoring\templates\student_placement.html:86
+#: .\mentoring\templates\student_placement.html:88
+#: .\mentoring\templates\student_placement.html:94
 #: .\mentoring\templates\tutor_index.html:50
 #: .\mentoring\templates\tutor_index.html:68
-#: .\mentoring\templates\tutor_index.html:75
+#: .\mentoring\templates\tutor_index.html:79
 msgid "comments"
 msgstr "Kommentare"
 
-#: .\mentoring\templates\student_placement.html:61
+#: .\mentoring\templates\student_placement.html:65
 msgid "active placement"
 msgstr "Aktive Betreuungsanfrage"
 
-#: .\mentoring\templates\student_placement.html:71
+#: .\mentoring\templates\student_placement.html:75
 msgid "State: "
 msgstr "Status: "
 
-#: .\mentoring\templates\student_placement.html:77
+#: .\mentoring\templates\student_placement.html:81
 msgid "not requested"
 msgstr "Nicht angefragt"
 
-#: .\mentoring\templates\student_placement.html:100
+#: .\mentoring\templates\student_placement.html:108
 msgid "General data"
 msgstr "Allgemeine Angaben"
 
-#: .\mentoring\templates\student_placement.html:115
+#: .\mentoring\templates\student_placement.html:123
 msgid "Company data"
 msgstr "Angaben zum Unternehmen"
 
-#: .\mentoring\templates\student_placement.html:125
+#: .\mentoring\templates\student_placement.html:133
 msgid "Contact person in the company"
 msgstr "Ansprechpartner im Unternehmen"
 
-#: .\mentoring\templates\student_placement.html:149
+#: .\mentoring\templates\student_placement.html:157
 #: .\mentoring\templates\student_settings.html:39
 #: .\mentoring\templates\tutor_settings.html:35
 msgid "Finish"
@@ -349,10 +349,10 @@ msgstr "Betreuung angenommen"
 msgid "Save"
 msgstr "Speichern"
 
-#: .\mentoring\templates\tutor_index.html:147
-#: .\mentoring\templates\tutor_index.html:148
-#: .\mentoring\templates\tutor_index.html:149
-#: .\mentoring\templates\tutor_index.html:150
+#: .\mentoring\templates\tutor_index.html:151
+#: .\mentoring\templates\tutor_index.html:152
+#: .\mentoring\templates\tutor_index.html:153
+#: .\mentoring\templates\tutor_index.html:154
 msgid "Search"
 msgstr ""
 

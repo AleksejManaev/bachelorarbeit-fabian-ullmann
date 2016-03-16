@@ -310,7 +310,14 @@ class PlacementCommentsView(View):
     def get(self, request, pk):
         # Nur der beteiligte Student und Tutor dürfen die Kommentare einsehen
         if self.is_placement_allowed(pk):
-            comments = Comment.objects.filter(abstract_work=pk).order_by('timestamp')
+            # Kommentar als gelesen für den anderen Gesprächspartner markieren
+            if (hasattr(request.user, 'portaluser')):
+                if (hasattr(request.user.portaluser, 'tutor')):
+                    Placement.objects.filter(id=pk).update(comment_unread_by_tutor=False)
+                elif (hasattr(request.user.portaluser, 'student')):
+                    Placement.objects.filter(id=pk).update(comment_unread_by_student=False)
+
+            comments = Comment.objects.filter(placement=pk).order_by('timestamp')
             comment_form = self.form_class()
             return render(request, self.template_name, {'comments': comments, 'comment_form': comment_form})
         else:
@@ -321,7 +328,7 @@ class PlacementCommentsView(View):
         if self.is_placement_allowed(pk):
             comment = Comment()
             comment.author = self.request.user.portaluser.user
-            comment.abstract_work = AbstractWork.objects.get(id=pk)
+            comment.placement = Placement.objects.get(id=pk)
             comment.message = request.POST.get('message')
 
             private = request.POST.get('private')
@@ -330,6 +337,15 @@ class PlacementCommentsView(View):
             comment.private = private
 
             comment.save()
+
+            # Kommentar als ungelesen für den anderen Gesprächspartner markieren (aber nicht bei privaten)
+            if (hasattr(request.user, 'portaluser')):
+                if (hasattr(request.user.portaluser, 'tutor')):
+                    if not private:
+                        Placement.objects.filter(id=pk).update(comment_unread_by_student=True)
+                elif (hasattr(request.user.portaluser, 'student')):
+                    if not private:
+                        Placement.objects.filter(id=pk).update(comment_unread_by_tutor=True)
 
             return redirect('placements-comments', pk=pk)
         else:
@@ -340,6 +356,7 @@ class PlacementCommentsView(View):
 
 
 def togglePrivacy(request):
+    # Kommentar speichern
     id = request.POST.get('id')
     comment = Comment.objects.get(pk=id)
     private_text = ''
@@ -352,6 +369,19 @@ def togglePrivacy(request):
         private_text = 'Private'
 
     comment.save()
+
+    # Kommentar als ungelesen oder gelesen markieren (private Kommentare sind immer als gelesen markiert)
+    if (hasattr(request.user, 'portaluser')):
+        if (hasattr(request.user.portaluser, 'tutor')):
+            if comment.private:
+                Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_student=False)
+            else:
+                Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_student=True)
+        elif (hasattr(request.user.portaluser, 'student')):
+            if comment.private:
+                Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_tutor=False)
+            else:
+                Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_tutor=True)
 
     return JsonResponse({'private_state': comment.private, 'private_text': str(_(private_text))})
 
