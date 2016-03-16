@@ -228,3 +228,9 @@ AUTH_USER_MODEL = 'mentoring.MentoringUser'
 # 'django_auth_ldap.backend.LDAPBackend',
 # 'django.contrib.auth.backends.ModelBackend',
 # )
+
+# EMAIL
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'mail.gmx.net'
+EMAIL_PORT = 587
+

@@ -2,4 +2,5 @@
 /static_root/*
 /.idea/*
 db.sqlite3
+settings.py
 
