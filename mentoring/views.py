@@ -227,7 +227,16 @@ class TutorUpdatePlacementView(View):
     def post(self, request, pk, *args, **kwargs):
         instance = Placement.objects.get(id=pk)
         mentoring_accepted_old_value = instance.mentoring_accepted
-        form = FormTutorPlacement(request.POST or None, instance=instance)
+        POST = request.POST
+
+        '''
+            Wenn das "Betreuung angenommen"-Feld "disabled" ist, wird der Wert über POST nicht mitgesendet. Dadurch schlägt die Validierung fehl.
+            Deshalb wird der alte Wert dem Formular übergeben.
+        '''
+        if not request.POST.has_key('mentoring_accepted'):
+            POST = request.POST.copy()
+            POST['mentoring_accepted'] = mentoring_accepted_old_value
+        form = FormTutorPlacement(POST, instance=instance)
 
         if form.is_valid():
             form.save()
