@@ -232,14 +232,28 @@ class TutorUpdatePlacementView(View):
             form.save()
 
             '''
-                Falls eine Betreuungsanfrage abgelehnt wurde, wird dem Studenten ein neues aktives Praktikum zugewiesen.
-                Das aktive Praktikum wird über wird über "post_save_placement" in "signals.py" zugewiesen.
+                1. Falls eine Betreuungsanfrage abgelehnt wurde, wird dem Studenten ein neues aktives Praktikum zugewiesen.
+                    Das aktive Praktikum wird über "post_save_placement" in "signals.py" zugewiesen.
+                2. Wenn eine Betreuungsanfrage abgelehnt oder angenommen wurde, wird ein Kommentar und E-Mail an Student und Tutor versendet.
             '''
-            if form.cleaned_data['mentoring_accepted'] == 'MD':
+            mentoring_accepted = form.cleaned_data['mentoring_accepted']
+            if mentoring_accepted == 'MD':
                 active_placement = Placement(student=instance.student)
                 active_placement.save()
+                self.notify(request.user, instance, _('Your mentoring request was denied.'))
 
-        return redirect('tutor-index')
+            elif mentoring_accepted == 'MA':
+                self.notify(request.user, instance, _('Your mentoring request was accepted.'))
+
+            return redirect('tutor-index')
+
+    def notify(self, tutor, placement, comment_message):
+        comment = Comment(author=tutor, placement=placement, message=comment_message)
+        comment.save()
+        Placement.objects.filter(id=placement.id).update(comment_unread_by_student=True, comment_unread_by_tutor=True)
+
+        html_message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(placement.id, _('Show comments'))
+        send_comment_email([placement.student.user.email, placement.tutor.user.email], html_message)
 
 
 class StudentIndexView(View):
