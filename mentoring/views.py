@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from thread import start_new_thread
 
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
@@ -422,10 +423,14 @@ def togglePrivacy(request):
 
 
 def send_comment_email(recipient_list, html_message):
-    try:
-        send_mail(_('You have unread comments.'), '', from_email='placement_thesis_service@gmx.de', recipient_list=recipient_list, html_message=html_message)
-    except:
-        pass
+    def run_in_new_thread():
+        try:
+            send_mail(_('You have unread comments.'), '', from_email='placement_thesis_service@gmx.de', recipient_list=recipient_list,
+                      html_message=html_message)
+        except:
+            pass
+
+    start_new_thread(run_in_new_thread, ())
 
 
 class PlacementSeminarListView(ListView):
