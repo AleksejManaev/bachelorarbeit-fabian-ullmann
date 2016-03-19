@@ -226,6 +226,7 @@ class TutorView(View):
 class TutorUpdatePlacementView(View):
     def post(self, request, pk, *args, **kwargs):
         instance = Placement.objects.get(id=pk)
+        mentoring_accepted_old_value = instance.mentoring_accepted
         form = FormTutorPlacement(request.POST or None, instance=instance)
 
         if form.is_valid():
@@ -236,14 +237,15 @@ class TutorUpdatePlacementView(View):
                     Das aktive Praktikum wird über "post_save_placement" in "signals.py" zugewiesen.
                 2. Wenn eine Betreuungsanfrage abgelehnt oder angenommen wurde, wird ein Kommentar und E-Mail an Student und Tutor versendet.
             '''
-            mentoring_accepted = form.cleaned_data['mentoring_accepted']
-            if mentoring_accepted == 'MD':
-                active_placement = Placement(student=instance.student)
-                active_placement.save()
-                self.notify(request.user, instance, _('Your mentoring request was denied.'))
+            mentoring_accepted_new_value = form.cleaned_data['mentoring_accepted']
+            if mentoring_accepted_old_value != mentoring_accepted_new_value:
+                if mentoring_accepted_new_value == 'MD':
+                    active_placement = Placement(student=instance.student)
+                    active_placement.save()
+                    self.notify(request.user, instance, _('Your mentoring request was denied.'))
 
-            elif mentoring_accepted == 'MA':
-                self.notify(request.user, instance, _('Your mentoring request was accepted.'))
+                elif mentoring_accepted_new_value == 'MA':
+                    self.notify(request.user, instance, _('Your mentoring request was accepted.'))
 
         return redirect('tutor-index')
 
