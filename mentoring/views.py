@@ -245,7 +245,7 @@ class TutorUpdatePlacementView(View):
             elif mentoring_accepted == 'MA':
                 self.notify(request.user, instance, _('Your mentoring request was accepted.'))
 
-            return redirect('tutor-index')
+        return redirect('tutor-index')
 
     def notify(self, tutor, placement, comment_message):
         comment = Comment(author=tutor, placement=placement, message=comment_message)
