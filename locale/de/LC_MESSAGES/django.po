@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-19 18:22+0100\n"
+"POT-Creation-Date: 2016-03-20 15:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -309,6 +309,10 @@ msgstr "Angaben zum Unternehmen"
 msgid "Contact person in the company"
 msgstr "Ansprechpartner im Unternehmen"
 
+#: .\mentoring\templates\student_placement.html:150
+msgid "Request visible for mentor!"
+msgstr "Anfrage für den Betreuer sichtbar!"
+
 #: .\mentoring\templates\student_placement.html:157
 #: .\mentoring\templates\student_settings.html:39
 #: .\mentoring\templates\tutor_settings.html:35
@@ -391,7 +395,7 @@ msgstr "Ihre Betreuungsanfrage wurde angenommen."
 msgid "Show comments"
 msgstr "Kommentare anzeigen"
 
-#: .\mentoring\views.py:430
+#: .\mentoring\views.py:428
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
