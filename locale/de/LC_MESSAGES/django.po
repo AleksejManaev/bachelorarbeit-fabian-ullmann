@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-20 15:09+0100\n"
+"POT-Creation-Date: 2016-03-22 17:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,8 +19,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\ldap_login\templates\ldap_login.html:28
-msgid "Please sign in with your FHB account!"
-msgstr "Bitte loggen Sie sich mit Ihrem FHB-Konto ein!"
+msgid "Please sign in with your THB account!"
+msgstr "Bitte loggen Sie sich mit Ihrem THB-Konto ein!"
 
 #: .\ldap_login\templates\ldap_login.html:38
 msgid "Sign in"
@@ -309,6 +309,7 @@ msgstr "Angaben zum Unternehmen"
 msgid "Contact person in the company"
 msgstr "Ansprechpartner im Unternehmen"
 
+#: .\mentoring\templates\student_placement.html:143
 #: .\mentoring\templates\student_placement.html:150
 msgid "Request visible for mentor!"
 msgstr "Anfrage für den Betreuer sichtbar!"
