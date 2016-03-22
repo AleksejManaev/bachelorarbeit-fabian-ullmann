@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-22 17:17+0100\n"
+"POT-Creation-Date: 2016-03-22 21:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,6 +81,7 @@ msgstr "Externe E-Mail-Adresse"
 
 #: .\mentoring\models.py:77
 #: .\mentoring\templates\placement_seminar_update.html:60
+#: .\mentoring\templates\student_placement_seminar_entry_list.html:27
 msgid "Placement seminar done"
 msgstr "Seminar bestanden"
 
@@ -239,6 +240,8 @@ msgid "Update"
 msgstr "Aktualisieren"
 
 #: .\mentoring\templates\placement_seminar_update.html:32
+#: .\mentoring\templates\student_index.html:18
+#: .\mentoring\templates\student_placement_seminar_entry_list.html:12
 msgid "Placement appointments"
 msgstr "Praktikumstermine"
 
@@ -247,6 +250,7 @@ msgid "Student"
 msgstr ""
 
 #: .\mentoring\templates\placement_seminar_update.html:58
+#: .\mentoring\templates\student_placement_seminar_entry_list.html:26
 msgid "Presentation done"
 msgstr "Präsentation gehalten"
 
@@ -258,12 +262,17 @@ msgstr "Termine anwesend"
 msgid "Delete"
 msgstr ""
 
-#: .\mentoring\templates\student_index.html:12
+#: .\mentoring\templates\student_index.html:11
 #: .\mentoring\templates\tutor_placement_details.html:19
 msgid "Placement"
 msgstr "Praktikum"
 
-#: .\mentoring\templates\student_index.html:17
+#: .\mentoring\templates\student_index.html:16
+msgid "Mentoring requests"
+msgstr "Betreuungsanfragen"
+
+#: .\mentoring\templates\student_index.html:28
+#: .\mentoring\templates\student_index.html:33
 msgid "Thesis"
 msgstr "Abschlussarbeit"
 
@@ -614,9 +623,6 @@ msgstr "Abmelden"
 
 #~ msgid "not created"
 #~ msgstr "nicht erstellt"
-
-#~ msgid "Mentoring Requests"
-#~ msgstr "Betreuungsanfragen"
 
 #~ msgid "on"
 #~ msgstr "am"

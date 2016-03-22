@@ -609,3 +609,28 @@ def generate_placement_pdf(self, pk):
         pdf.closed
 
     return redirect('index')
+
+
+class StudentPlacementSeminarEntryListView(TemplateView):
+    # model = PlacementSeminarEntry
+    template_name = 'student_placement_seminar_entry_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(StudentPlacementSeminarEntryListView, self).get_context_data(**kwargs)
+        entries_list = []
+
+        if hasattr(self.request.user, 'portaluser') and hasattr(self.request.user.portaluser, 'student'):
+            student = self.request.user.portaluser.student
+            entries_all = PlacementSeminarEntry.objects.filter(placement_seminar__placement_year=student.placement_year)
+            entries_present_ids = student.placement_seminar_entries.values_list('id', flat=True)
+
+            # Alle Termine und ob der Student an diesem anwesend war in einer Liste zusammenfassen
+            for entry in entries_all:
+                entries_list.append((entry, entry.id in entries_present_ids))
+
+            # Kontextvariablen setzen
+            context['entries_list'] = entries_list
+            context['presentation_date'] = student.presentation_date
+            context['placement_seminar_done'] = student.placement_seminar_done
+
+        return context

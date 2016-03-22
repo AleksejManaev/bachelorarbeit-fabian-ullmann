@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^student/settings/$', login_required(StudentSettingsFormView.as_view()), name='student-settings'),
     url(r'^student/placement/$', login_required(StudentFormView.as_view()), name='student-placement'),
     url(r'^student/placement/update/$', StudentPlacementFormView.as_view(), name='student-placement-update'),
+    url(r'^student/placementseminarentrylist/$', login_required(StudentPlacementSeminarEntryListView.as_view()), name='student-placement-seminar-entry-list'),
 
     url(r'^tutor/placement/update/(?P<pk>\d+)/$', login_required(TutorUpdatePlacementView.as_view()), name='tutor-placement-update'),
     url(r'^tutor/placement/(?P<pk>\d+)/$', login_required(TutorPlacementView.as_view(template_name='tutor_placement_details.html')), name='placement-details'),
