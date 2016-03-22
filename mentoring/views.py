@@ -570,6 +570,7 @@ def generate_placement_pdf(self, pk):
         ('Name Vorname', "%s, %s" % (student.user.last_name, student.user.first_name)),
         ('MatrNr', student.matriculation_number),
         ('TelNr', student.phone),
+        ('Email', student.user.email),
         ('Praktikumsbetreuer an der FHB', placement.tutor),
         ('Name des Betriebes', placement.company_name),
         ('Titel und Name des Betreuers', "%s" % placement.placementcompanycontactdata if placement.placementcompanycontactdata else ''),
