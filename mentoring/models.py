@@ -45,7 +45,7 @@ class PortalUser(ContactModel):
 
 @python_2_unicode_compatible
 class Tutor(PortalUser):
-    placement_courses = models.ManyToManyField(Course, blank=True, null=True)
+    placement_courses = models.ManyToManyField(Course, blank=True, null=True, verbose_name=_('Placement courses'))
     placement_responsible = models.BooleanField(default=False, null=False, blank=False)
 
     @property
