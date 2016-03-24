@@ -99,7 +99,7 @@ class Address(models.Model):
 
 
 class AbstractWork(models.Model):
-    task = models.TextField(_('task'), blank=True, null=True)
+    task = models.TextField(_('task'), null=True)
     created_on = models.DateTimeField(_('date joined'), auto_created=True, auto_now_add=True)
     updated_on = models.DateTimeField(_('date updated'), auto_now=True, null=True)
     sent_on = models.DateTimeField(_('date sent'), blank=True, null=True)
@@ -125,8 +125,8 @@ class AbstractWork(models.Model):
 @python_2_unicode_compatible
 class Placement(AbstractWork):
     student = models.ForeignKey(Student)
-    course = models.ForeignKey(Course, verbose_name=_('course placement'), blank=True, null=True)
-    tutor = models.ForeignKey(Tutor, blank=True, null=True)
+    course = models.ForeignKey(Course, verbose_name=_('course placement'), null=True)
+    tutor = models.ForeignKey(Tutor, null=True)
     company_name = models.CharField(_('company name'), max_length=100, null=True, blank=True)
     company_address = models.TextField(_('company address'), null=True, blank=True)
     date_from = models.DateField(_('internship begin'), blank=True, null=True)

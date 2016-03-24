@@ -59,11 +59,7 @@ class StudentPlacementFormView(UpdateView):
         return {
             'placement': placement,
             'placement_form': FormPlacement(data, files=files, instance=placement, prefix='placement_form'),
-            # 'placement_event_form': FormPlacementEventRegistration(data,
-            #                                                        instance=placement.placementeventregistration,
-            #                                                        prefix='placement_event_form'),
-            'placement_contact_formset': FormsetPlacementContactdata(data, instance=placement,
-                                                                     prefix='placement_contact_formset'),
+            'placement_contact_formset': FormsetPlacementContactdata(data, instance=placement, prefix='placement_contact_formset'),
         }
 
     def get_placement(self):

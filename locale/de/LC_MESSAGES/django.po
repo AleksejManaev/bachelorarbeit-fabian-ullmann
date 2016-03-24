@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-24 15:43+0100\n"
+"POT-Creation-Date: 2016-03-24 19:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -396,20 +396,20 @@ msgstr "Betreuung abgelehnt"
 msgid "error"
 msgstr "Fehler"
 
-#: .\mentoring\views.py:255
+#: .\mentoring\views.py:251
 msgid "Your mentoring request was denied."
 msgstr "Ihre Betreuungsanfrage wurde abgelehnt."
 
-#: .\mentoring\views.py:258
+#: .\mentoring\views.py:254
 msgid "Your mentoring request was accepted."
 msgstr "Ihre Betreuungsanfrage wurde angenommen."
 
-#: .\mentoring\views.py:267 .\mentoring\views.py:370 .\mentoring\views.py:412
-#: .\mentoring\views.py:419
+#: .\mentoring\views.py:263 .\mentoring\views.py:366 .\mentoring\views.py:408
+#: .\mentoring\views.py:415
 msgid "Show comments"
 msgstr "Kommentare anzeigen"
 
-#: .\mentoring\views.py:428
+#: .\mentoring\views.py:424
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
