@@ -23,6 +23,7 @@
                             {% endfor %}
                             {% bootstrap_field user_form.first_name %}
                             {% bootstrap_field user_form.last_name %}
+                            {% bootstrap_field user_form.email %}
 
                             {% for form in tutor_user_formset.forms %}
                                 {% bootstrap_field form.phone %}

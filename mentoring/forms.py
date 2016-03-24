@@ -89,7 +89,7 @@ FormsetPlacementContactdata = forms.inlineformset_factory(Placement, PlacementCo
 class FormSettingsUser(forms.ModelForm):
     class Meta:
         model = MentoringUser
-        fields = ['first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'email']
 
 
 FormsetUserTutor = forms.inlineformset_factory(MentoringUser, Tutor,
