@@ -20,31 +20,8 @@ class FormPlacement(forms.ModelForm):
             self.fields['tutor'].widget.attrs['disabled'] = True
 
     def is_valid(self):
-        # """
-        # Falls das Objekt bereits finalisiert wurde -> invalid
-        # """
-        # if (self.instance.finished):
-        #     return False
-        #
-        # """
-        # Falls Placement finalisiert werden soll, setze all Felder 'required'
-        # """
-        #
-        # req = True if self.data.has_key('finalize') and (
-        # self.data['finalize'] == 'true' or self.data['finalize'] == _('Finish')) else False
-        # for key, val in self.fields.iteritems():
-        #     if not key in ['public', 'finished']:
-        #         val.required = req
-        #     else:
-        #         val.required = False
-
         is_valid = super(FormPlacement, self).is_valid()
 
-        # """
-        # Falls Placement valid und finalize -> Placement.finished
-        # """
-
-        # if is_valid and req:
         if is_valid:
             # Wenn ein neuer Bericht hochgeladen wird, wird ein Zeitestempel gesetzt. Beim Löschen des Berichts wird der Zeitstempel gelöscht.
             if 'report' in self.changed_data:

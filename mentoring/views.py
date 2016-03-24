@@ -68,15 +68,6 @@ class StudentPlacementFormView(UpdateView):
         """
         return self.request.user.portaluser.student.studentactiveplacement.placement
 
-    # def get(self, request, status=200, *args, **kwargs):
-    #     if request.GET.has_key('fancy'):
-    #         request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
-    #     self.object = self.get_placement()
-    #
-    #     cd = self.get_context_data()
-    #     cd.update(self.get_context_placement())
-    #     return self.render_to_response(cd, status=status)
-
     def post(self, request, *args, **kwargs):
         show_tutor = request.POST.get('show_tutor')
         self.object = self.get_placement()
@@ -168,9 +159,7 @@ class StudentFormView(StudentPlacementFormView):
             return redirect('index')
         else:
             self.object = self.get_object()
-
             return render(request, self.template_name, self.get_context_data())
-            # return super(UpdateView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """
@@ -438,8 +427,6 @@ class PlacementSeminarCreateView(CreateView):
     model = PlacementSeminar
     template_name = 'placement_seminar_create.html'
     fields = '__all__'
-
-    # def form_valid(self, form):
 
     def get_success_url(self):
         return reverse('placement-seminar-list')
