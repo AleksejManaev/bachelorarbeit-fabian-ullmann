@@ -64,7 +64,7 @@ msgstr "Telefon"
 
 #: .\mentoring\models.py:48
 msgid "Placement courses"
-msgstr "Praktikumskurse"
+msgstr "Studiengänge"
 
 #: .\mentoring\models.py:60 .\mentoring\models.py:75
 msgid "Placement year"
