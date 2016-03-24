@@ -318,9 +318,9 @@ class TutorSettingsFormView(UpdateView):
 
 class TutorPlacementView(UpdateView):
     model = Placement
-    fields = ['student', 'course', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
+    fields = ['course', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
     template_name = 'tutor_placement_details.html'
-    exclude = ['tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'placement_completed']
+    exclude = ['student', 'tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'placement_completed']
 
     def get_success_url(self):
         return reverse('placement-details', args=[self.object.id])
