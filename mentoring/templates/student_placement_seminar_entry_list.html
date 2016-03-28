@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+
+{% block content %}
+    <div class="container center-vertically">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">{% trans 'Placement appointments' %}</h1>
+                    </div>
+
+                    <div class="panel-body">
+                        {% if entries_list %}
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover table-condensed">
+                                    <thead>
+                                    <tr>
+                                        {% for entry in entries_list %}
+                                            <th class="wrap-column text-center">
+                                                {{ entry.0.date|date:"d.m.Y" }}
+                                            </th>
+                                        {% endfor %}
+                                        <th class="wrap-column text-center">{% trans 'Presentation done' %}</th>
+                                        <th class="wrap-column text-center">{% trans 'Placement seminar done' %}</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr>
+                                        {% for entry in entries_list %}
+                                            <td class="text-center">
+                                                {% if entry.1 %}
+                                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                                {% else %}
+                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                        <td class="text-center">
+                                            {% if presentation_date %}
+                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                            {% else %}
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if placement_seminar_done %}
+                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                            {% else %}
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
