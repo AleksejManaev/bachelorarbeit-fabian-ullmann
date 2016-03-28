@@ -100,6 +100,9 @@ class AbstractWork(models.Model):
     sent_on = models.DateTimeField(_('date sent'), blank=True, null=True)
     comment_unread_by_student = models.BooleanField(default=False)
     comment_unread_by_tutor = models.BooleanField(default=False)
+    mentoring_requested = models.BooleanField(_('Requested'), default=False)
+    mentoring_accepted = models.CharField(max_length=2, choices=STATUS_CHOICES, default='ND')
+    abstractwork_completed = models.BooleanField(_('Completed'), default=False)
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
@@ -118,9 +121,6 @@ class Placement(AbstractWork):
                                    blank=True,
                                    null=True,
                                    validators=[validate_pdf, validate_size])
-    mentoring_requested = models.BooleanField(_('Requested'), default=False)
-    mentoring_accepted = models.CharField(max_length=2, choices=STATUS_CHOICES, default='ND')
-    placement_completed = models.BooleanField(_('Completed'), default=False)
 
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)
