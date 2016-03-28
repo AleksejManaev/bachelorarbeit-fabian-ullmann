@@ -538,10 +538,7 @@ def generate_placement_pdf(self, pk):
     fdf_file.close()
 
     # PDF-Datei erzeugen
-    os.system(
-            'pdftk {mediaroot}/docs/_Anerkennung_Praktikum_2014.pdf fill_form {directory}/data.fdf output {filepath} flatten'.format(mediaroot=settings.MEDIA_ROOT,
-                                                                                                                                     directory=directory,
-                                                                                                                                     filepath=filepath))
+    os.system('pdftk {mediaroot}/docs/_Anerkennung_Praktikum_2014.pdf fill_form {directory}/data.fdf output {filepath} flatten'.format(mediaroot=settings.MEDIA_ROOT, directory=directory, filepath=filepath))
 
     # PDF-Datei senden, wenn diese erfolgreich erzeugt wurde
     if os.path.exists(filepath):
