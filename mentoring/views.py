@@ -19,15 +19,14 @@ from mentoring.models import Student, Placement
 class IndexView(RedirectView):
     """
     + prüft ob Tutor oder Student eingeloggt ist und leitet zur entsprechenden Index-Seite weiter
-
     """
     permanent = False
 
     def get(self, request, *args, **kwargs):
-        if (hasattr(request.user, 'portaluser')):
-            if (hasattr(request.user.portaluser, 'tutor')):
+        if hasattr(request.user, 'portaluser'):
+            if hasattr(request.user.portaluser, 'tutor'):
                 self.pattern_name = 'tutor-index'
-            elif (hasattr(request.user.portaluser, 'student')):
+            elif hasattr(request.user.portaluser, 'student'):
                 self.pattern_name = 'student-index'
         else:
             self.pattern_name = 'logout'
@@ -35,26 +34,11 @@ class IndexView(RedirectView):
 
 
 class StudentPlacementFormView(UpdateView):
-    """
-    + Absolventen können Praktikumsarbeit anlegen
-    + Absolventen können Praktikum beschreiben
-    + Absolventen können Informationen zum Unternehmen erfassen, bei welchem das Praktikum durchgeführt wurde.
-    + Absolventen können ihren Praktikumsbericht im System hochladen.
-    + Absolventen können ihr Praktikumszeugnis im System hochladen.
-    + Absolventen können ihre Praktikumspräsentation im System hochladen.
-    """
-
+    template_name = 'student_placement.html'
     model = Placement
     form_class = FormPlacement
 
-    # template_name = 'student_placement_form.html'
-
     def get_context_placement(self, data=None, files=None):
-        """
-        enthält all nötigen Formulare, die an Template übergeben werden und validiert werden müssen
-
-        wird auch von erbenden Klassen genutzt
-        """
         placement = self.get_placement()
         return {
             'placement': placement,
@@ -63,44 +47,63 @@ class StudentPlacementFormView(UpdateView):
         }
 
     def get_placement(self):
-        """
-        muss von erbender Klasse überschrieben werden
-        """
         return self.request.user.portaluser.student.studentactiveplacement.placement
 
     def post(self, request, *args, **kwargs):
         show_tutor = request.POST.get('show_tutor')
-        self.object = self.get_placement()
+        placement = self.get_placement()
 
-        placement_form_dict = self.get_context_placement(request.POST, files=request.FILES)
+        """
+            Werte der disabled Felder werden mit POST nicht mitgesendet.
+            Manuelles Hinzufügen der Werte, sonst schlägt Validierung fehl.
+        """
+        if placement.mentoring_requested:
+            post = request.POST.copy()
+            post['placement_form-tutor'] = placement.tutor
+            post['placement_form-task'] = placement.task
+            placement_form_dict = self.get_context_placement(post, files=request.FILES)
+        else:
+            placement_form_dict = self.get_context_placement(request.POST, files=request.FILES)
 
-        form_target = [i for i, v in placement_form_dict.iteritems()]
+        # Alle Formulare validieren und speichern
+        target_forms = [i for i, v in placement_form_dict.iteritems()]
 
-        if 'placement' in form_target:
-            form_target.remove('placement')
+        if 'placement' in target_forms:
+            target_forms.remove('placement')
 
         valid = True
-        for t in form_target:
-            in_placement_form_dict = t in placement_form_dict
+        for t in target_forms:
             form = placement_form_dict.get(t)
             is_valid = form.is_valid()
 
-            if in_placement_form_dict and is_valid:
+            if is_valid:
                 placement_form_dict.get(t).save()
             else:
                 valid = False
 
+        # Wenn alle Formulare valide sind auch das Praktikum speichern
         if valid:
-            placement_form_dict = self.get_context_placement()
+            if placement.mentoring_requested is False and show_tutor:
+                placement.mentoring_requested = True
+                placement.sent_on = datetime.now()
+                placement.save()
 
-            if self.object.mentoring_requested is False and show_tutor:
-                self.object.mentoring_requested = True
-                self.object.sent_on = datetime.now()
-                self.object.save()
-
-        cd = self.get_context_data()
-        cd.update(placement_form_dict)
         return redirect('student-placement')
+
+    def get(self, request, status=200, *args, **kwargs):
+        student = self.request.user.portaluser.student
+
+        context = {}
+        context.update(self.get_context_placement())
+        context.update(self.get_denied_placements())
+
+        if not student:
+            return redirect('index')
+        else:
+            return render(request, self.template_name, context)
+
+    def get_denied_placements(self):
+        return {'denied_placements': Placement.objects.filter(student=self.request.user.portaluser.student, mentoring_accepted='MD')}
 
 
 class StudentSettingsFormView(UpdateView):
@@ -136,58 +139,15 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
-                                                    prefix='student_user_formset'),
-            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
-                                                          prefix='student_address_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
+                                                        prefix='student_user_formset'),
+                student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
+                                                              prefix='student_address_formset')
         )
 
     def get_object(self, queryset=None):
         return Student.objects.get(user=self.request.user)
-
-
-class StudentFormView(StudentPlacementFormView):
-    """
-    Zeigt alle Studenten-Formulare in einer Seite an
-    """
-    template_name = 'student_placement.html'
-    model = Student
-
-    def get(self, request, status=200, *args, **kwargs):
-        if not self.get_object():
-            return redirect('index')
-        else:
-            self.object = self.get_object()
-            return render(request, self.template_name, self.get_context_data())
-
-    def get_context_data(self, **kwargs):
-        """
-        Alle Context-Data zusammenführen.
-        Wichtig, dass die get_OBJECT Methoden korrekt überschrieben wurden
-        """
-        context = {}
-        if self.get_object():
-            context['object'] = self.object
-            context_object_name = self.get_context_object_name(self.object)
-
-            if context_object_name:
-                context[context_object_name] = self.object
-
-            context.update(kwargs)
-            context.update(self.get_context_placement())
-            context.update(self.get_denied_placements())
-
-            return context
-        else:
-            return None
-
-    def get_denied_placements(self):
-        return {'denied_placements': Placement.objects.filter(student=self.request.user.portaluser.student,
-                                                              mentoring_accepted='MD')}
-
-    def get_object(self, queryset=None):
-        return self.request.user.portaluser.student
 
 
 class TutorView(View):
@@ -296,9 +256,9 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
-                                                prefix='tutor_user_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
+                                                    prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
@@ -579,9 +539,9 @@ def generate_placement_pdf(self, pk):
 
     # PDF-Datei erzeugen
     os.system(
-        'pdftk {mediaroot}/docs/_Anerkennung_Praktikum_2014.pdf fill_form {directory}/data.fdf output {filepath} flatten'.format(mediaroot=settings.MEDIA_ROOT,
-                                                                                                                                 directory=directory,
-                                                                                                                                 filepath=filepath))
+            'pdftk {mediaroot}/docs/_Anerkennung_Praktikum_2014.pdf fill_form {directory}/data.fdf output {filepath} flatten'.format(mediaroot=settings.MEDIA_ROOT,
+                                                                                                                                     directory=directory,
+                                                                                                                                     filepath=filepath))
 
     # PDF-Datei senden, wenn diese erfolgreich erzeugt wurde
     if os.path.exists(filepath):
