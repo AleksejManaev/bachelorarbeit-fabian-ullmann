@@ -245,7 +245,7 @@ class TutorUpdatePlacementView(View):
         return redirect('tutor-index')
 
     def notify(self, tutor, placement, comment_message):
-        comment = Comment(author=tutor, placement=placement, message=comment_message)
+        comment = Comment(author=tutor, abstractwork=placement, message=comment_message)
         comment.save()
         Placement.objects.filter(id=placement.id).update(comment_unread_by_student=True, comment_unread_by_tutor=True)
 
@@ -321,7 +321,7 @@ class PlacementCommentsView(View):
 
     def get(self, request, pk):
         # Nur der beteiligte Student und Tutor dürfen die Kommentare einsehen
-        if self.is_placement_allowed(pk):
+        if self.is_abstractwork_allowed(pk):
             # Kommentar als gelesen für den anderen Gesprächspartner markieren
             if (hasattr(request.user, 'portaluser')):
                 if (hasattr(request.user.portaluser, 'tutor')):
@@ -329,7 +329,7 @@ class PlacementCommentsView(View):
                 elif (hasattr(request.user.portaluser, 'student')):
                     Placement.objects.filter(id=pk).update(comment_unread_by_student=False)
 
-            comments = Comment.objects.filter(placement=pk).order_by('timestamp')
+            comments = Comment.objects.filter(abstractwork=pk).order_by('timestamp')
             comment_form = self.form_class()
             return render(request, self.template_name, {'comments': comments, 'comment_form': comment_form})
         else:
@@ -337,10 +337,10 @@ class PlacementCommentsView(View):
 
     def post(self, request, pk):
         # Nur der beteiligte Student und Tutor dürfen Kommentare schreiben
-        if self.is_placement_allowed(pk):
+        if self.is_abstractwork_allowed(pk):
             comment = Comment()
             comment.author = self.request.user.portaluser.user
-            comment.placement = Placement.objects.get(id=pk)
+            comment.abstractwork = Placement.objects.get(id=pk)
             comment.message = request.POST.get('message')
 
             private = request.POST.get('private')
@@ -352,24 +352,24 @@ class PlacementCommentsView(View):
 
             # Kommentar als ungelesen für den anderen Gesprächspartner markieren (aber nicht bei privaten) und E-Mail versenden
             if (hasattr(request.user, 'portaluser')):
-                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.placement.id, _('Show comments'))
-                placement = comment.placement
+                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                abstractwork = comment.abstractwork
 
                 if (hasattr(request.user.portaluser, 'tutor')):
-                    if not private and placement.student:
-                        Placement.objects.filter(id=pk).update(comment_unread_by_student=True)
-                        send_comment_email([placement.student.user.email], message)
+                    if not private and abstractwork.student:
+                        AbstractWork.objects.filter(id=pk).update(comment_unread_by_student=True)
+                        send_comment_email([abstractwork.student.user.email], message)
                 elif (hasattr(request.user.portaluser, 'student')):
-                    if not private and placement.tutor:
-                        Placement.objects.filter(id=pk).update(comment_unread_by_tutor=True)
-                        send_comment_email([placement.tutor.user.email], message)
+                    if not private and abstractwork.tutor:
+                        AbstractWork.objects.filter(id=pk).update(comment_unread_by_tutor=True)
+                        send_comment_email([abstractwork.tutor.user.email], message)
 
             return redirect('placements-comments', pk=pk)
         else:
             return HttpResponseNotFound()
 
-    def is_placement_allowed(self, pk):
-        return Placement.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(tutor=self.request.user.portaluser)).exists()
+    def is_abstractwork_allowed(self, pk):
+        return AbstractWork.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(tutor=self.request.user.portaluser)).exists()
 
 
 def togglePrivacy(request):
@@ -391,18 +391,18 @@ def togglePrivacy(request):
     if (hasattr(request.user, 'portaluser')):
         if (hasattr(request.user.portaluser, 'tutor')):
             if comment.private:
-                Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_student=False)
+                AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_student=False)
             else:
-                Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_student=True)
-                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.placement.id, _('Show comments'))
-                send_comment_email([comment.placement.student.user.email], message)
+                AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_student=True)
+                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                send_comment_email([comment.abstractwork.student.user.email], message)
         elif (hasattr(request.user.portaluser, 'student')):
             if comment.private:
-                Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_tutor=False)
+                AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_tutor=False)
             else:
-                Placement.objects.filter(id=comment.placement.id).update(comment_unread_by_tutor=True)
-                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.placement.id, _('Show comments'))
-                send_comment_email([comment.placement.tutor.user.email], message)
+                AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_tutor=True)
+                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                send_comment_email([comment.abstractwork.tutor.user.email], message)
 
     return JsonResponse({'private_state': comment.private, 'private_text': str(_(private_text))})
 

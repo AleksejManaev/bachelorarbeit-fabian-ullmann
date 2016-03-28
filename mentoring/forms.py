@@ -15,7 +15,6 @@ class FormPlacement(forms.ModelForm):
         super(FormPlacement, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance.mentoring_requested:
-            self.fields['course'].widget.attrs['disabled'] = True
             self.fields['task'].widget.attrs['disabled'] = True
             self.fields['tutor'].widget.attrs['disabled'] = True
 
@@ -37,7 +36,7 @@ class FormPlacement(forms.ModelForm):
     class Meta:
         model = Placement
         exclude = ['student', 'finished', 'sent_on']
-        fields = ['course', 'tutor', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name',
+        fields = ['tutor', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name',
                   'company_address']
         widgets = {
             'date_from': DateInput(attrs={'class': 'datepicker'}),
@@ -54,7 +53,7 @@ class FormTutorPlacement(forms.ModelForm):
 
     class Meta:
         model = Placement
-        exclude = ['student', 'finished', 'mentoring_requested', 'sent_on', 'course', 'tutor', 'task', 'date_form', 'date_to',
+        exclude = ['student', 'finished', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'date_form', 'date_to',
                    'report', 'certificate', 'company_name', 'company_address']
         fields = ['placement_completed', 'mentoring_accepted']
 

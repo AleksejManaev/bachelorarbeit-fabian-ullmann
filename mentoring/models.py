@@ -71,6 +71,7 @@ class PlacementSeminarEntry(models.Model):
 @python_2_unicode_compatible
 class Student(PortalUser):
     matriculation_number = models.CharField(_('Matriculation number'), max_length=8, null=True, blank=True)
+    course = models.ForeignKey(Course, verbose_name=_('course placement'), null=True)
     extern_email = models.EmailField(_('extern email address'), null=True, blank=True)
     placement_year = models.IntegerField(_('Placement year'), blank=True, null=True)
     presentation_date = models.ForeignKey(PlacementSeminarEntry, blank=True, null=True, related_name='presentation_student')
@@ -79,14 +80,6 @@ class Student(PortalUser):
 
     def __str__(self):
         return u"{} ({})".format(self.user.get_full_name(), self.matriculation_number)
-
-    @property
-    def thesis(self):
-        return self.student.studentactivethesis.thesis
-
-    @property
-    def placement(self):
-        return self.student.studentactiveplacement.placement
 
 
 class Address(models.Model):
@@ -99,24 +92,14 @@ class Address(models.Model):
 
 
 class AbstractWork(models.Model):
+    student = models.ForeignKey(Student, null=True)
+    tutor = models.ForeignKey(Tutor, null=True)
     task = models.TextField(_('task'), null=True)
     created_on = models.DateTimeField(_('date joined'), auto_created=True, auto_now_add=True)
     updated_on = models.DateTimeField(_('date updated'), auto_now=True, null=True)
     sent_on = models.DateTimeField(_('date sent'), blank=True, null=True)
-
-    # @property
-    # def finished(self):
-    #     return bool(self.sent_on) and not self.state == 'NR'
-
-    # def __setattr__(self, key, value):
-    #     if not key == 'finished':
-    #         super(AbstractWork, self).__setattr__(key, value)
-    #     elif value == True:
-    #         self.sent_on = datetime.now()
-    #         self.state = 'RE'
-    #     else:
-    #         self.sent_on = None
-    #         self.state = 'NR'
+    comment_unread_by_student = models.BooleanField(default=False)
+    comment_unread_by_tutor = models.BooleanField(default=False)
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
@@ -124,9 +107,6 @@ class AbstractWork(models.Model):
 
 @python_2_unicode_compatible
 class Placement(AbstractWork):
-    student = models.ForeignKey(Student)
-    course = models.ForeignKey(Course, verbose_name=_('course placement'), null=True)
-    tutor = models.ForeignKey(Tutor, null=True)
     company_name = models.CharField(_('company name'), max_length=100, null=True, blank=True)
     company_address = models.TextField(_('company address'), null=True, blank=True)
     date_from = models.DateField(_('internship begin'), blank=True, null=True)
@@ -141,8 +121,6 @@ class Placement(AbstractWork):
     mentoring_requested = models.BooleanField(_('Requested'), default=False)
     mentoring_accepted = models.CharField(max_length=2, choices=STATUS_CHOICES, default='ND')
     placement_completed = models.BooleanField(_('Completed'), default=False)
-    comment_unread_by_student = models.BooleanField(default=False)
-    comment_unread_by_tutor = models.BooleanField(default=False)
 
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)
@@ -185,7 +163,7 @@ class PlacementCompanyContactData(ContactData):
 
 class Comment(models.Model):
     author = models.ForeignKey(MentoringUser)
-    placement = models.ForeignKey(Placement)
+    abstractwork = models.ForeignKey(AbstractWork)
     message = models.TextField(_('message'))
     timestamp = models.DateTimeField(auto_now_add=True)
     private = models.BooleanField(_('Only visible for me'), default=False)
