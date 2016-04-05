@@ -21,6 +21,9 @@
 
     <!-- DataTables-Konfiguration -->
     <script type="text/javascript" src="{% static 'js/tutor_index.js' %}"></script>
+
+    <!-- Datepicker -->
+    <script src="{% static 'js/datepicker.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -29,13 +32,13 @@
             <div class="col-sm-12">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs nav-justified" role="tablist">
-                    <li class="active"><a href="#placement" role="tab" data-toggle="tab">{% trans 'Internship tab' %}</a></li>
-                    <li><a href="#thesis" role="tab" data-toggle="tab">{% trans 'Thesis tab' %}</a></li>
+                    <li {% if not is_thesis %}class="active"{% endif %}><a href="#placement" role="tab" data-toggle="tab">{% trans 'Internship tab' %}</a></li>
+                    <li {% if is_thesis %}class="active"{% endif %}><a href="#thesis" role="tab" data-toggle="tab">{% trans 'Thesis tab' %}</a></li>
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div class="tab-pane active" id="placement">
+                    <div class="tab-pane {% if not is_thesis %}active{% endif %}" id="placement">
 
                         <div class="table-responsive">
                             {% for placement in placements %}
@@ -65,7 +68,7 @@
                                 {% for placement in placements %}
                                     <tr>
                                         <td>
-                                            <a href="{% url 'placements-comments' placement.id %}" title="{% trans 'comments' %}">
+                                            <a href="{% url 'comments' placement.id %}" title="{% trans 'comments' %}">
                                                 <button type="button" class="btn btn-default center-block"
                                                         {% if placement.comment_unread_by_tutor %}
                                                         style="background-color:#ffff80;"
@@ -98,7 +101,7 @@
                                                                                                                                            name="mentoring_accepted"
                                                                                                                                            form="{{ placement.id }}"
                                             >
-                                                {% for state in states %}
+                                                {% for state in mentoring_states %}
                                                     {% ifequal state.0 placement.mentoring_accepted %}
                                                         <option value="{{ state.0 }}" selected="selected">{% trans state.1 %}</option>
                                                     {% else %}
@@ -110,9 +113,9 @@
                                         <td>
                                             <input  {% if placement.mentoring_accepted == 'MD' %} disabled {% endif %}
                                                                                                   type="checkbox"
-                                                                                                  name="abstractwork_completed"
+                                                                                                  name="completed"
                                                                                                   form="{{ placement.id }}"
-                                                    {{ placement.abstractwork_completed|boolean_checked|default_if_none:"" }}
+                                                    {{ placement.completed|boolean_checked|default_if_none:"" }}
                                             >
                                         </td>
                                         <td>
@@ -147,24 +150,111 @@
                         </div>
                     </div>
 
-                    <div class="tab-pane" id="thesis">
-                        <table id="thesis-table" class="table table-striped table-bordered table-hover table-condensed">
-                            <thead>
-                            <tr>
-                                <th class="wrap-column">{% trans 'comments' %}</th>
-                                <th>{% trans 'First name' %}</th>
-                                <th>{% trans 'Last name' %}</th>
-                                <th>{% trans 'Matriculation number' %}</th>
-                                <th>{% trans 'Email' %}</th>
-                                <th>{% trans 'mentoring accepted' %}</th>
-                                <th>{% trans 'Completed' %}</th>
-                                <th class="wrap-column">{% trans 'Save' %}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                    <div class="tab-pane {% if is_thesis %}active{% endif %}" id="thesis">
+                        <div class="table-responsive">
                             {% for thesis in theses %}
+                                <form method="POST" id="{{ thesis.id }}" action="{% url 'tutor-thesis-update' thesis.id %}">
+                                    {% csrf_token %}
+                                </form>
                             {% endfor %}
-                        </table>
+                            <table id="thesis-table" class="table table-striped table-bordered table-hover table-condensed">
+                                <thead>
+                                <tr>
+                                    <th class="wrap-column">{% trans 'comments' %}</th>
+                                    <th>{% trans 'First name' %}</th>
+                                    <th>{% trans 'Last name' %}</th>
+                                    <th>{% trans 'Matriculation number' %}</th>
+                                    <th>{% trans 'Email' %}</th>
+                                    <th>{% trans 'mentoring accepted' %}</th>
+                                    <th>{% trans 'Examination office state' %}</th>
+                                    <th>{% trans 'Deadline' %}</th>
+                                    <th>{% trans 'Grade' %}</th>
+                                    <th class="wrap-column">{% trans 'Save' %}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for thesis in theses %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'comments' thesis.id %}" title="{% trans 'comments' %}">
+                                                <button type="button" class="btn btn-default center-block"
+                                                        {% if thesis.comment_unread_by_tutor %}
+                                                        style="background-color:#ffff80;"
+                                                        {% endif %}
+                                                >
+                                                    <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td><a href="{% url 'thesis-details' thesis.id %}">{{ thesis.student.user.first_name }}</a></td>
+                                        <td><a href="{% url 'thesis-details' thesis.id %}">{{ thesis.student.user.last_name }}</a></td>
+                                        <td><a href="{% url 'thesis-details' thesis.id %}">{{ thesis.student.matriculation_number }}</a></td>
+                                        <td><a href="mailto:{{ thesis.student.user.email }}">{{ thesis.student.user.email }}</a></td>
+                                        <td>
+                                            <select {% if thesis.mentoring_accepted == 'MD' or thesis.mentoring_accepted == 'MA' %} disabled {% endif %} name="mentoring_accepted" form="{{ thesis.id }}">
+                                                {% for state in mentoring_states %}
+                                                    {% ifequal state.0 thesis.mentoring_accepted %}
+                                                        <option value="{{ state.0 }}" selected="selected">{% trans state.1 %}</option>
+                                                    {% else %}
+                                                        <option value="{{ state.0 }}">{% trans state.1 %}</option>
+                                                    {% endifequal %}
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %} name="examination_office_state" form="{{ thesis.id }}">
+                                                {% for state in examination_office_states %}
+                                                    {% ifequal state.0 thesis.examination_office_state %}
+                                                        <option value="{{ state.0 }}" selected="selected">{% trans state.1 %}</option>
+                                                    {% else %}
+                                                        <option value="{{ state.0 }}">{% trans state.1 %}</option>
+                                                    {% endifequal %}
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input class="form-control datepicker" id="deadline{{ thesis.id }}" name="deadline" placeholder="{% trans 'Deadline' %}" type="text" {% if thesis.deadline %} value="{{ thesis.deadline|date:"d.m.Y" }}"{% endif %} form="{{ thesis.id }}">
+                                        </td>
+                                        <td>
+                                            <select {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %} name="grade" form="{{ thesis.id }}">
+                                                {% for grade in grades %}
+                                                    {% ifequal grade.0 thesis.grade %}
+                                                        <option value="{{ grade.0 }}" selected="selected">{{ grade.1 }}</option>
+                                                    {% else %}
+                                                        <option value="{{ grade.0 }}">{{ grade.1 }}</option>
+                                                    {% endifequal %}
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button  {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %}
+                                                                                                type="submit"
+                                                                                                class="btn btn-default center-block"
+                                                                                                form="{{ thesis.id }}"
+                                            >
+                                                <span class="glyphicon glyphicon-floppy-disk"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+
+                                <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th>{% trans 'Search' %} {% trans 'First name' %}</th>
+                                    <th>{% trans 'Search' %} {% trans 'Last name' %}</th>
+                                    <th>{% trans 'Search' %} {% trans 'Matriculation number' %}</th>
+                                    <th>{% trans 'Search' %} {% trans 'Email' %}</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

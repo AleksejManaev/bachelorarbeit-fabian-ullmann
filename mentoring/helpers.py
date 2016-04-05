@@ -28,8 +28,8 @@ def upload_to_placement_certificate(instance, filename):
     return uri
 
 
-def upload_to_thesis_report(instance, filename):
-    uri = '%s/thesis/documents/report/%s' % (instance.student.matriculation_number, filename)
+def upload_to_thesis_thesis(instance, filename):
+    uri = '%s/thesis/documents/thesis/%s' % (instance.student.matriculation_number, filename)
     return uri
 
 

@@ -36,13 +36,45 @@ class FormPlacement(forms.ModelForm):
     class Meta:
         model = Placement
         exclude = ['student', 'finished', 'sent_on']
-        fields = ['tutor', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name',
-                  'company_address']
+        fields = ['tutor', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
         widgets = {
             'date_from': DateInput(attrs={'class': 'datepicker'}),
             'date_to': DateInput(attrs={'class': 'datepicker'}),
             'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
             'certificate': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+        }
+
+
+class FormThesis(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(FormThesis, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance.mentoring_requested:
+            self.fields['task'].widget.attrs['disabled'] = True
+            self.fields['tutor'].widget.attrs['disabled'] = True
+
+    def is_valid(self):
+        is_valid = super(FormThesis, self).is_valid()
+
+        if is_valid:
+            # Wenn ein neuer Bericht hochgeladen wird, wird ein Zeitestempel gesetzt. Beim Löschen des Berichts wird der Zeitstempel gelöscht.
+            # if 'report' in self.changed_data:
+            #     if self.cleaned_data['report']:
+            #         self.instance.report_uploaded_date = datetime.now()
+            #     else:
+            #         self.instance.report_uploaded_date = None
+
+            self.instance.save()
+
+        return is_valid
+
+    class Meta:
+        model = Thesis
+        exclude = ['student', 'finished', 'sent_on']
+        fields = ['tutor', 'task', 'type', 'second_examiner_first_name', 'second_examiner_last_name', 'second_examiner_organisation', 'second_examiner_title', 'thesis', 'poster']
+        widgets = {
+            'thesis': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'poster': ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
 
 
@@ -55,7 +87,22 @@ class FormTutorPlacement(forms.ModelForm):
         model = Placement
         exclude = ['student', 'finished', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'date_form', 'date_to',
                    'report', 'certificate', 'company_name', 'company_address']
-        fields = ['abstractwork_completed', 'mentoring_accepted']
+        fields = ['completed', 'mentoring_accepted']
+
+
+class FormTutorThesis(forms.ModelForm):
+    def is_valid(self):
+        is_valid = super(FormTutorThesis, self).is_valid()
+        return is_valid
+
+    class Meta:
+        model = Thesis
+        exclude = ['student', 'finished', 'mentoring_requested', 'sent_on', 'tutor', 'task',
+                   'thesis', 'poster']
+        fields = ['mentoring_accepted', 'examination_office_state', 'grade', 'deadline']
+        widgets = {
+            'deadline': DateInput(attrs={'class': 'datepicker'}),
+        }
 
 
 FormsetPlacementContactdata = forms.inlineformset_factory(Placement, PlacementCompanyContactData, fields='__all__',

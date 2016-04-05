@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+{% load staticfiles %}
+{% load filter %}
+
+{% block head %}
+    <script src="{% static 'js/datepicker.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+    <!-- Details zum Praktikum -->
+    <div class="container center-vertically">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">{% trans 'Thesis' %}</h1>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <!-- Formular -->
+                        <form enctype="multipart/form-data" action="" method="post" class="form">
+                            {% csrf_token %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{% trans 'General data' %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label>{% trans 'Student' %}</label>
+                                        <p>{{ form.instance.student }}</p>
+                                    </div>
+
+                                    {% bootstrap_field form.type bound_css_class=' ' %}
+                                    {% bootstrap_field form.task bound_css_class=' ' %}
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="id_thesis">{% trans 'Thesis' %}</label>
+                                        <div class="row bootstrap3-multi-input">
+                                            <div class="col-xs-12">
+                                                {% if form.instance.thesis %}
+                                                    {% trans 'Currently' %}:
+                                                    <a href="{{ form.instance.thesis.url }}">{{ form.instance.thesis }}</a>
+                                                    <input id="thesis-clear_id" name="thesis-clear" type="checkbox">
+                                                    <label for="thesis-clear_id">{% trans 'Reset' %}</label>
+                                                    </br>
+                                                {% endif %}
+                                                <input class="" id="id_thesis" name="thesis" title="" type="file"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="id_poster">{% trans 'Poster' %}</label>
+                                        <div class="row bootstrap3-multi-input">
+                                            <div class="col-xs-12">
+                                                {% if form.instance.poster %}
+                                                    {% trans 'Currently' %}:
+                                                    <a href="{{ form.instance.poster.url }}">{{ form.instance.poster }}</a>
+                                                    <input id="poster-clear_id" name="poster-clear" type="checkbox">
+                                                    <label for="poster-clear_id">{% trans 'Reset' %}</label>
+                                                    </br>
+                                                {% endif %}
+                                                <input class="" id="id_poster" name="poster" title="" type="file"></div>
+                                        </div>
+                                    </div>
+
+                                    {% bootstrap_field form.deadline_extended bound_css_class=' ' %}
+                                    {% bootstrap_field form.colloquium_done bound_css_class=' ' %}
+
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{% trans 'Second examiner' %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    {% bootstrap_field form.second_examiner_title bound_css_class=' ' %}
+                                    {% bootstrap_field form.second_examiner_first_name bound_css_class=' ' %}
+                                    {% bootstrap_field form.second_examiner_last_name bound_css_class=' ' %}
+                                    {% bootstrap_field form.second_examiner_organisation bound_css_class=' ' %}
+                                </div>
+                            </div>
+
+
+
+                            {% buttons %}
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                    {% trans 'Update' %}
+                                </button>
+                            {% endbuttons %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

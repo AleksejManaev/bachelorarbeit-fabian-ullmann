@@ -53,7 +53,17 @@ def post_delete_placement(sender, instance, using, **kwargs):
         print("post_delete_placement save")
 
 
+@receiver(post_save, sender=Thesis)
+def post_save_thesis(sender, instance, created, **kwargs):
+    if created:
+        print("post_save_thesis")
+        sap = StudentActiveThesis.objects.get_or_create(student=instance.student)[0]
+        sap.thesis = instance
+        sap.save()
+
+
 @receiver(post_save, sender=Student)
 def post_save_student(sender, instance, created, **kwargs):
     if created:
         Placement.objects.get_or_create(student=instance)
+        Thesis.objects.get_or_create(student=instance)

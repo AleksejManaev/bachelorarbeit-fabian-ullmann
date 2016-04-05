@@ -29,7 +29,6 @@
                                 <p>{{ form.instance.student }}</p>
                             </div>
 
-                            {% bootstrap_field form.course bound_css_class=' ' %}
                             {% bootstrap_field form.task bound_css_class=' ' %}
                             <div class="form-group">
                                 <label class="control-label" for="id_date_from">Praktikumsbeginn</label>
@@ -62,17 +61,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="id_report">{% trans 'Placement certificate' %}</label>
+                                <label class="control-label" for="id_certificate">{% trans 'Placement certificate' %}</label>
                                 <div class="row bootstrap3-multi-input">
                                     <div class="col-xs-12">
                                         {% if form.instance.certificate %}
                                             {% trans 'Currently' %}:
                                             <a href="{{ form.instance.certificate.url }}">{{ form.instance.certificate }}</a>
-                                            <input id="report-clear_id" name="report-clear" type="checkbox">
-                                            <label for="report-clear_id">{% trans 'Reset' %}</label>
+                                            <input id="certificate-clear_id" name="certificate-clear" type="checkbox">
+                                            <label for="certificate-clear_id">{% trans 'Reset' %}</label>
                                             </br>
                                         {% endif %}
-                                        <input class="" id="id_report" name="report" title="" type="file"></div>
+                                        <input class="" id="id_certificate" name="certificate" title="" type="file"></div>
                                 </div>
                             </div>
                             {% bootstrap_field form.company_name bound_css_class=' ' %}

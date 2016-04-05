@@ -9,10 +9,36 @@ from mentoring.validators import *
 
 app_label = 'mentoring'
 
-STATUS_CHOICES = (
+MENTORING_STATE_CHOICES = (
     ('ND', 'not decided'),
     ('MA', 'mentoring accepted'),
     ('MD', 'mentoring denied'),
+)
+
+THESIS_CHOICES = (
+    ('Bachelor', 'Bachelor'),
+    ('Master', 'Master'),
+)
+
+GRADE_CHOICES = (
+    ('-', '-'),
+    ('1,0', '1,0'),
+    ('1,3', '1,3'),
+    ('1,7', '1,7'),
+    ('2,0', '2,0'),
+    ('2,3', '2,3'),
+    ('3,0', '3,0'),
+    ('3,3', '3,3'),
+    ('3,7', '3,7'),
+    ('4,0', '4,0'),
+    ('5,0', '5,0')
+)
+
+EXAMINATION_OFFICE_STATE_CHOICES = (
+    ('1A', 'not registered'),
+    ('1B', 'registration sent'),
+    ('2A', 'registration accepted'),
+    ('2B', 'registration denied')
 )
 
 
@@ -101,8 +127,7 @@ class AbstractWork(models.Model):
     comment_unread_by_student = models.BooleanField(default=False)
     comment_unread_by_tutor = models.BooleanField(default=False)
     mentoring_requested = models.BooleanField(_('Requested'), default=False)
-    mentoring_accepted = models.CharField(max_length=2, choices=STATUS_CHOICES, default='ND')
-    abstractwork_completed = models.BooleanField(_('Completed'), default=False)
+    mentoring_accepted = models.CharField(max_length=2, choices=MENTORING_STATE_CHOICES, default='ND')
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
@@ -114,13 +139,10 @@ class Placement(AbstractWork):
     company_address = models.TextField(_('company address'), null=True, blank=True)
     date_from = models.DateField(_('internship begin'), blank=True, null=True)
     date_to = models.DateField(_('internship end'), blank=True, null=True)
-    report = models.FileField(_('Placement report'), upload_to=upload_to_placement_report, blank=True, null=True,
-                              validators=[validate_pdf, validate_size])
+    report = models.FileField(_('Placement report'), upload_to=upload_to_placement_report, blank=True, null=True, validators=[validate_pdf, validate_size])
     report_uploaded_date = models.DateTimeField(blank=True, null=True)
-    certificate = models.FileField(_('Placement certificate'), upload_to=upload_to_placement_certificate,
-                                   blank=True,
-                                   null=True,
-                                   validators=[validate_pdf, validate_size])
+    certificate = models.FileField(_('Placement certificate'), upload_to=upload_to_placement_certificate, blank=True, null=True, validators=[validate_pdf, validate_size])
+    completed = models.BooleanField(_('Completed'), default=False)
 
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)
@@ -142,6 +164,26 @@ class Placement(AbstractWork):
 class StudentActivePlacement(models.Model):
     student = models.OneToOneField(Student)
     placement = models.OneToOneField(Placement, null=True)
+
+
+class Thesis(AbstractWork):
+    type = models.CharField(_('Type'), max_length=100, choices=THESIS_CHOICES, default='Bachelor')
+    second_examiner_first_name = models.CharField(_('First name'), max_length=30, null=True, blank=True)
+    second_examiner_last_name = models.CharField(_('Last name'), max_length=30, null=True, blank=True)
+    second_examiner_organisation = models.CharField(_('Organisation'), max_length=30, null=True, blank=True)
+    second_examiner_title = models.CharField(_('title'), max_length=30, null=True, blank=True)
+    poster = models.FileField(_('Poster'), upload_to=upload_to_thesis_poster, blank=True, null=True, validators=[validate_pdf, validate_size])
+    thesis = models.FileField(_('Thesis'), upload_to=upload_to_thesis_thesis, blank=True, null=True, validators=[validate_pdf, validate_size])
+    grade = models.CharField(_('Grade'), max_length=3, choices=GRADE_CHOICES, default='-')
+    examination_office_state = models.CharField(_('Examination office state'), max_length=100, choices=EXAMINATION_OFFICE_STATE_CHOICES, default='1A')
+    deadline = models.DateTimeField(_('Deadline'), null=True, blank=True)
+    deadline_extended = models.BooleanField(_('Deadline extended'), default=False)
+    colloquium_done = models.BooleanField(_('Colloquium done'), default=False)
+
+
+class StudentActiveThesis(models.Model):
+    student = models.OneToOneField(Student)
+    thesis = models.OneToOneField(Thesis, null=True)
 
 
 @python_2_unicode_compatible

@@ -106,6 +106,78 @@ class StudentPlacementFormView(UpdateView):
         return {'denied_placements': Placement.objects.filter(student=self.request.user.portaluser.student, mentoring_accepted='MD')}
 
 
+class StudentThesisFormView(UpdateView):
+    template_name = 'student_thesis.html'
+    model = Thesis
+    form_class = FormThesis
+
+    def get_context_thesis(self, data=None, files=None):
+        thesis = self.get_thesis()
+        return {
+            'thesis': thesis,
+            'thesis_form': FormThesis(data, files=files, instance=thesis, prefix='thesis_form'),
+        }
+
+    def get_thesis(self):
+        return self.request.user.portaluser.student.studentactivethesis.thesis
+
+    def post(self, request, *args, **kwargs):
+        show_tutor = request.POST.get('show_tutor')
+        thesis = self.get_thesis()
+
+        """
+            Werte der disabled Felder werden mit POST nicht mitgesendet.
+            Manuelles Hinzufügen der Werte, sonst schlägt Validierung fehl.
+        """
+        if thesis.mentoring_requested:
+            post = request.POST.copy()
+            post['thesis_form-tutor'] = thesis.tutor
+            post['thesis_form-task'] = thesis.task
+            thesis_form_dict = self.get_context_thesis(post, files=request.FILES)
+        else:
+            thesis_form_dict = self.get_context_thesis(request.POST, files=request.FILES)
+
+        # Alle Formulare validieren und speichern
+        target_forms = [i for i, v in thesis_form_dict.iteritems()]
+
+        if 'thesis' in target_forms:
+            target_forms.remove('thesis')
+
+        valid = True
+        for t in target_forms:
+            form = thesis_form_dict.get(t)
+            is_valid = form.is_valid()
+
+            if is_valid:
+                thesis_form_dict.get(t).save()
+            else:
+                valid = False
+
+        # Wenn alle Formulare valide sind auch das Praktikum speichern
+        if valid:
+            if thesis.mentoring_requested is False and show_tutor:
+                thesis.mentoring_requested = True
+                thesis.sent_on = datetime.now()
+                thesis.save()
+
+        return redirect('student-thesis')
+
+    def get(self, request, status=200, *args, **kwargs):
+        student = self.request.user.portaluser.student
+
+        context = {}
+        context.update(self.get_context_thesis())
+        context.update(self.get_denied_theses())
+
+        if not student:
+            return redirect('index')
+        else:
+            return render(request, self.template_name, context)
+
+    def get_denied_theses(self):
+        return {'denied_theses': Thesis.objects.filter(student=self.request.user.portaluser.student, mentoring_accepted='MD')}
+
+
 class StudentSettingsFormView(UpdateView):
     """
     + Studenten können ihre persönlichen Daten hinterlegen
@@ -162,7 +234,12 @@ class TutorView(View):
             return redirect('index')
         else:
             placements = Placement.objects.filter(tutor=request.user.id, mentoring_requested=True)
-            return render(request, self.template_name, {'placements': placements, 'states': STATUS_CHOICES})
+            theses = Thesis.objects.filter(tutor=request.user.id, mentoring_requested=True)
+            context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'grades': GRADE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES}
+            if 'is_thesis' in request.session:
+                context['is_thesis'] = request.session['is_thesis']
+
+            return render(request, self.template_name, context)
 
     def get_object(self, queryset=None):
         st = Tutor.objects.filter(user=self.request.user)
@@ -202,6 +279,7 @@ class TutorUpdatePlacementView(View):
                 elif mentoring_accepted_new_value == 'MA':
                     self.notify(request.user, instance, _('Your mentoring request was accepted.'))
 
+        request.session['is_thesis'] = False
         return redirect('tutor-index')
 
     def notify(self, tutor, placement, comment_message):
@@ -211,6 +289,51 @@ class TutorUpdatePlacementView(View):
 
         html_message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(placement.id, _('Show comments'))
         send_comment_email([placement.student.user.email, placement.tutor.user.email], html_message)
+
+
+class TutorUpdateThesisView(View):
+    def post(self, request, pk, *args, **kwargs):
+        instance = Thesis.objects.get(id=pk)
+        mentoring_accepted_old_value = instance.mentoring_accepted
+        POST = request.POST
+
+        '''
+            Wenn das "Betreuung angenommen"-Feld "disabled" ist, wird der Wert über POST nicht mitgesendet. Dadurch schlägt die Validierung fehl.
+            Deshalb wird der alte Wert dem Formular übergeben.
+        '''
+        if not request.POST.has_key('mentoring_accepted'):
+            POST = request.POST.copy()
+            POST['mentoring_accepted'] = mentoring_accepted_old_value
+        form = FormTutorThesis(POST, instance=instance)
+
+        if form.is_valid():
+            form.save()
+
+            '''
+                1. Falls eine Betreuungsanfrage abgelehnt wurde, wird dem Studenten eine neue aktive Abschlussarbeit zugewiesen.
+                    Die aktive Abschlussarbeit wird über "post_save_thesis" in "signals.py" zugewiesen.
+                2. Wenn eine Betreuungsanfrage abgelehnt oder angenommen wurde, wird ein Kommentar und E-Mail an Student und Tutor versendet.
+            '''
+            mentoring_accepted_new_value = form.cleaned_data['mentoring_accepted']
+            if mentoring_accepted_old_value != mentoring_accepted_new_value:
+                if mentoring_accepted_new_value == 'MD':
+                    active_thesis = Thesis(student=instance.student)
+                    active_thesis.save()
+                    self.notify(request.user, instance, _('Your mentoring request was denied.'))
+
+                elif mentoring_accepted_new_value == 'MA':
+                    self.notify(request.user, instance, _('Your mentoring request was accepted.'))
+
+        request.session['is_thesis'] = True
+        return redirect('tutor-index')
+
+    def notify(self, tutor, thesis, comment_message):
+        comment = Comment(author=tutor, abstractwork=thesis, message=comment_message)
+        comment.save()
+        Thesis.objects.filter(id=thesis.id).update(comment_unread_by_student=True, comment_unread_by_tutor=True)
+
+        html_message = '<a href="http://127.0.0.1:8000/comments/abstractwork/{}">{}</a>'.format(thesis.id, _('Show comments'))
+        send_comment_email([thesis.student.user.email, thesis.tutor.user.email], html_message)
 
 
 class StudentIndexView(View):
@@ -267,15 +390,35 @@ class TutorSettingsFormView(UpdateView):
 
 class TutorPlacementView(UpdateView):
     model = Placement
-    fields = ['course', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
+    fields = ['task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
     template_name = 'tutor_placement_details.html'
-    exclude = ['student', 'tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'placement_completed']
+    exclude = ['student', 'tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'completed']
+
+    def get(self, request, *args, **kwargs):
+        self.request.session['is_thesis'] = False
+        return super(TutorPlacementView, self).get(request, *args, **kwargs)
 
     def get_success_url(self):
+        self.request.session['is_thesis'] = False
         return reverse('placement-details', args=[self.object.id])
 
 
-class PlacementCommentsView(View):
+class TutorThesisView(UpdateView):
+    model = Thesis
+    fields = ['type', 'task', 'poster', 'thesis', 'second_examiner_title', 'second_examiner_first_name', 'second_examiner_last_name', 'second_examiner_organisation', 'colloquium_done', 'deadline_extended']
+    template_name = 'tutor_thesis_details.html'
+    exclude = ['student', 'tutor', 'mentoring_requested', 'mentoring_accepted']
+
+    def get(self, request, *args, **kwargs):
+        self.request.session['is_thesis'] = True
+        return super(TutorThesisView, self).get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        self.request.session['is_thesis'] = True
+        return reverse('thesis-details', args=[self.object.id])
+
+
+class CommentsView(View):
     template_name = 'comments.html'
     form_class = CommentForm
 
@@ -285,9 +428,9 @@ class PlacementCommentsView(View):
             # Kommentar als gelesen für den anderen Gesprächspartner markieren
             if (hasattr(request.user, 'portaluser')):
                 if (hasattr(request.user.portaluser, 'tutor')):
-                    Placement.objects.filter(id=pk).update(comment_unread_by_tutor=False)
+                    AbstractWork.objects.filter(id=pk).update(comment_unread_by_tutor=False)
                 elif (hasattr(request.user.portaluser, 'student')):
-                    Placement.objects.filter(id=pk).update(comment_unread_by_student=False)
+                    AbstractWork.objects.filter(id=pk).update(comment_unread_by_student=False)
 
             comments = Comment.objects.filter(abstractwork=pk).order_by('timestamp')
             comment_form = self.form_class()
@@ -300,7 +443,7 @@ class PlacementCommentsView(View):
         if self.is_abstractwork_allowed(pk):
             comment = Comment()
             comment.author = self.request.user.portaluser.user
-            comment.abstractwork = Placement.objects.get(id=pk)
+            comment.abstractwork = AbstractWork.objects.get(id=pk)
             comment.message = request.POST.get('message')
 
             private = request.POST.get('private')
@@ -312,7 +455,7 @@ class PlacementCommentsView(View):
 
             # Kommentar als ungelesen für den anderen Gesprächspartner markieren (aber nicht bei privaten) und E-Mail versenden
             if (hasattr(request.user, 'portaluser')):
-                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                message = '<a href="http://127.0.0.1:8000/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
                 abstractwork = comment.abstractwork
 
                 if (hasattr(request.user.portaluser, 'tutor')):
@@ -324,7 +467,7 @@ class PlacementCommentsView(View):
                         AbstractWork.objects.filter(id=pk).update(comment_unread_by_tutor=True)
                         send_comment_email([abstractwork.tutor.user.email], message)
 
-            return redirect('placements-comments', pk=pk)
+            return redirect('comments', pk=pk)
         else:
             return HttpResponseNotFound()
 
@@ -334,8 +477,8 @@ class PlacementCommentsView(View):
 
 def togglePrivacy(request):
     # Kommentar speichern
-    id = request.POST.get('id')
-    comment = Comment.objects.get(pk=id)
+    comment_id = request.POST.get('id')
+    comment = Comment.objects.get(pk=comment_id)
     private_text = ''
 
     if comment.private:
@@ -354,15 +497,16 @@ def togglePrivacy(request):
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_student=False)
             else:
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_student=True)
-                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                message = '<a href="http://127.0.0.1:8000/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
                 send_comment_email([comment.abstractwork.student.user.email], message)
         elif (hasattr(request.user.portaluser, 'student')):
             if comment.private:
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_tutor=False)
             else:
+                email = comment.abstractwork.tutor.user.email
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_tutor=True)
-                message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
-                send_comment_email([comment.abstractwork.tutor.user.email], message)
+                message = '<a href="http://127.0.0.1:8000/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                # send_comment_email([comment.abstractwork.tutor.user.email], message)
 
     return JsonResponse({'private_state': comment.private, 'private_text': str(_(private_text))})
 

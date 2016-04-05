@@ -26,10 +26,13 @@ urlpatterns = [
     url(r'^student/placement/$', login_required(StudentPlacementFormView.as_view()), name='student-placement'),
     url(r'^student/placement/update/$', login_required(StudentPlacementFormView.as_view()), name='student-placement-update'),
     url(r'^student/placementseminarentrylist/$', login_required(StudentPlacementSeminarEntryListView.as_view()), name='student-placement-seminar-entry-list'),
+    url(r'^student/thesis/$', login_required(StudentThesisFormView.as_view()), name='student-thesis'),
 
     url(r'^tutor/placement/update/(?P<pk>\d+)/$', login_required(TutorUpdatePlacementView.as_view()), name='tutor-placement-update'),
-    url(r'^tutor/placement/(?P<pk>\d+)/$', login_required(TutorPlacementView.as_view(template_name='tutor_placement_details.html')), name='placement-details'),
+    url(r'^tutor/placement/(?P<pk>\d+)/$', login_required(TutorPlacementView.as_view()), name='placement-details'),
     url(r'^tutor/placement/pdf/(?P<pk>\d+)/$', login_required(generate_placement_pdf), name='placement-pdf'),
+    url(r'^tutor/thesis/update/(?P<pk>\d+)/$', login_required(TutorUpdateThesisView.as_view()), name='tutor-thesis-update'),
+    url(r'^tutor/thesis/(?P<pk>\d+)/$', login_required(TutorThesisView.as_view()), name='thesis-details'),
     url(r'^tutor/$', TutorView.as_view(), name='tutor-index'),
     url(r'^tutor/settings/$', login_required(TutorSettingsFormView.as_view()), name='tutor-settings'),
     url(r'^tutor/placementseminar/$', login_required(PlacementSeminarListView.as_view()), name='placement-seminar-list'),
@@ -39,6 +42,6 @@ urlpatterns = [
     url(r'^tutor/placementseminarentry/process$', login_required(SeminarEntryProcessView.as_view()), name='seminar-entry-process'),
     url(r'^tutor/placementseminarentry/(?P<pk>\d+)/delete$', login_required(SeminarEntryDeleteView.as_view()), name='seminar-entry-delete'),
 
-    url(r'^comments/placement/(?P<pk>\d+)$', login_required(PlacementCommentsView.as_view()), name='placements-comments'),
-    url(r'^comments/placement/toggleprivacy$', login_required(togglePrivacy), name='placements-comments'),
+    url(r'^comments/abstractwork/(?P<pk>\d+)$', login_required(CommentsView.as_view()), name='comments'),
+    url(r'^comments/abstractwork/toggleprivacy$', login_required(togglePrivacy), name='toggle-privacy'),
 ]

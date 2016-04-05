@@ -10,3 +10,7 @@ Deshalb werden die Texte in dieser Methode aufgeführt, damit makemessages diese
 def makemessages_dummy():
     ugettext('State')
     ugettext('not decided')
+    ugettext('not registered')
+    ugettext('registration sent')
+    ugettext('registration accepted')
+    ugettext('registration denied')
