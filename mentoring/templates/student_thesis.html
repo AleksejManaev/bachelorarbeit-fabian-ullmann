@@ -115,9 +115,13 @@
                                     {% bootstrap_field thesis_form.poster %}
                                     {% bootstrap_field thesis_form.presentation %}
                                     {% bootstrap_field thesis_form.other %}
+                                    <div class="form-group">
+                                        <label>{% trans 'Deadline' %}</label>
+                                        <p>{{ thesis_form.instance.deadline|date:"d.m.Y" }}</p>
+                                    </div>
                                 </div>
                             </div>
-                                <div class="panel panel-default">
+                            <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h1 class="panel-title">{% trans 'Second examiner' %}</h1>
                                 </div>

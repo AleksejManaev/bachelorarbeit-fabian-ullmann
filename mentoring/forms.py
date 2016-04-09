@@ -70,7 +70,7 @@ class FormThesis(forms.ModelForm):
 
     class Meta:
         model = Thesis
-        exclude = ['student', 'finished', 'sent_on']
+        exclude = ['student', 'finished', 'sent_on', 'deadline']
         fields = ['tutor', 'task', 'type', 'second_examiner_first_name', 'second_examiner_last_name', 'second_examiner_organisation', 'second_examiner_title', 'thesis', 'poster',
                   'presentation', 'other']
         widgets = {
