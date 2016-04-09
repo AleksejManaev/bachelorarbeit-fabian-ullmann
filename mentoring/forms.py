@@ -71,10 +71,13 @@ class FormThesis(forms.ModelForm):
     class Meta:
         model = Thesis
         exclude = ['student', 'finished', 'sent_on']
-        fields = ['tutor', 'task', 'type', 'second_examiner_first_name', 'second_examiner_last_name', 'second_examiner_organisation', 'second_examiner_title', 'thesis', 'poster']
+        fields = ['tutor', 'task', 'type', 'second_examiner_first_name', 'second_examiner_last_name', 'second_examiner_organisation', 'second_examiner_title', 'thesis', 'poster',
+                  'presentation', 'other']
         widgets = {
             'thesis': ClearableFileInput(attrs={'accept': 'application/pdf'}),
             'poster': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'presentation': ClearableFileInput(),
+            'other': ClearableFileInput(),
         }
 
 
@@ -97,8 +100,7 @@ class FormTutorThesis(forms.ModelForm):
 
     class Meta:
         model = Thesis
-        exclude = ['student', 'finished', 'mentoring_requested', 'sent_on', 'tutor', 'task',
-                   'thesis', 'poster']
+        exclude = ['student', 'finished', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'thesis', 'poster', 'presentation', 'other']
         fields = ['mentoring_accepted', 'examination_office_state', 'grade', 'deadline']
         widgets = {
             'deadline': DateInput(attrs={'class': 'datepicker'}),

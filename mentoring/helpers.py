@@ -37,6 +37,14 @@ def upload_to_thesis_poster(instance, filename):
     uri = '%s/thesis/documents/poster/%s' % (instance.student.matriculation_number, filename)
     return uri
 
+def upload_to_thesis_presentation(instance, filename):
+    uri = '%s/thesis/documents/presentation/%s' % (instance.student.matriculation_number, filename)
+    return uri
+
+def upload_to_thesis_other(instance, filename):
+    uri = '%s/thesis/documents/other/%s' % (instance.student.matriculation_number, filename)
+    return uri
+
 class ContentTypeRestrictedFileField(models.FileField):
     """
     Same as FileField, but you can specify:

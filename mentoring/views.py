@@ -211,11 +211,11 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-                student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
-                                                        prefix='student_user_formset'),
-                student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
-                                                              prefix='student_address_formset')
+            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+            student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
+                                                    prefix='student_user_formset'),
+            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
+                                                          prefix='student_address_formset')
         )
 
     def get_object(self, queryset=None):
@@ -235,7 +235,8 @@ class TutorView(View):
         else:
             placements = Placement.objects.filter(tutor=request.user.id, mentoring_requested=True)
             theses = Thesis.objects.filter(tutor=request.user.id, mentoring_requested=True)
-            context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'grades': GRADE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES}
+            context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'grades': GRADE_CHOICES,
+                       'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES}
             if 'is_thesis' in request.session:
                 context['is_thesis'] = request.session['is_thesis']
 
@@ -379,9 +380,9 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-                tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
-                                                    prefix='tutor_user_formset')
+            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
+                                                prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
@@ -405,7 +406,8 @@ class TutorPlacementView(UpdateView):
 
 class TutorThesisView(UpdateView):
     model = Thesis
-    fields = ['type', 'task', 'poster', 'thesis', 'second_examiner_title', 'second_examiner_first_name', 'second_examiner_last_name', 'second_examiner_organisation', 'colloquium_done', 'deadline_extended']
+    fields = ['type', 'task', 'poster', 'thesis', 'presentation', 'other', 'second_examiner_title', 'second_examiner_first_name', 'second_examiner_last_name',
+              'second_examiner_organisation', 'colloquium_done', 'deadline_extended']
     template_name = 'tutor_thesis_details.html'
     exclude = ['student', 'tutor', 'mentoring_requested', 'mentoring_accepted']
 

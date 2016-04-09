@@ -174,6 +174,8 @@ class Thesis(AbstractWork):
     second_examiner_title = models.CharField(_('title'), max_length=30, null=True, blank=True)
     poster = models.FileField(_('Poster'), upload_to=upload_to_thesis_poster, blank=True, null=True, validators=[validate_pdf, validate_size])
     thesis = models.FileField(_('Thesis'), upload_to=upload_to_thesis_thesis, blank=True, null=True, validators=[validate_pdf, validate_size])
+    presentation = models.FileField(_('Presentation'), upload_to=upload_to_thesis_presentation, blank=True, null=True)
+    other = models.FileField(_('Other'), upload_to=upload_to_thesis_other, blank=True, null=True)
     grade = models.CharField(_('Grade'), max_length=3, choices=GRADE_CHOICES, default='-')
     examination_office_state = models.CharField(_('Examination office state'), max_length=100, choices=EXAMINATION_OFFICE_STATE_CHOICES, default='1A')
     deadline = models.DateTimeField(_('Deadline'), null=True, blank=True)
