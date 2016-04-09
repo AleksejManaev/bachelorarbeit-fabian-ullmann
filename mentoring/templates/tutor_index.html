@@ -216,7 +216,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input class="form-control datepicker" id="deadline{{ thesis.id }}" name="deadline" placeholder="{% trans 'Deadline' %}" type="text"
+                                            <input {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %} class="form-control datepicker" id="deadline{{ thesis.id }}" name="deadline" placeholder="{% trans 'Deadline' %}" type="text"
                                                     {% if thesis.deadline %} value="{{ thesis.deadline|date:"d.m.Y" }}"{% endif %} form="{{ thesis.id }}">
                                         </td>
                                         <td>
