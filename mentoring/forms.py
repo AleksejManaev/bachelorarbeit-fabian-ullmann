@@ -101,7 +101,7 @@ class FormTutorThesis(forms.ModelForm):
     class Meta:
         model = Thesis
         exclude = ['student', 'finished', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'thesis', 'poster', 'presentation', 'other']
-        fields = ['mentoring_accepted', 'examination_office_state', 'grade', 'deadline']
+        fields = ['mentoring_accepted', 'examination_office_state', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation', 'deadline']
         widgets = {
             'deadline': DateInput(attrs={'class': 'datepicker'}),
         }

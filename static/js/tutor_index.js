@@ -35,7 +35,7 @@ $(document).ready(function () {
 
     var thesis_table = $('#thesis-table').DataTable({
         "columnDefs": [
-            {"searchable": false, "orderable": false, "targets": [0, 9]},
+            {"searchable": false, "orderable": false, "targets": [0, 11]},
             {"orderDataType": "dom-select", "targets": [5, 6, 8]},
             {"type": 'de_date', targets: 7 }
         ],
