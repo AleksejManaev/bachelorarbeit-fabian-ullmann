@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-09 18:58+0200\n"
+"POT-Creation-Date: 2016-04-09 19:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,7 +93,7 @@ msgstr "Praktikumsseminar"
 #: .\mentoring\models.py:99 .\mentoring\templates\tutor_index.html:57
 #: .\mentoring\templates\tutor_index.html:140
 #: .\mentoring\templates\tutor_index.html:166
-#: .\mentoring\templates\tutor_index.html:276
+#: .\mentoring\templates\tutor_index.html:273
 msgid "Matriculation number"
 msgstr "Matrikelnummer"
 
@@ -194,7 +194,7 @@ msgstr "Art"
 #: .\mentoring\templates\tutor_index.html:55
 #: .\mentoring\templates\tutor_index.html:138
 #: .\mentoring\templates\tutor_index.html:164
-#: .\mentoring\templates\tutor_index.html:274
+#: .\mentoring\templates\tutor_index.html:271
 msgid "First name"
 msgstr "Vorname"
 
@@ -202,7 +202,7 @@ msgstr "Vorname"
 #: .\mentoring\templates\tutor_index.html:56
 #: .\mentoring\templates\tutor_index.html:139
 #: .\mentoring\templates\tutor_index.html:165
-#: .\mentoring\templates\tutor_index.html:275
+#: .\mentoring\templates\tutor_index.html:272
 msgid "Last name"
 msgstr "Nachname"
 
@@ -247,7 +247,7 @@ msgstr "Status des Prüfungsamts"
 
 #: .\mentoring\models.py:183 .\mentoring\templates\student_thesis.html:119
 #: .\mentoring\templates\tutor_index.html:170
-#: .\mentoring\templates\tutor_index.html:222
+#: .\mentoring\templates\tutor_index.html:219
 #: .\mentoring\templates\tutor_thesis_details.html:99
 msgid "Deadline"
 msgstr "Abgabetermin"
@@ -263,7 +263,7 @@ msgstr "Kolloquium durchgeführt"
 #: .\mentoring\models.py:197 .\mentoring\templates\tutor_index.html:58
 #: .\mentoring\templates\tutor_index.html:141
 #: .\mentoring\templates\tutor_index.html:167
-#: .\mentoring\templates\tutor_index.html:277
+#: .\mentoring\templates\tutor_index.html:274
 msgid "Email"
 msgstr "E-Mail-Adresse"
 
@@ -389,7 +389,7 @@ msgstr "Tutor"
 #: .\mentoring\templates\tutor_index.html:71
 #: .\mentoring\templates\tutor_index.html:82
 #: .\mentoring\templates\tutor_index.html:163
-#: .\mentoring\templates\tutor_index.html:184
+#: .\mentoring\templates\tutor_index.html:181
 msgid "comments"
 msgstr "Kommentare"
 
@@ -469,7 +469,7 @@ msgid "mentoring accepted"
 msgstr "Betreuung angenommen"
 
 #: .\mentoring\templates\tutor_index.html:63
-#: .\mentoring\templates\tutor_index.html:177
+#: .\mentoring\templates\tutor_index.html:174
 msgid "Save"
 msgstr "Speichern"
 
@@ -477,10 +477,10 @@ msgstr "Speichern"
 #: .\mentoring\templates\tutor_index.html:139
 #: .\mentoring\templates\tutor_index.html:140
 #: .\mentoring\templates\tutor_index.html:141
+#: .\mentoring\templates\tutor_index.html:271
+#: .\mentoring\templates\tutor_index.html:272
+#: .\mentoring\templates\tutor_index.html:273
 #: .\mentoring\templates\tutor_index.html:274
-#: .\mentoring\templates\tutor_index.html:275
-#: .\mentoring\templates\tutor_index.html:276
-#: .\mentoring\templates\tutor_index.html:277
 msgid "Search"
 msgstr ""
 
