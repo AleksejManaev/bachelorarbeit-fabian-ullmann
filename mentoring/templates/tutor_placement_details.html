@@ -31,16 +31,16 @@
 
                             {% bootstrap_field form.task bound_css_class=' ' %}
                             <div class="form-group">
-                                <label class="control-label" for="id_date_from">Praktikumsbeginn</label>
-                                <input class="form-control datepicker" id="id_date_from" name="date_from" placeholder="Praktikumsbeginn" title="" type="text"
+                                <label class="control-label" for="id_date_from">{% trans 'internship begin' %}</label>
+                                <input class="form-control datepicker" id="id_date_from" name="date_from" title="" type="text"
                                         {% if form.instance.date_from %}
                                        value="{{ form.instance.date_from|date:"d.m.Y" }}"
                                         {% endif %}
                                 >
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="id_date_to">Praktikumsende</label>
-                                <input class="form-control datepicker" id="id_date_to" name="date_to" placeholder="Praktikumsende" title="" type="text"
+                                <label class="control-label" for="id_date_to">{% trans 'internship end' %}</label>
+                                <input class="form-control datepicker" id="id_date_to" name="date_to" title="" type="text"
                                         {% if form.instance.date_to %}
                                        value="{{ form.instance.date_to|date:"d.m.Y" }}"
                                         {% endif %}
