@@ -7,7 +7,8 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseNotFound, HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
+from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
 from fdfgen import forge_fdf
@@ -15,6 +16,9 @@ from fdfgen import forge_fdf
 from mentoring.forms import *
 from mentoring.models import Student, Placement
 
+
+def handle404(request):
+    return redirect('login')
 
 class IndexView(RedirectView):
     """
