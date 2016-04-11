@@ -11,6 +11,11 @@ numeric_test = re.compile("^\d+$")
 
 
 @register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+
+@register.filter
 def state_css(value, *args):
     if value == 'ND':
         return 'alert-warning'

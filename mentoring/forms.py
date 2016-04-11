@@ -82,10 +82,6 @@ class FormThesis(forms.ModelForm):
 
 
 class FormTutorPlacement(forms.ModelForm):
-    def is_valid(self):
-        is_valid = super(FormTutorPlacement, self).is_valid()
-        return is_valid
-
     class Meta:
         model = Placement
         exclude = ['student', 'finished', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'date_form', 'date_to',
@@ -94,10 +90,6 @@ class FormTutorPlacement(forms.ModelForm):
 
 
 class FormTutorThesis(forms.ModelForm):
-    def is_valid(self):
-        is_valid = super(FormTutorThesis, self).is_valid()
-        return is_valid
-
     class Meta:
         model = Thesis
         exclude = ['student', 'finished', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'thesis', 'poster', 'presentation', 'other']
@@ -109,6 +101,34 @@ class FormTutorThesis(forms.ModelForm):
 
 FormsetPlacementContactdata = forms.inlineformset_factory(Placement, PlacementCompanyContactData, fields='__all__',
                                                           extra=1, can_delete=False)
+
+
+class FormTutorPlacementDetails(forms.ModelForm):
+    def is_valid(self):
+        is_valid = super(FormTutorPlacementDetails, self).is_valid()
+
+        if is_valid:
+            # Wenn ein neuer Bericht hochgeladen wird, wird ein Zeitestempel gesetzt. Beim Löschen des Berichts wird der Zeitstempel gelöscht.
+            if 'report' in self.changed_data:
+                if self.cleaned_data['report']:
+                    self.instance.report_uploaded_date = datetime.now()
+                else:
+                    self.instance.report_uploaded_date = None
+
+            self.instance.save()
+
+        return is_valid
+
+    class Meta:
+        model = Placement
+        exclude = ['student', 'tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'completed']
+        fields = ['task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
+        widgets = {
+            'date_from': DateInput(attrs={'class': 'datepicker'}),
+            'date_to': DateInput(attrs={'class': 'datepicker'}),
+            'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'certificate': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+        }
 
 
 # Todo FormStudent alternative E-Mail anpassen

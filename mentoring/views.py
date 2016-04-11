@@ -239,8 +239,40 @@ class TutorView(View):
         else:
             placements = Placement.objects.filter(tutor=request.user.id, mentoring_requested=True)
             theses = Thesis.objects.filter(tutor=request.user.id, mentoring_requested=True)
+
+            help_message_dict = {}
+
+            for placement in placements:
+                help_message_dict[placement.id] = []
+                if not placement.date_from:
+                    help_message_dict[placement.id].append('Praktikumsbeginn fehlt')
+                if not placement.date_to:
+                    help_message_dict[placement.id].append('Praktikumsende fehlt')
+                if not placement.student.user.last_name:
+                    help_message_dict[placement.id].append('Studentennachname fehlt')
+                if not placement.student.user.first_name:
+                    help_message_dict[placement.id].append('Studentenvorname fehlt')
+                if not placement.student.matriculation_number:
+                    help_message_dict[placement.id].append('Matrikelnummer fehlt')
+                if not placement.student.user.email:
+                    help_message_dict[placement.id].append('E-Mailadresse fehlt')
+                if not placement.tutor:
+                    help_message_dict[placement.id].append('Praktikumsbetreuer an der THB fehlt')
+                if not placement.company_name:
+                    help_message_dict[placement.id].append('Name des Betriebs fehlt')
+                if not placement.placementcompanycontactdata:
+                    help_message_dict[placement.id].append('Titel und Name des Betreuers fehlt')
+                if not placement.company_address:
+                    help_message_dict[placement.id].append('Adresse des Betriebs fehlt')
+                if not placement.task:
+                    help_message_dict[placement.id].append('Aufgabe fehlt')
+                if not placement.report_uploaded_date:
+                    help_message_dict[placement.id].append('Datum Vorlage des Praktikumsberichts fehlt')
+                if not placement.student.presentation_date:
+                    help_message_dict[placement.id].append('Datum Vorstellung im Kolloquium fehlt')
+
             context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'grades': GRADE_CHOICES,
-                       'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES}
+                       'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'help_message_dict': help_message_dict}
             if 'is_thesis' in request.session:
                 context['is_thesis'] = request.session['is_thesis']
 
@@ -395,9 +427,8 @@ class TutorSettingsFormView(UpdateView):
 
 class TutorPlacementView(UpdateView):
     model = Placement
-    fields = ['task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
+    form_class = FormTutorPlacementDetails
     template_name = 'tutor_placement_details.html'
-    exclude = ['student', 'tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'completed']
 
     def get(self, request, *args, **kwargs):
         self.request.session['is_thesis'] = False

@@ -79,11 +79,19 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="{% url 'placement-pdf' placement.id %}" title="{% trans 'Generate PDF' %}">
-                                                <button type="button" class="btn btn-default center-block">
-                                                    <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
-                                                </button>
-                                            </a>
+                                            {% if help_message_dict|get_item:placement.id %}
+                                                <a title="{{ help_message_dict|get_item:placement.id }}">
+                                                    <button type="button" class="btn btn-default center-block" disabled>
+                                                        <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                                                    </button>
+                                                </a>
+                                            {% else %}
+                                                <a href="{% url 'placement-pdf' placement.id %}" title="{% trans 'Generate PDF' %}">
+                                                    <button type="button" class="btn btn-default center-block">
+                                                        <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                                                    </button>
+                                                </a>
+                                            {% endif %}
                                         </td>
                                         <td><a href="{% url 'placement-details' placement.id %}">{{ placement.student.user.first_name }}</a></td>
                                         <td><a href="{% url 'placement-details' placement.id %}">{{ placement.student.user.last_name }}</a></td>
