@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-09 19:18+0200\n"
+"POT-Creation-Date: 2016-04-11 15:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -387,7 +387,6 @@ msgstr "Tutor"
 #: .\mentoring\templates\student_thesis.html:95
 #: .\mentoring\templates\tutor_index.html:53
 #: .\mentoring\templates\tutor_index.html:71
-#: .\mentoring\templates\tutor_index.html:82
 #: .\mentoring\templates\tutor_index.html:163
 #: .\mentoring\templates\tutor_index.html:181
 msgid "comments"
@@ -473,6 +472,10 @@ msgstr "Betreuung angenommen"
 msgid "Save"
 msgstr "Speichern"
 
+#: .\mentoring\templates\tutor_index.html:82
+msgid "Generate PDF"
+msgstr "PDF generieren"
+
 #: .\mentoring\templates\tutor_index.html:138
 #: .\mentoring\templates\tutor_index.html:139
 #: .\mentoring\templates\tutor_index.html:140
@@ -514,20 +517,20 @@ msgstr "Betreuung abgelehnt"
 msgid "error"
 msgstr "Fehler"
 
-#: .\mentoring\views.py:278 .\mentoring\views.py:323
+#: .\mentoring\views.py:282 .\mentoring\views.py:327
 msgid "Your mentoring request was denied."
 msgstr "Ihre Betreuungsanfrage wurde abgelehnt."
 
-#: .\mentoring\views.py:281 .\mentoring\views.py:326
+#: .\mentoring\views.py:285 .\mentoring\views.py:330
 msgid "Your mentoring request was accepted."
 msgstr "Ihre Betreuungsanfrage wurde angenommen."
 
-#: .\mentoring\views.py:291 .\mentoring\views.py:336 .\mentoring\views.py:460
-#: .\mentoring\views.py:502 .\mentoring\views.py:510
+#: .\mentoring\views.py:295 .\mentoring\views.py:340 .\mentoring\views.py:464
+#: .\mentoring\views.py:506 .\mentoring\views.py:514
 msgid "Show comments"
 msgstr "Kommentare anzeigen"
 
-#: .\mentoring\views.py:519
+#: .\mentoring\views.py:523
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
