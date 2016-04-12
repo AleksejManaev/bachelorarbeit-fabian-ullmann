@@ -128,6 +128,7 @@ class AbstractWork(models.Model):
     comment_unread_by_tutor = models.BooleanField(default=False)
     mentoring_requested = models.BooleanField(_('Requested'), default=False)
     mentoring_accepted = models.CharField(max_length=2, choices=MENTORING_STATE_CHOICES, default='ND')
+    completed = models.BooleanField(_('Completed'), default=False)
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
@@ -142,7 +143,6 @@ class Placement(AbstractWork):
     report = models.FileField(_('Placement report'), upload_to=upload_to_placement_report, blank=True, null=True, validators=[validate_pdf, validate_size])
     report_uploaded_date = models.DateTimeField(blank=True, null=True)
     certificate = models.FileField(_('Placement certificate'), upload_to=upload_to_placement_certificate, blank=True, null=True, validators=[validate_pdf, validate_size])
-    completed = models.BooleanField(_('Completed'), default=False)
 
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)

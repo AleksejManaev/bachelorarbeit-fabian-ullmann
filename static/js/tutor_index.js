@@ -35,9 +35,10 @@ $(document).ready(function () {
 
     var thesis_table = $('#thesis-table').DataTable({
         "columnDefs": [
-            {"searchable": false, "orderable": false, "targets": [0, 11]},
+            {"searchable": false, "orderable": false, "targets": [0, 12]},
             {"orderDataType": "dom-select", "targets": [5, 6, 8]},
-            {"type": 'de_date', targets: 7 }
+            {"orderDataType": "dom-checkbox", "targets": 11},
+            {"type": 'de_date', targets: 7}
         ],
         "order": [[7, "asc"]],
         "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',

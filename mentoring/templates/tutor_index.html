@@ -179,6 +179,7 @@
                                     <th>{% trans 'Grade first examiner' %}</th>
                                     <th>{% trans 'Grade second examiner' %}</th>
                                     <th>{% trans 'Grade presentation' %}</th>
+                                    <th>{% trans 'Completed' %}</th>
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
                                 </thead>
@@ -261,6 +262,14 @@
                                             </select>
                                         </td>
                                         <td>
+                                            <input  {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %}
+                                                                                             type="checkbox"
+                                                                                             name="completed"
+                                                                                             form="{{ thesis.id }}"
+                                                    {{ thesis.completed|boolean_checked|default_if_none:"" }}
+                                            >
+                                        </td>
+                                        <td>
                                             <button  {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %}
                                                                                                 type="submit"
                                                                                                 class="btn btn-default center-block"
@@ -280,6 +289,7 @@
                                     <th>{% trans 'Search' %} {% trans 'Last name' %}</th>
                                     <th>{% trans 'Search' %} {% trans 'Matriculation number' %}</th>
                                     <th>{% trans 'Search' %} {% trans 'Email' %}</th>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
