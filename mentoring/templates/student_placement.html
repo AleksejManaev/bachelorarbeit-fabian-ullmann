@@ -25,7 +25,7 @@
                                     <tr>
                                         <th>{% trans 'tutor' %}</th>
                                         <th>{% trans 'task' %}</th>
-                                        <th class="wrap-column">{% trans 'comments' %}</th>
+                                        <th class="wrap-column">{% trans 'Comments' %}</th>
                                     </tr>
 
                                     {% for denied_placement in denied_placements %}
@@ -37,7 +37,7 @@
                                                 {{ denied_placement.task }}
                                             </td>
                                             <td>
-                                                <a href="{% url 'comments' denied_placement.id %}" title="{% trans 'comments' %}">
+                                                <a href="{% url 'comments' denied_placement.id %}" title="{% trans 'Comments' %}">
                                                     <button type="button" class="btn btn-default center-block"
                                                             {% if denied_placement.comment_unread_by_student %}
                                                             style="background-color:#ffff80;"
@@ -85,14 +85,14 @@
                                 <div class="col-md-6"></div>
 
                                 <div class="col-md-2">
-                                    <a href="{% url 'comments' placement.id %}" title="{% trans 'comments' %}">
+                                    <a href="{% url 'comments' placement.id %}" title="{% trans 'Comments' %}">
                                         <button class="btn btn-default"
                                                 {% if not placement.mentoring_requested %}disabled{% endif %}
                                                 {% if placement.comment_unread_by_student %}
                                                 style="background-color:#ffff80;"
                                                 {% endif %}
                                         >
-                                            {% trans 'comments' %} &nbsp;
+                                            {% trans 'Comments' %} &nbsp;
                                             <span class="glyphicon glyphicon-comment"></span>
                                         </button>
                                     </a>

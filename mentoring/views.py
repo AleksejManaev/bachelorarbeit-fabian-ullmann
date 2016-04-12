@@ -11,6 +11,7 @@ from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
 from fdfgen import forge_fdf
+import codecs
 
 from mentoring.forms import *
 from mentoring.models import Student, Placement
@@ -226,11 +227,11 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
-                                                    prefix='student_user_formset'),
-            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
-                                                          prefix='student_address_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
+                                                        prefix='student_user_formset'),
+                student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
+                                                              prefix='student_address_formset')
         )
 
     def get_object(self, queryset=None):
@@ -434,9 +435,9 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
-                                                prefix='tutor_user_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
+                                                    prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
@@ -448,13 +449,32 @@ class TutorPlacementView(UpdateView):
     form_class = FormTutorPlacementDetails
     template_name = 'tutor_placement_details.html'
 
-    def get(self, request, *args, **kwargs):
-        self.request.session['is_thesis'] = False
-        return super(TutorPlacementView, self).get(request, *args, **kwargs)
+    def get_context_placement(self, data=None, files=None):
+        placement = self.get_object()
+        return {
+            'placement_form': FormTutorPlacementDetails(data, files=files, instance=placement, prefix='placement_form'),
+            'placement_contact_formset': FormsetPlacementContactdata(data, instance=placement, prefix='placement_contact_formset'),
+        }
 
-    def get_success_url(self):
+    def get(self, request, status=200, *args, **kwargs):
         self.request.session['is_thesis'] = False
-        return reverse('placement-details', args=[self.object.id])
+        context = {}
+        context.update(self.get_context_placement())
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        placement_form_dict = self.get_context_placement(request.POST, files=request.FILES)
+
+        # Alle Formulare validieren und speichern
+        target_forms = [i for i, v in placement_form_dict.iteritems()]
+
+        for t in target_forms:
+            form = placement_form_dict.get(t)
+            if form.is_valid():
+                placement_form_dict.get(t).save()
+
+        return redirect('placement-details', pk=placement_form_dict['placement_form'].instance.id)
 
 
 class TutorThesisView(UpdateView):
@@ -738,8 +758,8 @@ def generate_placement_pdf(self, pk):
 
     # PDF-Datei erzeugen
     os.system(
-        'pdftk {mediaroot}/docs/_Anerkennung_Praktikum_2014.pdf fill_form {directory}/data.fdf output {filepath} flatten'.format(mediaroot=settings.MEDIA_ROOT, directory=directory,
-                                                                                                                                 filepath=filepath))
+            'pdftk {mediaroot}/docs/_Anerkennung_Praktikum_2014.pdf fill_form {directory}/data.fdf output {filepath} need_appearances'.format(mediaroot=settings.MEDIA_ROOT, directory=directory,
+                                                                                                                                              filepath=filepath))
 
     # PDF-Datei senden, wenn diese erfolgreich erzeugt wurde
     if os.path.exists(filepath):

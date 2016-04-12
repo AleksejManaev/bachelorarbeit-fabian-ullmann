@@ -95,7 +95,7 @@ msgstr "Praktikumsseminar"
 #: .\mentoring\templates\tutor_index.html:174
 #: .\mentoring\templates\tutor_index.html:290
 msgid "Matriculation number"
-msgstr "Matrikelnummer"
+msgstr "Matrikelnr."
 
 #: .\mentoring\models.py:100
 msgid "course placement"
@@ -284,7 +284,7 @@ msgstr "Kolloquium durchgeführt"
 #: .\mentoring\templates\tutor_index.html:175
 #: .\mentoring\templates\tutor_index.html:291
 msgid "Email"
-msgstr "E-Mail-Adresse"
+msgstr "E-Mail"
 
 #: .\mentoring\models.py:213
 msgid "message"

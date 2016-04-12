@@ -25,23 +25,23 @@
 
                             <div class="form-group">
                                 <label>{% trans 'Student' %}</label>
-                                <p>{{ form.instance.student }}</p>
+                                <p>{{ placement_form.instance.student }}</p>
                             </div>
 
-                            {% bootstrap_field form.task bound_css_class=' ' %}
+                            {% bootstrap_field placement_form.task bound_css_class=' ' %}
                             <div class="form-group">
                                 <label class="control-label" for="id_date_from">{% trans 'internship begin' %}</label>
-                                <input class="form-control datepicker" id="id_date_from" name="date_from" title="" type="text"
-                                        {% if form.instance.date_from %}
-                                       value="{{ form.instance.date_from|date:"d.m.Y" }}"
+                                <input class="form-control datepicker" id="id_date_from" name="placement_form-date_from" title="" type="text"
+                                        {% if placement_form.instance.date_from %}
+                                       value="{{ placement_form.instance.date_from|date:"d.m.Y" }}"
                                         {% endif %}
                                 >
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="id_date_to">{% trans 'internship end' %}</label>
-                                <input class="form-control datepicker" id="id_date_to" name="date_to" title="" type="text"
-                                        {% if form.instance.date_to %}
-                                       value="{{ form.instance.date_to|date:"d.m.Y" }}"
+                                <input class="form-control datepicker" id="id_date_to" name="placement_form-date_to" title="" type="text"
+                                        {% if placement_form.instance.date_to %}
+                                       value="{{ placement_form.instance.date_to|date:"d.m.Y" }}"
                                         {% endif %}
                                 >
                             </div>
@@ -49,33 +49,40 @@
                                 <label class="control-label" for="id_report">{% trans 'Placement report' %}</label>
                                 <div class="row bootstrap3-multi-input">
                                     <div class="col-xs-12">
-                                        {% if form.instance.report %}
+                                        {% if placement_form.instance.report %}
                                             {% trans 'Currently' %}:
-                                            <a href="{{ form.instance.report.url }}">{{ form.instance.report }}</a>
-                                            <input id="report-clear_id" name="report-clear" type="checkbox">
+                                            <a href="{{ placement_form.instance.report.url }}">{{ placement_form.instance.report }}</a>
+                                            <input id="report-clear_id" name="placement_form-report-clear" type="checkbox">
                                             <label for="report-clear_id">{% trans 'Reset' %}</label>
                                             </br>
                                         {% endif %}
-                                        <input class="" id="id_report" name="report" title="" type="file"></div>
+                                        <input class="" id="id_report" name="placement_form-report" title="" type="file"></div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="id_certificate">{% trans 'Placement certificate' %}</label>
                                 <div class="row bootstrap3-multi-input">
                                     <div class="col-xs-12">
-                                        {% if form.instance.certificate %}
+                                        {% if placement_form.instance.certificate %}
                                             {% trans 'Currently' %}:
-                                            <a href="{{ form.instance.certificate.url }}">{{ form.instance.certificate }}</a>
-                                            <input id="certificate-clear_id" name="certificate-clear" type="checkbox">
+                                            <a href="{{ placement_form.instance.certificate.url }}">{{ placement_form.instance.certificate }}</a>
+                                            <input id="certificate-clear_id" name="placement_form-certificate-clear" type="checkbox">
                                             <label for="certificate-clear_id">{% trans 'Reset' %}</label>
                                             </br>
                                         {% endif %}
-                                        <input class="" id="id_certificate" name="certificate" title="" type="file"></div>
+                                        <input class="" id="id_certificate" name="placement_form-certificate" title="" type="file"></div>
                                 </div>
                             </div>
-                            {% bootstrap_field form.company_name bound_css_class=' ' %}
-                            {% bootstrap_field form.company_address bound_css_class=' ' %}
-
+                            {% bootstrap_field placement_form.company_name bound_css_class=' ' %}
+                            {% bootstrap_field placement_form.company_address bound_css_class=' ' %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{% trans 'Contact person in the company' %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    {% bootstrap_formset placement_contact_formset %}
+                                </div>
+                            </div>
                             {% buttons %}
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">
                                     {% trans 'Update' %}
