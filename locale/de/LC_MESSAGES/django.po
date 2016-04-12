@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-12 12:28+0200\n"
+"POT-Creation-Date: 2016-04-12 15:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,24 +31,24 @@ msgid "State"
 msgstr "Status"
 
 #: .\mentoring\messages_dummy.py:12
-msgid "not decided"
-msgstr "Nicht entschieden"
+msgid "Accepted"
+msgstr "Akzeptiert"
 
 #: .\mentoring\messages_dummy.py:13
-msgid "not registered"
-msgstr "Anmeldung nicht eingereicht"
+msgid "Denied"
+msgstr "Abgelehnt"
 
 #: .\mentoring\messages_dummy.py:14
-msgid "registration sent"
-msgstr "Anmeldung eingereicht"
+msgid "Sent"
+msgstr "Eingereicht"
 
 #: .\mentoring\messages_dummy.py:15
-msgid "registration accepted"
-msgstr "Anmeldung akzeptiert"
+msgid "Not decided"
+msgstr "Nicht entschieden"
 
 #: .\mentoring\messages_dummy.py:16
-msgid "registration denied"
-msgstr "Anmeldung abgelehnt"
+msgid "Not sent"
+msgstr "Nicht eingereicht"
 
 #: .\mentoring\models.py:52
 msgid "3 months"
@@ -260,7 +260,7 @@ msgstr "Note Zweitprüfer"
 msgid "Grade presentation"
 msgstr "Note Präsentation"
 
-#: .\mentoring\models.py:182 .\mentoring\templates\tutor_index.html:177
+#: .\mentoring\models.py:182
 msgid "Examination office state"
 msgstr "Status des Prüfungsamts"
 
@@ -405,10 +405,8 @@ msgstr "Dateien"
 #: .\mentoring\templates\student_thesis.html:44
 #: .\mentoring\templates\student_thesis.html:92
 #: .\mentoring\templates\student_thesis.html:99
-#: .\mentoring\templates\tutor_index.html:53
-#: .\mentoring\templates\tutor_index.html:71
-#: .\mentoring\templates\tutor_index.html:171
-#: .\mentoring\templates\tutor_index.html:190
+#, fuzzy
+#| msgid "Comments"
 msgid "comments"
 msgstr "Kommentare"
 
@@ -488,9 +486,16 @@ msgstr "Praktikum"
 msgid "Thesis tab"
 msgstr "Abschlussarbeit"
 
+#: .\mentoring\templates\tutor_index.html:53
+#: .\mentoring\templates\tutor_index.html:71
+#: .\mentoring\templates\tutor_index.html:171
+#: .\mentoring\templates\tutor_index.html:190
+msgid "Comments"
+msgstr "Kommentare"
+
 #: .\mentoring\templates\tutor_index.html:54
-msgid "Placement acknowledgement"
-msgstr "Praktikumsanerkennung"
+msgid "Acknowledgement"
+msgstr "Anerkennung"
 
 #: .\mentoring\templates\tutor_index.html:59
 msgid "Seminars present"
@@ -498,9 +503,8 @@ msgstr "Seminare anwesend"
 
 #: .\mentoring\templates\tutor_index.html:61
 #: .\mentoring\templates\tutor_index.html:176
-#: .\mentoring\templatetags\filter.py:35
-msgid "mentoring accepted"
-msgstr "Betreuung angenommen"
+msgid "Mentoring"
+msgstr "Betreuung"
 
 #: .\mentoring\templates\tutor_index.html:63
 #: .\mentoring\templates\tutor_index.html:183
@@ -521,6 +525,10 @@ msgstr "PDF generieren"
 #: .\mentoring\templates\tutor_index.html:291
 msgid "Search"
 msgstr ""
+
+#: .\mentoring\templates\tutor_index.html:177
+msgid "Examination office"
+msgstr "Prüfungsamt"
 
 #: .\mentoring\templates\tutor_placement_details.html:53
 #: .\mentoring\templates\tutor_placement_details.html:67
@@ -544,9 +552,13 @@ msgstr "Zurücksetzen"
 msgid "requested"
 msgstr "angefragt"
 
+#: .\mentoring\templatetags\filter.py:35
+msgid "mentoring accepted"
+msgstr "Betreuung angenommen"
+
 #: .\mentoring\templatetags\filter.py:37
 msgid "mentoring denied"
-msgstr "Betreuung abgelehnt"
+msgstr "Betreuung der Abschlussarbeit"
 
 #: .\mentoring\templatetags\filter.py:39
 msgid "error"
@@ -580,6 +592,22 @@ msgstr "Profil"
 #: .\templates\base.html:75
 msgid "Logout"
 msgstr "Abmelden"
+
+#, fuzzy
+#~| msgid "Mentoring"
+#~ msgid "mentoring"
+#~ msgstr "Betreuung der Abschlussarbeit"
+
+#~ msgid "not registered"
+#~ msgstr "nicht eingereicht"
+
+#, fuzzy
+#~| msgid "Presentation done"
+#~ msgid "registration sent"
+#~ msgstr "Präsentation gehalten"
+
+#~ msgid "sent"
+#~ msgstr "eingereicht"
 
 #~ msgid "Grade"
 #~ msgstr "Note"
@@ -747,9 +775,6 @@ msgstr "Abmelden"
 #~ msgid "Contact-Data thesis"
 #~ msgstr "Ansprechpartner im Unternehmen"
 
-#~ msgid "Mentoring"
-#~ msgstr "Betreuung der Abschlussarbeit"
-
 #~ msgid "Answer"
 #~ msgstr "Antwort"
 
@@ -824,9 +849,6 @@ msgstr "Abmelden"
 
 #~ msgid "First Name"
 #~ msgstr "Vorname"
-
-#~ msgid "Mentoring accepted"
-#~ msgstr "Betreuung angenommen"
 
 #~ msgid "internship accepted"
 #~ msgstr "Praktikum bestanden"

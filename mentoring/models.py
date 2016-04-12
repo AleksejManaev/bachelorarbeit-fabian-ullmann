@@ -10,9 +10,9 @@ from mentoring.validators import *
 app_label = 'mentoring'
 
 MENTORING_STATE_CHOICES = (
-    ('ND', 'not decided'),
-    ('MA', 'mentoring accepted'),
-    ('MD', 'mentoring denied'),
+    ('ND', '-'),
+    ('MA', 'Accepted'),
+    ('MD', 'Denied'),
 )
 
 THESIS_CHOICES = (
@@ -35,10 +35,10 @@ GRADE_CHOICES = (
 )
 
 EXAMINATION_OFFICE_STATE_CHOICES = (
-    ('1A', 'not registered'),
-    ('1B', 'registration sent'),
-    ('2A', 'registration accepted'),
-    ('2B', 'registration denied')
+    ('1A', 'Not sent'),
+    ('1B', 'Sent'),
+    ('2A', 'Accepted'),
+    ('2B', 'Denied')
 )
 
 

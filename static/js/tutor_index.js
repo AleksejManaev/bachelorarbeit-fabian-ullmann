@@ -3,14 +3,14 @@ $(document).ready(function () {
     $('#placements-table tfoot th').each(function () {
         if ($(this).html()) {
             var title = $(this).text();
-            $(this).html('<input id="footer-search" type="text" placeholder="' + title + '" />');
+            $(this).html('<input id="footer-search" type="text" placeholder="' + title + '" style="width: 130px;" />');
         }
     });
 
     $('#thesis-table tfoot th').each(function () {
         if ($(this).html()) {
             var title = $(this).text();
-            $(this).html('<input id="footer-search" type="text" placeholder="' + title + '" />');
+            $(this).html('<input id="footer-search" type="text" placeholder="' + title + '" style="width: 130px;" />');
         }
     });
 
