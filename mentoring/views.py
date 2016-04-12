@@ -271,8 +271,8 @@ class TutorView(View):
                     help_message_dict[placement.id].append('Praktikumsbetreuer an der THB fehlt')
                 if not placement.company_name:
                     help_message_dict[placement.id].append('Name des Betriebs fehlt')
-                if not placement.placementcompanycontactdata:
-                    help_message_dict[placement.id].append('Titel und Name des Betreuers fehlt')
+                if not placement.placementcompanycontactdata.__str__():
+                    help_message_dict[placement.id].append('Vor- und Nachname des Betreuers im Betrieb fehlen')
                 if not placement.company_address:
                     help_message_dict[placement.id].append('Adresse des Betriebs fehlt')
                 if not placement.task:
