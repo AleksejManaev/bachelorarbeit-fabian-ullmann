@@ -25,6 +25,7 @@
                                     <tr>
                                         <th>{% trans 'tutor' %}</th>
                                         <th>{% trans 'task' %}</th>
+                                        <th>{% trans 'Type' %}</th>
                                         <th class="wrap-column">{% trans 'comments' %}</th>
                                     </tr>
 
@@ -35,6 +36,9 @@
                                             </td>
                                             <td>
                                                 {{ denied_thesis.task }}
+                                            </td>
+                                            <td>
+                                                {{ denied_thesis.type }}
                                             </td>
                                             <td>
                                                 <a href="{% url 'comments' denied_thesis.id %}" title="{% trans 'comments' %}">

@@ -182,6 +182,17 @@ class StudentThesisFormView(UpdateView):
         return {'denied_theses': Thesis.objects.filter(student=self.request.user.portaluser.student, mentoring_accepted='MD')}
 
 
+class StudentCompletedThesesView(View):
+    model = Thesis
+    template_name = 'student_completed_theses.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_completed_theses())
+
+    def get_completed_theses(self):
+        return {'completed_theses': Thesis.objects.filter(student=self.request.user.portaluser.student, completed=True)}
+
+
 class StudentSettingsFormView(UpdateView):
     """
     + Studenten können ihre persönlichen Daten hinterlegen
@@ -360,6 +371,13 @@ class TutorUpdateThesisView(View):
 
                 elif mentoring_accepted_new_value == 'MA':
                     self.notify(request.user, instance, _('Your mentoring request was accepted.'))
+
+            '''
+                Wenn eine Abschlussarbeit absolviert wurde, wird dem Studenten eine neue aktive Abschlussarbeit zugewiesen.
+            '''
+            if instance.mentoring_accepted == 'MA' and form.cleaned_data['completed']:
+                active_thesis = Thesis(student=instance.student)
+                active_thesis.save()
 
         request.session['is_thesis'] = True
         return redirect('tutor-index')
