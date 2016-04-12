@@ -376,7 +376,8 @@ class TutorUpdateThesisView(View):
             '''
                 Wenn eine Abschlussarbeit absolviert wurde, wird dem Studenten eine neue aktive Abschlussarbeit zugewiesen.
             '''
-            if instance.mentoring_accepted == 'MA' and form.cleaned_data['completed']:
+            instance_is_activethesis = StudentActiveThesis.objects.filter(thesis=instance)
+            if form.cleaned_data['completed'] and instance_is_activethesis:
                 active_thesis = Thesis(student=instance.student)
                 active_thesis.save()
 
