@@ -2,6 +2,7 @@
 import os
 from thread import start_new_thread
 
+import pypdftk
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -10,8 +11,6 @@ from django.http import JsonResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
-from fdfgen import forge_fdf
-import codecs
 
 from mentoring.forms import *
 from mentoring.models import Student, Placement
@@ -227,11 +226,11 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-                student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
-                                                        prefix='student_user_formset'),
-                student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
-                                                              prefix='student_address_formset')
+            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+            student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
+                                                    prefix='student_user_formset'),
+            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
+                                                          prefix='student_address_formset')
         )
 
     def get_object(self, queryset=None):
@@ -436,9 +435,9 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-                tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
-                                                    prefix='tutor_user_formset')
+            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
+                                                prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
@@ -727,40 +726,28 @@ def generate_placement_pdf(self, pk):
     student = placement.student
 
     # Felder füllen
-    fields = [
-        ('Beginn', placement.date_from.strftime('%d.%m.%Y') if placement.date_from else ''),
-        ('Ende', placement.date_to.strftime('%d.%m.%Y') if placement.date_to else ''),
-        ('Name Vorname', "%s, %s" % (student.user.last_name, student.user.first_name)),
-        ('MatrNr', student.matriculation_number),
-        ('TelNr', student.phone),
-        ('Email', student.user.email),
-        ('Praktikumsbetreuer an der FHB', placement.tutor),
-        ('Name des Betriebes', placement.company_name),
-        ('Titel und Name des Betreuers', "%s" % placement.placementcompanycontactdata if placement.placementcompanycontactdata else ''),
-        (u'vollständige Anschrift der Firma', placement.company_address),
-        ('Aufgabe', placement.task),
-        (u'Vorlage des Tätigkeitsberichtes am', "%s" % placement.report_uploaded_date.strftime('%d.%m.%Y') if placement.report_uploaded_date else ''),
-        ('Vorstellung im Kolloquium am', student.presentation_date.date.strftime('%d.%m.%Y') if student.presentation_date else ''),
-        ('Datum', datetime.now().strftime("%d.%m.%Y")),
-    ]
+    fields = {
+        'BeginnDatum': placement.date_from.strftime('%d.%m.%Y') if placement.date_from else '',
+        'EndeDatum': placement.date_to.strftime('%d.%m.%Y') if placement.date_to else '',
+        'StudentName': u"%s, %s" % (student.user.last_name, student.user.first_name),
+        'MatrNr': student.matriculation_number,
+        'Telefon': student.phone,
+        'Email': student.user.email,
+        'THBBetreuer': u'%s' % placement.tutor,
+        'BetriebName': u'%s' % placement.company_name,
+        'BetriebBetreuerName': u"%s" % placement.placementcompanycontactdata if placement.placementcompanycontactdata else '',
+        'BetriebAnschrift': u"%s" % placement.company_address,
+        'Aufgabe': u"%s" % placement.task.replace('\r', ''),
+        'BerichtDatum': u"%s" % placement.report_uploaded_date.strftime('%d.%m.%Y') if placement.report_uploaded_date else '',
+        'KolloquiumDatum': student.presentation_date.date.strftime('%d.%m.%Y') if student.presentation_date else '',
+        'AktuellesDatum': datetime.now().strftime("%d.%m.%Y")
+    }
 
-    # FDF-Datei erzeugen
+    # XFDF-Datei erzeugen
     directory = "{}/{}/placement/".format(settings.MEDIA_ROOT, student.matriculation_number)
     filename = '{}-Praktikumsanerkennung.pdf'.format(student.matriculation_number)
     filepath = '{directory}/{file}'.format(directory=directory, file=filename)
-
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
-    fdf = forge_fdf("", fields, [], [], [])
-    fdf_file = open("{}/data.fdf".format(directory), "wb")
-    fdf_file.write(fdf)
-    fdf_file.close()
-
-    # PDF-Datei erzeugen
-    os.system(
-            'pdftk {mediaroot}/docs/_Anerkennung_Praktikum_2014.pdf fill_form {directory}/data.fdf output {filepath} need_appearances'.format(mediaroot=settings.MEDIA_ROOT, directory=directory,
-                                                                                                                                              filepath=filepath))
+    pypdftk.fill_form('{mediaroot}/docs/_Anerkennung_Praktikum_2014.pdf'.format(mediaroot=settings.MEDIA_ROOT), fields, out_file=filepath, flatten=False)
 
     # PDF-Datei senden, wenn diese erfolgreich erzeugt wurde
     if os.path.exists(filepath):
