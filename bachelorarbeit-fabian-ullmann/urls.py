@@ -33,3 +33,4 @@ urlpatterns = [
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'mentoring.views.handle404'
+handler500 = 'mentoring.views.handle404'
