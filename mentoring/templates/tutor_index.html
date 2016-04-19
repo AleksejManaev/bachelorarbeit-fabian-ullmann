@@ -19,6 +19,9 @@
     <!-- DataTables-Plugin für Sortierbarkeit Select-Elementen | http://datatables.net/plug-ins/sorting/custom-data-source/dom-select -->
     <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/custom-data-source/dom-select.js"></script>
 
+    <!-- Dependency für Sortierbarkeit Datum Deutsch | https://datatables.net/plug-ins/sorting/date-de -->
+    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.11/sorting/date-de.js"></script>
+
     <!-- DataTables-Konfiguration -->
     <script type="text/javascript" src="{% static 'js/tutor_index.js' %}"></script>
 
@@ -176,7 +179,7 @@
                                     <th>{% trans 'Examination office' %}</th>
                                     <th>{% trans 'Deadline' %}</th>
                                     <th>{% trans 'Grades' %}</th>
-                                    <th>{% trans 'Archived' %} <input type="checkbox" value="" id="filter-checkbox" checked></th>
+                                    <th>{% trans 'Archived' %}</th>
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
                                 </thead>
