@@ -41,23 +41,20 @@ EXAMINATION_OFFICE_STATE_CHOICES = (
     ('2B', 'Denied')
 )
 
+COURSE_CHOICES = (
+    ('-', '-'),
+    ('B-INF', 'B-INF'),
+    ('M-INF', 'M-INF'),
+    ('B-OSMI', 'B-OSMI'),
+    ('M-OSMI', 'M-OSMI'),
+    ('B-MEDINF', 'B-MEDINF'),
+    ('B-ACS', 'B-ACS'),
+    ('M-DM', 'M-DM')
+)
+
 
 class MentoringUser(AbstractUser):
     gidNumber = models.IntegerField(null=True)
-
-
-@python_2_unicode_compatible
-class Course(models.Model):
-    TIME_CHOICES = (
-        ('3', _('3 months')),
-        ('6', _('6 months')),
-        ('8', _('8 weeks')),
-    )
-    editing_time = models.CharField(_('editing time thesis'), max_length=1, choices=TIME_CHOICES, default='3')
-    description = models.CharField(_('description'), max_length=50)
-
-    def __str__(self):
-        return self.description
 
 
 class ContactModel(models.Model):
@@ -71,7 +68,6 @@ class PortalUser(ContactModel):
 
 @python_2_unicode_compatible
 class Tutor(PortalUser):
-    placement_courses = models.ManyToManyField(Course, blank=True, null=True, verbose_name=_('Placement courses'))
     placement_responsible = models.BooleanField(default=False, null=False, blank=False)
 
     @property
@@ -97,7 +93,7 @@ class PlacementSeminarEntry(models.Model):
 @python_2_unicode_compatible
 class Student(PortalUser):
     matriculation_number = models.CharField(_('Matriculation number'), max_length=8, null=True, blank=True)
-    course = models.ForeignKey(Course, verbose_name=_('course placement'), null=True)
+    course = models.CharField(_('Course'), max_length=30, choices=COURSE_CHOICES, default='-')
     extern_email = models.EmailField(_('extern email address'), null=True, blank=True)
     placement_year = models.IntegerField(_('Placement year'), blank=True, null=True)
     presentation_date = models.ForeignKey(PlacementSeminarEntry, blank=True, null=True, related_name='presentation_student')

@@ -53,8 +53,8 @@
                                     <th class="wrap-column">{% trans 'Acknowledgement' %}</th>
                                     <th class="wrap-column">{% trans 'First name' %}</th>
                                     <th class="wrap-column">{% trans 'Last name' %}</th>
-                                    <th class="wrap-column">{% trans 'Matriculation number' %}</th>
                                     <th class="wrap-column">{% trans 'Email' %}</th>
+                                    <th class="wrap-column">{% trans 'Course' %}</th>
                                     <th class="wrap-column">{% trans 'Seminars present' %}</th>
                                     <th class="wrap-column">{% trans 'Presentation' %}</th>
                                     <th class="wrap-column">{% trans 'Mentoring' %}</th>
@@ -94,8 +94,8 @@
                                         </td>
                                         <td><a href="{% url 'placement-details' placement.id %}">{{ placement.student.user.first_name }}</a></td>
                                         <td><a href="{% url 'placement-details' placement.id %}">{{ placement.student.user.last_name }}</a></td>
-                                        <td><a href="{% url 'placement-details' placement.id %}">{{ placement.student.matriculation_number }}</a></td>
                                         <td><a href="mailto:{{ placement.student.user.email }}">{{ placement.student.user.email }}</a></td>
+                                        <td>{{ placement.student.course }}</td>
 
                                         <td>
                                             {{ placement.student.placement_seminar_entries.all|length }}
@@ -144,8 +144,8 @@
                                     <th></th>
                                     <th>{% trans 'First name' %}</th>
                                     <th>{% trans 'Last name' %}</th>
-                                    <th>{% trans 'Matriculation number' %}</th>
                                     <th>{% trans 'Email' %}</th>
+                                    <th>{% trans 'Course' %}</th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -171,6 +171,7 @@
                                     <th>{% trans 'First name' %}</th>
                                     <th>{% trans 'Last name' %}</th>
                                     <th>{% trans 'Email' %}</th>
+                                    <th>{% trans 'Course' %}</th>
                                     <th>{% trans 'Mentoring' %}</th>
                                     <th>{% trans 'Examination office' %}</th>
                                     <th>{% trans 'Deadline' %}</th>
@@ -196,6 +197,7 @@
                                         <td><a href="{% url 'thesis-details' thesis.id %}">{{ thesis.student.user.first_name }}</a></td>
                                         <td><a href="{% url 'thesis-details' thesis.id %}">{{ thesis.student.user.last_name }}</a></td>
                                         <td><a href="mailto:{{ thesis.student.user.email }}">{{ thesis.student.user.email }}</a></td>
+                                        <td>{{ thesis.student.course }}</td>
                                         <td>
                                             <select {% if thesis.mentoring_accepted == 'MD' or thesis.mentoring_accepted == 'MA' %} disabled {% endif %} name="mentoring_accepted"
                                                                                                                                     form="{{ thesis.id }}">
@@ -254,6 +256,7 @@
                                     <th>{% trans 'First name' %}</th>
                                     <th>{% trans 'Last name' %}</th>
                                     <th>{% trans 'Email' %}</th>
+                                    <th>{% trans 'Course' %}</th>
                                     <th></th>
                                     <th></th>
                                     <th></th>

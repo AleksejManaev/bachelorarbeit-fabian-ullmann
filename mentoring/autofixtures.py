@@ -7,7 +7,7 @@ from autofixture.generators import StaticGenerator
 # from django.contrib.auth.models import User
 from autofixture import AutoFixture
 from autofixture import generators
-from mentoring.models import Student, Course, Tutor, Placement, MentoringUser as User, PlacementSeminar, PlacementSeminarEntry
+from mentoring.models import Student, Tutor, Placement, MentoringUser as User, PlacementSeminar, PlacementSeminarEntry
 
 import string
 from django.contrib.auth.hashers import make_password
@@ -111,12 +111,6 @@ class EmailGenerator(StaticGenerator):
         return 'test{number}@th-brb.de'.format(number=(len(User.objects.all()) + 1))
 
 
-class CourseFixture(AutoFixture):
-    field_values = {
-        'editing_time': generators.ChoicesGenerator(choices=Course.TIME_CHOICES)
-    }
-
-
 class MyUserFixture(UserFixture):
     def __init__(self, *args, **kwargs):
         self.type = kwargs.pop('type', 'student')
@@ -163,7 +157,6 @@ class PlacementSeminarEntryFixture(AutoFixture):
 
 
 autofixture.register(User, UserFixture, fail_silently=True)
-autofixture.register(Course, CourseFixture)
 autofixture.register(Student, MyStudentFixture)
 autofixture.register(Tutor, MyTutorFixture)
 autofixture.register(Placement, PlacementFixture)

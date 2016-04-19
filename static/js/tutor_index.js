@@ -35,7 +35,7 @@ $(document).ready(function () {
         "columnDefs": [
             {"searchable": false, "orderable": false, "targets": [0, 1, 10]},
             {"orderDataType": "dom-checkbox", "targets": 9},
-            {"orderDataType": "dom-select", "targets": 8},
+            {"orderDataType": "dom-select", "targets": 8}
         ],
         "order": [[9, "asc"]],
         "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',
@@ -51,12 +51,12 @@ $(document).ready(function () {
 
     var thesis_table = $('#thesis-table').DataTable({
         "columnDefs": [
-            {"searchable": false, "orderable": false, "targets": [0, 9]},
-            {"orderDataType": "dom-select", "targets": [4, 5]},
-            {"orderDataType": "dom-checkbox", "targets": 8},
-            {"type": 'de_date', targets: 6}
+            {"searchable": false, "orderable": false, "targets": [0, 10]},
+            {"orderDataType": "dom-select", "targets": [5, 6]},
+            {"orderDataType": "dom-checkbox", "targets": 9},
+            {"type": 'de_date', targets: 7}
         ],
-        "order": [[6, "asc"]],
+        "order": [[7, "asc"]],
         "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',
         "language": {
             "zeroRecords": "Keine Einträge gefunden",

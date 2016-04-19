@@ -4,7 +4,6 @@ from .models import *
 
 # Register your models here.
 admin.site.register(AbstractWork)
-admin.site.register(Course)
 admin.site.register(Placement)
 admin.site.register(StudentActivePlacement)
 admin.site.register(PortalUser)

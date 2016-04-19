@@ -138,9 +138,8 @@ class FormSettingsUser(forms.ModelForm):
 
 
 FormsetUserTutor = forms.inlineformset_factory(MentoringUser, Tutor,
-                                               fields=['user', 'title', 'phone', 'placement_courses', 'portaluser_ptr'],
-                                               extra=1, can_delete=False,
-                                               widgets={'placement_courses': forms.CheckboxSelectMultiple()})
+                                               fields=['user', 'title', 'phone', 'portaluser_ptr'],
+                                               extra=1, can_delete=False)
 FormsetUserStudent = forms.inlineformset_factory(MentoringUser, Student,
                                                  fields='__all__',
                                                  extra=1, can_delete=False)
