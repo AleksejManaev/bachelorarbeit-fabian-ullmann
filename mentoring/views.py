@@ -282,8 +282,7 @@ class TutorView(View):
                 if not placement.student.presentation_date:
                     help_message_dict[placement.id].append('Datum Vorstellung im Kolloquium fehlt')
 
-            context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'grades': GRADE_CHOICES,
-                       'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'help_message_dict': help_message_dict}
+            context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'help_message_dict': help_message_dict}
             if 'is_thesis' in request.session:
                 context['is_thesis'] = request.session['is_thesis']
 
@@ -480,7 +479,7 @@ class TutorPlacementView(UpdateView):
 class TutorThesisView(UpdateView):
     model = Thesis
     fields = ['type', 'task', 'poster', 'thesis', 'presentation', 'other', 'second_examiner_title', 'second_examiner_first_name', 'second_examiner_last_name',
-              'second_examiner_organisation', 'colloquium_done', 'deadline_extended', 'deadline']
+              'second_examiner_organisation', 'colloquium_done', 'deadline_extended', 'deadline', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation']
     template_name = 'tutor_thesis_details.html'
     exclude = ['student', 'tutor', 'mentoring_requested', 'mentoring_accepted']
 
@@ -736,7 +735,7 @@ def generate_placement_pdf(self, pk):
         'THBBetreuer': u'%s' % placement.tutor,
         'BetriebName': u'%s' % placement.company_name,
         'BetriebBetreuerName': u"%s" % placement.placementcompanycontactdata if placement.placementcompanycontactdata else '',
-        'BetriebAnschrift': u"%s" % placement.company_address,
+        'BetriebAnschrift': u"%s" % placement.company_address.replace('\r', ''),
         'Aufgabe': u"%s" % placement.task.replace('\r', ''),
         'BerichtDatum': u"%s" % placement.report_uploaded_date.strftime('%d.%m.%Y') if placement.report_uploaded_date else '',
         'KolloquiumDatum': student.presentation_date.date.strftime('%d.%m.%Y') if student.presentation_date else '',

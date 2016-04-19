@@ -91,8 +91,8 @@ class FormTutorPlacement(forms.ModelForm):
 class FormTutorThesis(forms.ModelForm):
     class Meta:
         model = Thesis
-        exclude = ['student', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'thesis', 'poster', 'presentation', 'other']
-        fields = ['mentoring_accepted', 'examination_office_state', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation', 'deadline', 'completed']
+        exclude = ['student', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'thesis', 'poster', 'presentation', 'other', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation']
+        fields = ['mentoring_accepted', 'examination_office_state', 'deadline', 'completed']
         widgets = {
             'deadline': DateInput(attrs={'class': 'datepicker'}),
         }

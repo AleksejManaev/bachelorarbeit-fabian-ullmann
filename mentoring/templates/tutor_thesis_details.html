@@ -119,6 +119,17 @@
                                 </div>
                             </div>
 
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{% trans 'Grades' %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    {% bootstrap_field form.grade_first_examiner bound_css_class=' ' %}
+                                    {% bootstrap_field form.grade_second_examiner bound_css_class=' ' %}
+                                    {% bootstrap_field form.grade_presentation bound_css_class=' ' %}
+                                </div>
+                            </div>
+
                             {% buttons %}
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">
                                     {% trans 'Update' %}

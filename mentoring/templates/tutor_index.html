@@ -170,14 +170,11 @@
                                     <th class="wrap-column">{% trans 'Comments' %}</th>
                                     <th>{% trans 'First name' %}</th>
                                     <th>{% trans 'Last name' %}</th>
-                                    <th>{% trans 'Matriculation number' %}</th>
                                     <th>{% trans 'Email' %}</th>
                                     <th>{% trans 'Mentoring' %}</th>
                                     <th>{% trans 'Examination office' %}</th>
                                     <th>{% trans 'Deadline' %}</th>
-                                    <th>{% trans 'Grade first examiner' %}</th>
-                                    <th>{% trans 'Grade second examiner' %}</th>
-                                    <th>{% trans 'Grade presentation' %}</th>
+                                    <th>{% trans 'Grades' %}</th>
                                     <th>{% trans 'Completed' %}</th>
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
@@ -198,7 +195,6 @@
                                         </td>
                                         <td><a href="{% url 'thesis-details' thesis.id %}">{{ thesis.student.user.first_name }}</a></td>
                                         <td><a href="{% url 'thesis-details' thesis.id %}">{{ thesis.student.user.last_name }}</a></td>
-                                        <td><a href="{% url 'thesis-details' thesis.id %}">{{ thesis.student.matriculation_number }}</a></td>
                                         <td><a href="mailto:{{ thesis.student.user.email }}">{{ thesis.student.user.email }}</a></td>
                                         <td>
                                             <select {% if thesis.mentoring_accepted == 'MD' or thesis.mentoring_accepted == 'MA' %} disabled {% endif %} name="mentoring_accepted"
@@ -228,37 +224,7 @@
                                                     {% if thesis.deadline %} value="{{ thesis.deadline|date:"d.m.Y" }}"{% endif %} form="{{ thesis.id }}" size="11">
                                         </td>
                                         <td>
-                                            <select {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %} name="grade_first_examiner" form="{{ thesis.id }}">
-                                                {% for grade in grades %}
-                                                    {% ifequal grade.0 thesis.grade_first_examiner %}
-                                                        <option value="{{ grade.0 }}" selected="selected">{{ grade.1 }}</option>
-                                                    {% else %}
-                                                        <option value="{{ grade.0 }}">{{ grade.1 }}</option>
-                                                    {% endifequal %}
-                                                {% endfor %}
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %} name="grade_second_examiner" form="{{ thesis.id }}">
-                                                {% for grade in grades %}
-                                                    {% ifequal grade.0 thesis.grade_second_examiner %}
-                                                        <option value="{{ grade.0 }}" selected="selected">{{ grade.1 }}</option>
-                                                    {% else %}
-                                                        <option value="{{ grade.0 }}">{{ grade.1 }}</option>
-                                                    {% endifequal %}
-                                                {% endfor %}
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %} name="grade_presentation" form="{{ thesis.id }}">
-                                                {% for grade in grades %}
-                                                    {% ifequal grade.0 thesis.grade_presentation %}
-                                                        <option value="{{ grade.0 }}" selected="selected">{{ grade.1 }}</option>
-                                                    {% else %}
-                                                        <option value="{{ grade.0 }}">{{ grade.1 }}</option>
-                                                    {% endifequal %}
-                                                {% endfor %}
-                                            </select>
+                                            {{ thesis.grade_first_examiner }} | {{ thesis.grade_second_examiner }} | {{ thesis.grade_presentation }}
                                         </td>
                                         <td>
                                             <input  {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %}
@@ -286,10 +252,7 @@
                                     <th></th>
                                     <th>{% trans 'First name' %}</th>
                                     <th>{% trans 'Last name' %}</th>
-                                    <th>{% trans 'Matriculation number' %}</th>
                                     <th>{% trans 'Email' %}</th>
-                                    <th></th>
-                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
