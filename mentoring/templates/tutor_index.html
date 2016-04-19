@@ -58,7 +58,7 @@
                                     <th class="wrap-column">{% trans 'Seminars present' %}</th>
                                     <th class="wrap-column">{% trans 'Presentation' %}</th>
                                     <th class="wrap-column">{% trans 'Mentoring' %}</th>
-                                    <th class="wrap-column">{% trans 'Completed' %}</th>
+                                    <th class="wrap-column">{% trans 'Archived' %}</th>
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
                                 </thead>
@@ -175,7 +175,7 @@
                                     <th>{% trans 'Examination office' %}</th>
                                     <th>{% trans 'Deadline' %}</th>
                                     <th>{% trans 'Grades' %}</th>
-                                    <th>{% trans 'Completed' %}</th>
+                                    <th>{% trans 'Archived' %} <input type="checkbox" value="" id="filter-checkbox" checked></th>
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
                                 </thead>
@@ -231,6 +231,7 @@
                                                                                                type="checkbox"
                                                                                                name="completed"
                                                                                                form="{{ thesis.id }}"
+                                                                                               class="completed"
                                                     {{ thesis.completed|boolean_checked|default_if_none:"" }}
                                             >
                                         </td>

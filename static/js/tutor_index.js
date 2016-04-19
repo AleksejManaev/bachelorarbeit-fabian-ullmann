@@ -1,3 +1,19 @@
+$.fn.dataTable.ext.search.push(
+    function (settings, data, dataIndex) {
+        if (settings.sInstance != 'thesis-table') {
+            return true;
+        }
+        var filter_checkbox = document.getElementById("filter-checkbox").checked;
+        if (filter_checkbox) {
+            var completed = document.getElementsByClassName("completed")[dataIndex].checked;
+            return !completed;
+        }
+        else {
+            return true;
+        }
+    }
+);
+
 $(document).ready(function () {
     <!-- Jede Spalte der Tabelle mit einem nicht-leeren th-Element innerhalb von tfoot erhält eine Searchbox -->
     $('#placements-table tfoot th').each(function () {
@@ -103,4 +119,10 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#filter-checkbox').click(function () {
+        thesis_table.draw();
+    });
 });
+
+

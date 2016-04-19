@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-19 13:43+0200\n"
+"POT-Creation-Date: 2016-04-19 15:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -154,8 +154,6 @@ msgstr "Angefragt"
 
 #: .\mentoring\models.py:131 .\mentoring\templates\student_placement.html:79
 #: .\mentoring\templates\student_thesis.html:83
-#: .\mentoring\templates\tutor_index.html:61
-#: .\mentoring\templates\tutor_index.html:178
 msgid "Completed"
 msgstr "Absolviert"
 
@@ -342,7 +340,7 @@ msgstr "Praktikumsseminare"
 #: .\mentoring\templates\placement_seminar_update.html:24
 #: .\mentoring\templates\placement_seminar_update.html:133
 #: .\mentoring\templates\tutor_placement_details.html:88
-#: .\mentoring\templates\tutor_thesis_details.html:124
+#: .\mentoring\templates\tutor_thesis_details.html:135
 msgid "Update"
 msgstr "Aktualisieren"
 
@@ -497,6 +495,11 @@ msgstr "Seminare anwesend"
 msgid "Mentoring"
 msgstr "Betreuung"
 
+#: .\mentoring\templates\tutor_index.html:61
+#: .\mentoring\templates\tutor_index.html:178
+msgid "Archived"
+msgstr "Archiviert"
+
 #: .\mentoring\templates\tutor_index.html:62
 #: .\mentoring\templates\tutor_index.html:179
 msgid "Save"
@@ -511,6 +514,7 @@ msgid "Examination office"
 msgstr "Prüfungsamt"
 
 #: .\mentoring\templates\tutor_index.html:177
+#: .\mentoring\templates\tutor_thesis_details.html:124
 msgid "Grades"
 msgstr "Noten"
 
@@ -548,20 +552,20 @@ msgstr "Betreuung der Abschlussarbeit"
 msgid "error"
 msgstr "Fehler"
 
-#: .\mentoring\views.py:325 .\mentoring\views.py:370
+#: .\mentoring\views.py:324 .\mentoring\views.py:369
 msgid "Your mentoring request was denied."
 msgstr "Ihre Betreuungsanfrage wurde abgelehnt."
 
-#: .\mentoring\views.py:328 .\mentoring\views.py:373
+#: .\mentoring\views.py:327 .\mentoring\views.py:372
 msgid "Your mentoring request was accepted."
 msgstr "Ihre Betreuungsanfrage wurde angenommen."
 
-#: .\mentoring\views.py:338 .\mentoring\views.py:391 .\mentoring\views.py:533
-#: .\mentoring\views.py:575 .\mentoring\views.py:583
+#: .\mentoring\views.py:337 .\mentoring\views.py:390 .\mentoring\views.py:532
+#: .\mentoring\views.py:574 .\mentoring\views.py:582
 msgid "Show comments"
 msgstr "Kommentare anzeigen"
 
-#: .\mentoring\views.py:592
+#: .\mentoring\views.py:591
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
