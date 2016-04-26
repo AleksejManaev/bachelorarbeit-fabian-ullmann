@@ -16,7 +16,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-danger">
                         <div class="panel-heading">
-                            <h1 class="panel-title">{% trans 'Denied mentoring requests' %}</h1>
+                            <h1 class="panel-title">{% trans 'Denied mentoring requests' %} / {% trans 'Failed placements' %}</h1>
                         </div>
 
                         <div class="panel-body">
@@ -68,21 +68,13 @@
                     <div class="panel-body">
 
                         <!-- Status -->
-                        <div class="alert {% if placement.mentoring_requested and not placement.completed %} {{ placement.mentoring_accepted|state_css }} {% elif placement.completed %} alert-placement-completed {% else %} alert-info {% endif %}"
-                             role="alert">
+                        <div class="alert {% if placement.mentoring_requested and placement.completed != 'Completed' %} {{ placement.mentoring_accepted|state_css }} {% elif placement.completed == 'Completed' %} alert-placement-completed {% else %} alert-info {% endif %}" role="alert">
                             <div class="row ">
-                                <div class="col-md-4">
-                                    {% trans 'State: ' %}
-                                    {% if placement.mentoring_requested and not placement.completed %}
-                                        {{ placement.mentoring_accepted|state }}
-                                    {% elif placement.completed %}
-                                        {% trans 'Completed' %}
-                                    {% else %}
-                                        {% trans 'not requested' %}
-                                    {% endif %}
+                                <div class="col-md-6">
+                                    {% trans 'State: ' %}{% trans placement.state %}{% for state in placement_state_subgoals %}{% if state.0 == placement.state %} | {% trans 'Next subgoal' %}: {% trans state.1 %}{% endif %}{% endfor %}
                                 </div>
 
-                                <div class="col-md-6"></div>
+                                <div class="col-md-4"></div>
 
                                 <div class="col-md-2">
                                     <a href="{% url 'comments' placement.id %}" title="{% trans 'Comments' %}">
@@ -133,7 +125,11 @@
                                     <h1 class="panel-title">{% trans 'Contact person in the company' %}</h1>
                                 </div>
                                 <div class="panel-body">
-                                    {% bootstrap_formset placement_contact_formset %}
+                                    {% if placement.state == 'Placement completed' or placement.state == 'Placement failed' %}
+                                        {% bootstrap_formset placement_contact_formset set_disabled=True %}
+                                    {% else %}
+                                        {% bootstrap_formset placement_contact_formset %}
+                                    {% endif %}
                                 </div>
                             </div>
                             {% if placement.mentoring_requested %}
@@ -153,9 +149,15 @@
                             {% endif %}
 
                             {% buttons %}
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">
-                                    {% trans 'Finish' %}
-                                </button>
+                                {% if placement.state == 'Placement completed' or placement.state == 'Placement failed' %}
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block" disabled>
+                                        {% trans 'Finish' %}
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                        {% trans 'Finish' %}
+                                    </button>
+                                {% endif %}
                             {% endbuttons %}
                         </form>
                     </div>

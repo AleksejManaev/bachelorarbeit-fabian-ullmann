@@ -17,6 +17,15 @@ class FormPlacement(forms.ModelForm):
         if instance.mentoring_requested:
             self.fields['task'].widget.attrs['disabled'] = True
             self.fields['tutor'].widget.attrs['disabled'] = True
+        if instance.state == 'Placement completed' or instance.state == 'Placement failed':
+            self.fields['task'].widget.attrs['disabled'] = True
+            self.fields['tutor'].widget.attrs['disabled'] = True
+            self.fields['date_from'].widget.attrs['disabled'] = True
+            self.fields['date_to'].widget.attrs['disabled'] = True
+            self.fields['report'].widget.attrs['disabled'] = True
+            self.fields['certificate'].widget.attrs['disabled'] = True
+            self.fields['company_name'].widget.attrs['disabled'] = True
+            self.fields['company_address'].widget.attrs['disabled'] = True
 
     def is_valid(self):
         is_valid = super(FormPlacement, self).is_valid()
@@ -85,21 +94,20 @@ class FormTutorPlacement(forms.ModelForm):
     class Meta:
         model = Placement
         exclude = ['student', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
-        fields = ['completed', 'mentoring_accepted']
+        fields = ['archived', 'mentoring_accepted', 'completed']
 
 
 class FormTutorThesis(forms.ModelForm):
     class Meta:
         model = Thesis
         exclude = ['student', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'thesis', 'poster', 'presentation', 'other', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation']
-        fields = ['mentoring_accepted', 'examination_office_state', 'deadline', 'completed']
+        fields = ['mentoring_accepted', 'examination_office_state', 'deadline', 'archived']
         widgets = {
             'deadline': DateInput(attrs={'class': 'datepicker'}),
         }
 
 
-FormsetPlacementContactdata = forms.inlineformset_factory(Placement, PlacementCompanyContactData, fields='__all__',
-                                                          extra=1, can_delete=False)
+FormsetPlacementContactdata = forms.inlineformset_factory(Placement, PlacementCompanyContactData, fields='__all__', extra=1, can_delete=False)
 
 
 class FormTutorPlacementDetails(forms.ModelForm):
@@ -120,8 +128,8 @@ class FormTutorPlacementDetails(forms.ModelForm):
 
     class Meta:
         model = Placement
-        exclude = ['student', 'tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'completed']
-        fields = ['task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address']
+        exclude = ['student', 'tutor', 'number_seminars_present', 'presentation_done', 'mentoring_requested', 'mentoring_accepted', 'archived']
+        fields = ['task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address', 'report_accepted', 'certificate_accepted']
         widgets = {
             'date_from': DateInput(attrs={'class': 'datepicker'}),
             'date_to': DateInput(attrs={'class': 'datepicker'}),

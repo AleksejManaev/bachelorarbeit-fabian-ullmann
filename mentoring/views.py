@@ -89,6 +89,7 @@ class StudentPlacementFormView(UpdateView):
         if valid:
             if placement.mentoring_requested is False and show_tutor:
                 placement.mentoring_requested = True
+                placement.state = PLACEMENT_STATE_CHOICES[1][0]
                 placement.sent_on = datetime.now()
                 placement.save()
 
@@ -100,6 +101,7 @@ class StudentPlacementFormView(UpdateView):
         context = {}
         context.update(self.get_context_placement())
         context.update(self.get_denied_placements())
+        context.update({'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES})
 
         if not student:
             return redirect('index')
@@ -107,7 +109,7 @@ class StudentPlacementFormView(UpdateView):
             return render(request, self.template_name, context)
 
     def get_denied_placements(self):
-        return {'denied_placements': Placement.objects.filter(student=self.request.user.portaluser.student, mentoring_accepted='MD')}
+        return {'denied_placements': Placement.objects.filter(Q(student=self.request.user.portaluser.student), Q(mentoring_accepted='MD') | Q(completed='Failed'))}
 
 
 class StudentThesisFormView(UpdateView):
@@ -226,11 +228,11 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
-                                                    prefix='student_user_formset'),
-            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
-                                                          prefix='student_address_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
+                                                        prefix='student_user_formset'),
+                student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
+                                                              prefix='student_address_formset')
         )
 
     def get_object(self, queryset=None):
@@ -282,7 +284,7 @@ class TutorView(View):
                 if not placement.student.presentation_date:
                     help_message_dict[placement.id].append('Datum Vorstellung im Kolloquium fehlt')
 
-            context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'help_message_dict': help_message_dict}
+            context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'placement_states': PLACEMENT_STATE_CHOICES, 'placement_completed_states': PLACEMENT_COMPLETED_CHOICES, 'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES, 'help_message_dict': help_message_dict}
             if 'is_thesis' in request.session:
                 context['is_thesis'] = request.session['is_thesis']
 
@@ -297,18 +299,42 @@ class TutorUpdatePlacementView(View):
     def post(self, request, pk, *args, **kwargs):
         instance = Placement.objects.get(id=pk)
         mentoring_accepted_old_value = instance.mentoring_accepted
+        completed_old_value = instance.completed
         POST = request.POST
 
         '''
             Wenn das "Betreuung angenommen"-Feld "disabled" ist, wird der Wert über POST nicht mitgesendet. Dadurch schlägt die Validierung fehl.
             Deshalb wird der alte Wert dem Formular übergeben.
         '''
-        if not request.POST.has_key('mentoring_accepted'):
+        if not request.POST.has_key('mentoring_accepted') or not request.POST.has_key('completed'):
             POST = request.POST.copy()
+        if not request.POST.has_key('mentoring_accepted'):
             POST['mentoring_accepted'] = mentoring_accepted_old_value
+        if not request.POST.has_key('completed'):
+            POST['completed'] = completed_old_value
         form = FormTutorPlacement(POST, instance=instance)
 
         if form.is_valid():
+            mentoring_accepted_new_value = form.cleaned_data['mentoring_accepted']
+            completed_new_value = form.cleaned_data['completed']
+            if mentoring_accepted_new_value == 'MD' and form.instance.state == 'Requested':
+                form.instance.state = 'Mentoring denied'
+            elif mentoring_accepted_new_value == 'MA' and form.instance.state == 'Requested':
+                form.instance.state = 'Mentoring accepted'
+
+            # Wenn der Praktikumsverantwortliche das Seminar für einen Studenten als Bestanden bestätigt bevor der Tutor die Betreuung annimmt.
+            if form.instance.student.placement_seminar_done and form.instance.state == 'Mentoring accepted':
+                form.instance.state = 'Seminar completed'
+
+            if form.instance.state == 'Certificate accepted' and form.cleaned_data['completed'] == 'Completed':
+                form.instance.state = 'Placement completed'
+                self.notify(request.user, instance, _('You completed your placement.'))
+            elif form.cleaned_data['completed'] == 'Failed':
+                form.instance.state = 'Placement failed'
+            elif form.instance.state != 'Placement completed':
+                # TODO: Toast-Nachricht, Praktikum kann nicht absolviert werden, wenn der Status nicht "Certificate accepted" ist oder die Option "Absolviert" ausblenden
+                form.instance.completed = '-'
+
             form.save()
 
             '''
@@ -316,7 +342,6 @@ class TutorUpdatePlacementView(View):
                     Das aktive Praktikum wird über "post_save_placement" in "signals.py" zugewiesen.
                 2. Wenn eine Betreuungsanfrage abgelehnt oder angenommen wurde, wird ein Kommentar und E-Mail an Student und Tutor versendet.
             '''
-            mentoring_accepted_new_value = form.cleaned_data['mentoring_accepted']
             if mentoring_accepted_old_value != mentoring_accepted_new_value:
                 if mentoring_accepted_new_value == 'MD':
                     active_placement = Placement(student=instance.student)
@@ -325,6 +350,11 @@ class TutorUpdatePlacementView(View):
 
                 elif mentoring_accepted_new_value == 'MA':
                     self.notify(request.user, instance, _('Your mentoring request was accepted.'))
+            if completed_new_value != completed_old_value:
+                if completed_new_value == 'Failed':
+                    active_placement = Placement(student=instance.student)
+                    active_placement.save()
+                    self.notify(request.user, instance, _('You failed your placement.'))
 
         request.session['is_thesis'] = False
         return redirect('tutor-index')
@@ -375,7 +405,7 @@ class TutorUpdateThesisView(View):
                 Wenn eine Abschlussarbeit absolviert wurde, wird dem Studenten eine neue aktive Abschlussarbeit zugewiesen.
             '''
             instance_is_activethesis = StudentActiveThesis.objects.filter(thesis=instance)
-            if form.cleaned_data['completed'] and instance_is_activethesis:
+            if form.cleaned_data['archived'] and instance_is_activethesis:
                 active_thesis = Thesis(student=instance.student)
                 active_thesis.save()
 
@@ -434,9 +464,9 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
-                                                prefix='tutor_user_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
+                                                    prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
@@ -466,12 +496,18 @@ class TutorPlacementView(UpdateView):
         placement_form_dict = self.get_context_placement(request.POST, files=request.FILES)
 
         # Alle Formulare validieren und speichern
-        target_forms = [i for i, v in placement_form_dict.iteritems()]
-
-        for t in target_forms:
-            form = placement_form_dict.get(t)
-            if form.is_valid():
-                placement_form_dict.get(t).save()
+        for k, v in placement_form_dict.iteritems():
+            if v.is_valid():
+                if k == 'placement_form':
+                    if not v.cleaned_data['report_accepted'] and v.cleaned_data['certificate_accepted']:
+                        v.instance.state = 'Seminar completed'
+                    elif v.cleaned_data['report_accepted'] and not v.cleaned_data['certificate_accepted']:
+                        v.instance.state = 'Report accepted'
+                    elif v.cleaned_data['report_accepted'] and v.cleaned_data['certificate_accepted']:
+                        v.instance.state = 'Certificate accepted'
+                    elif not v.cleaned_data['report_accepted'] and not v.cleaned_data['certificate_accepted']:
+                        v.instance.state = 'Seminar completed'
+                v.save()
 
         return redirect('placement-details', pk=placement_form_dict['placement_form'].instance.id)
 
@@ -680,6 +716,7 @@ class SeminarEntryProcessView(View):
                 checked_student_placement_seminar_list.append(student_id)
 
         for student in all_seminar_students:
+            placement = student.studentactiveplacement.placement
             for student_presentation in presentation_done_student_list:
                 if student.id == student_presentation[0]:
                     presentation_date_id = student_presentation[1]
@@ -690,8 +727,22 @@ class SeminarEntryProcessView(View):
 
             if student.id in checked_student_placement_seminar_list:
                 student.placement_seminar_done = True
+                if placement.state == 'Mentoring accepted':
+                    if not placement.report_accepted and placement.certificate_accepted:
+                        placement.state = 'Seminar completed'
+                    elif placement.report_accepted and not placement.certificate_accepted:
+                        placement.state = 'Report accepted'
+                    elif placement.report_accepted and placement.certificate_accepted:
+                        placement.state = 'Certificate accepted'
+                    elif not placement.report_accepted and not placement.certificate_accepted:
+                        placement.state = 'Seminar completed'
+                    placement.save()
             else:
                 student.placement_seminar_done = False
+                state = student.studentactiveplacement.placement.state
+                if state == 'Seminar completed' or state == 'Report accepted' or state == 'Certificate accepted':
+                    student.studentactiveplacement.placement.state = 'Mentoring accepted'
+                    student.studentactiveplacement.placement.save()
             student.save()
 
             for entry in all_seminar_entrys:

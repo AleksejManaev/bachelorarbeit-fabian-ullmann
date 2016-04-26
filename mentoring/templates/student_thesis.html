@@ -72,15 +72,15 @@
                     <div class="panel-body">
 
                         <!-- Status -->
-                        <div class="alert {% if thesis.mentoring_requested and not thesis.abstractwork_completed %} {{ thesis.mentoring_accepted|state_css }} {% elif thesis.abstractwork_completed %} alert-placement-completed {% else %} alert-info {% endif %}"
+                        <div class="alert {% if thesis.mentoring_requested and not thesis.archived%} {{ thesis.mentoring_accepted|state_css }} {% elif thesis.archived %} alert-placement-completed {% else %} alert-info {% endif %}"
                              role="alert">
                             <div class="row ">
                                 <div class="col-md-4">
                                     {% trans 'State: ' %}
-                                    {% if thesis.mentoring_requested and not thesis.abstractwork_completed %}
+                                    {% if thesis.mentoring_requested and not thesis.archived %}
                                         {{ thesis.mentoring_accepted|state }}
-                                    {% elif thesis.abstractwork_completed %}
-                                        {% trans 'Completed' %}
+                                    {% elif thesis.archived %}
+                                        {% trans 'Archived' %}
                                     {% else %}
                                         {% trans 'not requested' %}
                                     {% endif %}

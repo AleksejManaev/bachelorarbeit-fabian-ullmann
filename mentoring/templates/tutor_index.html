@@ -54,13 +54,15 @@
                                 <tr>
                                     <th class="wrap-column">{% trans 'Comments' %}</th>
                                     <th class="wrap-column">{% trans 'Acknowledgement' %}</th>
+                                    <th class="wrap-column">{% trans 'Next subgoal' %}</th>
                                     <th class="wrap-column">{% trans 'First name' %}</th>
                                     <th class="wrap-column">{% trans 'Last name' %}</th>
                                     <th class="wrap-column">{% trans 'Email' %}</th>
                                     <th class="wrap-column">{% trans 'Course' %}</th>
                                     <th class="wrap-column">{% trans 'Seminars present' %}</th>
-                                    <th class="wrap-column">{% trans 'Presentation' %}</th>
+                                    <th class="wrap-column">{% trans 'Presentation hold' %}</th>
                                     <th class="wrap-column">{% trans 'Mentoring' %}</th>
+                                    <th class="wrap-column">{% trans 'Completed' %}</th>
                                     <th class="wrap-column">{% trans 'Archived' %}</th>
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
@@ -95,6 +97,13 @@
                                                 </a>
                                             {% endif %}
                                         </td>
+                                        <td>
+                                            {% for state in placement_state_subgoals %}
+                                                {% ifequal state.0 placement.state %}
+                                                    <span title="{% trans 'State: ' %}{% trans placement.state %}">{% trans state.1 %}</span>
+                                                {% endifequal %}
+                                            {% endfor %}
+                                        </td>
                                         <td><a href="{% url 'placement-details' placement.id %}">{{ placement.student.user.first_name }}</a></td>
                                         <td><a href="{% url 'placement-details' placement.id %}">{{ placement.student.user.last_name }}</a></td>
                                         <td><a href="mailto:{{ placement.student.user.email }}">{{ placement.student.user.email }}</a></td>
@@ -104,7 +113,7 @@
                                             {{ placement.student.placement_seminar_entries.all|length }}
                                         </td>
                                         <td>
-                                            {{ placement.student.presentation_date.date|date:"d.m.Y" }}
+                                            {{ placement.student.presentation_date.date|date:"d.m.Y"|default:"-" }}
                                         </td>
                                         <td>
                                             <select  {% if placement.mentoring_accepted == 'MD' or placement.mentoring_accepted == 'MA' %} disabled {% endif %}
@@ -121,19 +130,21 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input  {% if placement.mentoring_accepted == 'MD' %} disabled {% endif %}
-                                                                                                  type="checkbox"
-                                                                                                  name="completed"
-                                                                                                  form="{{ placement.id }}"
-                                                    {{ placement.completed|boolean_checked|default_if_none:"" }}
-                                            >
+                                            <select {% if placement.state == 'Placement completed' or placement.state == 'Placement failed' or placement.state == 'Requested' or placement.state == 'Mentoring denied' %} disabled {% endif %}name="completed" form="{{ placement.id }}">
+                                                {% for state in placement_completed_states %}
+                                                    {% ifequal state.0 placement.completed %}
+                                                        <option value="{{ state.0 }}" selected="selected">{% trans state.1 %}</option>
+                                                    {% else %}
+                                                        <option value="{{ state.0 }}">{% trans state.1 %}</option>
+                                                    {% endifequal %}
+                                                {% endfor %}
+                                            </select>
                                         </td>
                                         <td>
-                                            <button  {% if placement.mentoring_accepted == 'MD' %} disabled {% endif %}
-                                                                                                   type="submit"
-                                                                                                   class="btn btn-default center-block"
-                                                                                                   form="{{ placement.id }}"
-                                            >
+                                            <input type="checkbox" name="archived" form="{{ placement.id }}"{{ placement.archived|boolean_checked|default_if_none:"" }}>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-default center-block" form="{{ placement.id }}">
                                                 <span class="glyphicon glyphicon-floppy-disk"></span>
                                             </button>
                                         </td>
@@ -145,10 +156,12 @@
                                 <tr>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
                                     <th>{% trans 'First name' %}</th>
                                     <th>{% trans 'Last name' %}</th>
                                     <th>{% trans 'Email' %}</th>
                                     <th>{% trans 'Course' %}</th>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -234,10 +247,10 @@
                                         <td>
                                             <input  {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %}
                                                                                                type="checkbox"
-                                                                                               name="completed"
+                                                                                               name="archived"
                                                                                                form="{{ thesis.id }}"
                                                                                                class="completed"
-                                                    {{ thesis.completed|boolean_checked|default_if_none:"" }}
+                                                    {{ thesis.archived|boolean_checked|default_if_none:"" }}
                                             >
                                         </td>
                                         <td>

@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('comment_unread_by_tutor', models.BooleanField(default=False)),
                 ('mentoring_requested', models.BooleanField(default=False, verbose_name='Requested')),
                 ('mentoring_accepted', models.CharField(default=b'ND', max_length=2, choices=[(b'ND', b'-'), (b'MA', b'Accepted'), (b'MD', b'Denied')])),
-                ('completed', models.BooleanField(default=False, verbose_name='Completed')),
+                ('archived', models.BooleanField(default=False, verbose_name='Archived')),
             ],
         ),
         migrations.CreateModel(
@@ -136,6 +136,10 @@ class Migration(migrations.Migration):
                 ('report', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_placement_report, null=True, verbose_name='Placement report', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
                 ('report_uploaded_date', models.DateTimeField(null=True, blank=True)),
                 ('certificate', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_placement_certificate, null=True, verbose_name='Placement certificate', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
+                ('state', models.CharField(default=b'Not requested', max_length=100, verbose_name='State', choices=[(b'Not requested', b'Not requested'), (b'Requested', b'Requested'), (b'Mentoring denied', b'Mentoring denied'), (b'Mentoring accepted', b'Mentoring accepted'), (b'Seminar completed', b'Seminar completed'), (b'Report accepted', b'Report accepted'), (b'Certificate accepted', b'Certificate accepted'), (b'Placement completed', b'Placement completed'), (b'Placement failed', b'Placement failed'), (b'Archived', b'Archived')])),
+                ('completed', models.CharField(default=b'-', max_length=100, verbose_name='Completed', choices=[(b'-', b'-'), (b'Completed', b'Completed'), (b'Failed', b'Failed')])),
+                ('report_accepted', models.BooleanField(default=False, verbose_name='Report accepted')),
+                ('certificate_accepted', models.BooleanField(default=False, verbose_name='Certificate accepted')),
             ],
             bases=('mentoring.abstractwork',),
         ),
@@ -203,7 +207,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('portaluser_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='mentoring.PortalUser')),
                 ('matriculation_number', models.CharField(max_length=8, null=True, verbose_name='Matriculation number', blank=True)),
-                ('course', models.CharField(default=b'-', max_length=30, verbose_name='course placement', choices=[(b'-', b'-'), (b'B-INF', b'B-INF'), (b'M-INF', b'M-INF'), (b'B-OSMI', b'B-OSMI'), (b'M-OSMI', b'M-OSMI'), (b'B-MEDINF', b'B-MEDINF'), (b'B-ACS', b'B-ACS'), (b'M-DM', b'M-DM')])),
+                ('course', models.CharField(default=b'-', max_length=30, verbose_name='Course', choices=[(b'-', b'-'), (b'B-INF', b'B-INF'), (b'M-INF', b'M-INF'), (b'B-OSMI', b'B-OSMI'), (b'M-OSMI', b'M-OSMI'), (b'B-MEDINF', b'B-MEDINF'), (b'B-ACS', b'B-ACS'), (b'M-DM', b'M-DM')])),
                 ('extern_email', models.EmailField(max_length=254, null=True, verbose_name='extern email address', blank=True)),
                 ('placement_year', models.IntegerField(null=True, verbose_name='Placement year', blank=True)),
                 ('placement_seminar_done', models.BooleanField(default=False, verbose_name='Placement seminar done')),

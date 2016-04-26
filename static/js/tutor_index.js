@@ -17,11 +17,11 @@ $(document).ready(function () {
     <!-- Tabelleninitialisierung -->
     var placement_table = $('#placements-table').DataTable({
         "columnDefs": [
-            {"searchable": false, "orderable": false, "targets": [0, 1, 10]},
-            {"orderDataType": "dom-checkbox", "targets": 9},
-            {"orderDataType": "dom-select", "targets": 8}
+            {"searchable": false, "orderable": false, "targets": [0, 1, 12]},
+            {"orderDataType": "dom-checkbox", "targets": 11},
+            {"orderDataType": "dom-select", "targets": [9,10]}
         ],
-        "order": [[9, "asc"]],
+        "order": [[11, "asc"]],
         "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',
         "language": {
             "zeroRecords": "Keine Einträge gefunden",

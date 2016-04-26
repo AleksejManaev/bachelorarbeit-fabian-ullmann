@@ -9,6 +9,37 @@ from mentoring.validators import *
 
 app_label = 'mentoring'
 
+PLACEMENT_STATE_CHOICES = (
+    ('Not requested', _('Not requested')),
+    ('Requested', _('Requested')),
+    ('Mentoring denied', _('Mentoring denied')),
+    ('Mentoring accepted', _('Mentoring accepted')),
+    ('Seminar completed', _('Seminar completed')),
+    ('Report accepted', _('Report accepted')),
+    ('Certificate accepted', _('Certificate accepted')),
+    ('Placement completed', _('Placement completed')),
+    ('Placement failed', _('Placement failed')),
+    ('Archived', _('Archived'))
+)
+
+PLACEMENT_COMPLETED_CHOICES = (
+    ('-', '-'),
+    ('Completed', _('Completed')),
+    ('Failed', _('Failed'))
+)
+
+PLACEMENT_STATE_SUBGOAL_CHOICES = (
+    ('Requested', _('Mentoring acceptance')),
+    ('Mentoring accepted', _('Seminar completion')),
+    ('Mentoring denied', _('-')),
+    ('Seminar completed', _('Report acceptance')),
+    ('Report accepted', _('Certificate acceptance')),
+    ('Certificate accepted', _('Placement completion')),
+    ('Placement completed', _('-')),
+    ('Placement failed', _('-')),
+    ('Archived', _('-'))
+)
+
 MENTORING_STATE_CHOICES = (
     ('ND', '-'),
     ('MA', 'Accepted'),
@@ -124,7 +155,7 @@ class AbstractWork(models.Model):
     comment_unread_by_tutor = models.BooleanField(default=False)
     mentoring_requested = models.BooleanField(_('Requested'), default=False)
     mentoring_accepted = models.CharField(max_length=2, choices=MENTORING_STATE_CHOICES, default='ND')
-    completed = models.BooleanField(_('Completed'), default=False)
+    archived = models.BooleanField(_('Archived'), default=False)
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
@@ -139,6 +170,10 @@ class Placement(AbstractWork):
     report = models.FileField(_('Placement report'), upload_to=upload_to_placement_report, blank=True, null=True, validators=[validate_pdf, validate_size])
     report_uploaded_date = models.DateTimeField(blank=True, null=True)
     certificate = models.FileField(_('Placement certificate'), upload_to=upload_to_placement_certificate, blank=True, null=True, validators=[validate_pdf, validate_size])
+    state = models.CharField(_('State'), choices=PLACEMENT_STATE_CHOICES, max_length=100, default='Not requested')
+    completed = models.CharField(_('Completed'), choices=PLACEMENT_COMPLETED_CHOICES, max_length=100, default='-')
+    report_accepted = models.BooleanField(_('Report accepted'), default=False)
+    certificate_accepted = models.BooleanField(_('Certificate accepted'), default=False)
 
     def __str__(self):
         return u"Placement {}".format(self.student.user.username)

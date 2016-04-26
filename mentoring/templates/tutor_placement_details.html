@@ -59,6 +59,7 @@
                                         <input class="" id="id_report" name="placement_form-report" title="" type="file"></div>
                                 </div>
                             </div>
+                            {% bootstrap_field placement_form.report_accepted %}
                             <div class="form-group">
                                 <label class="control-label" for="id_certificate">{% trans 'Placement certificate' %}</label>
                                 <div class="row bootstrap3-multi-input">
@@ -73,6 +74,7 @@
                                         <input class="" id="id_certificate" name="placement_form-certificate" title="" type="file"></div>
                                 </div>
                             </div>
+                            {% bootstrap_field placement_form.certificate_accepted %}
                             {% bootstrap_field placement_form.company_name bound_css_class=' ' %}
                             {% bootstrap_field placement_form.company_address bound_css_class=' ' %}
                             <div class="panel panel-default">
