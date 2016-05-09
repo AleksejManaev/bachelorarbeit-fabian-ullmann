@@ -3,6 +3,7 @@ import os
 from thread import start_new_thread
 
 import pypdftk
+import pytz
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -286,7 +287,7 @@ class TutorView(View):
                     help_message_dict[placement.id].append('Datum Vorstellung im Kolloquium fehlt')
 
             context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'placement_states': PLACEMENT_STATE_CHOICES,
-                       'placement_completed_states': ABSTRACTWORK_COMPLETED_CHOICES, 'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES, 'help_message_dict': help_message_dict}
+                       'placement_completed_states': ABSTRACTWORK_COMPLETED_CHOICES, 'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES, 'help_message_dict': help_message_dict, 'thesis_choices': THESIS_CHOICES}
 
             # Dictionary mit den Gesamtnoten zu den Abschlussarbeiten
             thesis_final_grade_dict = {}

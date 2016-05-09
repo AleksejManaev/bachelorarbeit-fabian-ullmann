@@ -199,7 +199,21 @@
                                 </thead>
                                 <tbody>
                                 {% for thesis in theses %}
-                                    <tr>
+                                    <tr
+                                            {% if thesis.type == thesis_choices.0.0 %}
+                                                {% if thesis.deadline|deadline_bachelor_soon %}
+                                                    class="warning"
+                                                {% elif thesis.examination_office_state == examination_office_states.2.0 %}
+                                                    class="info"
+                                                {% endif %}
+                                            {% elif thesis.type == thesis_choices.1.0 %}
+                                                {% if thesis.deadline|deadline_master_soon %}
+                                                    class="warning"
+                                                {% elif thesis.examination_office_state == examination_office_states.2.0 %}
+                                                    class="info"
+                                                {% endif %}
+                                            {% endif %}
+                                    >
                                         <td>
                                             <a href="{% url 'comments' thesis.id %}" title="{% trans 'Comments' %}">
                                                 <button type="button" class="btn btn-default center-block"

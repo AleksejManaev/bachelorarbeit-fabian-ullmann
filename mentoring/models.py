@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal
 
+import pytz
 from django.contrib.auth.models import AbstractUser
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -231,6 +232,14 @@ class Thesis(AbstractWork):
     deadline = models.DateTimeField(_('Deadline'), null=True, blank=True)
     deadline_extended = models.BooleanField(_('Deadline extended'), default=False)
     colloquium_done = models.BooleanField(_('Colloquium done'), default=False)
+
+    def save(self, *args, **kwargs):
+        # Zeitzone anpassen und somit den richtigen Tag setzen
+        deadline = getattr(self, 'deadline')
+        if deadline:
+            self.deadline = deadline.replace(tzinfo=pytz.timezone('UTC'))
+
+        super(Thesis, self).save(*args, **kwargs)
 
 
 class StudentActiveThesis(models.Model):

@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 
+import pytz
 from django import template
 from django.utils.translation import ugettext_lazy as _
 
@@ -8,6 +9,22 @@ __author__ = 'ullmanfa'
 register = template.Library()
 
 numeric_test = re.compile("^\d+$")
+
+
+@register.filter
+def deadline_bachelor_soon(deadline, *args):
+    if deadline and (deadline - datetime.now(tz=pytz.utc)).days <= 21:
+        return True
+    else:
+        return False
+
+
+@register.filter
+def deadline_master_soon(deadline, *args):
+    if deadline and (deadline - datetime.now(tz=pytz.utc)).days <= 28:
+        return True
+    else:
+        return False
 
 
 @register.filter
