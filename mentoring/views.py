@@ -1128,7 +1128,5 @@ class StudentThesisSeminarEntryView(TemplateView):
 
                 # Ob Expose eingereicht
                 context['expose'] = studentactivethesis.expose
-                print context['expose']
-                print studentactivethesis.expose
 
         return context
