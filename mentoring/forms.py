@@ -59,6 +59,7 @@ class FormThesis(forms.ModelForm):
         super(FormThesis, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance.mentoring_requested:
+            self.fields['type'].widget.attrs['disabled'] = True
             self.fields['task'].widget.attrs['disabled'] = True
             self.fields['tutor'].widget.attrs['disabled'] = True
 

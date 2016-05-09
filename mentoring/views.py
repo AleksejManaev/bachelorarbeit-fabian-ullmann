@@ -139,6 +139,7 @@ class StudentThesisFormView(UpdateView):
             post = request.POST.copy()
             post['thesis_form-tutor'] = thesis.tutor
             post['thesis_form-task'] = thesis.task
+            post['thesis_form-type'] = thesis.type
             thesis_form_dict = self.get_context_thesis(post, files=request.FILES)
         else:
             thesis_form_dict = self.get_context_thesis(request.POST, files=request.FILES)
