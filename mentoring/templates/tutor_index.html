@@ -130,7 +130,8 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select {% if placement.state == 'Placement completed' or placement.state == 'Placement failed' or placement.state == 'Requested' or placement.state == 'Mentoring denied' %} disabled {% endif %}name="completed" form="{{ placement.id }}">
+                                            <select {% if placement.state == 'Placement completed' or placement.state == 'Placement failed' or placement.state == 'Requested' or placement.state == 'Mentoring denied' %}
+                                                disabled {% endif %}name="completed" form="{{ placement.id }}">
                                                 {% for state in placement_completed_states %}
                                                     {% ifequal state.0 placement.completed %}
                                                         <option value="{{ state.0 }}" selected="selected">{% trans state.1 %}</option>
@@ -215,8 +216,7 @@
                                         <td><a href="mailto:{{ thesis.student.user.email }}">{{ thesis.student.user.email }}</a></td>
                                         <td>{{ thesis.student.course }}</td>
                                         <td>
-                                            <select {% if thesis.mentoring_accepted == 'MD' or thesis.mentoring_accepted == 'MA' %} disabled {% endif %} name="mentoring_accepted"
-                                                                                                                                    form="{{ thesis.id }}">
+                                            <select {% if thesis.mentoring_accepted == 'MD' or thesis.mentoring_accepted == 'MA' %} disabled {% endif %} name="mentoring_accepted" form="{{ thesis.id }}">
                                                 {% for state in mentoring_states %}
                                                     {% ifequal state.0 thesis.mentoring_accepted %}
                                                         <option value="{{ state.0 }}" selected="selected">{% trans state.1 %}</option>
@@ -242,7 +242,14 @@
                                                     {% if thesis.deadline %} value="{{ thesis.deadline|date:"d.m.Y" }}"{% endif %} form="{{ thesis.id }}" size="11">
                                         </td>
                                         <td>
-                                            {{ thesis.grade_first_examiner }} | {{ thesis.grade_second_examiner }} | {{ thesis.grade_presentation }}
+                                            <nobr>
+                                                {{ thesis.grade_first_examiner|default_if_none:"-" }} | {{ thesis.grade_second_examiner|default_if_none:"-" }} | {{ thesis.grade_presentation|default_if_none:"-" }}
+                                                {% for thesis_id, final_grade in thesis_final_grade_dict.items %}
+                                                    {% ifequal thesis.id thesis_id %}
+                                                        | <b>{{ final_grade }}</b>
+                                                    {% endifequal %}
+                                                {% endfor %}
+                                            </nobr>
                                         </td>
                                         <td>
                                             <input  {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %}

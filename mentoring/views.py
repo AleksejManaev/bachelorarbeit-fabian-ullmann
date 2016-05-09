@@ -287,6 +287,29 @@ class TutorView(View):
 
             context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'placement_states': PLACEMENT_STATE_CHOICES,
                        'placement_completed_states': ABSTRACTWORK_COMPLETED_CHOICES, 'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES, 'help_message_dict': help_message_dict}
+
+            # Dictionary mit den Gesamtnoten zu den Abschlussarbeiten
+            thesis_final_grade_dict = {}
+            for thesis in theses:
+                if thesis.grade_first_examiner and thesis.grade_second_examiner and thesis.grade_presentation:
+                    final_grade = thesis.grade_first_examiner * Decimal('0.375') + thesis.grade_second_examiner * Decimal('0.375') + thesis.grade_presentation * Decimal('0.25')
+                    final_grade_rounded = round(final_grade, 1)
+
+                    final_grade_valid = None
+                    for grade in GRADE_CHOICES:
+                        if final_grade_rounded == grade[0]:
+                            final_grade_valid = grade
+                            break
+                        elif final_grade_rounded > grade[0]:
+                            continue
+                        else:
+                            final_grade_valid = grade
+                            break
+
+                    thesis_final_grade_dict[thesis.id] = final_grade_valid[0]
+            context['thesis_final_grade_dict'] = thesis_final_grade_dict
+
+            # Signalisieren, dass Der Abschlussarbeiten-Tab aktiv sein soll bei der Anzeige
             if 'is_thesis' in request.session:
                 context['is_thesis'] = request.session['is_thesis']
 

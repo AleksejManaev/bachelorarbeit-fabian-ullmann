@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from decimal import Decimal
 
 from django.contrib.auth.models import AbstractUser
 from django.utils.encoding import python_2_unicode_compatible
@@ -52,17 +53,17 @@ THESIS_CHOICES = (
 )
 
 GRADE_CHOICES = (
-    ('-', '-'),
-    ('1,0', '1,0'),
-    ('1,3', '1,3'),
-    ('1,7', '1,7'),
-    ('2,0', '2,0'),
-    ('2,3', '2,3'),
-    ('3,0', '3,0'),
-    ('3,3', '3,3'),
-    ('3,7', '3,7'),
-    ('4,0', '4,0'),
-    ('5,0', '5,0')
+    (Decimal('1.0'), '1,0'),
+    (Decimal('1.3'), '1,3'),
+    (Decimal('1.7'), '1,7'),
+    (Decimal('2.0'), '2,0'),
+    (Decimal('2.3'), '2,3'),
+    (Decimal('2.7'), '2,7'),
+    (Decimal('3.0'), '3,0'),
+    (Decimal('3.3'), '3,3'),
+    (Decimal('3.7'), '3,7'),
+    (Decimal('4.0'), '4,0'),
+    (Decimal('5.0'), '5,0')
 )
 
 EXAMINATION_OFFICE_STATE_CHOICES = (
@@ -223,9 +224,9 @@ class Thesis(AbstractWork):
     thesis = models.FileField(_('Thesis'), upload_to=upload_to_thesis_thesis, blank=True, null=True, validators=[validate_pdf, validate_size])
     presentation = models.FileField(_('Presentation'), upload_to=upload_to_thesis_presentation, blank=True, null=True)
     other = models.FileField(_('Other'), upload_to=upload_to_thesis_other, blank=True, null=True)
-    grade_first_examiner = models.CharField(_('Grade first examiner'), max_length=3, choices=GRADE_CHOICES, default='-')
-    grade_second_examiner = models.CharField(_('Grade second examiner'), max_length=3, choices=GRADE_CHOICES, default='-')
-    grade_presentation = models.CharField(_('Grade presentation'), max_length=3, choices=GRADE_CHOICES, default='-')
+    grade_first_examiner = models.DecimalField(_('Grade first examiner'), choices=GRADE_CHOICES, blank=True, null=True, decimal_places=1, max_digits=2)
+    grade_second_examiner = models.DecimalField(_('Grade second examiner'), choices=GRADE_CHOICES, blank=True, null=True, decimal_places=1, max_digits=2)
+    grade_presentation = models.DecimalField(_('Grade presentation'), choices=GRADE_CHOICES, blank=True, null=True, decimal_places=1, max_digits=2)
     examination_office_state = models.CharField(_('Examination office state'), max_length=100, choices=EXAMINATION_OFFICE_STATE_CHOICES, default='1A')
     deadline = models.DateTimeField(_('Deadline'), null=True, blank=True)
     deadline_extended = models.BooleanField(_('Deadline extended'), default=False)
