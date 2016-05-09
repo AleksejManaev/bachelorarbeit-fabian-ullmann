@@ -22,7 +22,7 @@ PLACEMENT_STATE_CHOICES = (
     ('Archived', _('Archived'))
 )
 
-PLACEMENT_COMPLETED_CHOICES = (
+ABSTRACTWORK_COMPLETED_CHOICES = (
     ('-', '-'),
     ('Completed', _('Completed')),
     ('Failed', _('Failed'))
@@ -83,6 +83,12 @@ COURSE_CHOICES = (
     ('M-DM', 'M-DM')
 )
 
+SEMINAR_TYPE_CHOICES = (
+    ('placement', 'placement'),
+    ('bachelor', 'bachelor'),
+    ('master', 'master'),
+)
+
 
 class MentoringUser(AbstractUser):
     gidNumber = models.IntegerField(null=True)
@@ -100,6 +106,7 @@ class PortalUser(ContactModel):
 @python_2_unicode_compatible
 class Tutor(PortalUser):
     placement_responsible = models.BooleanField(default=False, null=False, blank=False)
+    thesis_responsible = models.BooleanField(default=False, null=False, blank=False)
 
     @property
     def get_full_name(self):
@@ -109,16 +116,18 @@ class Tutor(PortalUser):
         return u"{} {} {}".format(self.title, self.user.first_name, self.user.last_name)
 
 
-class PlacementSeminar(models.Model):
-    placement_year = models.IntegerField(_('Placement year'), blank=True, null=True, unique=True)
+class Seminar(models.Model):
+    year = models.IntegerField(_('Year'), blank=True, null=True)
+    type = models.CharField(_('Seminar type'), max_length=10, choices=SEMINAR_TYPE_CHOICES)
 
     class Meta:
-        verbose_name = _('Placement seminar')
+        verbose_name = _('Seminar')
+        unique_together = ('year', 'type')
 
 
-class PlacementSeminarEntry(models.Model):
+class SeminarEntry(models.Model):
     date = models.DateTimeField()
-    placement_seminar = models.ForeignKey(PlacementSeminar)
+    seminar = models.ForeignKey(Seminar)
 
 
 @python_2_unicode_compatible
@@ -127,9 +136,15 @@ class Student(PortalUser):
     course = models.CharField(_('Course'), max_length=30, choices=COURSE_CHOICES, default='-')
     extern_email = models.EmailField(_('extern email address'), null=True, blank=True)
     placement_year = models.IntegerField(_('Placement year'), blank=True, null=True)
-    presentation_date = models.ForeignKey(PlacementSeminarEntry, blank=True, null=True, related_name='presentation_student')
+    bachelor_year = models.IntegerField(_('Bachelor year'), blank=True, null=True)
+    master_year = models.IntegerField(_('Master year'), blank=True, null=True)
+    placement_seminar_presentation_date = models.ForeignKey(SeminarEntry, blank=True, null=True, related_name='placement_seminar_presentation_student')
+    bachelor_seminar_presentation_date = models.ForeignKey(SeminarEntry, blank=True, null=True, related_name='bachelor_seminar_presentation_student')
+    master_seminar_presentation_date = models.ForeignKey(SeminarEntry, blank=True, null=True, related_name='master_seminar_presentation_student')
     placement_seminar_done = models.BooleanField(_('Placement seminar done'), default=False)
-    placement_seminar_entries = models.ManyToManyField(PlacementSeminarEntry, blank=True, related_name='seminar_students')
+    bachelor_seminar_done = models.BooleanField(_('Bachelor seminar done'), default=False)
+    master_seminar_done = models.BooleanField(_('Master seminar done'), default=False)
+    seminar_entries = models.ManyToManyField(SeminarEntry, blank=True, related_name='seminar_students')
 
     def __str__(self):
         return u"{} ({})".format(self.user.get_full_name(), self.matriculation_number)
@@ -156,6 +171,7 @@ class AbstractWork(models.Model):
     mentoring_requested = models.BooleanField(_('Requested'), default=False)
     mentoring_accepted = models.CharField(max_length=2, choices=MENTORING_STATE_CHOICES, default='ND')
     archived = models.BooleanField(_('Archived'), default=False)
+    completed = models.CharField(_('Completed'), choices=ABSTRACTWORK_COMPLETED_CHOICES, max_length=100, default='-')
 
     def __str__(self):
         return "AbstractWork {}".format(self.pk)
@@ -171,7 +187,6 @@ class Placement(AbstractWork):
     report_uploaded_date = models.DateTimeField(blank=True, null=True)
     certificate = models.FileField(_('Placement certificate'), upload_to=upload_to_placement_certificate, blank=True, null=True, validators=[validate_pdf, validate_size])
     state = models.CharField(_('State'), choices=PLACEMENT_STATE_CHOICES, max_length=100, default='Not requested')
-    completed = models.CharField(_('Completed'), choices=PLACEMENT_COMPLETED_CHOICES, max_length=100, default='-')
     report_accepted = models.BooleanField(_('Report accepted'), default=False)
     certificate_accepted = models.BooleanField(_('Certificate accepted'), default=False)
 
@@ -203,6 +218,7 @@ class Thesis(AbstractWork):
     second_examiner_last_name = models.CharField(_('Last name'), max_length=30, null=True, blank=True)
     second_examiner_organisation = models.CharField(_('Organisation'), max_length=30, null=True, blank=True)
     second_examiner_title = models.CharField(_('title'), max_length=30, null=True, blank=True)
+    expose = models.FileField(_('Expose'), upload_to=upload_to_thesis_expose, blank=True, null=True, validators=[validate_pdf, validate_size])
     poster = models.FileField(_('Poster'), upload_to=upload_to_thesis_poster, blank=True, null=True, validators=[validate_pdf, validate_size])
     thesis = models.FileField(_('Thesis'), upload_to=upload_to_thesis_thesis, blank=True, null=True, validators=[validate_pdf, validate_size])
     presentation = models.FileField(_('Presentation'), upload_to=upload_to_thesis_presentation, blank=True, null=True)

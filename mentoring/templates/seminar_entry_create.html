@@ -20,7 +20,7 @@
                     <div class="panel-body">
                         <form enctype="multipart/form-data" action="" method="post" class="form">
                             {% csrf_token %}
-                            <input type="hidden" id="id_seminar" name="seminar" value="{{ placement_seminar_id }}">
+                            <input type="hidden" id="id_seminar" name="seminar" value="{{ seminar_id }}">
                             <div class="form-group">
                                 <label class="control-label" for="date">{% trans 'Date' %}</label>
                                 <input class="form-control datepicker" id="date" name="date" placeholder="{% trans 'Date' %}"

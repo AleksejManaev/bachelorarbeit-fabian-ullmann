@@ -192,7 +192,7 @@ class StudentCompletedThesesView(View):
         return render(request, self.template_name, self.get_completed_theses())
 
     def get_completed_theses(self):
-        return {'completed_theses': Thesis.objects.filter(student=self.request.user.portaluser.student, completed=True)}
+        return {'completed_theses': Thesis.objects.filter(student=self.request.user.portaluser.student, completed=ABSTRACTWORK_COMPLETED_CHOICES[1][0])}
 
 
 class StudentSettingsFormView(UpdateView):
@@ -228,11 +228,11 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-                student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
-                                                        prefix='student_user_formset'),
-                student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
-                                                              prefix='student_address_formset')
+            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+            student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
+                                                    prefix='student_user_formset'),
+            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
+                                                          prefix='student_address_formset')
         )
 
     def get_object(self, queryset=None):
@@ -281,10 +281,11 @@ class TutorView(View):
                     help_message_dict[placement.id].append('Aufgabe fehlt')
                 if not placement.report_uploaded_date:
                     help_message_dict[placement.id].append('Datum Vorlage des Praktikumsberichts fehlt')
-                if not placement.student.presentation_date:
+                if not placement.student.placement_seminar_presentation_date:
                     help_message_dict[placement.id].append('Datum Vorstellung im Kolloquium fehlt')
 
-            context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'placement_states': PLACEMENT_STATE_CHOICES, 'placement_completed_states': PLACEMENT_COMPLETED_CHOICES, 'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES, 'help_message_dict': help_message_dict}
+            context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'placement_states': PLACEMENT_STATE_CHOICES,
+                       'placement_completed_states': ABSTRACTWORK_COMPLETED_CHOICES, 'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES, 'help_message_dict': help_message_dict}
             if 'is_thesis' in request.session:
                 context['is_thesis'] = request.session['is_thesis']
 
@@ -464,9 +465,9 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-                tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
-                                                    prefix='tutor_user_formset')
+            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
+                                                prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
@@ -514,7 +515,7 @@ class TutorPlacementView(UpdateView):
 
 class TutorThesisView(UpdateView):
     model = Thesis
-    fields = ['type', 'task', 'poster', 'thesis', 'presentation', 'other', 'second_examiner_title', 'second_examiner_first_name', 'second_examiner_last_name',
+    fields = ['type', 'task', 'expose', 'poster', 'thesis', 'presentation', 'other', 'second_examiner_title', 'second_examiner_first_name', 'second_examiner_last_name',
               'second_examiner_organisation', 'colloquium_done', 'deadline_extended', 'deadline', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation']
     template_name = 'tutor_thesis_details.html'
     exclude = ['student', 'tutor', 'mentoring_requested', 'mentoring_accepted']
@@ -633,38 +634,45 @@ def send_comment_email(recipient_list, html_message):
 
 
 class PlacementSeminarListView(ListView):
-    model = PlacementSeminar
+    context_object_name = 'placement_seminar_list'
+    queryset = Seminar.objects.filter(type=SEMINAR_TYPE_CHOICES[0][0])
     template_name = 'placement_seminar_list.html'
 
 
 class PlacementSeminarCreateView(CreateView):
-    model = PlacementSeminar
-    template_name = 'placement_seminar_create.html'
-    fields = '__all__'
-
-    def get_success_url(self):
-        return reverse('placement-seminar-list')
-
-
-class PlacementSeminarUpdateView(UpdateView):
-    model = PlacementSeminar
-    template_name = 'placement_seminar_update.html'
+    model = Seminar
+    template_name = 'seminar_create.html'
     fields = '__all__'
 
     def get_success_url(self):
         return reverse('placement-seminar-list')
 
     def get_context_data(self, **kwargs):
+        context = super(PlacementSeminarCreateView, self).get_context_data(**kwargs)
+        context['seminar_type'] = SEMINAR_TYPE_CHOICES[0][0]
+        return context
+
+
+class PlacementSeminarUpdateView(UpdateView):
+    model = Seminar
+    template_name = 'placement_seminar_update.html'
+    fields = ['year']
+
+    def get_success_url(self):
+        return reverse('placement-seminar-list')
+
+    def get_context_data(self, **kwargs):
         context = super(PlacementSeminarUpdateView, self).get_context_data(**kwargs)
-        students = Student.objects.filter(placement_year=self.get_object().placement_year).order_by('matriculation_number')
-        entrys = PlacementSeminarEntry.objects.filter(placement_seminar=self.get_object().id).order_by('date')
+        students = Student.objects.filter(placement_year=self.get_object().year).order_by('matriculation_number')
+        entrys = SeminarEntry.objects.filter(seminar=self.get_object().id, seminar__type=SEMINAR_TYPE_CHOICES[0][0]).order_by('date')
         numbers_present_dict = {}
 
         for student in students:
             numbers_present_dict[student.id] = 0
 
         for student in students:
-            for entry in student.placement_seminar_entries.all():
+            student_entrys = student.seminar_entries.all().filter(seminar__type=SEMINAR_TYPE_CHOICES[0][0])
+            for entry in student_entrys:
                 if student.id in numbers_present_dict:
                     numbers_present = numbers_present_dict[student.id]
                     numbers_present_dict[student.id] = numbers_present + 1
@@ -676,12 +684,12 @@ class PlacementSeminarUpdateView(UpdateView):
 
 
 class PlacementSeminarEntryCreateView(CreateView):
-    model = PlacementSeminarEntry
+    model = SeminarEntry
     template_name = 'placement_seminar_entry_create.html'
-    fields = ['date', 'placement_seminar']
+    fields = '__all__'
 
     def get_success_url(self):
-        return reverse('placement-seminar-update', args=[self.object.placement_seminar.id])
+        return reverse('placement-seminar-update', args=[self.object.seminar.id])
 
     def get_context_data(self, **kwargs):
         context = super(PlacementSeminarEntryCreateView, self).get_context_data(**kwargs)
@@ -689,21 +697,20 @@ class PlacementSeminarEntryCreateView(CreateView):
         return context
 
 
-class SeminarEntryProcessView(View):
+class PlacementSeminarEntryProcessView(View):
     @transaction.atomic
     def post(self, request):
         checked_student_entry_list = []
         presentation_done_student_list = []
         checked_student_placement_seminar_list = []
         placement_seminar_id = int(request.POST.get('placement_seminar'))
-        placement_seminar = PlacementSeminar.objects.get(pk=placement_seminar_id)
-        all_seminar_students = Student.objects.filter(placement_year=placement_seminar.placement_year)
-        all_seminar_entrys = PlacementSeminarEntry.objects.filter(placement_seminar=placement_seminar_id)
+        placement_seminar = Seminar.objects.get(pk=placement_seminar_id)
+        all_seminar_students = Student.objects.filter(placement_year=placement_seminar.year)
+        all_seminar_entrys = SeminarEntry.objects.filter(seminar=placement_seminar_id)
 
         for key in request.POST:
             splitted_key = key.split('_')
-            if key != 'csrfmiddlewaretoken' and not key.startswith('presentation_done') and key != 'placement_seminar' and not key.startswith(
-                    'placement_seminar_done'):
+            if key != 'csrfmiddlewaretoken' and not key.startswith('presentation_done') and key != 'placement_seminar' and not key.startswith('placement_seminar_done'):
                 entry_id = int(splitted_key[0])
                 student_id = int(splitted_key[1])
                 checked_student_entry_list.append([student_id, entry_id])
@@ -721,9 +728,9 @@ class SeminarEntryProcessView(View):
                 if student.id == student_presentation[0]:
                     presentation_date_id = student_presentation[1]
                     if presentation_date_id:
-                        student.presentation_date = PlacementSeminarEntry.objects.get(id=int(presentation_date_id))
+                        student.placement_seminar_presentation_date = SeminarEntry.objects.get(id=int(presentation_date_id))
                     else:
-                        student.presentation_date = None
+                        student.placement_seminar_presentation_date = None
 
             if student.id in checked_student_placement_seminar_list:
                 student.placement_seminar_done = True
@@ -755,17 +762,272 @@ class SeminarEntryProcessView(View):
         return redirect('placement-seminar-update', pk=placement_seminar_id)
 
 
-class SeminarEntryDeleteView(DeleteView):
-    model = PlacementSeminarEntry
-    template = ''
+class PlacementSeminarEntryDeleteView(DeleteView):
+    model = SeminarEntry
 
     def get_success_url(self):
-        return reverse('placement-seminar-update', args=[self.get_object().placement_seminar.id])
+        return reverse('placement-seminar-update', args=[self.get_object().seminar.id])
 
     def delete(self, request, *args, **kwargs):
         entry = self.get_object()
         success_url = self.get_success_url()
-        Student.objects.filter(presentation_date=entry).update(presentation_date=None)
+        Student.objects.filter(placement_seminar_presentation_date=entry).update(placement_seminar_presentation_date=None)
+        entry.seminar_students.remove()
+        entry.delete()
+        return HttpResponseRedirect(success_url)
+
+
+class ThesisSeminarView(View):
+    template_name = 'thesis_seminar_list.html'
+
+    def get(self, request):
+        context = {'bachelor_seminar_list': Seminar.objects.filter(type=SEMINAR_TYPE_CHOICES[1][0]),
+                   'master_seminar_list': Seminar.objects.filter(type=SEMINAR_TYPE_CHOICES[2][0])
+                   }
+        return render(request, self.template_name, context)
+
+
+class BachelorSeminarCreateView(CreateView):
+    model = Seminar
+    template_name = 'seminar_create.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('thesis-seminar-list')
+
+    def get_context_data(self, **kwargs):
+        context = super(BachelorSeminarCreateView, self).get_context_data(**kwargs)
+        context['seminar_type'] = SEMINAR_TYPE_CHOICES[1][0]
+        return context
+
+
+class BachelorSeminarUpdateView(UpdateView):
+    model = Seminar
+    template_name = 'thesis_bachelor_seminar_update.html'
+    fields = ['year']
+
+    def get_success_url(self):
+        return reverse('thesis-seminar-list')
+
+    def get_context_data(self, **kwargs):
+        context = super(BachelorSeminarUpdateView, self).get_context_data(**kwargs)
+        students = Student.objects.filter(bachelor_year=self.get_object().year).order_by('matriculation_number')
+        entrys = SeminarEntry.objects.filter(seminar=self.get_object().id, seminar__type=SEMINAR_TYPE_CHOICES[1][0]).order_by('date')
+        numbers_present_dict = {}
+
+        for student in students:
+            numbers_present_dict[student.id] = 0
+
+        for student in students:
+            student_entrys = student.seminar_entries.all().filter(seminar__type=SEMINAR_TYPE_CHOICES[1][0])
+            for entry in student_entrys:
+                if student.id in numbers_present_dict:
+                    numbers_present = numbers_present_dict[student.id]
+                    numbers_present_dict[student.id] = numbers_present + 1
+
+        context['students'] = students
+        context['entrys'] = entrys
+        context['numbers_present_dict'] = numbers_present_dict
+        return context
+
+
+class BachelorSeminarEntryProcessView(View):
+    @transaction.atomic
+    def post(self, request):
+        checked_student_entry_list = []
+        presentation_done_student_list = []
+        checked_student_placement_seminar_list = []
+        thesis_seminar_id = int(request.POST.get('bachelor_seminar'))
+        thesis_seminar = Seminar.objects.get(pk=thesis_seminar_id)
+        all_seminar_students = Student.objects.filter(bachelor_year=thesis_seminar.year)
+        all_seminar_entrys = SeminarEntry.objects.filter(seminar=thesis_seminar_id)
+
+        for key in request.POST:
+            splitted_key = key.split('_')
+            if key != 'csrfmiddlewaretoken' and not key.startswith('presentation_done') and key != 'bachelor_seminar' and not key.startswith('bachelor_seminar_done'):
+                entry_id = int(splitted_key[0])
+                student_id = int(splitted_key[1])
+                checked_student_entry_list.append([student_id, entry_id])
+            if key.startswith('presentation_done'):
+                student_id = int(splitted_key[2])
+                presentation_date_id = request.POST.get(key)
+                presentation_done_student_list.append([student_id, presentation_date_id])
+            if key.startswith('bachelor_seminar_done'):
+                student_id = int(splitted_key[3])
+                checked_student_placement_seminar_list.append(student_id)
+
+        for student in all_seminar_students:
+            for student_presentation in presentation_done_student_list:
+                if student.id == student_presentation[0]:
+                    presentation_date_id = student_presentation[1]
+                    if presentation_date_id:
+                        student.bachelor_seminar_presentation_date = SeminarEntry.objects.get(id=int(presentation_date_id))
+                    else:
+                        student.bachelor_seminar_presentation_date = None
+
+            if student.id in checked_student_placement_seminar_list:
+                student.bachelor_seminar_done = True
+            else:
+                student.bachelor_seminar_done = False
+            student.save()
+
+            for entry in all_seminar_entrys:
+                student_entry = [student.id, entry.id]
+                if student_entry in checked_student_entry_list:
+                    entry.seminar_students.add(student)
+                else:
+                    entry.seminar_students.remove(student)
+                entry.save()
+        return redirect('bachelor-seminar-update', pk=thesis_seminar_id)
+
+
+class BachelorSeminarEntryCreateView(CreateView):
+    model = SeminarEntry
+    template_name = 'seminar_entry_create.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('bachelor-seminar-update', args=[self.object.seminar.id])
+
+    def get_context_data(self, **kwargs):
+        context = super(BachelorSeminarEntryCreateView, self).get_context_data(**kwargs)
+        context['seminar_id'] = self.request.GET.get('bachelor_seminar')
+        return context
+
+
+class BachelorSeminarEntryDeleteView(DeleteView):
+    model = SeminarEntry
+
+    def get_success_url(self):
+        return reverse('bachelor-seminar-update', args=[self.get_object().seminar.id])
+
+    def delete(self, request, *args, **kwargs):
+        entry = self.get_object()
+        success_url = self.get_success_url()
+        Student.objects.filter(bachelor_seminar_presentation_date=entry).update(bachelor_seminar_presentation_date=None)
+        entry.seminar_students.remove()
+        entry.delete()
+        return HttpResponseRedirect(success_url)
+
+
+class MasterSeminarUpdateView(UpdateView):
+    model = Seminar
+    template_name = 'thesis_master_seminar_update.html'
+    fields = ['year']
+
+    def get_success_url(self):
+        return reverse('thesis-seminar-list')
+
+    def get_context_data(self, **kwargs):
+        context = super(MasterSeminarUpdateView, self).get_context_data(**kwargs)
+        students = Student.objects.filter(master_year=self.get_object().year).order_by('matriculation_number')
+        entrys = SeminarEntry.objects.filter(seminar=self.get_object().id, seminar__type=SEMINAR_TYPE_CHOICES[2][0]).order_by('date')
+        numbers_present_dict = {}
+
+        for student in students:
+            numbers_present_dict[student.id] = 0
+
+        for student in students:
+            student_entrys = student.seminar_entries.all().filter(seminar__type=SEMINAR_TYPE_CHOICES[2][0])
+            for entry in student_entrys:
+                if student.id in numbers_present_dict:
+                    numbers_present = numbers_present_dict[student.id]
+                    numbers_present_dict[student.id] = numbers_present + 1
+
+        context['students'] = students
+        context['entrys'] = entrys
+        context['numbers_present_dict'] = numbers_present_dict
+        return context
+
+
+class MasterSeminarCreateView(CreateView):
+    model = Seminar
+    template_name = 'seminar_create.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('thesis-seminar-list')
+
+    def get_context_data(self, **kwargs):
+        context = super(MasterSeminarCreateView, self).get_context_data(**kwargs)
+        context['seminar_type'] = SEMINAR_TYPE_CHOICES[2][0]
+        return context
+
+
+class MasterSeminarEntryProcessView(View):
+    @transaction.atomic
+    def post(self, request):
+        checked_student_entry_list = []
+        presentation_done_student_list = []
+        checked_student_placement_seminar_list = []
+        thesis_seminar_id = int(request.POST.get('master_seminar'))
+        thesis_seminar = Seminar.objects.get(pk=thesis_seminar_id)
+        all_seminar_students = Student.objects.filter(master_year=thesis_seminar.year)
+        all_seminar_entrys = SeminarEntry.objects.filter(seminar=thesis_seminar_id)
+
+        for key in request.POST:
+            splitted_key = key.split('_')
+            if key != 'csrfmiddlewaretoken' and not key.startswith('presentation_done') and key != 'master_seminar' and not key.startswith('master_seminar_done'):
+                entry_id = int(splitted_key[0])
+                student_id = int(splitted_key[1])
+                checked_student_entry_list.append([student_id, entry_id])
+            if key.startswith('presentation_done'):
+                student_id = int(splitted_key[2])
+                presentation_date_id = request.POST.get(key)
+                presentation_done_student_list.append([student_id, presentation_date_id])
+            if key.startswith('master_seminar_done'):
+                student_id = int(splitted_key[3])
+                checked_student_placement_seminar_list.append(student_id)
+
+        for student in all_seminar_students:
+            for student_presentation in presentation_done_student_list:
+                if student.id == student_presentation[0]:
+                    presentation_date_id = student_presentation[1]
+                    if presentation_date_id:
+                        student.master_seminar_presentation_date = SeminarEntry.objects.get(id=int(presentation_date_id))
+                    else:
+                        student.master_seminar_presentation_date = None
+
+            if student.id in checked_student_placement_seminar_list:
+                student.master_seminar_done = True
+            else:
+                student.master_seminar_done = False
+            student.save()
+
+            for entry in all_seminar_entrys:
+                student_entry = [student.id, entry.id]
+                if student_entry in checked_student_entry_list:
+                    entry.seminar_students.add(student)
+                else:
+                    entry.seminar_students.remove(student)
+                entry.save()
+        return redirect('master-seminar-update', pk=thesis_seminar_id)
+
+
+class MasterSeminarEntryCreateView(CreateView):
+    model = SeminarEntry
+    template_name = 'seminar_entry_create.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('master-seminar-update', args=[self.object.seminar.id])
+
+    def get_context_data(self, **kwargs):
+        context = super(MasterSeminarEntryCreateView, self).get_context_data(**kwargs)
+        context['seminar_id'] = self.request.GET.get('master_seminar')
+        return context
+
+
+class MasterSeminarEntryDeleteView(DeleteView):
+    model = SeminarEntry
+
+    def get_success_url(self):
+        return reverse('master-seminar-update', args=[self.get_object().seminar.id])
+
+    def delete(self, request, *args, **kwargs):
+        entry = self.get_object()
+        success_url = self.get_success_url()
+        Student.objects.filter(master_seminar_presentation_date=entry).update(master_seminar_presentation_date=None)
         entry.seminar_students.remove()
         entry.delete()
         return HttpResponseRedirect(success_url)
@@ -789,7 +1051,7 @@ def generate_placement_pdf(self, pk):
         'BetriebAnschrift': u"%s" % placement.company_address.replace('\r', ''),
         'Aufgabe': u"%s" % placement.task.replace('\r', ''),
         'BerichtDatum': u"%s" % placement.report_uploaded_date.strftime('%d.%m.%Y') if placement.report_uploaded_date else '',
-        'KolloquiumDatum': student.presentation_date.date.strftime('%d.%m.%Y') if student.presentation_date else '',
+        'KolloquiumDatum': student.placement_seminar_presentation_date.date.strftime('%d.%m.%Y') if student.placement_seminar_presentation_date else '',
         'AktuellesDatum': datetime.now().strftime("%d.%m.%Y")
     }
 
@@ -810,26 +1072,62 @@ def generate_placement_pdf(self, pk):
     return redirect('index')
 
 
-class StudentPlacementSeminarEntryListView(TemplateView):
-    # model = PlacementSeminarEntry
+class StudentPlacementSeminarEntryView(TemplateView):
     template_name = 'student_placement_seminar_entry_list.html'
 
     def get_context_data(self, **kwargs):
-        context = super(StudentPlacementSeminarEntryListView, self).get_context_data(**kwargs)
+        context = super(StudentPlacementSeminarEntryView, self).get_context_data(**kwargs)
         entries_list = []
 
         if hasattr(self.request.user, 'portaluser') and hasattr(self.request.user.portaluser, 'student'):
             student = self.request.user.portaluser.student
-            entries_all = PlacementSeminarEntry.objects.filter(placement_seminar__placement_year=student.placement_year)
-            entries_present_ids = student.placement_seminar_entries.values_list('id', flat=True)
+            entries_all = SeminarEntry.objects.filter(seminar__year=student.placement_year, seminar__type=SEMINAR_TYPE_CHOICES[0][0])
+            entries_present_ids = student.seminar_entries.values_list('id', flat=True)
 
-            # Alle Termine und ob der Student an diesem anwesend war in einer Liste zusammenfassen
+            # Alle Termine und ob der Student an diesen anwesend war in einer Liste zusammenfassen
             for entry in entries_all:
                 entries_list.append((entry, entry.id in entries_present_ids))
 
             # Kontextvariablen setzen
             context['entries_list'] = entries_list
-            context['presentation_date'] = student.presentation_date
+            context['presentation_date'] = student.placement_seminar_presentation_date
             context['placement_seminar_done'] = student.placement_seminar_done
+
+        return context
+
+
+class StudentThesisSeminarEntryView(TemplateView):
+    template_name = 'student_thesis_seminar_entry_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(StudentThesisSeminarEntryView, self).get_context_data(**kwargs)
+
+        if hasattr(self.request.user, 'portaluser') and hasattr(self.request.user.portaluser, 'student'):
+            student = self.request.user.portaluser.student
+            studentactivethesis = student.studentactivethesis.thesis
+
+            # Es werden entweder die Bachelorseminartermine oder die Masterseminartermine aufgelistet, je nachdem was für den Studenten gerade aktuell ist
+            if studentactivethesis:
+                entries_list = []
+
+                if studentactivethesis.type == THESIS_CHOICES[0][0]:
+                    entries_all = SeminarEntry.objects.filter(seminar__year=student.bachelor_year, seminar__type=SEMINAR_TYPE_CHOICES[1][0])
+                    context['presentation_date'] = student.bachelor_seminar_presentation_date
+                    context['seminar_done'] = student.bachelor_seminar_done
+                elif studentactivethesis.type == THESIS_CHOICES[1][0]:
+                    entries_all = SeminarEntry.objects.filter(seminar__year=student.master_year, seminar__type=SEMINAR_TYPE_CHOICES[2][0])
+                    context['presentation_date'] = student.master_seminar_presentation_date
+                    context['seminar_done'] = student.master_seminar_done
+
+                # Alle Termine und ob der Student an diesen anwesend war in einer Liste zusammenfassen
+                entries_present_ids = student.seminar_entries.values_list('id', flat=True)
+                for entry in entries_all:
+                    entries_list.append((entry, entry.id in entries_present_ids))
+                context['entries_list'] = entries_list
+
+                # Ob Expose eingereicht
+                context['expose'] = studentactivethesis.expose
+                print context['expose']
+                print studentactivethesis.expose
 
         return context

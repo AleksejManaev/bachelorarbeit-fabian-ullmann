@@ -113,7 +113,7 @@
                                             {{ placement.student.placement_seminar_entries.all|length }}
                                         </td>
                                         <td>
-                                            {{ placement.student.presentation_date.date|date:"d.m.Y"|default:"-" }}
+                                            {{ placement.student.placement_seminar_presentation_date.date|date:"d.m.Y"|default:"-" }}
                                         </td>
                                         <td>
                                             <select  {% if placement.mentoring_accepted == 'MD' or placement.mentoring_accepted == 'MA' %} disabled {% endif %}

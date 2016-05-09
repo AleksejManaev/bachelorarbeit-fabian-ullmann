@@ -17,7 +17,9 @@
                         <form enctype="multipart/form-data" action="" method="post" class="form">
                             {% csrf_token %}
 
-                            {% bootstrap_field form.placement_year bound_css_class=' ' %}
+                            <input type="hidden" id="id_type" name="type" value="{{ seminar_type }}">
+
+                            {% bootstrap_field form.year bound_css_class=' ' %}
 
                             {% buttons %}
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">

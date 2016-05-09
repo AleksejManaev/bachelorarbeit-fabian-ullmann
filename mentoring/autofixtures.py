@@ -7,16 +7,34 @@ from autofixture.generators import StaticGenerator
 # from django.contrib.auth.models import User
 from autofixture import AutoFixture
 from autofixture import generators
-from mentoring.models import Student, Tutor, Placement, MentoringUser as User, PlacementSeminar, PlacementSeminarEntry
+from mentoring.models import Student, Tutor, Placement, MentoringUser as User, Seminar, SeminarEntry, SEMINAR_TYPE_CHOICES
 
 import string
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 
+seminar_counter = 0
+
+
+class SeminarTypeFixture(StaticGenerator):
+    def __init__(self):
+        pass
+
+    def generate(self):
+        modulo = seminar_counter % 2
+        global seminar_counter
+        seminar_counter += 1
+
+        if modulo == 0:
+            return SEMINAR_TYPE_CHOICES[1][0]
+        else:
+            return SEMINAR_TYPE_CHOICES[0][0]
+
 
 class PlacementSeminarFixture(AutoFixture):
     field_values = {
-        'placement_year': 2017,
+        'year': generators.IntegerGenerator(min_value=2017, max_value=2017),
+        'type': SeminarTypeFixture()
     }
 
 
@@ -137,6 +155,8 @@ class MyStudentFixture(AutoFixture):
         'title': '',
         'phone': '03092751522',
         'placement_year': 2017,
+        'bachelor_year': 2017,
+        'master_year': 2017,
         'matriculation_number': generators.IntegerGenerator(min_value=20110000, max_value=20159999),
     }
 
@@ -147,12 +167,14 @@ class MyTutorFixture(AutoFixture):
         'title': 'Prof. Dr.',
         'phone': '03092751522',
         'placement_responsible': True,
+        'thesis_responsible': True,
     }
 
 
 class PlacementSeminarEntryFixture(AutoFixture):
     field_values = {
         'date': generators.DateTimeGenerator(min_date=datetime(2017, 1, 1), max_date=datetime(2018, 12, 31)),
+        # 'seminar': generators.InstanceSelector(Seminar, limit_choices_to={'type': SEMINAR_TYPE_CHOICES[0][0]})
     }
 
 
@@ -160,5 +182,5 @@ autofixture.register(User, UserFixture, fail_silently=True)
 autofixture.register(Student, MyStudentFixture)
 autofixture.register(Tutor, MyTutorFixture)
 autofixture.register(Placement, PlacementFixture)
-autofixture.register(PlacementSeminar, PlacementSeminarFixture)
-autofixture.register(PlacementSeminarEntry, PlacementSeminarEntryFixture)
+autofixture.register(Seminar, PlacementSeminarFixture)
+autofixture.register(SeminarEntry, PlacementSeminarEntryFixture)

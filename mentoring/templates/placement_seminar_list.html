@@ -15,14 +15,13 @@
                     </div>
                     <div class="panel-body">
                         <ul>
-                            {% for placement_seminar in object_list %}
+                            {% for placement_seminar in placement_seminar_list %}
                                 <li>
-                                    <a href="{% url 'placement-seminar-update' placement_seminar.id %}">{{ placement_seminar.placement_year }}</a>
+                                    <a href="{% url 'placement-seminar-update' placement_seminar.id %}">{{ placement_seminar.year }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
-                        <a href="{% url 'placement-seminar-create' %}" class="btn btn-primary"
-                           role="button">{% trans 'Create seminar' %}</a>
+                        <a href="{% url 'placement-seminar-create' %}" class="btn btn-primary" role="button">{% trans 'Create seminar' %}</a>
                     </div>
                 </div>
             </div>

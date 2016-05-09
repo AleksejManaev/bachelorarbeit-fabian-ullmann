@@ -28,6 +28,11 @@ def upload_to_placement_certificate(instance, filename):
     return uri
 
 
+def upload_to_thesis_expose(instance, filename):
+    uri = '%s/thesis/documents/expose/%s' % (instance.student.matriculation_number, filename)
+    return uri
+
+
 def upload_to_thesis_thesis(instance, filename):
     uri = '%s/thesis/documents/thesis/%s' % (instance.student.matriculation_number, filename)
     return uri
@@ -37,13 +42,16 @@ def upload_to_thesis_poster(instance, filename):
     uri = '%s/thesis/documents/poster/%s' % (instance.student.matriculation_number, filename)
     return uri
 
+
 def upload_to_thesis_presentation(instance, filename):
     uri = '%s/thesis/documents/presentation/%s' % (instance.student.matriculation_number, filename)
     return uri
 
+
 def upload_to_thesis_other(instance, filename):
     uri = '%s/thesis/documents/other/%s' % (instance.student.matriculation_number, filename)
     return uri
+
 
 class ContentTypeRestrictedFileField(models.FileField):
     """

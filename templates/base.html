@@ -42,14 +42,23 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 {% if user.portaluser.tutor and user.portaluser.tutor.placement_responsible %}
-                <li>
-                    <a href="{% url 'placement-seminar-list' %}" title="{% trans 'Placement seminars' %}">
-                        <button type="button" class="btn btn-default  btn-lg">
-                            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-                        </button>
-                    </a>
-                </li>
-                {%  endif %}
+                    <li>
+                        <a href="{% url 'placement-seminar-list' %}" title="{% trans 'Placement seminars' %}">
+                            <button type="button" class="btn btn-default  btn-lg">
+                                <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+                            </button>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if user.portaluser.tutor and user.portaluser.tutor.thesis_responsible %}
+                    <li>
+                        <a href="{% url 'thesis-seminar-list' %}" title="{% trans 'Thesis seminars' %}">
+                            <button type="button" class="btn btn-default  btn-lg">
+                                <span class="glyphicon glyphicon-education" aria-hidden="true"></span>
+                            </button>
+                        </a>
+                    </li>
+                {% endif %}
                 <li>
                     <a href="{% url 'index' %}" title="{% trans 'Home' %}">
                         <button type="button" class="btn btn-default  btn-lg">

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+{% load staticfiles %}
+{% load filter %}
+
+
+{% block content %}
+    <div class="container center-vertically">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">{% trans 'Bachelor thesis seminars' %}</h1>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            {% for bachelor_seminar in bachelor_seminar_list %}
+                                <li>
+                                    <a href="{% url 'bachelor-seminar-update' bachelor_seminar.id %}">{{ bachelor_seminar.year }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'bachelor-seminar-create' %}" class="btn btn-primary" role="button">{% trans 'Create seminar' %}</a>
+                    </div>
+                </div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">{% trans 'Master thesis seminars' %}</h1>
+                    </div>
+                    <div class="panel-body">
+                       <ul>
+                            {% for master_seminar in master_seminar_list %}
+                                <li>
+                                    <a href="{% url 'master-seminar-update' master_seminar.id %}">{{ master_seminar.year }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'master-seminar-create' %}" class="btn btn-primary" role="button">{% trans 'Create seminar' %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

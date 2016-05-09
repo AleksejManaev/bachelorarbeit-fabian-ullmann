@@ -9,7 +9,7 @@
             <div class="col-md-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h1 class="panel-title">{% trans 'Placement seminar appointments' %}</h1>
+                        <h1 class="panel-title">{% trans 'Thesis seminar appointments' %}</h1>
                     </div>
 
                     <div class="panel-body">
@@ -23,8 +23,9 @@
                                                 {{ entry.0.date|date:"d.m.Y" }}
                                             </th>
                                         {% endfor %}
+                                        <th class="wrap-column text-center">{% trans 'Expose submitted' %}</th>
                                         <th class="wrap-column text-center">{% trans 'Presentation done' %}</th>
-                                        <th class="wrap-column text-center">{% trans 'Placement seminar done' %}</th>
+                                        <th class="wrap-column text-center">{% trans 'Thesis seminar done' %}</th>
                                     </tr>
                                     </thead>
 
@@ -40,6 +41,13 @@
                                             </td>
                                         {% endfor %}
                                         <td class="text-center">
+                                            {% if expose %}
+                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                            {% else %}
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
                                             {% if presentation_date %}
                                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                             {% else %}
@@ -47,7 +55,7 @@
                                             {% endif %}
                                         </td>
                                         <td class="text-center">
-                                            {% if placement_seminar_done %}
+                                            {% if seminar_done %}
                                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                             {% else %}
                                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
