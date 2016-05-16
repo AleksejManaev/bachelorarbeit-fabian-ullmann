@@ -2,8 +2,6 @@
 import os
 from thread import start_new_thread
 
-import pypdftk
-import pytz
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -12,6 +10,7 @@ from django.http import JsonResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
+from docxtpl import DocxTemplate
 
 from mentoring.forms import *
 from mentoring.models import Student, Placement
@@ -1062,8 +1061,7 @@ def generate_placement_pdf(self, pk):
     placement = Placement.objects.get(id=pk)
     student = placement.student
 
-    # Felder füllen
-    fields = {
+    context = {
         'BeginnDatum': placement.date_from.strftime('%d.%m.%Y') if placement.date_from else '',
         'EndeDatum': placement.date_to.strftime('%d.%m.%Y') if placement.date_to else '',
         'StudentName': u"%s, %s" % (student.user.last_name, student.user.first_name),
@@ -1073,23 +1071,28 @@ def generate_placement_pdf(self, pk):
         'THBBetreuer': u'%s' % placement.tutor,
         'BetriebName': u'%s' % placement.company_name,
         'BetriebBetreuerName': u"%s" % placement.placementcompanycontactdata if placement.placementcompanycontactdata else '',
-        'BetriebAnschrift': u"%s" % placement.company_address.replace('\r', ''),
-        'Aufgabe': u"%s" % placement.task.replace('\r', ''),
+        'BetriebAnschrift': u"%s" % placement.company_address.replace('\r\n', '<w:br/>'),
+        'Aufgabe': u"%s" % placement.task.replace('\r\n', '<w:br/>'),
         'BerichtDatum': u"%s" % placement.report_uploaded_date.strftime('%d.%m.%Y') if placement.report_uploaded_date else '',
-        'KolloquiumDatum': student.placement_seminar_presentation_date.date.strftime('%d.%m.%Y') if student.placement_seminar_presentation_date else '',
+        'KollDatum': student.placement_seminar_presentation_date.date.strftime('%d.%m.%Y') if student.placement_seminar_presentation_date else '',
         'AktuellesDatum': datetime.now().strftime("%d.%m.%Y")
     }
 
-    # XFDF-Datei erzeugen
+    # Pfade zusammensetzen
+    template_file = '{mediaroot}/docs/_Anerkennung_Praktikum_2014.docx'.format(mediaroot=settings.MEDIA_ROOT)
     directory = "{}/{}/placement/".format(settings.MEDIA_ROOT, student.matriculation_number)
-    filename = '{}-Praktikumsanerkennung.pdf'.format(student.matriculation_number)
-    filepath = '{directory}/{file}'.format(directory=directory, file=filename)
-    pypdftk.fill_form('{mediaroot}/docs/_Anerkennung_Praktikum_2014.pdf'.format(mediaroot=settings.MEDIA_ROOT), fields, out_file=filepath, flatten=False)
+    filename = '{}-Praktikumsanerkennung.docx'.format(student.matriculation_number)
+    output_file = '{directory}/{file}'.format(directory=directory, file=filename)
 
-    # PDF-Datei senden, wenn diese erfolgreich erzeugt wurde
-    if os.path.exists(filepath):
-        with open(filepath, 'rb') as pdf:
-            response = HttpResponse(pdf.read(), content_type='application/pdf')
+    # Docx-Datei füllen
+    doc = DocxTemplate(template_file)
+    doc.render(context)
+    doc.save(output_file)
+
+    # Docx-Datei senden, wenn diese erfolgreich erzeugt wurde
+    if os.path.exists(output_file):
+        with open(output_file, 'rb') as pdf:
+            response = HttpResponse(pdf.read(), content_type='application/docx')
             response['Content-Disposition'] = 'attachment; filename="{filename}"'.format(student_name=student, filename=filename)
             return response
         pdf.closed

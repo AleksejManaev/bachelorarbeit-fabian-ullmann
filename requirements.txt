@@ -7,3 +7,4 @@ django-tag-parser==2.1
 django-bootstrap3
 django-autofixture
 pypdftk==0.3
+docxtpl==0.2.0
