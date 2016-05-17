@@ -5,7 +5,7 @@ from thread import start_new_thread
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.db import transaction
+from django.db import transaction, connection
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseNotFound, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
@@ -818,8 +818,8 @@ class PlacementSeminarEntryDeleteView(DeleteView):
         entry = self.get_object()
         success_url = self.get_success_url()
         Student.objects.filter(placement_seminar_presentation_date=entry).update(placement_seminar_presentation_date=None)
-        entry.seminar_students.remove()
-        entry.delete()
+        Student.seminar_entries.through.objects.filter(seminarentry_id=entry.id).delete()
+        connection.cursor().execute("DELETE FROM mentoring_seminarentry WHERE id = %s", [entry.id])
         return HttpResponseRedirect(success_url)
 
 
@@ -951,8 +951,8 @@ class BachelorSeminarEntryDeleteView(DeleteView):
         entry = self.get_object()
         success_url = self.get_success_url()
         Student.objects.filter(bachelor_seminar_presentation_date=entry).update(bachelor_seminar_presentation_date=None)
-        entry.seminar_students.remove()
-        entry.delete()
+        Student.seminar_entries.through.objects.filter(seminarentry_id=entry.id).delete()
+        connection.cursor().execute("DELETE FROM mentoring_seminarentry WHERE id = %s", [entry.id])
         return HttpResponseRedirect(success_url)
 
 

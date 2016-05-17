@@ -44,15 +44,6 @@ def post_save_placement(sender, instance, created, **kwargs):
         sap.save()
 
 
-@receiver(post_delete, sender=Placement)
-def post_delete_placement(sender, instance, using, **kwargs):
-    if not delete_user:
-        sap = StudentActivePlacement.objects.get_or_create(student=instance.student)[0]
-        sap.placement = instance.student.placement_set.all().exclude(pk=instance.pk).last()
-        sap.save()
-        print("post_delete_placement save")
-
-
 @receiver(post_save, sender=Thesis)
 def post_save_thesis(sender, instance, created, **kwargs):
     if created:
