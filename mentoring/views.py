@@ -2,6 +2,7 @@
 import os
 from thread import start_new_thread
 
+from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -521,7 +522,9 @@ class TutorPlacementView(UpdateView):
         placement_form_dict = self.get_context_placement(request.POST, files=request.FILES)
 
         # Alle Formulare validieren und speichern
+        all_forms_valid = False
         for k, v in placement_form_dict.iteritems():
+            all_forms_valid = v.is_valid()
             if v.is_valid():
                 if k == 'placement_form':
                     if not v.cleaned_data['report_accepted'] and v.cleaned_data['certificate_accepted']:
@@ -533,24 +536,43 @@ class TutorPlacementView(UpdateView):
                     elif not v.cleaned_data['report_accepted'] and not v.cleaned_data['certificate_accepted']:
                         v.instance.state = 'Seminar completed'
                 v.save()
+            else:
+                break
+
+        # Django-Message hinzufügen
+        if all_forms_valid:
+            messages.add_message(request, messages.SUCCESS, _('Placement successfully updated.'))
+        else:
+            messages.add_message(request, messages.ERROR, _('Placement update failed.'))
 
         return redirect('placement-details', pk=placement_form_dict['placement_form'].instance.id)
 
 
 class TutorThesisView(UpdateView):
     model = Thesis
-    fields = ['type', 'task', 'expose', 'poster', 'thesis', 'presentation', 'other', 'second_examiner_title', 'second_examiner_first_name', 'second_examiner_last_name',
-              'second_examiner_organisation', 'colloquium_done', 'deadline_extended', 'deadline', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation']
+    form_class = FormTutorThesisDetails
     template_name = 'tutor_thesis_details.html'
-    exclude = ['student', 'tutor', 'mentoring_requested', 'mentoring_accepted']
+
+    def get_context_thesis(self, data=None, files=None):
+        thesis = self.get_object()
+        return FormTutorThesisDetails(data, files=files, instance=thesis)
 
     def get(self, request, *args, **kwargs):
         self.request.session['is_thesis'] = True
         return super(TutorThesisView, self).get(request, *args, **kwargs)
 
-    def get_success_url(self):
-        self.request.session['is_thesis'] = True
-        return reverse('thesis-details', args=[self.object.id])
+    def post(self, request, *args, **kwargs):
+        form = self.get_context_thesis(request.POST, files=request.FILES)
+
+        # Formular validieren und speichern, Django-Message hinzufügen
+        form_valid = form.is_valid()
+        if form_valid:
+            form.save()
+            messages.add_message(request, messages.SUCCESS, _('Thesis successfully updated.'))
+        else:
+            messages.add_message(request, messages.ERROR, _('Thesis update failed.'))
+
+        return redirect('thesis-details', pk=form.instance.id)
 
 
 class CommentsView(View):

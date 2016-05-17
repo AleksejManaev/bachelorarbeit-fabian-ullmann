@@ -139,6 +139,30 @@ class FormTutorPlacementDetails(forms.ModelForm):
         }
 
 
+class FormTutorThesisDetails(forms.ModelForm):
+    def is_valid(self):
+        is_valid = super(FormTutorThesisDetails, self).is_valid()
+
+        if is_valid:
+            self.instance.save()
+
+        return is_valid
+
+    class Meta:
+        model = Thesis
+        exclude = ['student', 'tutor', 'mentoring_requested', 'mentoring_accepted']
+        fields = ['type', 'task', 'expose', 'poster', 'thesis', 'presentation', 'other', 'second_examiner_title', 'second_examiner_first_name', 'second_examiner_last_name',
+                  'second_examiner_organisation', 'colloquium_done', 'deadline_extended', 'deadline', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation']
+        widgets = {
+            'deadline': DateInput(attrs={'class': 'datepicker'}),
+            'expose': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'thesis': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'poster': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'presentation': ClearableFileInput(),
+            'other': ClearableFileInput(),
+        }
+
+
 # Todo FormStudent alternative E-Mail anpassen
 class FormSettingsUser(forms.ModelForm):
     class Meta:
