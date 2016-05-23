@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
+from django.views.generic import RedirectView
 
 urlpatterns = [
                   url(r'^accounts/login/$', LoginView.as_view(template_name='ldap_login.html'), name='login'),
@@ -30,7 +31,5 @@ urlpatterns = [
                       name='logout'),
                   url(r'^', include('mentoring.urls')),
                   url(r'^admin/', include(admin.site.urls)),
+                  url(r'.*', RedirectView.as_view(url='/accounts/login/')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-handler404 = 'mentoring.views.handle404'
-handler500 = 'mentoring.views.handle404'

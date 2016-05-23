@@ -17,10 +17,6 @@ from mentoring.forms import *
 from mentoring.models import Student, Placement
 
 
-def handle404(request):
-    return redirect('login')
-
-
 class IndexView(RedirectView):
     """
     + prüft ob Tutor oder Student eingeloggt ist und leitet zur entsprechenden Index-Seite weiter
