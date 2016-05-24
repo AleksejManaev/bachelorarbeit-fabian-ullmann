@@ -150,16 +150,11 @@ class FormTutorThesisDetails(forms.ModelForm):
 
     class Meta:
         model = Thesis
-        exclude = ['student', 'tutor', 'mentoring_requested', 'mentoring_accepted']
-        fields = ['type', 'task', 'expose', 'poster', 'thesis', 'presentation', 'other', 'second_examiner_title', 'second_examiner_first_name', 'second_examiner_last_name',
+        exclude = ['student', 'tutor', 'mentoring_requested', 'mentoring_accepted', 'expose', 'poster', 'thesis', 'presentation', 'other', ]
+        fields = ['type', 'task', 'second_examiner_title', 'second_examiner_first_name', 'second_examiner_last_name',
                   'second_examiner_organisation', 'colloquium_done', 'deadline_extended', 'deadline', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation']
         widgets = {
             'deadline': DateInput(attrs={'class': 'datepicker'}),
-            'expose': ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'thesis': ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'poster': ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'presentation': ClearableFileInput(),
-            'other': ClearableFileInput(),
         }
 
 

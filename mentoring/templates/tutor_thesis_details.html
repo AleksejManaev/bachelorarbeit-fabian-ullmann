@@ -46,74 +46,67 @@
                                     {% bootstrap_field form.task bound_css_class=' ' %}
 
                                     <div class="form-group">
-                                        <label class="control-label" for="id_expose">{% trans 'Expose' %}</label>
-                                        <div class="row bootstrap3-multi-input">
+                                        <label class="control-label">{% trans 'Expose' %}</label>
+                                        <div class="row">
                                             <div class="col-xs-12">
                                                 {% if form.instance.expose %}
-                                                    {% trans 'Currently' %}:
                                                     <a href="{{ form.instance.expose.url }}">{{ form.instance.expose }}</a>
-                                                    <input id="expose-clear_id" name="expose-clear" type="checkbox">
-                                                    <label for="expose-clear_id">{% trans 'Reset' %}</label>
-                                                    </br>
+                                                {% else %}
+                                                    <p>-</p>
                                                 {% endif %}
-                                                <input class="" id="id_expose" name="expose" title="" type="file"></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label" for="id_thesis">{% trans 'Thesis' %}</label>
-                                        <div class="row bootstrap3-multi-input">
-                                            <div class="col-xs-12">
-                                                {% if form.instance.thesis %}
-                                                    {% trans 'Currently' %}:
-                                                    <a href="{{ form.instance.thesis.url }}">{{ form.instance.thesis }}</a>
-                                                    <input id="thesis-clear_id" name="thesis-clear" type="checkbox">
-                                                    <label for="thesis-clear_id">{% trans 'Reset' %}</label>
-                                                    </br>
-                                                {% endif %}
-                                                <input class="" id="id_thesis" name="thesis" title="" type="file"></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label" for="id_poster">{% trans 'Poster' %}</label>
-                                        <div class="row bootstrap3-multi-input">
-                                            <div class="col-xs-12">
-                                                {% if form.instance.poster %}
-                                                    {% trans 'Currently' %}:
-                                                    <a href="{{ form.instance.poster.url }}">{{ form.instance.poster }}</a>
-                                                    <input id="poster-clear_id" name="poster-clear" type="checkbox">
-                                                    <label for="poster-clear_id">{% trans 'Reset' %}</label>
-                                                    </br>
-                                                {% endif %}
-                                                <input class="" id="id_poster" name="poster" title="" type="file">
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
-                                        <label class="control-label" for="id_presentation">{% trans 'Presentation' %}</label>
-                                        <div class="row bootstrap3-multi-input">
+                                        <label class="control-label">{% trans 'Thesis' %}</label>
+                                        <div class="row">
                                             <div class="col-xs-12">
-                                                {% if form.instance.presentation %}
-                                                    {% trans 'Currently' %}:
-                                                    <a href="{{ form.instance.presentation.url }}">{{ form.instance.presentation }}</a>
-                                                    <input id="presentation-clear_id" name="presentation-clear" type="checkbox">
-                                                    <label for="presentation-clear_id">{% trans 'Reset' %}</label>
-                                                    </br>
+                                                {% if form.instance.thesis %}
+                                                    <a href="{{ form.instance.thesis.url }}">{{ form.instance.thesis }}</a>
+                                                {% else %}
+                                                    <p>-</p>
                                                 {% endif %}
-                                                <input class="" id="id_presentation" name="presentation" title="" type="file"></div>
+                                            </div>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
-                                        <label class="control-label" for="id_other">{% trans 'Other' %}</label>
-                                        <div class="row bootstrap3-multi-input">
+                                        <label class="control-label">{% trans 'Poster' %}</label>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                {% if form.instance.poster %}
+                                                    <a href="{{ form.instance.poster.url }}">{{ form.instance.poster }}</a>
+                                                {% else %}
+                                                    <p>-</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label">{% trans 'Presentation' %}</label>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                {% if form.instance.presentation %}
+                                                    <a href="{{ form.instance.presentation.url }}">{{ form.instance.presentation }}</a>
+                                                {% else %}
+                                                    <p>-</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label">{% trans 'Other' %}</label>
+                                        <div class="row">
                                             <div class="col-xs-12">
                                                 {% if form.instance.other %}
-                                                    {% trans 'Currently' %}:
                                                     <a href="{{ form.instance.other.url }}">{{ form.instance.other }}</a>
-                                                    <input id="other-clear_id" name="other-clear" type="checkbox">
-                                                    <label for="other-clear_id">{% trans 'Reset' %}</label>
-                                                    </br>
+                                                {% else %}
+                                                    <p>-</p>
                                                 {% endif %}
-                                                <input class="" id="id_other" name="other" title="" type="file"></div>
+                                            </div>
                                         </div>
                                     </div>
 
