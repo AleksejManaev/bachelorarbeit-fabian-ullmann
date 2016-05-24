@@ -13,5 +13,6 @@ def makemessages_dummy():
     ugettext('Denied')
     ugettext('Sent')
     ugettext('Not decided')
-    ugettext('Not sent')
+    ugettext('Not submitted')
+    ugettext('Submitted')
 

@@ -35,12 +35,12 @@ $(document).ready(function () {
 
     var thesis_table = $('#thesis-table').DataTable({
         "columnDefs": [
-            {"searchable": false, "orderable": false, "targets": [0, 10]},
-            {"orderDataType": "dom-select", "targets": [5, 6]},
-            {"orderDataType": "dom-checkbox", "targets": 9},
-            {"orderDataType": "dom-text", "targets": 7, "type": 'de_date'}
+            {"searchable": false, "orderable": false, "targets": [0, 11]},
+            {"orderDataType": "dom-select", "targets": [6, 7]},
+            {"orderDataType": "dom-checkbox", "targets": 10},
+            {"orderDataType": "dom-text", "targets": 8, "type": 'de_date'}
         ],
-        "order": [[7, "asc"]],
+        "order": [[8, "asc"]],
         "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',
         "language": {
             "zeroRecords": "Keine Einträge gefunden",

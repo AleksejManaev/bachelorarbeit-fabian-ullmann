@@ -24,6 +24,22 @@ PLACEMENT_STATE_CHOICES = (
     ('Archived', _('Archived'))
 )
 
+THESIS_STATE_CHOICES = (
+    ('Not requested', _('Not requested')),
+    ('Requested', _('Requested')),
+    ('Mentoring accepted', _('Mentoring accepted')),
+    ('Mentoring denied', _('Mentoring denied')),
+    ('Examination office submitted', _('Examination office submitted')),
+    ('Examination office accepted', _('Examination office accepted')),
+    ('Thesis submitted', _('Thesis submitted')),
+    ('Colloquium completed', _('Colloquium completed')),
+    ('Seminar completed', _('Seminar completed')),
+    ('Poster accepted', _('Poster accepted')),
+    ('Thesis completed', _('Thesis completed')),
+    ('Thesis failed', _('Thesis failed')),
+    ('Archived', _('Archived'))
+)
+
 ABSTRACTWORK_COMPLETED_CHOICES = (
     ('-', '-'),
     ('Completed', _('Completed')),
@@ -39,6 +55,21 @@ PLACEMENT_STATE_SUBGOAL_CHOICES = (
     ('Certificate accepted', _('Placement completion')),
     ('Placement completed', _('-')),
     ('Placement failed', _('-')),
+    ('Archived', _('-'))
+)
+
+THESIS_STATE_SUBGOAL_CHOICES = (
+    ('Requested', _('Mentoring acceptance')),
+    ('Mentoring accepted', _('Examination office submitted')),
+    ('Mentoring denied', _('-')),
+    ('Examination office submitted', _('Examination office accepted')),
+    ('Examination office accepted', _('Thesis submitted')),
+    ('Thesis submitted', _('Colloquium completed')),
+    ('Colloquium completed', _('Seminar completed')),
+    ('Seminar completed', _('Poster completed')),
+    ('Poster completed', _('Thesis completion')),
+    ('Thesis completed', _('-')),
+    ('Thesis failed', _('-')),
     ('Archived', _('-'))
 )
 
@@ -68,8 +99,8 @@ GRADE_CHOICES = (
 )
 
 EXAMINATION_OFFICE_STATE_CHOICES = (
-    ('1A', 'Not sent'),
-    ('1B', 'Sent'),
+    ('1A', 'Not submitted'),
+    ('1B', 'Submitted'),
     ('2A', 'Accepted'),
     ('2B', 'Denied')
 )
@@ -232,6 +263,7 @@ class Thesis(AbstractWork):
     deadline = models.DateTimeField(_('Deadline'), null=True, blank=True)
     deadline_extended = models.BooleanField(_('Deadline extended'), default=False)
     colloquium_done = models.BooleanField(_('Colloquium done'), default=False)
+    state = models.CharField(_('State'), choices=THESIS_STATE_CHOICES, max_length=100, default='Not requested')
 
     def save(self, *args, **kwargs):
         # Zeitzone anpassen und somit den richtigen Tag setzen

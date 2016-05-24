@@ -185,15 +185,18 @@
                                 <thead>
                                 <tr>
                                     <th class="wrap-column">{% trans 'Comments' %}</th>
-                                    <th>{% trans 'First name' %}</th>
-                                    <th>{% trans 'Last name' %}</th>
-                                    <th>{% trans 'Email' %}</th>
-                                    <th>{% trans 'Course' %}</th>
-                                    <th>{% trans 'Mentoring' %}</th>
-                                    <th>{% trans 'Examination office' %}</th>
-                                    <th>{% trans 'Deadline' %}</th>
-                                    <th>{% trans 'Grades' %}</th>
-                                    <th>{% trans 'Archived' %}</th>
+                                    <th class="wrap-column">
+                                        <nobr>{% trans 'Next subgoal' %}</nobr>
+                                    </th>
+                                    <th class="wrap-column">{% trans 'First name' %}</th>
+                                    <th class="wrap-column">{% trans 'Last name' %}</th>
+                                    <th class="wrap-column">{% trans 'Email' %}</th>
+                                    <th class="wrap-column">{% trans 'Course' %}</th>
+                                    <th class="wrap-column">{% trans 'Mentoring' %}</th>
+                                    <th class="wrap-column">{% trans 'Examination office' %}</th>
+                                    <th class="wrap-column">{% trans 'Deadline' %}</th>
+                                    <th class="wrap-column">{% trans 'Grades' %}</th>
+                                    <th class="wrap-column">{% trans 'Archived' %}</th>
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
                                 </thead>
@@ -225,6 +228,13 @@
                                                 </button>
                                             </a>
                                         </td>
+                                        <td>
+                                            {% for state in thesis_state_subgoals %}
+                                                {% ifequal state.0 thesis.state %}
+                                                    <span title="{% trans 'State: ' %}{% trans thesis.state %}">{% trans state.1 %}</span>
+                                                {% endifequal %}
+                                            {% endfor %}
+                                        </td>
                                         <td><a href="{% url 'thesis-details' thesis.id %}">{{ thesis.student.user.first_name }}</a></td>
                                         <td><a href="{% url 'thesis-details' thesis.id %}">{{ thesis.student.user.last_name }}</a></td>
                                         <td><a href="mailto:{{ thesis.student.user.email }}">{{ thesis.student.user.email }}</a></td>
@@ -241,7 +251,10 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %} name="examination_office_state" form="{{ thesis.id }}">
+                                            <select
+                                                    {% if thesis.mentoring_accepted == 'ND' or thesis.mentoring_accepted == 'MD' or thesis.state == 'Examination office accepted' or  thesis.state == 'Thesis submitted' or thesis.state == 'Colloquium completed' or thesis.state == 'Thesis completed' or thesis.state == 'Thesis failed' %}
+                                                        disabled
+                                                    {% endif %} name="examination_office_state" form="{{ thesis.id }}">
                                                 {% for state in examination_office_states %}
                                                     {% ifequal state.0 thesis.examination_office_state %}
                                                         <option value="{{ state.0 }}" selected="selected">{% trans state.1 %}</option>
@@ -252,7 +265,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %} class="form-control datepicker" id="deadline{{ thesis.id }}" name="deadline" placeholder="{% trans 'Deadline' %}" type="text"
+                                            <input {% if thesis.mentoring_accepted == 'MD' or thesis.mentoring_accepted == 'ND' %} disabled {% endif %} class="form-control datepicker" id="deadline{{ thesis.id }}" name="deadline" placeholder="{% trans 'Deadline' %}" type="text"
                                                     {% if thesis.deadline %} value="{{ thesis.deadline|date:"d.m.Y" }}"{% endif %} form="{{ thesis.id }}" size="11">
                                         </td>
                                         <td>
@@ -289,6 +302,7 @@
 
                                 <tfoot>
                                 <tr>
+                                    <th></th>
                                     <th></th>
                                     <th>{% trans 'First name' %}</th>
                                     <th>{% trans 'Last name' %}</th>

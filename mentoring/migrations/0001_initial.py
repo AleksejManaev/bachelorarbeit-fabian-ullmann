@@ -2,12 +2,13 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import mentoring.validators
+from decimal import Decimal
 import mentoring.helpers
 import django.contrib.auth.models
 import django.utils.timezone
 from django.conf import settings
 import django.core.validators
-import mentoring.validators
 
 
 class Migration(migrations.Migration):
@@ -166,13 +167,14 @@ class Migration(migrations.Migration):
                 ('thesis', models.FileField(blank=True, upload_to=mentoring.helpers.upload_to_thesis_thesis, null=True, verbose_name='Thesis', validators=[mentoring.validators.validate_pdf, mentoring.validators.validate_size])),
                 ('presentation', models.FileField(upload_to=mentoring.helpers.upload_to_thesis_presentation, null=True, verbose_name='Presentation', blank=True)),
                 ('other', models.FileField(upload_to=mentoring.helpers.upload_to_thesis_other, null=True, verbose_name='Other', blank=True)),
-                ('grade_first_examiner', models.CharField(default=b'-', max_length=3, verbose_name='Grade first examiner', choices=[(b'-', b'-'), (b'1,0', b'1,0'), (b'1,3', b'1,3'), (b'1,7', b'1,7'), (b'2,0', b'2,0'), (b'2,3', b'2,3'), (b'3,0', b'3,0'), (b'3,3', b'3,3'), (b'3,7', b'3,7'), (b'4,0', b'4,0'), (b'5,0', b'5,0')])),
-                ('grade_second_examiner', models.CharField(default=b'-', max_length=3, verbose_name='Grade second examiner', choices=[(b'-', b'-'), (b'1,0', b'1,0'), (b'1,3', b'1,3'), (b'1,7', b'1,7'), (b'2,0', b'2,0'), (b'2,3', b'2,3'), (b'3,0', b'3,0'), (b'3,3', b'3,3'), (b'3,7', b'3,7'), (b'4,0', b'4,0'), (b'5,0', b'5,0')])),
-                ('grade_presentation', models.CharField(default=b'-', max_length=3, verbose_name='Grade presentation', choices=[(b'-', b'-'), (b'1,0', b'1,0'), (b'1,3', b'1,3'), (b'1,7', b'1,7'), (b'2,0', b'2,0'), (b'2,3', b'2,3'), (b'3,0', b'3,0'), (b'3,3', b'3,3'), (b'3,7', b'3,7'), (b'4,0', b'4,0'), (b'5,0', b'5,0')])),
-                ('examination_office_state', models.CharField(default=b'1A', max_length=100, verbose_name='Examination office state', choices=[(b'1A', b'Not sent'), (b'1B', b'Sent'), (b'2A', b'Accepted'), (b'2B', b'Denied')])),
+                ('grade_first_examiner', models.DecimalField(decimal_places=1, choices=[(Decimal('1.0'), b'1,0'), (Decimal('1.3'), b'1,3'), (Decimal('1.7'), b'1,7'), (Decimal('2.0'), b'2,0'), (Decimal('2.3'), b'2,3'), (Decimal('2.7'), b'2,7'), (Decimal('3.0'), b'3,0'), (Decimal('3.3'), b'3,3'), (Decimal('3.7'), b'3,7'), (Decimal('4.0'), b'4,0'), (Decimal('5.0'), b'5,0')], max_digits=2, blank=True, null=True, verbose_name='Grade first examiner')),
+                ('grade_second_examiner', models.DecimalField(decimal_places=1, choices=[(Decimal('1.0'), b'1,0'), (Decimal('1.3'), b'1,3'), (Decimal('1.7'), b'1,7'), (Decimal('2.0'), b'2,0'), (Decimal('2.3'), b'2,3'), (Decimal('2.7'), b'2,7'), (Decimal('3.0'), b'3,0'), (Decimal('3.3'), b'3,3'), (Decimal('3.7'), b'3,7'), (Decimal('4.0'), b'4,0'), (Decimal('5.0'), b'5,0')], max_digits=2, blank=True, null=True, verbose_name='Grade second examiner')),
+                ('grade_presentation', models.DecimalField(decimal_places=1, choices=[(Decimal('1.0'), b'1,0'), (Decimal('1.3'), b'1,3'), (Decimal('1.7'), b'1,7'), (Decimal('2.0'), b'2,0'), (Decimal('2.3'), b'2,3'), (Decimal('2.7'), b'2,7'), (Decimal('3.0'), b'3,0'), (Decimal('3.3'), b'3,3'), (Decimal('3.7'), b'3,7'), (Decimal('4.0'), b'4,0'), (Decimal('5.0'), b'5,0')], max_digits=2, blank=True, null=True, verbose_name='Grade presentation')),
+                ('examination_office_state', models.CharField(default=b'1A', max_length=100, verbose_name='Examination office state', choices=[(b'1A', b'Not submitted'), (b'1B', b'Submitted'), (b'2A', b'Accepted'), (b'2B', b'Denied')])),
                 ('deadline', models.DateTimeField(null=True, verbose_name='Deadline', blank=True)),
                 ('deadline_extended', models.BooleanField(default=False, verbose_name='Deadline extended')),
                 ('colloquium_done', models.BooleanField(default=False, verbose_name='Colloquium done')),
+                ('state', models.CharField(default=b'Not requested', max_length=100, verbose_name='State', choices=[(b'Not requested', 'Not requested'), (b'Requested', 'Requested'), (b'Mentoring accepted', 'Mentoring accepted'), (b'Mentoring denied', 'Mentoring denied'), (b'Examination office submitted', 'Examination office submitted'), (b'Examination office accepted', 'Examination office accepted'), (b'Thesis submitted', 'Thesis submitted'), (b'Colloquium completed', 'Colloquium completed'), (b'Seminar completed', 'Seminar completed'), (b'Poster accepted', 'Poster accepted'), (b'Thesis completed', 'Thesis completed'), (b'Thesis failed', 'Thesis failed'), (b'Archived', 'Archived')])),
             ],
             bases=('mentoring.abstractwork',),
         ),
@@ -224,7 +226,7 @@ class Migration(migrations.Migration):
                 ('bachelor_seminar_presentation_date', models.ForeignKey(related_name='bachelor_seminar_presentation_student', blank=True, to='mentoring.SeminarEntry', null=True)),
                 ('master_seminar_presentation_date', models.ForeignKey(related_name='master_seminar_presentation_student', blank=True, to='mentoring.SeminarEntry', null=True)),
                 ('placement_seminar_presentation_date', models.ForeignKey(related_name='placement_seminar_presentation_student', blank=True, to='mentoring.SeminarEntry', null=True)),
-                ('seminar_entries', models.ManyToManyField(related_name='seminar_students', to='mentoring.SeminarEntry', blank=True)),
+                ('seminar_entries', models.ManyToManyField(related_name='seminar_students', to='mentoring.SeminarEntry')),
             ],
             bases=('mentoring.portaluser',),
         ),

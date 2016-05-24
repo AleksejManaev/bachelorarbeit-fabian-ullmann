@@ -157,11 +157,31 @@ class StudentThesisFormView(UpdateView):
             else:
                 valid = False
 
-        # Wenn alle Formulare valide sind auch das Praktikum speichern
+        # Wenn alle Formulare valide sind, dann ggf. den Zustand der Abschlussarbeit anpassen und die Arbeit speichern
         if valid:
             if thesis.mentoring_requested is False and show_tutor:
                 thesis.mentoring_requested = True
+                thesis.state = 'Requested'
                 thesis.sent_on = datetime.now()
+                thesis.save()
+            else:
+                thesis.state = 'Requested'
+                if thesis.mentoring_accepted == 'MA':
+                    thesis.state = 'Mentoring accepted'
+                    if thesis.examination_office_state == '1B':
+                        thesis.state = 'Examination office submitted'
+                    elif thesis.examination_office_state == '2A':
+                        thesis.state = 'Examination office accepted'
+                        if thesis.thesis:
+                            thesis.state = 'Thesis submitted'
+                            if thesis.colloquium_done:
+                                thesis.state = 'Colloquium completed'
+                                if thesis.type == 'Bachelor' and thesis.student.bachelor_seminar_done:
+                                    form.instance.state = 'Seminar completed'
+                                elif thesis.type == 'Master' and thesis.student.master_seminar_done:
+                                    form.instance.state = 'Seminar completed'
+                elif thesis.mentoring_accepted == 'MD':
+                    thesis.state = 'Mentoring denied'
                 thesis.save()
 
         return redirect('student-thesis')
@@ -283,7 +303,8 @@ class TutorView(View):
                     help_message_dict[placement.id].append('Datum Vorstellung im Kolloquium fehlt')
 
             context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'placement_states': PLACEMENT_STATE_CHOICES,
-                       'placement_completed_states': ABSTRACTWORK_COMPLETED_CHOICES, 'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES, 'help_message_dict': help_message_dict, 'thesis_choices': THESIS_CHOICES}
+                       'placement_completed_states': ABSTRACTWORK_COMPLETED_CHOICES, 'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES, 'thesis_state_subgoals': THESIS_STATE_SUBGOAL_CHOICES,
+                       'help_message_dict': help_message_dict, 'thesis_choices': THESIS_CHOICES}
 
             # Dictionary mit den Gesamtnoten zu den Abschlussarbeiten
             thesis_final_grade_dict = {}
@@ -394,18 +415,48 @@ class TutorUpdateThesisView(View):
     def post(self, request, pk, *args, **kwargs):
         instance = Thesis.objects.get(id=pk)
         mentoring_accepted_old_value = instance.mentoring_accepted
+        examination_office_state_old_value = instance.examination_office_state
         POST = request.POST
 
         '''
             Wenn das "Betreuung angenommen"-Feld "disabled" ist, wird der Wert über POST nicht mitgesendet. Dadurch schlägt die Validierung fehl.
             Deshalb wird der alte Wert dem Formular übergeben.
         '''
-        if not request.POST.has_key('mentoring_accepted'):
+        if not request.POST.has_key('mentoring_accepted') or not request.POST.has_key('completed'):
             POST = request.POST.copy()
+        if not request.POST.has_key('mentoring_accepted'):
             POST['mentoring_accepted'] = mentoring_accepted_old_value
+        if not request.POST.has_key('examination_office_state'):
+            POST['examination_office_state'] = examination_office_state_old_value
         form = FormTutorThesis(POST, instance=instance)
 
         if form.is_valid():
+            mentoring_accepted_new_value = form.cleaned_data['mentoring_accepted']
+            if mentoring_accepted_new_value == 'MD' and form.instance.state == 'Requested':
+                form.instance.state = 'Mentoring denied'
+            elif mentoring_accepted_new_value == 'MA' and form.instance.state == 'Requested':
+                form.instance.state = 'Mentoring accepted'
+
+            examination_office_state_new_value = form.cleaned_data['examination_office_state']
+            if mentoring_accepted_new_value == 'MA':
+                if examination_office_state_new_value == '1A':
+                    form.instance.state = 'Mentoring accepted'
+                elif examination_office_state_new_value == '1B':
+                    form.instance.state = 'Examination office submitted'
+                elif examination_office_state_new_value == '2A':
+                    form.instance.state = 'Examination office accepted'
+                    if form.instance.thesis:
+                        form.instance.state = 'Thesis submitted'
+                    if form.instance.state == 'Thesis submitted' and form.instance.colloquium_done:
+                        form.instance.state = 'Colloquium completed'
+                    if form.instance.state == 'Colloquium completed':
+                        if form.instance.type == 'Bachelor' and form.instance.student.bachelor_seminar_done:
+                            form.instance.state = 'Seminar completed'
+                        elif form.instance.type == 'Master' and form.instance.student.master_seminar_done:
+                            form.instance.state = 'Seminar completed'
+                elif examination_office_state_new_value == '2B':
+                    form.instance.state = 'Mentoring accepted'
+
             form.save()
 
             '''
@@ -413,7 +464,6 @@ class TutorUpdateThesisView(View):
                     Die aktive Abschlussarbeit wird über "post_save_thesis" in "signals.py" zugewiesen.
                 2. Wenn eine Betreuungsanfrage abgelehnt oder angenommen wurde, wird ein Kommentar und E-Mail an Student und Tutor versendet.
             '''
-            mentoring_accepted_new_value = form.cleaned_data['mentoring_accepted']
             if mentoring_accepted_old_value != mentoring_accepted_new_value:
                 if mentoring_accepted_new_value == 'MD':
                     active_thesis = Thesis(student=instance.student)
@@ -561,8 +611,32 @@ class TutorThesisView(UpdateView):
         form = self.get_context_thesis(request.POST, files=request.FILES)
 
         # Formular validieren und speichern, Django-Message hinzufügen
-        form_valid = form.is_valid()
-        if form_valid:
+        if form.is_valid():
+            if form.instance.state == 'Thesis submitted' and form.cleaned_data['colloquium_done']:
+                form.instance.state = 'Colloquium completed'
+
+                if form.instance.state == 'Colloquium completed':
+                    if form.instance.type == 'Bachelor' and form.instance.student.bachelor_seminar_done:
+                        form.instance.state = 'Seminar completed'
+                    elif form.instance.type == 'Master' and form.instance.student.master_seminar_done:
+                        form.instance.state = 'Seminar completed'
+
+            if not form.cleaned_data['colloquium_done']:
+                if form.instance.state == 'Colloquium completed' or form.instance.state == 'Seminar completed':
+                    if form.instance.mentoring_accepted == 'MA':
+                        form.instance.state = 'Mentoring accepted'
+                        if form.instance.examination_office_state == '1B':
+                            form.instance.state = 'Examination office submitted'
+                        elif form.instance.examination_office_state == '2A':
+                            form.instance.state = 'Examination office accepted'
+                            if form.instance.thesis:
+                                form.instance.state = 'Thesis submitted'
+                    else:
+                        if form.instance.mentoring_accepted == 'MD':
+                            form.instance.state = 'Mentoring Denied'
+                        elif form.instance.mentoring_accepted == 'ND':
+                            form.instance.state = 'Requested'
+
             form.save()
             messages.add_message(request, messages.SUCCESS, _('Thesis successfully updated.'))
         else:
@@ -878,7 +952,7 @@ class BachelorSeminarEntryProcessView(View):
     def post(self, request):
         checked_student_entry_list = []
         presentation_done_student_list = []
-        checked_student_placement_seminar_list = []
+        checked_student_bachelor_seminar_list = []
         thesis_seminar_id = int(request.POST.get('bachelor_seminar'))
         thesis_seminar = Seminar.objects.get(pk=thesis_seminar_id)
         all_seminar_students = Student.objects.filter(bachelor_year=thesis_seminar.year)
@@ -896,21 +970,43 @@ class BachelorSeminarEntryProcessView(View):
                 presentation_done_student_list.append([student_id, presentation_date_id])
             if key.startswith('bachelor_seminar_done'):
                 student_id = int(splitted_key[3])
-                checked_student_placement_seminar_list.append(student_id)
+                checked_student_bachelor_seminar_list.append(student_id)
 
         for student in all_seminar_students:
+            thesis = student.studentactivethesis.thesis
             for student_presentation in presentation_done_student_list:
                 if student.id == student_presentation[0]:
                     presentation_date_id = student_presentation[1]
                     if presentation_date_id:
                         student.bachelor_seminar_presentation_date = SeminarEntry.objects.get(id=int(presentation_date_id))
                     else:
-                        student.bachelor_seminar_presentation_date = None
+                        student.bachelor_seminar_presentatiton_date = None
 
-            if student.id in checked_student_placement_seminar_list:
+            if student.id in checked_student_bachelor_seminar_list:
                 student.bachelor_seminar_done = True
+                if thesis.state == 'Colloquium completed':
+                    thesis.state = 'Seminar completed'
+                    thesis.save()
             else:
                 student.bachelor_seminar_done = False
+                if thesis.mentoring_requested:
+                    thesis.state = 'Requested'
+                    if thesis.mentoring_accepted == 'MA':
+                        thesis.state = 'Mentoring accepted'
+                        if thesis.examination_office_state == '1B':
+                            thesis.state = 'Examination office submitted'
+                        elif thesis.examination_office_state == '2A':
+                            thesis.state = 'Examination office accepted'
+                            if thesis.thesis:
+                                thesis.state = 'Thesis submitted'
+                                if thesis.colloquium_done:
+                                    thesis.state = 'Colloquium completed'
+                    elif thesis.mentoring_accepted == 'MD':
+                        thesis.state = 'Mentoring denied'
+                else:
+                    thesis.state = 'Not requested'
+                thesis.save()
+
             student.save()
 
             for entry in all_seminar_entrys:
@@ -1022,6 +1118,7 @@ class MasterSeminarEntryProcessView(View):
                 checked_student_placement_seminar_list.append(student_id)
 
         for student in all_seminar_students:
+            thesis = student.studentactivethesis.thesis
             for student_presentation in presentation_done_student_list:
                 if student.id == student_presentation[0]:
                     presentation_date_id = student_presentation[1]
@@ -1032,8 +1129,28 @@ class MasterSeminarEntryProcessView(View):
 
             if student.id in checked_student_placement_seminar_list:
                 student.master_seminar_done = True
+                if thesis.state == 'Colloquium completed':
+                    thesis.state = 'Seminar completed'
+                    thesis.save()
             else:
                 student.master_seminar_done = False
+                if thesis.mentoring_requested:
+                    thesis.state = 'Requested'
+                    if thesis.mentoring_accepted == 'MA':
+                        thesis.state = 'Mentoring accepted'
+                        if thesis.examination_office_state == '1B':
+                            thesis.state = 'Examination office submitted'
+                        elif thesis.examination_office_state == '2A':
+                            thesis.state = 'Examination office accepted'
+                            if thesis.thesis:
+                                thesis.state = 'Thesis submitted'
+                                if thesis.colloquium_done:
+                                    thesis.state = 'Colloquium completed'
+                    elif thesis.mentoring_accepted == 'MD':
+                        thesis.state = 'Mentoring denied'
+                else:
+                    thesis.state = 'Not requested'
+                thesis.save()
             student.save()
 
             for entry in all_seminar_entrys:
