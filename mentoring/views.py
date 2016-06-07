@@ -1292,3 +1292,8 @@ class StudentThesisSeminarEntryView(TemplateView):
                 context['expose'] = studentactivethesis.expose
 
         return context
+
+
+def handler500(request):
+    return redirect('login')
+

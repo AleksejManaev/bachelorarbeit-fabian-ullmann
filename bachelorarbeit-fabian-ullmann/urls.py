@@ -33,3 +33,5 @@ urlpatterns = [
                   url(r'^admin/', include(admin.site.urls)),
                   url(r'.*', RedirectView.as_view(url='/accounts/login/')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler500 = 'mentoring.views.handler500'
