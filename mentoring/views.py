@@ -503,7 +503,8 @@ class StudentIndexView(View):
             return render(request, self.template_name)
 
     def get_object(self, queryset=None):
-        return self.request.user.portaluser.student
+        student = Student.objects.filter(user=self.request.user)
+        return student[0] if len(student) > 0 else None
 
 
 class TutorSettingsFormView(UpdateView):
@@ -1296,4 +1297,3 @@ class StudentThesisSeminarEntryView(TemplateView):
 
 def handler500(request):
     return redirect('login')
-
