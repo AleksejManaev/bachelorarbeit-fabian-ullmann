@@ -35,7 +35,7 @@ THESIS_STATE_CHOICES = (
     ('Colloquium completed', _('Colloquium completed')),
     ('Seminar completed', _('Seminar completed')),
     ('Poster accepted', _('Poster accepted')),
-    ('Thesis completed', _('Thesis completed')),
+    ('Thesis completion', _('Thesis completion')),
     ('Thesis failed', _('Thesis failed')),
     ('Archived', _('Archived'))
 )
@@ -66,9 +66,9 @@ THESIS_STATE_SUBGOAL_CHOICES = (
     ('Examination office accepted', _('Thesis submitted')),
     ('Thesis submitted', _('Colloquium completed')),
     ('Colloquium completed', _('Seminar completed')),
-    ('Seminar completed', _('Poster completed')),
-    ('Poster completed', _('Thesis completion')),
-    ('Thesis completed', _('-')),
+    ('Seminar completed', _('Poster accepted')),
+    ('Poster accepted', _('Thesis completion')),
+    ('Thesis completion', _('-')),
     ('Thesis failed', _('-')),
     ('Archived', _('-'))
 )
@@ -140,6 +140,7 @@ class PortalUser(ContactModel):
 class Tutor(PortalUser):
     placement_responsible = models.BooleanField(default=False, null=False, blank=False)
     thesis_responsible = models.BooleanField(default=False, null=False, blank=False)
+    poster_responsible = models.BooleanField(default=False, null=False, blank=False)
 
     @property
     def get_full_name(self):
@@ -263,6 +264,8 @@ class Thesis(AbstractWork):
     deadline = models.DateTimeField(_('Deadline'), null=True, blank=True)
     deadline_extended = models.BooleanField(_('Deadline extended'), default=False)
     colloquium_done = models.BooleanField(_('Colloquium done'), default=False)
+    poster_printed = models.BooleanField(_('Poster printed'), default=False)
+    poster_accepted = models.BooleanField(_('Poster accepted'), default=False)
     state = models.CharField(_('State'), choices=THESIS_STATE_CHOICES, max_length=100, default='Not requested')
 
     def save(self, *args, **kwargs):

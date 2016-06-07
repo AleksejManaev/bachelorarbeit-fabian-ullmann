@@ -26,7 +26,11 @@ class IndexView(RedirectView):
     def get(self, request, *args, **kwargs):
         if hasattr(request.user, 'portaluser'):
             if hasattr(request.user.portaluser, 'tutor'):
-                self.pattern_name = 'tutor-index'
+                tutor = request.user.portaluser.tutor
+                if not tutor.placement_responsible and not tutor.thesis_responsible and tutor.poster_responsible:
+                    self.pattern_name = 'posters-index'
+                else:
+                    self.pattern_name = 'tutor-index'
             elif hasattr(request.user.portaluser, 'student'):
                 self.pattern_name = 'student-index'
         else:
@@ -177,9 +181,11 @@ class StudentThesisFormView(UpdateView):
                             if thesis.colloquium_done:
                                 thesis.state = 'Colloquium completed'
                                 if thesis.type == 'Bachelor' and thesis.student.bachelor_seminar_done:
-                                    form.instance.state = 'Seminar completed'
+                                    thesis.state = 'Seminar completed'
                                 elif thesis.type == 'Master' and thesis.student.master_seminar_done:
-                                    form.instance.state = 'Seminar completed'
+                                    thesis.state = 'Seminar completed'
+                                    if thesis.poster_accepted:
+                                        thesis.state = 'Poster accepted'
                 elif thesis.mentoring_accepted == 'MD':
                     thesis.state = 'Mentoring denied'
                 thesis.save()
@@ -246,11 +252,11 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
-                                                    prefix='student_user_formset'),
-            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
-                                                          prefix='student_address_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
+                                                        prefix='student_user_formset'),
+                student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
+                                                              prefix='student_address_formset')
         )
 
     def get_object(self, queryset=None):
@@ -454,6 +460,9 @@ class TutorUpdateThesisView(View):
                             form.instance.state = 'Seminar completed'
                         elif form.instance.type == 'Master' and form.instance.student.master_seminar_done:
                             form.instance.state = 'Seminar completed'
+                        if form.instance.state == 'Seminar completed' and form.instance.poster_accepted:
+                            form.instance.state = 'Poster accepted'
+
                 elif examination_office_state_new_value == '2B':
                     form.instance.state = 'Mentoring accepted'
 
@@ -537,9 +546,9 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
-                                                prefix='tutor_user_formset')
+                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+                tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
+                                                    prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
@@ -621,9 +630,11 @@ class TutorThesisView(UpdateView):
                         form.instance.state = 'Seminar completed'
                     elif form.instance.type == 'Master' and form.instance.student.master_seminar_done:
                         form.instance.state = 'Seminar completed'
+                    if form.instance.state == 'Seminar completed' and form.instance.poster_accepted:
+                        form.instance.state = 'Poster accepted'
 
             if not form.cleaned_data['colloquium_done']:
-                if form.instance.state == 'Colloquium completed' or form.instance.state == 'Seminar completed':
+                if form.instance.state == 'Colloquium completed' or form.instance.state == 'Seminar completed' or form.instance.state == 'Poster accepted':
                     if form.instance.mentoring_accepted == 'MA':
                         form.instance.state = 'Mentoring accepted'
                         if form.instance.examination_office_state == '1B':
@@ -987,6 +998,8 @@ class BachelorSeminarEntryProcessView(View):
                 student.bachelor_seminar_done = True
                 if thesis.state == 'Colloquium completed':
                     thesis.state = 'Seminar completed'
+                    if thesis.poster_accepted:
+                        thesis.state = 'Poster accepted'
                     thesis.save()
             else:
                 student.bachelor_seminar_done = False
@@ -1132,6 +1145,8 @@ class MasterSeminarEntryProcessView(View):
                 student.master_seminar_done = True
                 if thesis.state == 'Colloquium completed':
                     thesis.state = 'Seminar completed'
+                    if thesis.poster_accepted:
+                        thesis.state = 'Poster accepted'
                     thesis.save()
             else:
                 student.master_seminar_done = False
@@ -1293,6 +1308,59 @@ class StudentThesisSeminarEntryView(TemplateView):
                 context['expose'] = studentactivethesis.expose
 
         return context
+
+
+class PostersView(View):
+    template_name = 'posters_index.html'
+
+    def get(self, request, *args, **kwargs):
+        if not self.get_object():
+            return redirect('index')
+        else:
+            theses = Thesis.objects.filter(mentoring_requested=True)
+            context = {'theses': theses}
+            return render(request, self.template_name, context)
+
+    def get_object(self, queryset=None):
+        st = Tutor.objects.filter(user=self.request.user)
+        return st[0] if len(st) > 0 else None
+
+
+class PosterUpdateView(View):
+    def post(self, request, pk, *args, **kwargs):
+        thesis = Thesis.objects.get(id=pk)
+        POST = request.POST
+
+        form = FormTutorPoster(POST, instance=thesis)
+
+        if form.is_valid():
+            poster_accepted_new_value = form.cleaned_data['poster_accepted']
+            if poster_accepted_new_value and form.instance.state == 'Seminar completed':
+                form.instance.state = 'Poster accepted'
+            else:
+                if thesis.mentoring_requested:
+                    thesis.state = 'Requested'
+                    if thesis.mentoring_accepted == 'MA':
+                        thesis.state = 'Mentoring accepted'
+                        if thesis.examination_office_state == '1B':
+                            thesis.state = 'Examination office submitted'
+                        elif thesis.examination_office_state == '2A':
+                            thesis.state = 'Examination office accepted'
+                            if thesis.thesis:
+                                thesis.state = 'Thesis submitted'
+                                if thesis.colloquium_done:
+                                    thesis.state = 'Colloquium completed'
+                                    if thesis.type == 'Bachelor' and thesis.student.bachelor_seminar_done:
+                                        form.instance.state = 'Seminar completed'
+                                    elif thesis.type == 'Master' and thesis.student.master_seminar_done:
+                                        form.instance.state = 'Seminar completed'
+                    elif thesis.mentoring_accepted == 'MD':
+                        thesis.state = 'Mentoring denied'
+                else:
+                    thesis.state = 'Not requested'
+                thesis.save()
+            form.save()
+        return redirect('posters-index')
 
 
 def handler500(request):

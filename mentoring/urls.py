@@ -43,6 +43,8 @@ urlpatterns = [
     url(r'^tutor/placementseminarentry/create$', login_required(PlacementSeminarEntryCreateView.as_view()), name='placement-seminar-entry-create'),
     url(r'^tutor/placementseminarentry/process$', login_required(PlacementSeminarEntryProcessView.as_view()), name='placement-seminar-entry-process'),
     url(r'^tutor/placementseminarentry/(?P<pk>\d+)/delete$', login_required(PlacementSeminarEntryDeleteView.as_view()), name='placement-seminar-entry-delete'),
+    url(r'^tutor/posters$', PostersView.as_view(), name='posters-index'),
+    url(r'^tutor/posters/update/(?P<pk>\d+)$', PosterUpdateView.as_view(), name='tutor-poster-update'),
 
     url(r'^tutor/thesisseminar/$', login_required(ThesisSeminarView.as_view()), name='thesis-seminar-list'),
     url(r'^tutor/thesisbachelorseminar/(?P<pk>\d+)/$', login_required(BachelorSeminarUpdateView.as_view()), name='bachelor-seminar-update'),

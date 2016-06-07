@@ -101,11 +101,18 @@ class FormTutorPlacement(forms.ModelForm):
 class FormTutorThesis(forms.ModelForm):
     class Meta:
         model = Thesis
-        exclude = ['student', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'thesis', 'poster', 'presentation', 'other', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation']
+        exclude = ['student', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'thesis', 'poster', 'presentation', 'other', 'grade_first_examiner', 'grade_second_examiner', 'grade_presentation', 'poster_printed', 'poster_accepted']
         fields = ['mentoring_accepted', 'examination_office_state', 'deadline', 'archived']
         widgets = {
             'deadline': DateInput(attrs={'class': 'datepicker'}),
         }
+
+
+class FormTutorPoster(forms.ModelForm):
+    class Meta:
+        model = Thesis
+        exclude = ['student', 'mentoring_requested', 'sent_on', 'tutor', 'task', 'date_from', 'date_to', 'report', 'certificate', 'company_name', 'company_address', 'archived']
+        fields = ['poster_printed', 'poster_accepted']
 
 
 FormsetPlacementContactdata = forms.inlineformset_factory(Placement, PlacementCompanyContactData, fields='__all__', extra=1, can_delete=False)
