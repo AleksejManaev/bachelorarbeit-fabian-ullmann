@@ -229,14 +229,9 @@ class StudentSettingsFormView(UpdateView):
     template_name = 'student_settings.html'
 
     def get(self, request, *args, **kwargs):
-        if request.GET.has_key('fancy'):
-            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
-
         return super(StudentSettingsFormView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        if request.GET.has_key('fancy'):
-            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_object()
         cd = self.get_context_data(request.POST)
 
@@ -526,14 +521,9 @@ class TutorSettingsFormView(UpdateView):
     template_name = 'tutor_settings.html'
 
     def get(self, request, *args, **kwargs):
-        if request.GET.has_key('fancy'):
-            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
-
         return super(TutorSettingsFormView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        if request.GET.has_key('fancy'):
-            request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
         self.object = self.get_object()
         cd = self.get_context_data(request.POST)
         if (cd.get('user_form').is_valid()
