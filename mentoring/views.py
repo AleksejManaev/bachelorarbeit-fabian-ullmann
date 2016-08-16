@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from thread import start_new_thread
+from _thread import start_new_thread
 
 from django.contrib import messages
 from django.core.mail import send_mail
