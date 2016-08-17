@@ -71,7 +71,7 @@ class StudentPlacementFormView(UpdateView):
             placement_form_dict = self.get_context_placement(request.POST, files=request.FILES)
 
         # Alle Formulare validieren und speichern
-        target_forms = [i for i, v in placement_form_dict.iteritems()]
+        target_forms = [i for i, v in placement_form_dict.items()]
 
         if 'placement' in target_forms:
             target_forms.remove('placement')
@@ -146,7 +146,7 @@ class StudentThesisFormView(UpdateView):
             thesis_form_dict = self.get_context_thesis(request.POST, files=request.FILES)
 
         # Alle Formulare validieren und speichern
-        target_forms = [i for i, v in thesis_form_dict.iteritems()]
+        target_forms = [i for i, v in thesis_form_dict.items()]
 
         if 'thesis' in target_forms:
             target_forms.remove('thesis')
@@ -569,7 +569,7 @@ class TutorPlacementView(UpdateView):
 
         # Alle Formulare validieren und speichern
         all_forms_valid = False
-        for k, v in placement_form_dict.iteritems():
+        for k, v in placement_form_dict.items():
             all_forms_valid = v.is_valid()
             if v.is_valid():
                 if k == 'placement_form':
