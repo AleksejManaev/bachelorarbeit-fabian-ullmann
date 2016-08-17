@@ -350,11 +350,11 @@ class TutorUpdatePlacementView(View):
             Wenn das "Betreuung angenommen"-Feld "disabled" ist, wird der Wert über POST nicht mitgesendet. Dadurch schlägt die Validierung fehl.
             Deshalb wird der alte Wert dem Formular übergeben.
         '''
-        if not request.POST.has_key('mentoring_accepted') or not request.POST.has_key('completed'):
+        if 'mentoring_accepted' not in request.POST or 'completed' not in request.POST:
             POST = request.POST.copy()
-        if not request.POST.has_key('mentoring_accepted'):
+        if 'mentoring_accepted' not in request.POST:
             POST['mentoring_accepted'] = mentoring_accepted_old_value
-        if not request.POST.has_key('completed'):
+        if 'completed'not in request.POST:
             POST['completed'] = completed_old_value
         form = FormTutorPlacement(POST, instance=instance)
 
@@ -423,11 +423,11 @@ class TutorUpdateThesisView(View):
             Wenn das "Betreuung angenommen"-Feld "disabled" ist, wird der Wert über POST nicht mitgesendet. Dadurch schlägt die Validierung fehl.
             Deshalb wird der alte Wert dem Formular übergeben.
         '''
-        if not request.POST.has_key('mentoring_accepted') or not request.POST.has_key('completed'):
+        if 'mentoring_accepted' not in request.POST or 'completed' not in request.POST:
             POST = request.POST.copy()
-        if not request.POST.has_key('mentoring_accepted'):
+        if 'mentoring_accepted' not in request.POST:
             POST['mentoring_accepted'] = mentoring_accepted_old_value
-        if not request.POST.has_key('examination_office_state'):
+        if 'examination_office_state' not in request.POST:
             POST['examination_office_state'] = examination_office_state_old_value
         form = FormTutorThesis(POST, instance=instance)
 
