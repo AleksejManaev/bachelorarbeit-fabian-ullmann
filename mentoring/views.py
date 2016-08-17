@@ -247,11 +247,11 @@ class StudentSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(StudentSettingsFormView, self).get_context_data(
-                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-                student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
-                                                        prefix='student_user_formset'),
-                student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
-                                                              prefix='student_address_formset')
+            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+            student_user_formset=FormsetUserStudent(data=data, instance=self.get_object().user,
+                                                    prefix='student_user_formset'),
+            student_address_formset=FormsetStudentAddress(data=data, instance=self.get_object(),
+                                                          prefix='student_address_formset')
         )
 
     def get_object(self, queryset=None):
@@ -354,7 +354,7 @@ class TutorUpdatePlacementView(View):
             POST = request.POST.copy()
         if 'mentoring_accepted' not in request.POST:
             POST['mentoring_accepted'] = mentoring_accepted_old_value
-        if 'completed'not in request.POST:
+        if 'completed' not in request.POST:
             POST['completed'] = completed_old_value
         form = FormTutorPlacement(POST, instance=instance)
 
@@ -408,7 +408,7 @@ class TutorUpdatePlacementView(View):
         comment.save()
         Placement.objects.filter(id=placement.id).update(comment_unread_by_student=True, comment_unread_by_tutor=True)
 
-        html_message = '<a href="http://127.0.0.1:8000/comments/placement/{}">{}</a>'.format(placement.id, _('Show comments'))
+        html_message = '<a href="http://grad-man.th-brandenburg.de/comments/placement/{}">{}</a>'.format(placement.id, _('Show comments'))
         send_comment_email([placement.student.user.email, placement.tutor.user.email], html_message)
 
 
@@ -493,7 +493,7 @@ class TutorUpdateThesisView(View):
         comment.save()
         Thesis.objects.filter(id=thesis.id).update(comment_unread_by_student=True, comment_unread_by_tutor=True)
 
-        html_message = '<a href="http://127.0.0.1:8000/comments/abstractwork/{}">{}</a>'.format(thesis.id, _('Show comments'))
+        html_message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a>'.format(thesis.id, _('Show comments'))
         send_comment_email([thesis.student.user.email, thesis.tutor.user.email], html_message)
 
 
@@ -536,9 +536,9 @@ class TutorSettingsFormView(UpdateView):
 
     def get_context_data(self, data=None, **kwargs):
         return super(TutorSettingsFormView, self).get_context_data(
-                user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
-                tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
-                                                    prefix='tutor_user_formset')
+            user_form=FormSettingsUser(data=data, instance=self.get_object().user, prefix='user_form'),
+            tutor_user_formset=FormsetUserTutor(data=data, instance=self.get_object().user,
+                                                prefix='tutor_user_formset')
         )
 
     def get_object(self, queryset=None):
@@ -684,7 +684,7 @@ class CommentsView(View):
 
             # Kommentar als ungelesen für den anderen Gesprächspartner markieren (aber nicht bei privaten) und E-Mail versenden
             if (hasattr(request.user, 'portaluser')):
-                message = '<a href="http://127.0.0.1:8000/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
                 abstractwork = comment.abstractwork
 
                 if (hasattr(request.user.portaluser, 'tutor')):
@@ -726,16 +726,15 @@ def togglePrivacy(request):
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_student=False)
             else:
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_student=True)
-                message = '<a href="http://127.0.0.1:8000/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
                 send_comment_email([comment.abstractwork.student.user.email], message)
         elif (hasattr(request.user.portaluser, 'student')):
             if comment.private:
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_tutor=False)
             else:
-                email = comment.abstractwork.tutor.user.email
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_tutor=True)
-                message = '<a href="http://127.0.0.1:8000/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
-                # send_comment_email([comment.abstractwork.tutor.user.email], message)
+                message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                send_comment_email([comment.abstractwork.tutor.user.email], message)
 
     return JsonResponse({'private_state': comment.private, 'private_text': str(_(private_text))})
 
