@@ -742,7 +742,7 @@ def togglePrivacy(request):
 def send_comment_email(recipient_list, html_message):
     def run_in_new_thread():
         try:
-            send_mail(_('You have unread comments.'), '', from_email='placement_thesis_service@gmx.de', recipient_list=recipient_list,
+            send_mail(_('You have unread comments.'), '', from_email='placement_thesis_service@gmx.net', recipient_list=recipient_list,
                       html_message=html_message)
         except:
             pass
