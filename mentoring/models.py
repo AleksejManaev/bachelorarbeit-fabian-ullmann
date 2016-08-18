@@ -178,7 +178,7 @@ class Student(PortalUser):
     placement_seminar_done = models.BooleanField(_('Placement seminar done'), default=False)
     bachelor_seminar_done = models.BooleanField(_('Bachelor seminar done'), default=False)
     master_seminar_done = models.BooleanField(_('Master seminar done'), default=False)
-    seminar_entries = models.ManyToManyField(SeminarEntry, related_name='seminar_students')
+    seminar_entries = models.ManyToManyField(SeminarEntry, blank=True, null=True, related_name='seminar_students')
 
     def __str__(self):
         return u"{} ({})".format(self.user.get_full_name(), self.matriculation_number)
