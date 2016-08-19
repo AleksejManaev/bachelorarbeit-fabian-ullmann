@@ -49,8 +49,8 @@ class FormPlacement(forms.ModelForm):
         widgets = {
             'date_from': DateInput(attrs={'class': 'datepicker'}),
             'date_to': DateInput(attrs={'class': 'datepicker'}),
-            'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'certificate': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'report': ClearableFileInput(),
+            'certificate': ClearableFileInput(),
         }
 
 
@@ -83,9 +83,9 @@ class FormThesis(forms.ModelForm):
         exclude = ['student', 'finished', 'sent_on', 'deadline']
         fields = ['tutor', 'task', 'type', 'second_examiner_first_name', 'second_examiner_last_name', 'second_examiner_organisation', 'second_examiner_title', 'expose', 'thesis', 'poster', 'presentation', 'other']
         widgets = {
-            'expose': ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'thesis': ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'poster': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'expose': ClearableFileInput(),
+            'thesis': ClearableFileInput(),
+            'poster': ClearableFileInput(),
             'presentation': ClearableFileInput(),
             'other': ClearableFileInput(),
         }
@@ -141,8 +141,8 @@ class FormTutorPlacementDetails(forms.ModelForm):
         widgets = {
             'date_from': DateInput(attrs={'class': 'datepicker'}),
             'date_to': DateInput(attrs={'class': 'datepicker'}),
-            'report': ClearableFileInput(attrs={'accept': 'application/pdf'}),
-            'certificate': ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'report': ClearableFileInput(),
+            'certificate': ClearableFileInput(),
         }
 
 
