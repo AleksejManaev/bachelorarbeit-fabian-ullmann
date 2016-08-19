@@ -440,6 +440,8 @@ class TutorUpdateThesisView(View):
         form = FormTutorThesis(POST, instance=instance)
 
         if form.is_valid():
+            messages.add_message(request, messages.SUCCESS, _('Thesis successfully updated.'))
+
             mentoring_accepted_new_value = form.cleaned_data['mentoring_accepted']
             if mentoring_accepted_new_value == 'MD' and form.instance.state == 'Requested':
                 form.instance.state = 'Mentoring denied'
@@ -492,6 +494,8 @@ class TutorUpdateThesisView(View):
             if form.cleaned_data['archived'] and instance_is_activethesis:
                 active_thesis = Thesis(student=instance.student)
                 active_thesis.save()
+        else:
+            messages.add_message(request, messages.ERROR, _('Thesis update failed.'))
 
         request.session['is_thesis'] = True
         return redirect('tutor-index')
