@@ -364,6 +364,8 @@ class TutorUpdatePlacementView(View):
         form = FormTutorPlacement(POST, instance=instance)
 
         if form.is_valid():
+            messages.add_message(request, messages.SUCCESS, _('Placement successfully updated.'))
+
             mentoring_accepted_new_value = form.cleaned_data['mentoring_accepted']
             completed_new_value = form.cleaned_data['completed']
             if mentoring_accepted_new_value == 'MD' and form.instance.state == 'Requested':
@@ -381,7 +383,6 @@ class TutorUpdatePlacementView(View):
             elif form.cleaned_data['completed'] == 'Failed':
                 form.instance.state = 'Placement failed'
             elif form.instance.state != 'Placement completed':
-                # TODO: Toast-Nachricht, Praktikum kann nicht absolviert werden, wenn der Status nicht "Certificate accepted" ist oder die Option "Absolviert" ausblenden
                 form.instance.completed = '-'
 
             form.save()
@@ -404,6 +405,8 @@ class TutorUpdatePlacementView(View):
                     active_placement = Placement(student=instance.student)
                     active_placement.save()
                     self.notify(request.user, instance, _('You failed your placement.'))
+        else:
+            messages.add_message(request, messages.ERROR, _('Placement update failed.'))
 
         request.session['is_thesis'] = False
         return redirect('tutor-index')

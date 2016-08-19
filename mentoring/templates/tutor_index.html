@@ -33,6 +33,19 @@
     <div class="container-fluid center-vertically">
         <div class="row">
             <div class="col-sm-12">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}alert-success{% elif  message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}alert-danger{% else %}alert-info{% endif %} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs nav-justified" role="tablist">
                     <li {% if not is_thesis %}class="active"{% endif %}><a href="#placement" role="tab" data-toggle="tab">{% trans 'Internship tab' %}</a></li>
@@ -265,7 +278,8 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input {% if thesis.mentoring_accepted == 'MD' or thesis.mentoring_accepted == 'ND' %} disabled {% endif %} class="form-control datepicker" id="deadline{{ thesis.id }}" name="deadline" placeholder="{% trans 'Deadline' %}" type="text"
+                                            <input {% if thesis.mentoring_accepted == 'MD' or thesis.mentoring_accepted == 'ND' %} disabled {% endif %} class="form-control datepicker" id="deadline{{ thesis.id }}" name="deadline"
+                                                                                                                                   placeholder="{% trans 'Deadline' %}" type="text"
                                                     {% if thesis.deadline %} value="{{ thesis.deadline|date:"d.m.Y" }}"{% endif %} form="{{ thesis.id }}" size="11">
                                         </td>
                                         <td>
