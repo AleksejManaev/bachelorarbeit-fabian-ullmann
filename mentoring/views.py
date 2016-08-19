@@ -94,6 +94,10 @@ class StudentPlacementFormView(UpdateView):
                 placement.sent_on = datetime.now()
                 placement.save()
 
+            messages.add_message(request, messages.SUCCESS, _('Placement successfully updated.'))
+        else:
+            messages.add_message(request, messages.ERROR, _('Placement update failed.'))
+
         return redirect('student-placement')
 
     def get(self, request, status=200, *args, **kwargs):
@@ -154,15 +158,14 @@ class StudentThesisFormView(UpdateView):
         valid = True
         for t in target_forms:
             form = thesis_form_dict.get(t)
-            is_valid = form.is_valid()
-
-            if is_valid:
-                thesis_form_dict.get(t).save()
-            else:
+            if not form.is_valid():
                 valid = False
 
-        # Wenn alle Formulare valide sind, dann ggf. den Zustand der Abschlussarbeit anpassen und die Arbeit speichern
+        # Wenn alle Formulare valide sind, dann Formulare speichern, ggf. den Zustand der Abschlussarbeit anpassen und die Arbeit speichern
         if valid:
+            for t in target_forms:
+                thesis_form_dict.get(t).save()
+
             if thesis.mentoring_requested is False and show_tutor:
                 thesis.mentoring_requested = True
                 thesis.state = 'Requested'
@@ -189,6 +192,10 @@ class StudentThesisFormView(UpdateView):
                 elif thesis.mentoring_accepted == 'MD':
                     thesis.state = 'Mentoring denied'
                 thesis.save()
+
+            messages.add_message(request, messages.SUCCESS, _('Thesis successfully updated.'))
+        else:
+            messages.add_message(request, messages.ERROR, _('Thesis update failed.'))
 
         return redirect('student-thesis')
 

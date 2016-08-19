@@ -59,6 +59,15 @@
 
         <!-- Aktives Praktikum bzw. Betreuungsanfrage" -->
         <div class="row ">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}alert-success{% elif  message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}alert-danger{% else %}alert-info{% endif %} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             <div class="col-md-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -68,7 +77,8 @@
                     <div class="panel-body">
 
                         <!-- Status -->
-                        <div class="alert {% if placement.mentoring_requested and placement.completed != 'Completed' %} {{ placement.mentoring_accepted|state_css }} {% elif placement.completed == 'Completed' %} alert-placement-completed {% else %} alert-info {% endif %}" role="alert">
+                        <div class="alert {% if placement.mentoring_requested and placement.completed != 'Completed' %} {{ placement.mentoring_accepted|state_css }} {% elif placement.completed == 'Completed' %} alert-placement-completed {% else %} alert-info {% endif %}"
+                             role="alert">
                             <div class="row ">
                                 <div class="col-md-6">
                                     {% trans 'State: ' %}{% trans placement.state %}{% for state in placement_state_subgoals %}{% if state.0 == placement.state %} | {% trans 'Next subgoal' %}: {% trans state.1 %}{% endif %}{% endfor %}

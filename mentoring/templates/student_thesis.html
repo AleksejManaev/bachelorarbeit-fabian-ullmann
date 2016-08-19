@@ -63,6 +63,15 @@
 
         <!-- Aktive Abschlussarbeit bzw. Betreuungsanfrage" -->
         <div class="row ">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}alert-success{% elif  message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}alert-danger{% else %}alert-info{% endif %} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             <div class="col-md-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -72,7 +81,7 @@
                     <div class="panel-body">
 
                         <!-- Status -->
-                        <div class="alert {% if thesis.mentoring_requested and not thesis.archived%} {{ thesis.mentoring_accepted|state_css }} {% elif thesis.archived %} alert-placement-completed {% else %} alert-info {% endif %}"
+                        <div class="alert {% if thesis.mentoring_requested and not thesis.archived %} {{ thesis.mentoring_accepted|state_css }} {% elif thesis.archived %} alert-placement-completed {% else %} alert-info {% endif %}"
                              role="alert">
                             <div class="row ">
                                 <div class="col-md-4">
