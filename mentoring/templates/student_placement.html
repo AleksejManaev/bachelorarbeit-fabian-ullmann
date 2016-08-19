@@ -105,7 +105,7 @@
                         <!-- Formular -->
                         <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post" class="form">
                             {% csrf_token %}
-                            {% bootstrap_form_errors placement_form %}
+
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h1 class="panel-title">{% trans 'General data' %}</h1>
@@ -115,8 +115,10 @@
                                     {% bootstrap_field placement_form.task %}
                                     {% bootstrap_field placement_form.date_from %}
                                     {% bootstrap_field placement_form.date_to %}
-                                    {% bootstrap_field placement_form.report %}
-                                    {% bootstrap_field placement_form.certificate %}
+                                    <label class="control-label" for="id_placement_form-report">{% trans 'Placement report' %}</label> {% file_upload_max_size %}
+                                    {% bootstrap_field placement_form.report show_label=False %}
+                                    <label class="control-label" for="id_placement_form-certificate">{% trans 'Placement certificate' %}</label> {% file_upload_max_size %}
+                                    {% bootstrap_field placement_form.certificate show_label=False %}
                                 </div>
                             </div>
 

@@ -124,9 +124,12 @@
                                     {% bootstrap_field thesis_form.type %}
                                     {% bootstrap_field thesis_form.tutor %}
                                     {% bootstrap_field thesis_form.task %}
-                                    {% bootstrap_field thesis_form.expose %}
-                                    {% bootstrap_field thesis_form.thesis %}
-                                    {% bootstrap_field thesis_form.poster %}
+                                    <label class="control-label" for="id_thesis_form-expose">{% trans 'Expose' %}</label> {% file_upload_max_size %}
+                                    {% bootstrap_field thesis_form.expose show_label=False %}
+                                    <label class="control-label" for="id_thesis_form-thesis">{% trans 'Thesis' %}</label> {% file_upload_max_size %}
+                                    {% bootstrap_field thesis_form.thesis show_label=False %}
+                                    <label class="control-label" for="id_thesis_form-poster">{% trans 'Poster' %}</label> {% file_upload_max_size %}
+                                    {% bootstrap_field thesis_form.poster show_label=False %}
                                     {% bootstrap_field thesis_form.presentation %}
                                     {% bootstrap_field thesis_form.other %}
                                     <div class="form-group">

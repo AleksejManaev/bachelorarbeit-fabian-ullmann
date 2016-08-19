@@ -3,6 +3,7 @@ from datetime import datetime
 
 import pytz
 from django import template
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 __author__ = 'ullmanfa'
@@ -111,3 +112,9 @@ def placementeventregistration(value, arg=None):
             for i in t:
                 l.append(i)
     return l
+
+
+@register.simple_tag()
+def file_upload_max_size():
+    size_in_mb = int(getattr(settings, "FILE_UPLOAD_MAX_SIZE", "") / 1024 / 1024)
+    return "(Max. %sMB)" % size_in_mb
