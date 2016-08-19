@@ -10,151 +10,155 @@
 
 
 {% block content %}
-    <!-- Details zum Praktikum -->
     <div class="container center-vertically">
-        <div class="row ">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}alert-success{% elif  message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}alert-danger{% else %}alert-info{% endif %} alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
+        <!-- Meldungen -->
+        <div class="row">
+            <div class="col-sm-12">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}alert-success{% elif  message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}alert-danger{% else %}alert-info{% endif %} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
 
-            <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h1 class="panel-title">{% trans 'Thesis' %}</h1>
-                    </div>
+        <!-- Details zum Praktikum -->
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h1 class="panel-title">{% trans 'Thesis' %}</h1>
+                </div>
 
-                    <div class="panel-body">
-                        <!-- Formular -->
-                        <form enctype="multipart/form-data" action="" method="post" class="form">
-                            {% csrf_token %}
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h1 class="panel-title">{% trans 'General data' %}</h1>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <label>{% trans 'Student' %}</label>
-                                        <p>{{ form.instance.student }}</p>
-                                    </div>
-
-                                    {% bootstrap_field form.type %}
-                                    {% bootstrap_field form.task %}
-
-                                    <div class="form-group">
-                                        <label class="control-label">{% trans 'Expose' %}</label>
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                {% if form.instance.expose %}
-                                                    <a href="{{ form.instance.expose.url }}">{{ form.instance.expose }}</a>
-                                                {% else %}
-                                                    <p>-</p>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label">{% trans 'Thesis' %}</label>
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                {% if form.instance.thesis %}
-                                                    <a href="{{ form.instance.thesis.url }}">{{ form.instance.thesis }}</a>
-                                                {% else %}
-                                                    <p>-</p>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label">{% trans 'Poster' %}</label>
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                {% if form.instance.poster %}
-                                                    <a href="{{ form.instance.poster.url }}">{{ form.instance.poster }}</a>
-                                                {% else %}
-                                                    <p>-</p>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label">{% trans 'Presentation' %}</label>
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                {% if form.instance.presentation %}
-                                                    <a href="{{ form.instance.presentation.url }}">{{ form.instance.presentation }}</a>
-                                                {% else %}
-                                                    <p>-</p>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label">{% trans 'Other' %}</label>
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                {% if form.instance.other %}
-                                                    <a href="{{ form.instance.other.url }}">{{ form.instance.other }}</a>
-                                                {% else %}
-                                                    <p>-</p>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {% bootstrap_field form.deadline_extended %}
-                                    <div class="form-group">
-                                        <label class="control-label">{% trans 'Deadline' %}</label>
-                                        <input class="form-control datepicker" id="id_deadline" name="deadline" title="" type="text"
-                                                {% if form.instance.deadline %}
-                                               value="{{ form.instance.deadline|date:"d.m.Y" }}"
-                                                {% endif %}
-                                        >
-                                    </div>
-                                    {% bootstrap_field form.colloquium_done %}
-                                </div>
+                <div class="panel-body">
+                    <!-- Formular -->
+                    <form enctype="multipart/form-data" action="" method="post" class="form">
+                        {% csrf_token %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h1 class="panel-title">{% trans 'General data' %}</h1>
                             </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>{% trans 'Student' %}</label>
+                                    <p>{{ form.instance.student }}</p>
+                                </div>
 
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h1 class="panel-title">{% trans 'Second examiner' %}</h1>
+                                {% bootstrap_field form.type %}
+                                {% bootstrap_field form.task %}
+
+                                <div class="form-group">
+                                    <label class="control-label">{% trans 'Expose' %}</label>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            {% if form.instance.expose %}
+                                                <a href="{{ form.instance.expose.url }}">{{ form.instance.expose }}</a>
+                                            {% else %}
+                                                <p>-</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="panel-body">
-                                    {% bootstrap_field form.second_examiner_title %}
-                                    {% bootstrap_field form.second_examiner_first_name %}
-                                    {% bootstrap_field form.second_examiner_last_name %}
-                                    {% bootstrap_field form.second_examiner_organisation %}
+
+                                <div class="form-group">
+                                    <label class="control-label">{% trans 'Thesis' %}</label>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            {% if form.instance.thesis %}
+                                                <a href="{{ form.instance.thesis.url }}">{{ form.instance.thesis }}</a>
+                                            {% else %}
+                                                <p>-</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">{% trans 'Poster' %}</label>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            {% if form.instance.poster %}
+                                                <a href="{{ form.instance.poster.url }}">{{ form.instance.poster }}</a>
+                                            {% else %}
+                                                <p>-</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">{% trans 'Presentation' %}</label>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            {% if form.instance.presentation %}
+                                                <a href="{{ form.instance.presentation.url }}">{{ form.instance.presentation }}</a>
+                                            {% else %}
+                                                <p>-</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">{% trans 'Other' %}</label>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            {% if form.instance.other %}
+                                                <a href="{{ form.instance.other.url }}">{{ form.instance.other }}</a>
+                                            {% else %}
+                                                <p>-</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% bootstrap_field form.deadline_extended %}
+                                <div class="form-group">
+                                    <label class="control-label">{% trans 'Deadline' %}</label>
+                                    <input class="form-control datepicker" id="id_deadline" name="deadline" title="" type="text"
+                                            {% if form.instance.deadline %}
+                                           value="{{ form.instance.deadline|date:"d.m.Y" }}"
+                                            {% endif %}
+                                    >
+                                </div>
+                                {% bootstrap_field form.colloquium_done %}
                             </div>
+                        </div>
 
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h1 class="panel-title">{% trans 'Grades' %}</h1>
-                                </div>
-                                <div class="panel-body">
-                                    {% bootstrap_field form.grade_first_examiner %}
-                                    {% bootstrap_field form.grade_second_examiner %}
-                                    {% bootstrap_field form.grade_presentation %}
-                                </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h1 class="panel-title">{% trans 'Second examiner' %}</h1>
                             </div>
+                            <div class="panel-body">
+                                {% bootstrap_field form.second_examiner_title %}
+                                {% bootstrap_field form.second_examiner_first_name %}
+                                {% bootstrap_field form.second_examiner_last_name %}
+                                {% bootstrap_field form.second_examiner_organisation %}
+                            </div>
+                        </div>
 
-                            {% buttons %}
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">
-                                    {% trans 'Update' %}
-                                </button>
-                            {% endbuttons %}
-                        </form>
-                    </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h1 class="panel-title">{% trans 'Grades' %}</h1>
+                            </div>
+                            <div class="panel-body">
+                                {% bootstrap_field form.grade_first_examiner %}
+                                {% bootstrap_field form.grade_second_examiner %}
+                                {% bootstrap_field form.grade_presentation %}
+                            </div>
+                        </div>
+
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                {% trans 'Update' %}
+                            </button>
+                        {% endbuttons %}
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
