@@ -55,32 +55,28 @@
                                 >
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="id_report">{% trans 'Placement report' %}</label>
-                                <div class="row bootstrap3-multi-input">
+                                <label class="control-label">{% trans 'Placement report' %}</label>
+                                <div class="row">
                                     <div class="col-xs-12">
                                         {% if placement_form.instance.report %}
-                                            {% trans 'Currently' %}:
                                             <a href="{{ placement_form.instance.report.url }}">{{ placement_form.instance.report }}</a>
-                                            <input id="report-clear_id" name="placement_form-report-clear" type="checkbox">
-                                            <label for="report-clear_id">{% trans 'Reset' %}</label>
-                                            </br>
+                                        {% else %}
+                                            <p>-</p>
                                         {% endif %}
-                                        <input class="" id="id_report" name="placement_form-report" title="" type="file"></div>
+                                    </div>
                                 </div>
                             </div>
                             {% bootstrap_field placement_form.report_accepted %}
-                            <div class="form-group">
-                                <label class="control-label" for="id_certificate">{% trans 'Placement certificate' %}</label>
-                                <div class="row bootstrap3-multi-input">
+                             <div class="form-group">
+                                <label class="control-label">{% trans 'Placement certificate' %}</label>
+                                <div class="row">
                                     <div class="col-xs-12">
                                         {% if placement_form.instance.certificate %}
-                                            {% trans 'Currently' %}:
                                             <a href="{{ placement_form.instance.certificate.url }}">{{ placement_form.instance.certificate }}</a>
-                                            <input id="certificate-clear_id" name="placement_form-certificate-clear" type="checkbox">
-                                            <label for="certificate-clear_id">{% trans 'Reset' %}</label>
-                                            </br>
+                                        {% else %}
+                                            <p>-</p>
                                         {% endif %}
-                                        <input class="" id="id_certificate" name="placement_form-certificate" title="" type="file"></div>
+                                    </div>
                                 </div>
                             </div>
                             {% bootstrap_field placement_form.certificate_accepted %}
