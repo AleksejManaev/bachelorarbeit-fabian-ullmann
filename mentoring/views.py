@@ -79,15 +79,15 @@ class StudentPlacementFormView(UpdateView):
         valid = True
         for t in target_forms:
             form = placement_form_dict.get(t)
-            is_valid = form.is_valid()
-
-            if is_valid:
-                placement_form_dict.get(t).save()
-            else:
+            if not form.is_valid():
                 valid = False
+                break
 
-        # Wenn alle Formulare valide sind auch das Praktikum speichern
+        # Wenn alle Formulare valide sind, dann Formulare und auch das Praktikum speichern
         if valid:
+            for t in target_forms:
+                placement_form_dict.get(t).save()
+
             if placement.mentoring_requested is False and show_tutor:
                 placement.mentoring_requested = True
                 placement.state = PLACEMENT_STATE_CHOICES[1][0]
