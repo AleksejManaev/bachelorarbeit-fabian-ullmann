@@ -352,7 +352,7 @@ class TutorUpdatePlacementView(View):
         POST = request.POST
 
         '''
-            Wenn das "Betreuung angenommen"-Feld "disabled" ist, wird der Wert über POST nicht mitgesendet. Dadurch schlägt die Validierung fehl.
+            Wenn das "Betreuung angenommen"-Feld oder "Praktikum absolviert"-Feld "disabled" ist, wird der Wert über POST nicht mitgesendet. Dadurch schlägt die Validierung fehl.
             Deshalb wird der alte Wert dem Formular übergeben.
         '''
         if 'mentoring_accepted' not in request.POST or 'completed' not in request.POST:
@@ -384,6 +384,10 @@ class TutorUpdatePlacementView(View):
                 form.instance.state = 'Placement failed'
             elif form.instance.state != 'Placement completed':
                 form.instance.completed = '-'
+
+            # Wenn Zertifikat noch nicht akzeptiert, dann darf Praktikum noch nicht absolviert werden. Wenn Praktikum bereits abgeschlossen, dann erscheint Meldung nicht.
+            if form.instance.state not in ['Certificate accepted', 'Placement completed'] and form.cleaned_data['completed'] == 'Completed':
+                messages.add_message(request, messages.ERROR, _('Placement can\'t be completed without having reached the subgoal "Certificate accepted".'))
 
             form.save()
 
