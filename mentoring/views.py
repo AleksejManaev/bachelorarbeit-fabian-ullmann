@@ -242,9 +242,7 @@ class StudentSettingsFormView(UpdateView):
         self.object = self.get_object()
         cd = self.get_context_data(request.POST)
 
-        if (cd.get('user_form').is_valid()
-            and cd.get('student_user_formset').is_valid()
-            and cd.get('student_address_formset').is_valid()):
+        if (cd.get('user_form').is_valid() and cd.get('student_user_formset').is_valid() and cd.get('student_address_formset').is_valid()):
             cd.get('user_form').save()
             cd.get('student_user_formset').save()
             cd.get('student_address_formset').save()
@@ -533,8 +531,8 @@ class TutorSettingsFormView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         cd = self.get_context_data(request.POST)
-        if (cd.get('user_form').is_valid()
-            and cd.get('tutor_user_formset').is_valid()):
+
+        if (cd.get('user_form').is_valid() and cd.get('tutor_user_formset').is_valid()):
             cd.get('user_form').save()
             cd.get('tutor_user_formset').save()
             return self.render_to_response(cd, status=200)
