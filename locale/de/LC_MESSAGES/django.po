@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-07 20:44+0200\n"
+"POT-Creation-Date: 2016-08-19 14:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -515,7 +515,9 @@ msgid "Delete"
 msgstr "Löschen"
 
 #: .\mentoring\templates\posters_index.html:46
-msgid "Tutor 2"
+#, fuzzy
+#| msgid "Tutor 2"
+msgid "Tutor"
 msgstr "2. Gutachter"
 
 #: .\mentoring\templates\posters_index.html:49
@@ -551,8 +553,8 @@ msgstr "Dateien"
 #: .\mentoring\templates\student_completed_theses.html:50
 #: .\mentoring\templates\student_placement.html:28
 #: .\mentoring\templates\student_placement.html:40
-#: .\mentoring\templates\student_placement.html:80
-#: .\mentoring\templates\student_placement.html:87
+#: .\mentoring\templates\student_placement.html:90
+#: .\mentoring\templates\student_placement.html:97
 #: .\mentoring\templates\student_thesis.html:29
 #: .\mentoring\templates\student_thesis.html:44
 #: .\mentoring\templates\student_thesis.html:92
@@ -588,48 +590,48 @@ msgstr "Abgelehnte Betreuungsanfragen"
 msgid "Failed placements"
 msgstr "Durchgefallene Praktika"
 
-#: .\mentoring\templates\student_placement.html:65
+#: .\mentoring\templates\student_placement.html:74
 #: .\mentoring\templates\student_thesis.html:69
 msgid "Active mentoring request"
 msgstr "Aktive Betreuungsanfrage"
 
-#: .\mentoring\templates\student_placement.html:74
+#: .\mentoring\templates\student_placement.html:84
 #: .\mentoring\templates\student_thesis.html:79
 #: .\mentoring\templates\tutor_index.html:103
 #: .\mentoring\templates\tutor_index.html:234
 msgid "State: "
 msgstr "Status: "
 
-#: .\mentoring\templates\student_placement.html:74
+#: .\mentoring\templates\student_placement.html:84
 #: .\mentoring\templates\tutor_index.html:57
 #: .\mentoring\templates\tutor_index.html:189
 msgid "Next subgoal"
 msgstr "Nächstes Teilziel"
 
-#: .\mentoring\templates\student_placement.html:101
+#: .\mentoring\templates\student_placement.html:111
 #: .\mentoring\templates\student_thesis.html:112
 #: .\mentoring\templates\tutor_thesis_details.html:37
 msgid "General data"
 msgstr "Allgemeine Angaben"
 
-#: .\mentoring\templates\student_placement.html:115
+#: .\mentoring\templates\student_placement.html:125
 msgid "Company data"
 msgstr "Angaben zum Unternehmen"
 
-#: .\mentoring\templates\student_placement.html:125
+#: .\mentoring\templates\student_placement.html:135
 #: .\mentoring\templates\tutor_placement_details.html:91
 msgid "Contact person in the company"
 msgstr "Ansprechpartner im Unternehmen"
 
-#: .\mentoring\templates\student_placement.html:139
-#: .\mentoring\templates\student_placement.html:146
+#: .\mentoring\templates\student_placement.html:149
+#: .\mentoring\templates\student_placement.html:156
 #: .\mentoring\templates\student_thesis.html:144
 #: .\mentoring\templates\student_thesis.html:151
 msgid "Request visible for mentor!"
 msgstr "Anfrage für den Betreuer sichtbar!"
 
-#: .\mentoring\templates\student_placement.html:154
-#: .\mentoring\templates\student_placement.html:158
+#: .\mentoring\templates\student_placement.html:164
+#: .\mentoring\templates\student_placement.html:168
 #: .\mentoring\templates\student_settings.html:43
 #: .\mentoring\templates\student_thesis.html:157
 #: .\mentoring\templates\tutor_settings.html:35
@@ -751,44 +753,44 @@ msgstr "Betreuung der Abschlussarbeit"
 msgid "error"
 msgstr "Fehler"
 
-#: .\mentoring\views.py:380
-msgid "You completed your placement."
-msgstr "Sie haben ihr Praktimum abgeschlossen."
-
-#: .\mentoring\views.py:398 .\mentoring\views.py:480
-msgid "Your mentoring request was denied."
-msgstr "Ihre Betreuungsanfrage wurde abgelehnt."
-
-#: .\mentoring\views.py:401 .\mentoring\views.py:483
-msgid "Your mentoring request was accepted."
-msgstr "Ihre Betreuungsanfrage wurde angenommen."
-
-#: .\mentoring\views.py:406
-msgid "You failed your placement."
-msgstr "Sie haben Ihr Praktikum nicht bestanden."
-
-#: .\mentoring\views.py:416 .\mentoring\views.py:501 .\mentoring\views.py:697
-#: .\mentoring\views.py:739 .\mentoring\views.py:747
-msgid "Show comments"
-msgstr "Kommentare anzeigen"
-
-#: .\mentoring\views.py:600
+#: .\mentoring\views.py:97 .\mentoring\views.py:594
 msgid "Placement successfully updated."
 msgstr "Praktikum erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:602
+#: .\mentoring\views.py:99 .\mentoring\views.py:596
 msgid "Placement update failed."
-msgstr "Aktualisierung des Praktikums fehlgeschlagen"
+msgstr "Aktualisierung des Praktikums fehlgeschlagen."
 
-#: .\mentoring\views.py:653
+#: .\mentoring\views.py:379
+msgid "You completed your placement."
+msgstr "Sie haben ihr Praktimum abgeschlossen."
+
+#: .\mentoring\views.py:397 .\mentoring\views.py:479
+msgid "Your mentoring request was denied."
+msgstr "Ihre Betreuungsanfrage wurde abgelehnt."
+
+#: .\mentoring\views.py:400 .\mentoring\views.py:482
+msgid "Your mentoring request was accepted."
+msgstr "Ihre Betreuungsanfrage wurde angenommen."
+
+#: .\mentoring\views.py:405
+msgid "You failed your placement."
+msgstr "Sie haben Ihr Praktikum nicht bestanden."
+
+#: .\mentoring\views.py:415 .\mentoring\views.py:500 .\mentoring\views.py:691
+#: .\mentoring\views.py:733 .\mentoring\views.py:740
+msgid "Show comments"
+msgstr "Kommentare anzeigen"
+
+#: .\mentoring\views.py:647
 msgid "Thesis successfully updated."
 msgstr "Abschlussarbeit erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:655
+#: .\mentoring\views.py:649
 msgid "Thesis update failed."
 msgstr "Aktualisierung der Abschlussarbeit fehlgeschlagen"
 
-#: .\mentoring\views.py:756
+#: .\mentoring\views.py:749
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
@@ -800,15 +802,15 @@ msgstr "Posterverwaltung"
 msgid "Thesis seminars"
 msgstr "Abschlussarbeitseminare"
 
-#: .\templates\base.html:74
+#: .\templates\base.html:72
 msgid "Home"
 msgstr "Start"
 
-#: .\templates\base.html:89
+#: .\templates\base.html:85
 msgid "Profile"
 msgstr "Profil"
 
-#: .\templates\base.html:97
+#: .\templates\base.html:93
 msgid "Logout"
 msgstr "Abmelden"
 
