@@ -105,7 +105,7 @@
                         <!-- Formular -->
                         <form enctype="multipart/form-data" action="{% url 'student-placement-update' %}" method="post" class="form">
                             {% csrf_token %}
-
+                            {% bootstrap_form_errors placement_form %}
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h1 class="panel-title">{% trans 'General data' %}</h1>

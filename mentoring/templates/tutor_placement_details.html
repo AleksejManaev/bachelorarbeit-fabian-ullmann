@@ -37,7 +37,7 @@
                                 <p>{{ placement_form.instance.student }}</p>
                             </div>
 
-                            {% bootstrap_field placement_form.task bound_css_class=' ' %}
+                            {% bootstrap_field placement_form.task %}
                             <div class="form-group">
                                 <label class="control-label" for="id_date_from">{% trans 'internship begin' %}</label>
                                 <input class="form-control datepicker" id="id_date_from" name="placement_form-date_from" title="" type="text"
@@ -84,8 +84,8 @@
                                 </div>
                             </div>
                             {% bootstrap_field placement_form.certificate_accepted %}
-                            {% bootstrap_field placement_form.company_name bound_css_class=' ' %}
-                            {% bootstrap_field placement_form.company_address bound_css_class=' ' %}
+                            {% bootstrap_field placement_form.company_name %}
+                            {% bootstrap_field placement_form.company_address %}
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h1 class="panel-title">{% trans 'Contact person in the company' %}</h1>

@@ -31,8 +31,8 @@
                     <form action="" method="post" class="form">
                         {% csrf_token %}
                         {% bootstrap_form_errors form %}
-                        {% bootstrap_field form.username bound_css_class=' ' %}
-                        {% bootstrap_field form.password bound_css_class=' ' %}
+                        {% bootstrap_field form.username %}
+                        {% bootstrap_field form.password %}
                         {% buttons %}
                             <button type="submit" class="btn btn-primary">
                                 {% trans 'Sign in' %}

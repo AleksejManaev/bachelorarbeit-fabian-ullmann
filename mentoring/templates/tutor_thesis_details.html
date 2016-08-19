@@ -42,8 +42,8 @@
                                         <p>{{ form.instance.student }}</p>
                                     </div>
 
-                                    {% bootstrap_field form.type bound_css_class=' ' %}
-                                    {% bootstrap_field form.task bound_css_class=' ' %}
+                                    {% bootstrap_field form.type %}
+                                    {% bootstrap_field form.task %}
 
                                     <div class="form-group">
                                         <label class="control-label">{% trans 'Expose' %}</label>
@@ -110,7 +110,7 @@
                                         </div>
                                     </div>
 
-                                    {% bootstrap_field form.deadline_extended bound_css_class=' ' %}
+                                    {% bootstrap_field form.deadline_extended %}
                                     <div class="form-group">
                                         <label class="control-label">{% trans 'Deadline' %}</label>
                                         <input class="form-control datepicker" id="id_deadline" name="deadline" title="" type="text"
@@ -119,7 +119,7 @@
                                                 {% endif %}
                                         >
                                     </div>
-                                    {% bootstrap_field form.colloquium_done bound_css_class=' ' %}
+                                    {% bootstrap_field form.colloquium_done %}
                                 </div>
                             </div>
 
@@ -128,10 +128,10 @@
                                     <h1 class="panel-title">{% trans 'Second examiner' %}</h1>
                                 </div>
                                 <div class="panel-body">
-                                    {% bootstrap_field form.second_examiner_title bound_css_class=' ' %}
-                                    {% bootstrap_field form.second_examiner_first_name bound_css_class=' ' %}
-                                    {% bootstrap_field form.second_examiner_last_name bound_css_class=' ' %}
-                                    {% bootstrap_field form.second_examiner_organisation bound_css_class=' ' %}
+                                    {% bootstrap_field form.second_examiner_title %}
+                                    {% bootstrap_field form.second_examiner_first_name %}
+                                    {% bootstrap_field form.second_examiner_last_name %}
+                                    {% bootstrap_field form.second_examiner_organisation %}
                                 </div>
                             </div>
 
@@ -140,9 +140,9 @@
                                     <h1 class="panel-title">{% trans 'Grades' %}</h1>
                                 </div>
                                 <div class="panel-body">
-                                    {% bootstrap_field form.grade_first_examiner bound_css_class=' ' %}
-                                    {% bootstrap_field form.grade_second_examiner bound_css_class=' ' %}
-                                    {% bootstrap_field form.grade_presentation bound_css_class=' ' %}
+                                    {% bootstrap_field form.grade_first_examiner %}
+                                    {% bootstrap_field form.grade_second_examiner %}
+                                    {% bootstrap_field form.grade_presentation %}
                                 </div>
                             </div>
 
