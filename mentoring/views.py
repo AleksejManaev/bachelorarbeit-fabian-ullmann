@@ -246,8 +246,10 @@ class StudentSettingsFormView(UpdateView):
             cd.get('user_form').save()
             cd.get('student_user_formset').save()
             cd.get('student_address_formset').save()
+            messages.add_message(request, messages.SUCCESS, _('Profile successfully updated.'))
             return self.render_to_response(cd, status=200)
         else:
+            messages.add_message(request, messages.ERROR, _('Profile update failed.'))
             return self.render_to_response(cd, status=400)
 
     def get_context_data(self, data=None, **kwargs):
@@ -546,8 +548,10 @@ class TutorSettingsFormView(UpdateView):
         if (cd.get('user_form').is_valid() and cd.get('tutor_user_formset').is_valid()):
             cd.get('user_form').save()
             cd.get('tutor_user_formset').save()
+            messages.add_message(request, messages.SUCCESS, _('Profile successfully updated.'))
             return self.render_to_response(cd, status=200)
         else:
+            messages.add_message(request, messages.ERROR, _('Profile update failed.'))
             return self.render_to_response(cd, status=400)
 
     def get_context_data(self, data=None, **kwargs):

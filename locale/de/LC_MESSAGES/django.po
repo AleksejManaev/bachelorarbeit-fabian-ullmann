@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 19:21+0200\n"
+"POT-Creation-Date: 2016-08-20 12:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -517,8 +517,6 @@ msgid "Delete"
 msgstr "Löschen"
 
 #: .\mentoring\templates\posters_index.html:46
-#, fuzzy
-#| msgid "Tutor 2"
 msgid "Tutor"
 msgstr "2. Gutachter"
 
@@ -634,14 +632,14 @@ msgstr "Anfrage für den Betreuer sichtbar!"
 
 #: .\mentoring\templates\student_placement.html:171
 #: .\mentoring\templates\student_placement.html:175
-#: .\mentoring\templates\student_settings.html:43
+#: .\mentoring\templates\student_settings.html:58
 #: .\mentoring\templates\student_thesis.html:174
-#: .\mentoring\templates\tutor_settings.html:35
+#: .\mentoring\templates\tutor_settings.html:50
 msgid "Finish"
 msgstr "Abschließen"
 
-#: .\mentoring\templates\student_settings.html:13
-#: .\mentoring\templates\tutor_settings.html:12
+#: .\mentoring\templates\student_settings.html:28
+#: .\mentoring\templates\tutor_settings.html:27
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -745,50 +743,60 @@ msgstr "Betreuung der Abschlussarbeit"
 msgid "error"
 msgstr "Fehler"
 
-#: .\mentoring\views.py:97 .\mentoring\views.py:367 .\mentoring\views.py:605
+#: .\mentoring\views.py:97 .\mentoring\views.py:369 .\mentoring\views.py:610
 msgid "Placement successfully updated."
 msgstr "Praktikum erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:99 .\mentoring\views.py:412 .\mentoring\views.py:607
+#: .\mentoring\views.py:99 .\mentoring\views.py:415 .\mentoring\views.py:612
 msgid "Placement update failed."
 msgstr "Aktualisierung des Praktikums fehlgeschlagen."
 
-#: .\mentoring\views.py:196 .\mentoring\views.py:446 .\mentoring\views.py:658
+#: .\mentoring\views.py:196 .\mentoring\views.py:449 .\mentoring\views.py:663
 msgid "Thesis successfully updated."
 msgstr "Abschlussarbeit erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:198 .\mentoring\views.py:501 .\mentoring\views.py:660
+#: .\mentoring\views.py:198 .\mentoring\views.py:504 .\mentoring\views.py:665
 msgid "Thesis update failed."
 msgstr "Aktualisierung der Abschlussarbeit fehlgeschlagen"
 
-#: .\mentoring\views.py:382
+#: .\mentoring\views.py:249 .\mentoring\views.py:551
+msgid "Profile successfully updated."
+msgstr "Profil erfolgreich aktualisiert."
+
+#: .\mentoring\views.py:252 .\mentoring\views.py:554
+msgid "Profile update failed."
+msgstr "Aktualisierung des Profils fehlgeschlagen."
+
+#: .\mentoring\views.py:384
 msgid "You completed your placement."
 msgstr "Sie haben ihr Praktimum abgeschlossen."
 
-#: .\mentoring\views.py:389
+#: .\mentoring\views.py:392
 msgid ""
 "Placement can't be completed without having reached the subgoal "
 "\"Certificate accepted\"."
-msgstr "Das Praktikum kann nicht absolviert werden, solange das Teilziel \"Zeugnis akzeptiert\" nicht erreicht wurde."
+msgstr ""
+"Das Praktikum kann nicht absolviert werden, solange das Teilziel \"Zeugnis "
+"akzeptiert\" nicht erreicht wurde."
 
-#: .\mentoring\views.py:402 .\mentoring\views.py:488
+#: .\mentoring\views.py:405 .\mentoring\views.py:491
 msgid "Your mentoring request was denied."
 msgstr "Ihre Betreuungsanfrage wurde abgelehnt."
 
-#: .\mentoring\views.py:405 .\mentoring\views.py:491
+#: .\mentoring\views.py:408 .\mentoring\views.py:494
 msgid "Your mentoring request was accepted."
 msgstr "Ihre Betreuungsanfrage wurde angenommen."
 
-#: .\mentoring\views.py:410
+#: .\mentoring\views.py:413
 msgid "You failed your placement."
 msgstr "Sie haben Ihr Praktikum nicht bestanden."
 
-#: .\mentoring\views.py:422 .\mentoring\views.py:511 .\mentoring\views.py:702
-#: .\mentoring\views.py:744 .\mentoring\views.py:751
+#: .\mentoring\views.py:425 .\mentoring\views.py:514 .\mentoring\views.py:707
+#: .\mentoring\views.py:749 .\mentoring\views.py:756
 msgid "Show comments"
 msgstr "Kommentare anzeigen"
 
-#: .\mentoring\views.py:760
+#: .\mentoring\views.py:765
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
