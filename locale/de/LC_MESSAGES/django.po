@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-20 12:50+0200\n"
+"POT-Creation-Date: 2016-08-20 13:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -518,7 +518,7 @@ msgstr "Löschen"
 
 #: .\mentoring\templates\posters_index.html:46
 msgid "Tutor"
-msgstr "2. Gutachter"
+msgstr "Tutor"
 
 #: .\mentoring\templates\posters_index.html:49
 msgid "Printed"
