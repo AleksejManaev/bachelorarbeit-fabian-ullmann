@@ -725,6 +725,10 @@ class CommentsView(View):
 
 
 def togglePrivacy(request):
+    # Nur der Ersteller des Kommentars darf die Sichtbarkeit ändern
+    if not Comment.objects.filter(id=request.POST.get('id'), author=request.user.id).exists():
+        return HttpResponseNotFound()
+
     # Kommentar speichern
     comment_id = request.POST.get('id')
     comment = Comment.objects.get(pk=comment_id)
