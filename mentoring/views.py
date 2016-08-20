@@ -1369,6 +1369,9 @@ class PosterUpdateView(View):
                     thesis.state = 'Not requested'
                 thesis.save()
             form.save()
+            messages.add_message(request, messages.SUCCESS, _('Poster successfully updated.'))
+        else:
+            messages.add_message(request, messages.ERROR, _('Poster update failed.'))
         return redirect('posters-index')
 
 

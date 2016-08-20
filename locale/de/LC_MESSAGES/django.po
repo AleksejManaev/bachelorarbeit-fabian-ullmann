@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-20 13:19+0200\n"
+"POT-Creation-Date: 2016-08-20 13:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr "Anmelden"
 msgid "State"
 msgstr "Status"
 
-#: .\mentoring\messages_dummy.py:12 .\mentoring\templates\posters_index.html:50
+#: .\mentoring\messages_dummy.py:12 .\mentoring\templates\posters_index.html:65
 msgid "Accepted"
 msgstr "Akzeptiert"
 
@@ -185,8 +185,8 @@ msgstr "Seminar"
 msgid "Matriculation number"
 msgstr "Matrikelnr."
 
-#: .\mentoring\models.py:170 .\mentoring\templates\posters_index.html:45
-#: .\mentoring\templates\posters_index.html:89
+#: .\mentoring\models.py:170 .\mentoring\templates\posters_index.html:60
+#: .\mentoring\templates\posters_index.html:104
 #: .\mentoring\templates\tutor_index.html:74
 #: .\mentoring\templates\tutor_index.html:177
 #: .\mentoring\templates\tutor_index.html:207
@@ -300,8 +300,8 @@ msgid "Type"
 msgstr "Art"
 
 #: .\mentoring\models.py:251 .\mentoring\models.py:287
-#: .\mentoring\templates\posters_index.html:42
-#: .\mentoring\templates\posters_index.html:86
+#: .\mentoring\templates\posters_index.html:57
+#: .\mentoring\templates\posters_index.html:101
 #: .\mentoring\templates\tutor_index.html:71
 #: .\mentoring\templates\tutor_index.html:174
 #: .\mentoring\templates\tutor_index.html:204
@@ -310,8 +310,8 @@ msgid "First name"
 msgstr "Vorname"
 
 #: .\mentoring\models.py:252 .\mentoring\models.py:288
-#: .\mentoring\templates\posters_index.html:43
-#: .\mentoring\templates\posters_index.html:87
+#: .\mentoring\templates\posters_index.html:58
+#: .\mentoring\templates\posters_index.html:102
 #: .\mentoring\templates\tutor_index.html:72
 #: .\mentoring\templates\tutor_index.html:175
 #: .\mentoring\templates\tutor_index.html:205
@@ -330,7 +330,7 @@ msgstr "Organisation"
 msgid "Expose"
 msgstr ""
 
-#: .\mentoring\models.py:256 .\mentoring\templates\posters_index.html:48
+#: .\mentoring\models.py:256 .\mentoring\templates\posters_index.html:63
 #: .\mentoring\templates\student_completed_theses.html:45
 #: .\mentoring\templates\student_thesis.html:136
 #: .\mentoring\templates\tutor_thesis_details.html:79
@@ -377,7 +377,7 @@ msgstr "Note Präsentation"
 msgid "Examination office state"
 msgstr "Status des Prüfungsamts"
 
-#: .\mentoring\models.py:264 .\mentoring\templates\posters_index.html:47
+#: .\mentoring\models.py:264 .\mentoring\templates\posters_index.html:62
 #: .\mentoring\templates\student_thesis.html:141
 #: .\mentoring\templates\tutor_index.html:210
 #: .\mentoring\templates\tutor_index.html:282
@@ -397,8 +397,8 @@ msgstr "Kolloquium durchgeführt"
 msgid "Poster printed"
 msgstr "Poster gedruckt"
 
-#: .\mentoring\models.py:289 .\mentoring\templates\posters_index.html:44
-#: .\mentoring\templates\posters_index.html:88
+#: .\mentoring\models.py:289 .\mentoring\templates\posters_index.html:59
+#: .\mentoring\templates\posters_index.html:103
 #: .\mentoring\templates\tutor_index.html:73
 #: .\mentoring\templates\tutor_index.html:176
 #: .\mentoring\templates\tutor_index.html:206
@@ -516,15 +516,15 @@ msgstr "Termine anwesend"
 msgid "Delete"
 msgstr "Löschen"
 
-#: .\mentoring\templates\posters_index.html:46
+#: .\mentoring\templates\posters_index.html:61
 msgid "Tutor"
 msgstr "Tutor"
 
-#: .\mentoring\templates\posters_index.html:49
+#: .\mentoring\templates\posters_index.html:64
 msgid "Printed"
 msgstr "Ausgedruckt"
 
-#: .\mentoring\templates\posters_index.html:51
+#: .\mentoring\templates\posters_index.html:66
 #: .\mentoring\templates\tutor_index.html:80
 #: .\mentoring\templates\tutor_index.html:213
 msgid "Save"
@@ -799,6 +799,14 @@ msgstr "Kommentare anzeigen"
 #: .\mentoring\views.py:765
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
+
+#: .\mentoring\views.py:1372
+msgid "Poster successfully updated."
+msgstr "Poster erfolgreich aktualisiert."
+
+#: .\mentoring\views.py:1374
+msgid "Poster update failed."
+msgstr "Aktualisierung des Posters fehlgeschlagen."
 
 #: .\templates\base.html:46
 msgid "Poster management"
