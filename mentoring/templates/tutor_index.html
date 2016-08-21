@@ -103,7 +103,7 @@
                                                     </button>
                                                 </a>
                                             {% else %}
-                                                <a href="{% url 'placement-pdf' placement.id %}" title="{% trans 'Generate PDF' %}">
+                                                <a href="{% url 'placement-document' placement.id %}" title="{% trans 'Generate document' %}">
                                                     <button type="button" class="btn btn-default center-block">
                                                         <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
                                                     </button>
@@ -250,7 +250,7 @@
                                                     </button>
                                                 </a>
                                             {% else %}
-                                                <a href="{% url 'thesis-pdf' thesis.id %}" title="{% trans 'Generate PDF' %}">
+                                                <a href="{% url 'thesis-document' thesis.id %}" title="{% trans 'Generate document' %}">
                                                     <button type="button" class="btn btn-default center-block">
                                                         <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
                                                     </button>

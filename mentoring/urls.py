@@ -32,8 +32,8 @@ urlpatterns = [
 
     url(r'^tutor/placement/update/(?P<pk>\d+)/$', login_required(TutorUpdatePlacementView.as_view()), name='tutor-placement-update'),
     url(r'^tutor/placement/(?P<pk>\d+)/$', login_required(TutorPlacementView.as_view()), name='placement-details'),
-    url(r'^tutor/placement/pdf/(?P<pk>\d+)/$', login_required(generate_placement_pdf), name='placement-pdf'),
-    url(r'^tutor/thesis/pdf/(?P<pk>\d+)/$', login_required(generate_thesis_pdf), name='thesis-pdf'),
+    url(r'^tutor/placement/document/(?P<pk>\d+)/$', login_required(generate_placement_document), name='placement-document'),
+    url(r'^tutor/thesis/document/(?P<pk>\d+)/$', login_required(generate_thesis_document), name='thesis-document'),
     url(r'^tutor/thesis/update/(?P<pk>\d+)/$', login_required(TutorUpdateThesisView.as_view()), name='tutor-thesis-update'),
     url(r'^tutor/thesis/(?P<pk>\d+)/$', login_required(TutorThesisView.as_view()), name='thesis-details'),
     url(r'^tutor/$', TutorView.as_view(), name='tutor-index'),

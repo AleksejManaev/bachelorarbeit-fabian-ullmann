@@ -1238,7 +1238,7 @@ class MasterSeminarEntryDeleteView(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-def generate_placement_pdf(self, pk):
+def generate_placement_document(self, pk):
     placement = Placement.objects.get(id=pk)
     student = placement.student
 
@@ -1272,16 +1272,16 @@ def generate_placement_pdf(self, pk):
 
     # Docx-Datei senden, wenn diese erfolgreich erzeugt wurde
     if os.path.exists(output_file):
-        with open(output_file, 'rb') as pdf:
-            response = HttpResponse(pdf.read(), content_type='application/docx')
+        with open(output_file, 'rb') as document:
+            response = HttpResponse(document.read(), content_type='application/docx')
             response['Content-Disposition'] = 'attachment; filename="{filename}"'.format(student_name=student, filename=filename)
             return response
-        pdf.closed
+        document.closed
 
     return redirect('index')
 
 
-def generate_thesis_pdf(self, pk):
+def generate_thesis_document(self, pk):
     thesis = Thesis.objects.get(id=pk)
     student = thesis.student
 
@@ -1315,11 +1315,11 @@ def generate_thesis_pdf(self, pk):
 
     # Docx-Datei senden, wenn diese erfolgreich erzeugt wurde
     if os.path.exists(output_file):
-        with open(output_file, 'rb') as pdf:
-            response = HttpResponse(pdf.read(), content_type='application/docx')
+        with open(output_file, 'rb') as document:
+            response = HttpResponse(document.read(), content_type='application/docx')
             response['Content-Disposition'] = 'attachment; filename="{filename}"'.format(student_name=student, filename=filename)
             return response
-        pdf.closed
+        document.closed
 
     return redirect('index')
 
