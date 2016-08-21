@@ -42,10 +42,10 @@ $(document).ready(function () {
 
     var thesis_table = $('#thesis-table').DataTable({
         "columnDefs": [
-            {"searchable": false, "orderable": false, "targets": [0, 11]},
-            {"orderDataType": "dom-select", "targets": [6, 7]},
-            {"orderDataType": "dom-checkbox", "targets": 10},
-            {"orderDataType": "dom-text", "targets": 8, "type": 'de_date'}
+            {"searchable": false, "orderable": false, "targets": [0, 12]},
+            {"orderDataType": "dom-select", "targets": [7, 8]},
+            {"orderDataType": "dom-checkbox", "targets": 11},
+            {"orderDataType": "dom-text", "targets": 9, "type": 'de_date'}
         ],
         "order": [[8, "asc"]],
         "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',

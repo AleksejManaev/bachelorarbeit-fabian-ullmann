@@ -96,8 +96,8 @@
                                             </a>
                                         </td>
                                         <td>
-                                            {% if help_message_dict|get_item:placement.id %}
-                                                <a title="{{ help_message_dict|get_item:placement.id }}">
+                                            {% if help_message_dict_placement|get_item:placement.id %}
+                                                <a title="{{ help_message_dict_placement|get_item:placement.id }}">
                                                     <button type="button" class="btn btn-default center-block" disabled>
                                                         <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
                                                     </button>
@@ -198,6 +198,7 @@
                                 <thead>
                                 <tr>
                                     <th class="wrap-column">{% trans 'Comments' %}</th>
+                                    <th class="wrap-column">{% trans 'Application' %}</th>
                                     <th class="wrap-column">
                                         <nobr>{% trans 'Next subgoal' %}</nobr>
                                     </th>
@@ -240,6 +241,21 @@
                                                     <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
                                                 </button>
                                             </a>
+                                        </td>
+                                        <td>
+                                            {% if help_message_dict_thesis|get_item:thesis.id %}
+                                                <a title="{{ help_message_dict_thesis|get_item:thesis.id }}">
+                                                    <button type="button" class="btn btn-default center-block" disabled>
+                                                        <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                                                    </button>
+                                                </a>
+                                            {% else %}
+                                                <a href="{% url 'thesis-pdf' thesis.id %}" title="{% trans 'Generate PDF' %}">
+                                                    <button type="button" class="btn btn-default center-block">
+                                                        <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                                                    </button>
+                                                </a>
+                                            {% endif %}
                                         </td>
                                         <td>
                                             {% for state in thesis_state_subgoals %}
@@ -316,6 +332,7 @@
 
                                 <tfoot>
                                 <tr>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th>{% trans 'First name' %}</th>

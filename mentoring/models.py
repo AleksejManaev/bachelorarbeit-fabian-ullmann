@@ -186,10 +186,9 @@ class Student(PortalUser):
 
 class Address(models.Model):
     student = models.OneToOneField(Student)
-    street = models.CharField(_('street'), max_length=255)
-    city = models.CharField(_('city'), max_length=255)
-    zip_code = models.CharField(_('zip code'), max_length=30)
-    location = models.CharField(_('location'), max_length=100)
+    street = models.CharField(_('street'), max_length=255, blank=True, null=True)
+    zip_code = models.CharField(_('zip code'), max_length=30, blank=True, null=True)
+    location = models.CharField(_('location'), max_length=100, blank=True, null=True)
     web_address = models.CharField(_('web address'), max_length=255, blank=True, null=True)
 
 

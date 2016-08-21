@@ -279,40 +279,72 @@ class TutorView(View):
             placements = Placement.objects.filter(tutor=request.user.id, mentoring_requested=True)
             theses = Thesis.objects.filter(tutor=request.user.id, mentoring_requested=True)
 
-            help_message_dict = {}
+            help_message_dict_placement = {}
 
             for placement in placements:
-                help_message_dict[placement.id] = []
+                help_message_dict_placement[placement.id] = []
                 if not placement.date_from:
-                    help_message_dict[placement.id].append('Praktikumsbeginn fehlt')
+                    help_message_dict_placement[placement.id].append('Praktikumsbeginn fehlt')
                 if not placement.date_to:
-                    help_message_dict[placement.id].append('Praktikumsende fehlt')
+                    help_message_dict_placement[placement.id].append('Praktikumsende fehlt')
                 if not placement.student.user.last_name:
-                    help_message_dict[placement.id].append('Studentennachname fehlt')
+                    help_message_dict_placement[placement.id].append('Studentennachname fehlt')
                 if not placement.student.user.first_name:
-                    help_message_dict[placement.id].append('Studentenvorname fehlt')
+                    help_message_dict_placement[placement.id].append('Studentenvorname fehlt')
                 if not placement.student.matriculation_number:
-                    help_message_dict[placement.id].append('Matrikelnummer fehlt')
+                    help_message_dict_placement[placement.id].append('Matrikelnummer fehlt')
                 if not placement.student.user.email:
-                    help_message_dict[placement.id].append('E-Mailadresse fehlt')
+                    help_message_dict_placement[placement.id].append('E-Mailadresse fehlt')
                 if not placement.tutor:
-                    help_message_dict[placement.id].append('Praktikumsbetreuer an der THB fehlt')
+                    help_message_dict_placement[placement.id].append('Praktikumsbetreuer an der THB fehlt')
                 if not placement.company_name:
-                    help_message_dict[placement.id].append('Name des Betriebs fehlt')
+                    help_message_dict_placement[placement.id].append('Name des Betriebs fehlt')
                 if not placement.placementcompanycontactdata.__str__():
-                    help_message_dict[placement.id].append('Vor- und Nachname des Betreuers im Betrieb fehlen')
+                    help_message_dict_placement[placement.id].append('Vor- und Nachname des Betreuers im Betrieb fehlen')
                 if not placement.company_address:
-                    help_message_dict[placement.id].append('Adresse des Betriebs fehlt')
+                    help_message_dict_placement[placement.id].append('Adresse des Betriebs fehlt')
                 if not placement.task:
-                    help_message_dict[placement.id].append('Aufgabe fehlt')
+                    help_message_dict_placement[placement.id].append('Aufgabe fehlt')
                 if not placement.report_uploaded_date:
-                    help_message_dict[placement.id].append('Datum Vorlage des Praktikumsberichts fehlt')
+                    help_message_dict_placement[placement.id].append('Datum Vorlage des Praktikumsberichts fehlt')
                 if not placement.student.placement_seminar_presentation_date:
-                    help_message_dict[placement.id].append('Datum Vorstellung im Kolloquium fehlt')
+                    help_message_dict_placement[placement.id].append('Datum Vorstellung im Kolloquium fehlt')
+
+            help_message_dict_thesis = {}
+
+            for thesis in theses:
+                help_message_dict_thesis[thesis.id] = []
+                if not thesis.student.user.last_name:
+                    help_message_dict_thesis[thesis.id].append('Studentennachname fehlt')
+                if not thesis.student.user.first_name:
+                    help_message_dict_thesis[thesis.id].append('Studentenvorname fehlt')
+                if not thesis.student.matriculation_number:
+                    help_message_dict_thesis[thesis.id].append('Matrikelnummer fehlt')
+                if not thesis.student.user.email:
+                    help_message_dict_thesis[thesis.id].append('E-Mailadresse fehlt')
+                if not thesis.student.course:
+                    help_message_dict_thesis[thesis.id].append('Studiengang fehlt')
+                if not thesis.second_examiner_first_name:
+                    help_message_dict_thesis[thesis.id].append('Vorname 2.Gutachter fehlt')
+                if not thesis.second_examiner_last_name:
+                    help_message_dict_thesis[thesis.id].append('Nachname 2. Gutachter fehlt')
+                if not thesis.second_examiner_organisation:
+                    help_message_dict_thesis[thesis.id].append('Organisation 2. Gutachter fehlt')
+                if not thesis.task:
+                    help_message_dict_thesis[thesis.id].append('Thema fehlt')
+                try:
+                    if not thesis.student.address.street:
+                        help_message_dict_thesis[thesis.id].append('Straße fehlt')
+                    if not thesis.student.address.location:
+                        help_message_dict_thesis[thesis.id].append('Ort fehlt')
+                    if not thesis.student.address.zip_code:
+                        help_message_dict_thesis[thesis.id].append('PLZ fehlt')
+                except Address.DoesNotExist:
+                    help_message_dict_thesis[thesis.id].append('Adresse fehlt')
 
             context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'placement_states': PLACEMENT_STATE_CHOICES,
                        'placement_completed_states': ABSTRACTWORK_COMPLETED_CHOICES, 'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES, 'thesis_state_subgoals': THESIS_STATE_SUBGOAL_CHOICES,
-                       'help_message_dict': help_message_dict, 'thesis_choices': THESIS_CHOICES}
+                       'help_message_dict_placement': help_message_dict_placement, 'help_message_dict_thesis': help_message_dict_thesis, 'thesis_choices': THESIS_CHOICES}
 
             # Dictionary mit den Gesamtnoten zu den Abschlussarbeiten
             thesis_final_grade_dict = {}
@@ -1247,6 +1279,49 @@ def generate_placement_pdf(self, pk):
     directory = "{}/{}/placement/".format(settings.MEDIA_ROOT, student.matriculation_number)
     filename = '{}-Praktikumsanerkennung.docx'.format(student.matriculation_number)
     output_file = '{directory}/{file}'.format(directory=directory, file=filename)
+
+    # Docx-Datei füllen
+    doc = DocxTemplate(template_file)
+    doc.render(context)
+    doc.save(output_file)
+
+    # Docx-Datei senden, wenn diese erfolgreich erzeugt wurde
+    if os.path.exists(output_file):
+        with open(output_file, 'rb') as pdf:
+            response = HttpResponse(pdf.read(), content_type='application/docx')
+            response['Content-Disposition'] = 'attachment; filename="{filename}"'.format(student_name=student, filename=filename)
+            return response
+        pdf.closed
+
+    return redirect('index')
+
+
+def generate_thesis_pdf(self, pk):
+    thesis = Thesis.objects.get(id=pk)
+    student = thesis.student
+
+    context = {
+        'StudentName': u"%s, %s" % (student.user.last_name, student.user.first_name),
+        'MatrNr': student.matriculation_number,
+        'Telefon': student.phone,
+        'Email': student.user.email,
+        'THBBetreuer': u'%s' % thesis.tutor,
+        'Strasse': student.address.street,
+        'PLZ': student.address.zip_code,
+        'Ort': student.address.location,
+        'Studiengang': student.course,
+        'AktuellesDatum': datetime.now().strftime("%d.%m.%Y"),
+        'Thema': thesis.task,
+        'ZweiterGutachter': u"%s %s %s" % (thesis.second_examiner_title, thesis.second_examiner_first_name, thesis.second_examiner_last_name),
+        'ZGOrganisation': thesis.second_examiner_organisation
+    }
+
+    # Pfade zusammensetzen
+    template_file = '{mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.docx'.format(mediaroot=settings.MEDIA_ROOT)
+    directory = "{}/{}/thesis/".format(settings.MEDIA_ROOT, student.matriculation_number)
+    filename = '{}-Anmeldung.docx'.format(student.matriculation_number)
+    output_file = '{directory}/{file}'.format(directory=directory, file=filename)
+    os.makedirs(directory, exist_ok=True)
 
     # Docx-Datei füllen
     doc = DocxTemplate(template_file)
