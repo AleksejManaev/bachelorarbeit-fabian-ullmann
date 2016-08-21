@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-21 15:26+0200\n"
+"POT-Creation-Date: 2016-08-21 17:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -744,35 +744,35 @@ msgstr "Betreuung der Abschlussarbeit"
 msgid "error"
 msgstr "Fehler"
 
-#: .\mentoring\views.py:98 .\mentoring\views.py:400 .\mentoring\views.py:641
+#: .\mentoring\views.py:97 .\mentoring\views.py:401 .\mentoring\views.py:642
 msgid "Placement successfully updated."
 msgstr "Praktikum erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:100 .\mentoring\views.py:446 .\mentoring\views.py:643
+#: .\mentoring\views.py:99 .\mentoring\views.py:447 .\mentoring\views.py:644
 msgid "Placement update failed."
 msgstr "Aktualisierung des Praktikums fehlgeschlagen."
 
-#: .\mentoring\views.py:197 .\mentoring\views.py:480 .\mentoring\views.py:694
+#: .\mentoring\views.py:196 .\mentoring\views.py:481 .\mentoring\views.py:695
 msgid "Thesis successfully updated."
 msgstr "Abschlussarbeit erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:199 .\mentoring\views.py:535 .\mentoring\views.py:696
+#: .\mentoring\views.py:198 .\mentoring\views.py:536 .\mentoring\views.py:697
 msgid "Thesis update failed."
 msgstr "Aktualisierung der Abschlussarbeit fehlgeschlagen"
 
-#: .\mentoring\views.py:250 .\mentoring\views.py:582
+#: .\mentoring\views.py:249 .\mentoring\views.py:583
 msgid "Profile successfully updated."
 msgstr "Profil erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:253 .\mentoring\views.py:585
+#: .\mentoring\views.py:252 .\mentoring\views.py:586
 msgid "Profile update failed."
 msgstr "Aktualisierung des Profils fehlgeschlagen."
 
-#: .\mentoring\views.py:415
+#: .\mentoring\views.py:416
 msgid "You completed your placement."
 msgstr "Sie haben ihr Praktimum abgeschlossen."
 
-#: .\mentoring\views.py:423
+#: .\mentoring\views.py:424
 msgid ""
 "Placement can't be completed without having reached the subgoal "
 "\"Certificate accepted\"."
@@ -780,32 +780,32 @@ msgstr ""
 "Das Praktikum kann nicht absolviert werden, solange das Teilziel \"Zeugnis "
 "akzeptiert\" nicht erreicht wurde."
 
-#: .\mentoring\views.py:436 .\mentoring\views.py:522
+#: .\mentoring\views.py:437 .\mentoring\views.py:523
 msgid "Your mentoring request was denied."
 msgstr "Ihre Betreuungsanfrage wurde abgelehnt."
 
-#: .\mentoring\views.py:439 .\mentoring\views.py:525
+#: .\mentoring\views.py:440 .\mentoring\views.py:526
 msgid "Your mentoring request was accepted."
 msgstr "Ihre Betreuungsanfrage wurde angenommen."
 
-#: .\mentoring\views.py:444
+#: .\mentoring\views.py:445
 msgid "You failed your placement."
 msgstr "Sie haben Ihr Praktikum nicht bestanden."
 
-#: .\mentoring\views.py:456 .\mentoring\views.py:545 .\mentoring\views.py:738
-#: .\mentoring\views.py:784 .\mentoring\views.py:791
+#: .\mentoring\views.py:457 .\mentoring\views.py:546 .\mentoring\views.py:733
+#: .\mentoring\views.py:770 .\mentoring\views.py:777
 msgid "Show comments"
 msgstr "Kommentare anzeigen"
 
-#: .\mentoring\views.py:800
+#: .\mentoring\views.py:786
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
-#: .\mentoring\views.py:1450
+#: .\mentoring\views.py:1436
 msgid "Poster successfully updated."
 msgstr "Poster erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:1452
+#: .\mentoring\views.py:1438
 msgid "Poster update failed."
 msgstr "Aktualisierung des Posters fehlgeschlagen."
 

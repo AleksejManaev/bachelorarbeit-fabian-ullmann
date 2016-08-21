@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db import transaction, connection
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseNotFound, HttpResponseRedirect, HttpResponse
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
@@ -704,63 +704,48 @@ class CommentsView(View):
     form_class = CommentForm
 
     def get(self, request, pk):
-        # Nur der beteiligte Student und Tutor dürfen die Kommentare einsehen
-        if self.is_abstractwork_allowed(pk):
-            # Kommentar als gelesen für den anderen Gesprächspartner markieren
-            if (hasattr(request.user, 'portaluser')):
-                if (hasattr(request.user.portaluser, 'tutor')):
-                    AbstractWork.objects.filter(id=pk).update(comment_unread_by_tutor=False)
-                elif (hasattr(request.user.portaluser, 'student')):
-                    AbstractWork.objects.filter(id=pk).update(comment_unread_by_student=False)
+        # Kommentar als gelesen für den anderen Gesprächspartner markieren
+        if (hasattr(request.user, 'portaluser')):
+            if (hasattr(request.user.portaluser, 'tutor')):
+                AbstractWork.objects.filter(id=pk).update(comment_unread_by_tutor=False)
+            elif (hasattr(request.user.portaluser, 'student')):
+                AbstractWork.objects.filter(id=pk).update(comment_unread_by_student=False)
 
-            comments = Comment.objects.filter(abstractwork=pk).order_by('timestamp')
-            comment_form = self.form_class()
-            return render(request, self.template_name, {'comments': comments, 'comment_form': comment_form})
-        else:
-            return HttpResponseNotFound()
+        comments = Comment.objects.filter(abstractwork=pk).order_by('timestamp')
+        comment_form = self.form_class()
+        return render(request, self.template_name, {'comments': comments, 'comment_form': comment_form})
 
     def post(self, request, pk):
-        # Nur der beteiligte Student und Tutor dürfen Kommentare schreiben
-        if self.is_abstractwork_allowed(pk):
-            comment = Comment()
-            comment.author = self.request.user.portaluser.user
-            comment.abstractwork = AbstractWork.objects.get(id=pk)
-            comment.message = request.POST.get('message')
+        comment = Comment()
+        comment.author = self.request.user.portaluser.user
+        comment.abstractwork = AbstractWork.objects.get(id=pk)
+        comment.message = request.POST.get('message')
 
-            private = request.POST.get('private')
-            if private is None:
-                private = False
-            comment.private = private
+        private = request.POST.get('private')
+        if private is None:
+            private = False
+        comment.private = private
 
-            comment.save()
+        comment.save()
 
-            # Kommentar als ungelesen für den anderen Gesprächspartner markieren (aber nicht bei privaten) und E-Mail versenden
-            if (hasattr(request.user, 'portaluser')):
-                message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
-                abstractwork = comment.abstractwork
+        # Kommentar als ungelesen für den anderen Gesprächspartner markieren (aber nicht bei privaten) und E-Mail versenden
+        if (hasattr(request.user, 'portaluser')):
+            message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+            abstractwork = comment.abstractwork
 
-                if (hasattr(request.user.portaluser, 'tutor')):
-                    if not private and abstractwork.student:
-                        AbstractWork.objects.filter(id=pk).update(comment_unread_by_student=True)
-                        send_comment_email([abstractwork.student.user.email], message)
-                elif (hasattr(request.user.portaluser, 'student')):
-                    if not private and abstractwork.tutor:
-                        AbstractWork.objects.filter(id=pk).update(comment_unread_by_tutor=True)
-                        send_comment_email([abstractwork.tutor.user.email], message)
+            if (hasattr(request.user.portaluser, 'tutor')):
+                if not private and abstractwork.student:
+                    AbstractWork.objects.filter(id=pk).update(comment_unread_by_student=True)
+                    send_comment_email([abstractwork.student.user.email], message)
+            elif (hasattr(request.user.portaluser, 'student')):
+                if not private and abstractwork.tutor:
+                    AbstractWork.objects.filter(id=pk).update(comment_unread_by_tutor=True)
+                    send_comment_email([abstractwork.tutor.user.email], message)
 
-            return redirect('comments', pk=pk)
-        else:
-            return HttpResponseNotFound()
-
-    def is_abstractwork_allowed(self, pk):
-        return AbstractWork.objects.filter(Q(id=pk), Q(student=self.request.user.portaluser) | Q(tutor=self.request.user.portaluser)).exists()
+        return redirect('comments', pk=pk)
 
 
 def togglePrivacy(request):
-    # Nur der Ersteller des Kommentars darf die Sichtbarkeit ändern
-    if not Comment.objects.filter(id=request.POST.get('id'), author=request.user.id).exists():
-        return HttpResponseNotFound()
-
     # Kommentar speichern
     comment_id = request.POST.get('id')
     comment = Comment.objects.get(pk=comment_id)
