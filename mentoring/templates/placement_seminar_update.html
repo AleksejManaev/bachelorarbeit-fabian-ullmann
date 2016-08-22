@@ -4,6 +4,9 @@
 {% load staticfiles %}
 {% load filter %}
 
+{% block head %}
+    <script src="{% static 'js/delete_dialog.js' %}"></script>
+{% endblock %}
 
 {% block content %}
     <div class="container center-vertically">
@@ -68,7 +71,7 @@
                                             {% for entry in entrys %}
                                                 <td class="text-center"
                                                     style="vertical-align: middle;">
-                                                    <input form="delete_form_{{ entry.id }}" class="btn btn-danger" type="submit" value="{% trans 'Delete' %}"/>
+                                                    <input data-form-id="delete_form_{{ entry.id }}" class="btn btn-danger" type="button" value="{% trans 'Delete' %}" data-toggle="modal" data-target="#delete-dialog"/>
                                                 </td>
                                             {% endfor %}
                                             <td></td>
@@ -140,4 +143,6 @@
             </div>
         </div>
     </div>
+
+    {% include "delete_dialog.html" %}
 {% endblock %}
