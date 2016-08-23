@@ -145,7 +145,7 @@
                                         <td>
                                             <select {% if placement.state == 'Placement completed' or placement.state == 'Placement failed' or placement.state == 'Requested' or placement.state == 'Mentoring denied' %}
                                                 disabled {% endif %}name="completed" form="{{ placement.id }}">
-                                                {% for state in placement_completed_states %}
+                                                {% for state in abstractwork_completed_states %}
                                                     {% ifequal state.0 placement.completed %}
                                                         <option value="{{ state.0 }}" selected="selected">{% trans state.1 %}</option>
                                                     {% else %}
@@ -210,6 +210,7 @@
                                     <th class="wrap-column">{% trans 'Examination office' %}</th>
                                     <th class="wrap-column">{% trans 'Deadline' %}</th>
                                     <th class="wrap-column">{% trans 'Grades' %}</th>
+                                    <th class="wrap-column">{% trans 'Completed' %}</th>
                                     <th class="wrap-column">{% trans 'Archived' %}</th>
                                     <th class="wrap-column">{% trans 'Save' %}</th>
                                 </tr>
@@ -309,6 +310,18 @@
                                             </nobr>
                                         </td>
                                         <td>
+                                            <select {% if thesis.state == 'Thesis completion' or thesis.state == 'Thesis failed' or thesis.state == 'Requested' or thesis.state == 'Mentoring denied' %}
+                                                disabled {% endif %}name="completed" form="{{ thesis.id }}">
+                                                {% for state in abstractwork_completed_states %}
+                                                    {% ifequal state.0 thesis.completed %}
+                                                        <option value="{{ state.0 }}" selected="selected">{% trans state.1 %}</option>
+                                                    {% else %}
+                                                        <option value="{{ state.0 }}">{% trans state.1 %}</option>
+                                                    {% endifequal %}
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
                                             <input  {% if thesis.mentoring_accepted == 'MD' %} disabled {% endif %}
                                                                                                type="checkbox"
                                                                                                name="archived"
@@ -339,6 +352,7 @@
                                     <th>{% trans 'Last name' %}</th>
                                     <th>{% trans 'Email' %}</th>
                                     <th>{% trans 'Course' %}</th>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 14:16+0200\n"
+"POT-Creation-Date: 2016-08-23 15:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgstr "Praktikum durchgefallen"
 #: .\mentoring\models.py:24 .\mentoring\models.py:40 .\mentoring\models.py:206
 #: .\mentoring\templates\student_thesis.html:97
 #: .\mentoring\templates\tutor_index.html:79
-#: .\mentoring\templates\tutor_index.html:213
+#: .\mentoring\templates\tutor_index.html:214
 msgid "Archived"
 msgstr "Archiviert"
 
@@ -128,6 +128,7 @@ msgstr "Abschlussarbeit durchgefallen"
 
 #: .\mentoring\models.py:45 .\mentoring\models.py:207
 #: .\mentoring\templates\tutor_index.html:78
+#: .\mentoring\templates\tutor_index.html:213
 msgid "Completed"
 msgstr "Absolviert"
 
@@ -190,7 +191,7 @@ msgstr "Matrikelnr."
 #: .\mentoring\templates\tutor_index.html:74
 #: .\mentoring\templates\tutor_index.html:177
 #: .\mentoring\templates\tutor_index.html:208
-#: .\mentoring\templates\tutor_index.html:341
+#: .\mentoring\templates\tutor_index.html:354
 msgid "Course"
 msgstr "Studiengang"
 
@@ -301,7 +302,7 @@ msgstr "Art"
 #: .\mentoring\templates\tutor_index.html:71
 #: .\mentoring\templates\tutor_index.html:174
 #: .\mentoring\templates\tutor_index.html:205
-#: .\mentoring\templates\tutor_index.html:338
+#: .\mentoring\templates\tutor_index.html:351
 msgid "First name"
 msgstr "Vorname"
 
@@ -311,7 +312,7 @@ msgstr "Vorname"
 #: .\mentoring\templates\tutor_index.html:72
 #: .\mentoring\templates\tutor_index.html:175
 #: .\mentoring\templates\tutor_index.html:206
-#: .\mentoring\templates\tutor_index.html:339
+#: .\mentoring\templates\tutor_index.html:352
 msgid "Last name"
 msgstr "Nachname"
 
@@ -376,7 +377,7 @@ msgstr "Status des Prüfungsamts"
 #: .\mentoring\models.py:263 .\mentoring\templates\posters_index.html:62
 #: .\mentoring\templates\student_thesis.html:141
 #: .\mentoring\templates\tutor_index.html:211
-#: .\mentoring\templates\tutor_index.html:298
+#: .\mentoring\templates\tutor_index.html:299
 #: .\mentoring\templates\tutor_thesis_details.html:119
 msgid "Deadline"
 msgstr "Abgabetermin"
@@ -398,7 +399,7 @@ msgstr "Poster gedruckt"
 #: .\mentoring\templates\tutor_index.html:73
 #: .\mentoring\templates\tutor_index.html:176
 #: .\mentoring\templates\tutor_index.html:207
-#: .\mentoring\templates\tutor_index.html:340
+#: .\mentoring\templates\tutor_index.html:353
 msgid "Email"
 msgstr "E-Mail"
 
@@ -534,7 +535,7 @@ msgstr "Ausgedruckt"
 
 #: .\mentoring\templates\posters_index.html:66
 #: .\mentoring\templates\tutor_index.html:80
-#: .\mentoring\templates\tutor_index.html:214
+#: .\mentoring\templates\tutor_index.html:215
 msgid "Save"
 msgstr "Speichern"
 
@@ -570,7 +571,7 @@ msgstr "Dateien"
 #: .\mentoring\templates\tutor_index.html:68
 #: .\mentoring\templates\tutor_index.html:88
 #: .\mentoring\templates\tutor_index.html:200
-#: .\mentoring\templates\tutor_index.html:235
+#: .\mentoring\templates\tutor_index.html:236
 msgid "Comments"
 msgstr "Kommentare"
 
@@ -606,7 +607,7 @@ msgstr "Aktive Betreuungsanfrage"
 #: .\mentoring\templates\student_placement.html:89
 #: .\mentoring\templates\student_thesis.html:93
 #: .\mentoring\templates\tutor_index.html:116
-#: .\mentoring\templates\tutor_index.html:263
+#: .\mentoring\templates\tutor_index.html:264
 msgid "State: "
 msgstr "Status: "
 
@@ -723,7 +724,7 @@ msgid "Mentoring"
 msgstr "Betreuung"
 
 #: .\mentoring\templates\tutor_index.html:106
-#: .\mentoring\templates\tutor_index.html:253
+#: .\mentoring\templates\tutor_index.html:254
 msgid "Generate document"
 msgstr "Dokument generieren"
 
@@ -756,35 +757,35 @@ msgstr "Betreuung der Abschlussarbeit"
 msgid "error"
 msgstr "Fehler"
 
-#: .\mentoring\views.py:97 .\mentoring\views.py:401 .\mentoring\views.py:642
+#: .\mentoring\views.py:97 .\mentoring\views.py:403 .\mentoring\views.py:659
 msgid "Placement successfully updated."
 msgstr "Praktikum erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:99 .\mentoring\views.py:447 .\mentoring\views.py:644
+#: .\mentoring\views.py:99 .\mentoring\views.py:449 .\mentoring\views.py:661
 msgid "Placement update failed."
 msgstr "Aktualisierung des Praktikums fehlgeschlagen."
 
-#: .\mentoring\views.py:196 .\mentoring\views.py:481 .\mentoring\views.py:695
+#: .\mentoring\views.py:198 .\mentoring\views.py:486 .\mentoring\views.py:714
 msgid "Thesis successfully updated."
 msgstr "Abschlussarbeit erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:198 .\mentoring\views.py:536 .\mentoring\views.py:697
+#: .\mentoring\views.py:200 .\mentoring\views.py:553 .\mentoring\views.py:716
 msgid "Thesis update failed."
 msgstr "Aktualisierung der Abschlussarbeit fehlgeschlagen"
 
-#: .\mentoring\views.py:249 .\mentoring\views.py:583
+#: .\mentoring\views.py:251 .\mentoring\views.py:600
 msgid "Profile successfully updated."
 msgstr "Profil erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:252 .\mentoring\views.py:586
+#: .\mentoring\views.py:254 .\mentoring\views.py:603
 msgid "Profile update failed."
 msgstr "Aktualisierung des Profils fehlgeschlagen."
 
-#: .\mentoring\views.py:416
+#: .\mentoring\views.py:418 .\mentoring\views.py:519
 msgid "You completed your placement."
 msgstr "Sie haben ihr Praktimum abgeschlossen."
 
-#: .\mentoring\views.py:424
+#: .\mentoring\views.py:426
 msgid ""
 "Placement can't be completed without having reached the subgoal "
 "\"Certificate accepted\"."
@@ -792,32 +793,40 @@ msgstr ""
 "Das Praktikum kann nicht absolviert werden, solange das Teilziel \"Zeugnis "
 "akzeptiert\" nicht erreicht wurde."
 
-#: .\mentoring\views.py:437 .\mentoring\views.py:523
+#: .\mentoring\views.py:439 .\mentoring\views.py:540
 msgid "Your mentoring request was denied."
 msgstr "Ihre Betreuungsanfrage wurde abgelehnt."
 
-#: .\mentoring\views.py:440 .\mentoring\views.py:526
+#: .\mentoring\views.py:442 .\mentoring\views.py:543
 msgid "Your mentoring request was accepted."
 msgstr "Ihre Betreuungsanfrage wurde angenommen."
 
-#: .\mentoring\views.py:445
+#: .\mentoring\views.py:447
 msgid "You failed your placement."
 msgstr "Sie haben Ihr Praktikum nicht bestanden."
 
-#: .\mentoring\views.py:457 .\mentoring\views.py:546 .\mentoring\views.py:733
-#: .\mentoring\views.py:770 .\mentoring\views.py:777
+#: .\mentoring\views.py:459 .\mentoring\views.py:563 .\mentoring\views.py:752
+#: .\mentoring\views.py:789 .\mentoring\views.py:796
 msgid "Show comments"
 msgstr "Kommentare anzeigen"
 
-#: .\mentoring\views.py:786
+#: .\mentoring\views.py:527
+msgid ""
+"Thesis can't be completed without having reached the subgoal \"Poster "
+"accepted\"."
+msgstr ""
+"Die Abschlussarbeit kann nicht absolviert werden, solange das Teilziel \"Poster "
+"akzeptiert\" nicht erreicht wurde."
+
+#: .\mentoring\views.py:805
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
-#: .\mentoring\views.py:1436
+#: .\mentoring\views.py:1455
 msgid "Poster successfully updated."
 msgstr "Poster erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:1438
+#: .\mentoring\views.py:1457
 msgid "Poster update failed."
 msgstr "Aktualisierung des Posters fehlgeschlagen."
 
