@@ -1415,7 +1415,7 @@ class PostersView(View):
         if not self.get_object():
             return redirect('index')
         else:
-            theses = Thesis.objects.filter(mentoring_requested=True, mentoring_accepted='MA')
+            theses = Thesis.objects.filter(mentoring_requested=True, mentoring_accepted='MA', completed='-')
             context = {'theses': theses}
             return render(request, self.template_name, context)
 
