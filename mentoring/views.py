@@ -512,7 +512,6 @@ class TutorUpdateThesisView(View):
                             form.instance.state = 'Poster accepted'
                             if form.instance.state == 'Poster accepted' and form.instance.completed == 'Completed':
                                 form.instance.state = 'Thesis completed'
-                                self.notify(request.user, instance, _('You completed your thesis.'))
                 elif examination_office_state_new_value == '2B':
                     form.instance.state = 'Mentoring accepted'
 
@@ -542,12 +541,20 @@ class TutorUpdateThesisView(View):
                     self.notify(request.user, instance, _('Your mentoring request was accepted.'))
 
             '''
-                Wenn eine Abschlussarbeit absolviert wurde, wird dem Studenten eine neue aktive Abschlussarbeit zugewiesen.
+                Wenn eine Abschlussarbeit absolviert wurde oder der Student durchgefallen ist,
+                    1. wird ein Kommentar und E-Mail an Student und Tutor versendet und
+                    2. wird dem Studenten eine neue aktive Abschlussarbeit zugewiesen.
             '''
             instance_is_activethesis = StudentActiveThesis.objects.filter(thesis=instance)
             if form.cleaned_data['completed'] and instance_is_activethesis and form.instance.state == 'Thesis completed':
+                self.notify(request.user, instance, _('You completed your thesis.'))
                 active_thesis = Thesis(student=instance.student)
                 active_thesis.save()
+            elif form.cleaned_data['completed'] and instance_is_activethesis and form.instance.state == 'Thesis failed':
+                self.notify(request.user, instance, _('You failed your thesis.'))
+                active_thesis = Thesis(student=instance.student)
+                active_thesis.save()
+
         else:
             messages.add_message(request, messages.ERROR, _('Thesis update failed.'))
 
