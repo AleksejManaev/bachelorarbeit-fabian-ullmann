@@ -516,10 +516,10 @@ class TutorUpdateThesisView(View):
                     form.instance.state = 'Mentoring accepted'
 
             if form.instance.state == 'Poster accepted' and form.cleaned_data['completed'] == 'Completed':
-                self.notify(request.user, instance, _('You completed your placement.'))
+                self.notify(request.user, instance, _('You completed your thesis.'))
             elif form.cleaned_data['completed'] == 'Failed':
-                form.instance.state = 'Placement failed'
-            elif form.instance.state != 'Placement completed':
+                form.instance.state = 'Thesis failed'
+            elif form.instance.state != 'Thesis completed':
                 form.instance.completed = '-'
 
             # Wenn Poster noch nicht akzeptiert, dann darf die Abschlussarbeit noch nicht absolviert werden. Wenn Abschlussarbeit bereits abgeschlossen, dann erscheint Meldung nicht.
