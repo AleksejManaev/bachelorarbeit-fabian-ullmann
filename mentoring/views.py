@@ -214,7 +214,7 @@ class StudentThesisFormView(UpdateView):
             return render(request, self.template_name, context)
 
     def get_denied_theses(self):
-        return {'denied_theses': Thesis.objects.filter(student=self.request.user.portaluser.student, mentoring_accepted='MD')}
+        return {'denied_theses': Thesis.objects.filter(Q(student=self.request.user.portaluser.student), Q(mentoring_accepted='MD') | Q(completed='Failed'))}
 
 
 class StudentCompletedThesesView(View):
