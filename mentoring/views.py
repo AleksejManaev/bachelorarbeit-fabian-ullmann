@@ -189,7 +189,7 @@ class StudentThesisFormView(UpdateView):
                                     thesis.state = 'Seminar completed'
                                 if thesis.state == 'Seminar completed' and thesis.poster_accepted:
                                     thesis.state = 'Poster accepted'
-                                    if thesis.state == 'Poster accepted' and thesis.completed:
+                                    if thesis.state == 'Poster accepted' and thesis.completed == 'Completed':
                                         thesis.state = 'Thesis completed'
                 elif thesis.mentoring_accepted == 'MD':
                     thesis.state = 'Mentoring denied'
@@ -510,14 +510,13 @@ class TutorUpdateThesisView(View):
                             form.instance.state = 'Seminar completed'
                         if form.instance.state == 'Seminar completed' and form.instance.poster_accepted:
                             form.instance.state = 'Poster accepted'
-                            if form.instance.state == 'Poster accepted' and form.instance.completed:
+                            if form.instance.state == 'Poster accepted' and form.instance.completed == 'Completed':
                                 form.instance.state = 'Thesis completed'
+                                self.notify(request.user, instance, _('You completed your thesis.'))
                 elif examination_office_state_new_value == '2B':
                     form.instance.state = 'Mentoring accepted'
 
-            if form.instance.state == 'Poster accepted' and form.cleaned_data['completed'] == 'Completed':
-                self.notify(request.user, instance, _('You completed your thesis.'))
-            elif form.cleaned_data['completed'] == 'Failed':
+            if form.cleaned_data['completed'] == 'Failed':
                 form.instance.state = 'Thesis failed'
             elif form.instance.state != 'Thesis completed':
                 form.instance.completed = '-'
@@ -691,7 +690,7 @@ class TutorThesisView(UpdateView):
                         form.instance.state = 'Seminar completed'
                     if form.instance.state == 'Seminar completed' and form.instance.poster_accepted:
                         form.instance.state = 'Poster accepted'
-                        if form.instance.state == 'Poster accepted' and form.instance.completed:
+                        if form.instance.state == 'Poster accepted' and form.instance.completed == 'Completed':
                             form.instance.state = 'Thesis completed'
 
             if not form.cleaned_data['colloquium_done']:

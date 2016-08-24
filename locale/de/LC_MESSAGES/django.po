@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-24 14:08+0200\n"
+"POT-Creation-Date: 2016-08-24 15:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -757,31 +757,31 @@ msgstr "Betreuung der Abschlussarbeit"
 msgid "error"
 msgstr "Fehler"
 
-#: .\mentoring\views.py:97 .\mentoring\views.py:403 .\mentoring\views.py:659
+#: .\mentoring\views.py:97 .\mentoring\views.py:403 .\mentoring\views.py:658
 msgid "Placement successfully updated."
 msgstr "Praktikum erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:99 .\mentoring\views.py:449 .\mentoring\views.py:661
+#: .\mentoring\views.py:99 .\mentoring\views.py:449 .\mentoring\views.py:660
 msgid "Placement update failed."
 msgstr "Aktualisierung des Praktikums fehlgeschlagen."
 
-#: .\mentoring\views.py:198 .\mentoring\views.py:486 .\mentoring\views.py:714
+#: .\mentoring\views.py:198 .\mentoring\views.py:486 .\mentoring\views.py:713
 msgid "Thesis successfully updated."
 msgstr "Abschlussarbeit erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:200 .\mentoring\views.py:553 .\mentoring\views.py:716
+#: .\mentoring\views.py:200 .\mentoring\views.py:552 .\mentoring\views.py:715
 msgid "Thesis update failed."
 msgstr "Aktualisierung der Abschlussarbeit fehlgeschlagen"
 
-#: .\mentoring\views.py:251 .\mentoring\views.py:600
+#: .\mentoring\views.py:251 .\mentoring\views.py:599
 msgid "Profile successfully updated."
 msgstr "Profil erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:254 .\mentoring\views.py:603
+#: .\mentoring\views.py:254 .\mentoring\views.py:602
 msgid "Profile update failed."
 msgstr "Aktualisierung des Profils fehlgeschlagen."
 
-#: .\mentoring\views.py:418 .\mentoring\views.py:519
+#: .\mentoring\views.py:418
 msgid "You completed your placement."
 msgstr "Sie haben ihr Praktimum abgeschlossen."
 
@@ -793,11 +793,11 @@ msgstr ""
 "Das Praktikum kann nicht absolviert werden, solange das Teilziel \"Zeugnis "
 "akzeptiert\" nicht erreicht wurde."
 
-#: .\mentoring\views.py:439 .\mentoring\views.py:540
+#: .\mentoring\views.py:439 .\mentoring\views.py:539
 msgid "Your mentoring request was denied."
 msgstr "Ihre Betreuungsanfrage wurde abgelehnt."
 
-#: .\mentoring\views.py:442 .\mentoring\views.py:543
+#: .\mentoring\views.py:442 .\mentoring\views.py:542
 msgid "Your mentoring request was accepted."
 msgstr "Ihre Betreuungsanfrage wurde angenommen."
 
@@ -805,12 +805,16 @@ msgstr "Ihre Betreuungsanfrage wurde angenommen."
 msgid "You failed your placement."
 msgstr "Sie haben Ihr Praktikum nicht bestanden."
 
-#: .\mentoring\views.py:459 .\mentoring\views.py:563 .\mentoring\views.py:752
-#: .\mentoring\views.py:789 .\mentoring\views.py:796
+#: .\mentoring\views.py:459 .\mentoring\views.py:562 .\mentoring\views.py:751
+#: .\mentoring\views.py:788 .\mentoring\views.py:795
 msgid "Show comments"
 msgstr "Kommentare anzeigen"
 
-#: .\mentoring\views.py:527
+#: .\mentoring\views.py:515
+msgid "You completed your thesis."
+msgstr "Sie haben ihre Abschlussarbeit abgeschlossen."
+
+#: .\mentoring\views.py:526
 msgid ""
 "Thesis can't be completed without having reached the subgoal \"Poster "
 "accepted\"."
@@ -818,15 +822,15 @@ msgstr ""
 "Die Abschlussarbeit kann nicht absolviert werden, solange das Teilziel "
 "\"Poster akzeptiert\" nicht erreicht wurde."
 
-#: .\mentoring\views.py:805
+#: .\mentoring\views.py:804
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
-#: .\mentoring\views.py:1455
+#: .\mentoring\views.py:1454
 msgid "Poster successfully updated."
 msgstr "Poster erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:1457
+#: .\mentoring\views.py:1456
 msgid "Poster update failed."
 msgstr "Aktualisierung des Posters fehlgeschlagen."
 
@@ -849,9 +853,6 @@ msgstr "Profil"
 #: .\templates\base.html:93
 msgid "Logout"
 msgstr "Abmelden"
-
-#~ msgid "You completed your thesis."
-#~ msgstr "Sie haben ihre Abschlussarbeit abgeschlossen."
 
 #~ msgid "Thesis completion"
 #~ msgstr "Abschlussarbeit bestanden"
