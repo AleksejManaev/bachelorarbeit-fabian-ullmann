@@ -35,7 +35,7 @@ THESIS_STATE_CHOICES = (
     ('Colloquium completed', _('Colloquium completed')),
     ('Seminar completed', _('Seminar completed')),
     ('Poster accepted', _('Poster accepted')),
-    ('Thesis completion', _('Thesis completion')),
+    ('Thesis completed', _('Thesis completed')),
     ('Thesis failed', _('Thesis failed')),
     ('Archived', _('Archived'))
 )
@@ -67,8 +67,8 @@ THESIS_STATE_SUBGOAL_CHOICES = (
     ('Thesis submitted', _('Colloquium completed')),
     ('Colloquium completed', _('Seminar completed')),
     ('Seminar completed', _('Poster accepted')),
-    ('Poster accepted', _('Thesis completion')),
-    ('Thesis completion', _('-')),
+    ('Poster accepted', _('Thesis completed')),
+    ('Thesis completed', _('-')),
     ('Thesis failed', _('-')),
     ('Archived', _('-'))
 )

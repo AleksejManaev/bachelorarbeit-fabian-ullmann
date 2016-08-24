@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-23 15:05+0200\n"
+"POT-Creation-Date: 2016-08-24 14:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,8 +119,8 @@ msgid "Poster accepted"
 msgstr "Poster akzeptiert"
 
 #: .\mentoring\models.py:38 .\mentoring\models.py:70
-msgid "Thesis completion"
-msgstr "Abschlussarbeit bestanden"
+msgid "Thesis completed"
+msgstr "Abschlussarbeit abgeschlossen"
 
 #: .\mentoring\models.py:39
 msgid "Thesis failed"
@@ -815,8 +815,8 @@ msgid ""
 "Thesis can't be completed without having reached the subgoal \"Poster "
 "accepted\"."
 msgstr ""
-"Die Abschlussarbeit kann nicht absolviert werden, solange das Teilziel \"Poster "
-"akzeptiert\" nicht erreicht wurde."
+"Die Abschlussarbeit kann nicht absolviert werden, solange das Teilziel "
+"\"Poster akzeptiert\" nicht erreicht wurde."
 
 #: .\mentoring\views.py:805
 msgid "You have unread comments."
@@ -850,14 +850,17 @@ msgstr "Profil"
 msgid "Logout"
 msgstr "Abmelden"
 
+#~ msgid "You completed your thesis."
+#~ msgstr "Sie haben ihre Abschlussarbeit abgeschlossen."
+
+#~ msgid "Thesis completion"
+#~ msgstr "Abschlussarbeit bestanden"
+
 #~ msgid "city"
 #~ msgstr "Stadt"
 
 #~ msgid "Reset"
 #~ msgstr "Zurücksetzen"
-
-#~ msgid "Thesis completed"
-#~ msgstr "Abschlussarbeit abgeschlossen"
 
 #~ msgid "Poster completed"
 #~ msgstr "Poster abgeschlossen"

@@ -189,8 +189,8 @@ class StudentThesisFormView(UpdateView):
                                     thesis.state = 'Seminar completed'
                                 if thesis.state == 'Seminar completed' and thesis.poster_accepted:
                                     thesis.state = 'Poster accepted'
-                                if thesis.state == 'Poster accepted' and thesis.completed:
-                                    thesis.state = 'Thesis completion'
+                                    if thesis.state == 'Poster accepted' and thesis.completed:
+                                        thesis.state = 'Thesis completed'
                 elif thesis.mentoring_accepted == 'MD':
                     thesis.state = 'Mentoring denied'
                 thesis.save()
@@ -510,8 +510,8 @@ class TutorUpdateThesisView(View):
                             form.instance.state = 'Seminar completed'
                         if form.instance.state == 'Seminar completed' and form.instance.poster_accepted:
                             form.instance.state = 'Poster accepted'
-                        if form.instance.state == 'Poster accepted' and form.instance.completed:
-                            form.instance.state = 'Thesis completion'
+                            if form.instance.state == 'Poster accepted' and form.instance.completed:
+                                form.instance.state = 'Thesis completed'
                 elif examination_office_state_new_value == '2B':
                     form.instance.state = 'Mentoring accepted'
 
@@ -523,7 +523,7 @@ class TutorUpdateThesisView(View):
                 form.instance.completed = '-'
 
             # Wenn Poster noch nicht akzeptiert, dann darf die Abschlussarbeit noch nicht absolviert werden. Wenn Abschlussarbeit bereits abgeschlossen, dann erscheint Meldung nicht.
-            if form.instance.state not in ['Poster accepted', 'Thesis completion'] and form.cleaned_data['completed'] == 'Completed':
+            if form.instance.state not in ['Poster accepted', 'Thesis completed'] and form.cleaned_data['completed'] == 'Completed':
                 messages.add_message(request, messages.ERROR, _('Thesis can\'t be completed without having reached the subgoal "Poster accepted".'))
 
             form.save()
@@ -546,7 +546,7 @@ class TutorUpdateThesisView(View):
                 Wenn eine Abschlussarbeit absolviert wurde, wird dem Studenten eine neue aktive Abschlussarbeit zugewiesen.
             '''
             instance_is_activethesis = StudentActiveThesis.objects.filter(thesis=instance)
-            if form.cleaned_data['completed'] and instance_is_activethesis and form.instance.state == 'Thesis completion':
+            if form.cleaned_data['completed'] and instance_is_activethesis and form.instance.state == 'Thesis completed':
                 active_thesis = Thesis(student=instance.student)
                 active_thesis.save()
         else:
@@ -691,8 +691,8 @@ class TutorThesisView(UpdateView):
                         form.instance.state = 'Seminar completed'
                     if form.instance.state == 'Seminar completed' and form.instance.poster_accepted:
                         form.instance.state = 'Poster accepted'
-                    if form.instance.state == 'Poster accepted' and form.instance.completed:
-                        form.instance.state = 'Thesis completion'
+                        if form.instance.state == 'Poster accepted' and form.instance.completed:
+                            form.instance.state = 'Thesis completed'
 
             if not form.cleaned_data['colloquium_done']:
                 if form.instance.state == 'Colloquium completed' or form.instance.state == 'Seminar completed' or form.instance.state == 'Poster accepted':

@@ -310,7 +310,7 @@
                                             </nobr>
                                         </td>
                                         <td>
-                                            <select {% if thesis.state == 'Thesis completion' or thesis.state == 'Thesis failed' or thesis.state == 'Requested' or thesis.state == 'Mentoring denied' %}
+                                            <select {% if thesis.state == 'Thesis completed' or thesis.state == 'Thesis failed' or thesis.state == 'Requested' or thesis.state == 'Mentoring denied' %}
                                                 disabled {% endif %}name="completed" form="{{ thesis.id }}">
                                                 {% for state in abstractwork_completed_states %}
                                                     {% ifequal state.0 thesis.completed %}
