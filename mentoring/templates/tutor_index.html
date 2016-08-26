@@ -13,14 +13,18 @@
     <!-- DataTables-Plugin für Sortierbarkeit von Checkboxen | http://www.datatables.net/plug-ins/sorting/custom-data-source/dom-checkbox -->
     <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/custom-data-source/dom-checkbox.js"></script>
 
-    <!-- DataTables-Plugin für Sortierbarkeit Input-Elementen | http://datatables.net/plug-ins/sorting/custom-data-source/dom-text -->
+    <!-- DataTables-Plugin für Sortierbarkeit von Input-Elementen | http://datatables.net/plug-ins/sorting/custom-data-source/dom-text -->
     <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/custom-data-source/dom-text.js"></script>
 
-    <!-- DataTables-Plugin für Sortierbarkeit Select-Elementen | http://datatables.net/plug-ins/sorting/custom-data-source/dom-select -->
+    <!-- DataTables-Plugin für Sortierbarkeit von Select-Elementen | http://datatables.net/plug-ins/sorting/custom-data-source/dom-select -->
     <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/custom-data-source/dom-select.js"></script>
 
-    <!-- Dependency für Sortierbarkeit Datum Deutsch | https://datatables.net/plug-ins/sorting/date-de -->
+    <!-- DataTables-Plugin für Sortierbarkeit von Datum - Deutsch | https://datatables.net/plug-ins/sorting/date-de -->
     <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.11/sorting/date-de.js"></script>
+
+    <!-- Bootstrap Switch -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap2/bootstrap-switch.min.css"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/js/bootstrap-switch.min.js"></script>
 
     <!-- DataTables-Konfiguration -->
     <script type="text/javascript" src="{% static 'js/tutor_index.js' %}"></script>
@@ -179,7 +183,7 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th></th>
+                                    <th><input type="checkbox" name="toggle-archived-placements" data-size="small"></th>
                                     <th></th>
                                 </tr>
                                 </tfoot>
@@ -357,7 +361,7 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th></th>
+                                    <th><input type="checkbox" name="toggle-archived-theses" data-size="small"></th>
                                     <th></th>
                                 </tr>
                                 </tfoot>

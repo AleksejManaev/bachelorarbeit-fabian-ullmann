@@ -1,14 +1,14 @@
 $(document).ready(function () {
-    <!-- Jede Spalte der Tabelle mit einem nicht-leeren th-Element innerhalb von tfoot erhält eine Searchbox -->
+    <!-- Jede Spalte der Tabelle mit einem th-Element, das nur Text und keine HTML-Tags enthält, innerhalb von tfoot, erhält eine Searchbox -->
     $('#placements-table tfoot th').each(function () {
-        if ($(this).html()) {
+        if ($(this).html() && $(this).children().length == 0) {
             var title = $(this).text();
             $(this).html('<input id="footer-search" type="text" placeholder="' + title + '" style="width: 130px;" />');
         }
     });
 
     $('#thesis-table tfoot th').each(function () {
-        if ($(this).html()) {
+        if ($(this).html() && $(this).children().length == 0) {
             var title = $(this).text();
             $(this).html('<input id="footer-search" type="text" placeholder="' + title + '" style="width: 130px;" />');
         }
@@ -103,6 +103,32 @@ $(document).ready(function () {
             }
         });
     });
+
+    <!-- Buttons zum Togglen von archivierten Praktika bzw. Abschlussarbeiten erstellen und Eventhandling setzen -->
+    toggleArchivedPlacementsButton = $("[name='toggle-archived-placements']").bootstrapSwitch();
+    toggleArchivedThesesButton = $("[name='toggle-archived-theses']").bootstrapSwitch();
+
+    var toggleArchived = function (event, state) {
+        const toggleButton = $(event.target);
+        const table = (toggleButton.attr('name') == 'toggle-archived-placements') ? placement_table : (toggleButton.attr('name') == 'toggle-archived-theses') ? thesis_table : false;
+        if (!table) return;
+
+        if (state) {
+            $.fn.dataTable.ext.search.push(
+                function (settings, data, dataIndex) {
+                    return !$(table.row(dataIndex).node()).find("[name='archived']").is(':checked');
+                }
+            );
+            table.draw();
+        }
+        else {
+            $.fn.dataTable.ext.search.pop();
+            table.draw();
+        }
+    }
+
+    toggleArchivedPlacementsButton.on('switchChange.bootstrapSwitch', toggleArchived);
+    toggleArchivedThesesButton.on('switchChange.bootstrapSwitch', toggleArchived);
 });
 
 
