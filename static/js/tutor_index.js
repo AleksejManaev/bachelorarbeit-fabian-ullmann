@@ -14,19 +14,12 @@ $(document).ready(function () {
         }
     });
 
-    $('#poster-table tfoot th').each(function () {
-        if ($(this).html()) {
-            var title = $(this).text();
-            $(this).html('<input id="footer-search" type="text" placeholder="' + title + '" style="width: 130px;" />');
-        }
-    });
-
     <!-- Tabelleninitialisierung -->
     var placement_table = $('#placements-table').DataTable({
         "columnDefs": [
             {"searchable": false, "orderable": false, "targets": [0, 1, 12]},
             {"orderDataType": "dom-checkbox", "targets": 11},
-            {"orderDataType": "dom-select", "targets": [9,10]}
+            {"orderDataType": "dom-select", "targets": [9, 10]}
         ],
         "order": [[10, "asc"]],
         "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',
@@ -48,24 +41,6 @@ $(document).ready(function () {
             {"orderDataType": "dom-text", "targets": 9, "type": 'de_date'}
         ],
         "order": [[8, "asc"]],
-        "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',
-        "language": {
-            "zeroRecords": "Keine Einträge gefunden",
-            "paginate": {
-                "previous": "Zurück",
-                "next": "Weiter"
-            }
-        },
-        stateSave: true
-    });
-
-    var poster_table = $('#poster-table').DataTable({
-        "columnDefs": [
-            {"searchable": false, "orderable": false, "targets": 9},
-            {"orderDataType": "dom-checkbox", "targets": [7,8]},
-            {"orderDataType": "dom-text", "targets": 5, "type": 'de_date'}
-        ],
-        "order": [[5, "asc"]],
         "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',
         "language": {
             "zeroRecords": "Keine Einträge gefunden",
@@ -104,19 +79,6 @@ $(document).ready(function () {
         thesis_table.draw();
     }
 
-    var poster_state = poster_table.state.loaded();
-    if (poster_state) {
-        poster_table.columns().eq(0).each(function (colIdx) {
-            var colSearch = poster_state.columns[colIdx].search;
-
-            if (colSearch.search) {
-                $('input', poster_table.column(colIdx).footer()).val(colSearch.search);
-            }
-        });
-
-        poster_table.draw();
-    }
-
     <!-- Suchfunktion für jede Searchbox -->
     placement_table.columns().every(function () {
         var that = this;
@@ -131,18 +93,6 @@ $(document).ready(function () {
     });
 
     thesis_table.columns().every(function () {
-        var that = this;
-
-        $('#footer-search', this.footer()).on('keyup change', function () {
-            if (that.search() !== this.value) {
-                that
-                    .search(this.value)
-                    .draw();
-            }
-        });
-    });
-
-    poster_table.columns().every(function () {
         var that = this;
 
         $('#footer-search', this.footer()).on('keyup change', function () {
