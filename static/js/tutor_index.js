@@ -28,7 +28,7 @@ $(document).ready(function () {
             {"orderDataType": "dom-checkbox", "targets": 11},
             {"orderDataType": "dom-select", "targets": [9,10]}
         ],
-        "order": [[11, "asc"]],
+        "order": [[10, "asc"]],
         "dom": 't<"row"<"col-sm-6 col-sm-offset-1"p>>',
         "language": {
             "zeroRecords": "Keine Einträge gefunden",
