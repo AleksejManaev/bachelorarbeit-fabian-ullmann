@@ -1287,7 +1287,7 @@ class MasterSeminarEntryDeleteView(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-def generate_placement_document(self, pk):
+def generate_placement_document(request, pk):
     placement = Placement.objects.get(id=pk)
     student = placement.student
 
