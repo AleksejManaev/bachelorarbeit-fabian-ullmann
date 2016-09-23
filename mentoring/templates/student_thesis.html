@@ -100,14 +100,29 @@
                                     {% endif %}
                                 </div>
 
-                                <div class="col-md-6"></div>
+                                <div class="col-md-3"></div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-5">
+                                    {% if help_messages %}
+                                        <a title="{{ help_messages }}">
+                                            <button type="button" class="btn btn-default" disabled>
+                                                {% trans 'Download application form' %}
+                                                <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                                            </button>
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'student-thesis-document' thesis.id %}" title="{% trans 'Download application form' %}">
+                                            <button type="button" class="btn btn-default">
+                                                {% trans 'Download application form' %}
+                                                <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                                            </button>
+                                        </a>
+                                    {% endif %}
+
                                     <a href="{% url 'comments' thesis.id %}" title="{% trans 'Comments' %}">
                                         <button class="btn btn-default"
                                                 {% if not thesis.mentoring_requested %}disabled{% endif %}
                                                 {% if thesis.comment_unread_by_student %}
-                                                style="background-color:#ffff80;"
                                                 {% endif %}
                                         >
                                             {% trans 'Comments' %} &nbsp;

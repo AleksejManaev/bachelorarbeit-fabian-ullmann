@@ -132,6 +132,28 @@ class StudentThesisFormView(UpdateView):
     def get_thesis(self):
         return self.request.user.portaluser.student.studentactivethesis.thesis
 
+    def get_denied_theses(self):
+        return {'denied_theses': Thesis.objects.filter(Q(student=self.request.user.portaluser.student), Q(mentoring_accepted='MD') | Q(completed='Failed'))}
+
+    def get_help_message(self):
+        thesis = self.get_thesis()
+
+        if not thesis.mentoring_requested:
+            return {'help_messages': _('Download is only possible after mentoring has been requested.')}
+        else:
+            thesis_help_messages = get_thesis_help_messages(thesis)
+            if thesis_help_messages:
+                return {'help_messages': thesis_help_messages}
+            else:
+                return {}
+
+    def get_context(self):
+        context = {}
+        context.update(self.get_context_thesis())
+        context.update(self.get_denied_theses())
+        context.update(self.get_help_message())
+        return context
+
     def post(self, request, *args, **kwargs):
         show_tutor = request.POST.get('show_tutor')
         thesis = self.get_thesis()
@@ -199,22 +221,17 @@ class StudentThesisFormView(UpdateView):
         else:
             messages.add_message(request, messages.ERROR, _('Thesis update failed.'))
 
-        return redirect('student-thesis')
+        context = self.get_context()
+        return render(request, self.template_name, context)
 
     def get(self, request, status=200, *args, **kwargs):
         student = self.request.user.portaluser.student
 
-        context = {}
-        context.update(self.get_context_thesis())
-        context.update(self.get_denied_theses())
-
         if not student:
             return redirect('index')
         else:
+            context = self.get_context()
             return render(request, self.template_name, context)
-
-    def get_denied_theses(self):
-        return {'denied_theses': Thesis.objects.filter(Q(student=self.request.user.portaluser.student), Q(mentoring_accepted='MD') | Q(completed='Failed'))}
 
 
 class StudentCompletedThesesView(View):
@@ -1313,7 +1330,15 @@ def generate_placement_document(self, pk):
     return redirect('index')
 
 
-def generate_thesis_document(self, pk):
+def generate_thesis_document_student(request, pk):
+    return generate_thesis_document(pk, '_2014-FBI-Anmeldung-Abschlussarbeit-Formular-Student.docx')
+
+
+def generate_thesis_document_tutor(request, pk):
+    return generate_thesis_document(pk, '_2014-FBI-Anmeldung-Abschlussarbeit-Formular-Tutor.docx')
+
+
+def generate_thesis_document(pk, template_file_name):
     thesis = Thesis.objects.get(id=pk)
     student = thesis.student
 
@@ -1334,7 +1359,7 @@ def generate_thesis_document(self, pk):
     }
 
     # Pfade zusammensetzen
-    template_file = '{mediaroot}/docs/_2014-FBI-Anmeldung-Abschlussarbeit-Formular.docx'.format(mediaroot=settings.MEDIA_ROOT)
+    template_file = '{mediaroot}/docs/{template_file_name}'.format(mediaroot=settings.MEDIA_ROOT, template_file_name=template_file_name)
     directory = "{}/{}/thesis/".format(settings.MEDIA_ROOT, student.matriculation_number)
     filename = '{}-Anmeldung.docx'.format(student.matriculation_number)
     output_file = '{directory}/{file}'.format(directory=directory, file=filename)
