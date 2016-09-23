@@ -315,34 +315,7 @@ class TutorView(View):
             help_message_dict_thesis = {}
 
             for thesis in theses:
-                help_message_dict_thesis[thesis.id] = []
-                if not thesis.student.user.last_name:
-                    help_message_dict_thesis[thesis.id].append('Studentennachname fehlt')
-                if not thesis.student.user.first_name:
-                    help_message_dict_thesis[thesis.id].append('Studentenvorname fehlt')
-                if not thesis.student.matriculation_number:
-                    help_message_dict_thesis[thesis.id].append('Matrikelnummer fehlt')
-                if not thesis.student.user.email:
-                    help_message_dict_thesis[thesis.id].append('E-Mailadresse fehlt')
-                if not thesis.student.course:
-                    help_message_dict_thesis[thesis.id].append('Studiengang fehlt')
-                if not thesis.second_examiner_first_name:
-                    help_message_dict_thesis[thesis.id].append('Vorname 2.Gutachter fehlt')
-                if not thesis.second_examiner_last_name:
-                    help_message_dict_thesis[thesis.id].append('Nachname 2. Gutachter fehlt')
-                if not thesis.second_examiner_organisation:
-                    help_message_dict_thesis[thesis.id].append('Organisation 2. Gutachter fehlt')
-                if not thesis.task:
-                    help_message_dict_thesis[thesis.id].append('Thema fehlt')
-                try:
-                    if not thesis.student.address.street:
-                        help_message_dict_thesis[thesis.id].append('Straße fehlt')
-                    if not thesis.student.address.location:
-                        help_message_dict_thesis[thesis.id].append('Ort fehlt')
-                    if not thesis.student.address.zip_code:
-                        help_message_dict_thesis[thesis.id].append('PLZ fehlt')
-                except Address.DoesNotExist:
-                    help_message_dict_thesis[thesis.id].append('Adresse fehlt')
+                help_message_dict_thesis[thesis.id] = get_thesis_help_messages(thesis)
 
             context = {'placements': placements, 'theses': theses, 'mentoring_states': MENTORING_STATE_CHOICES, 'examination_office_states': EXAMINATION_OFFICE_STATE_CHOICES, 'placement_states': PLACEMENT_STATE_CHOICES,
                        'abstractwork_completed_states': ABSTRACTWORK_COMPLETED_CHOICES, 'placement_state_subgoals': PLACEMENT_STATE_SUBGOAL_CHOICES, 'thesis_state_subgoals': THESIS_STATE_SUBGOAL_CHOICES,
@@ -378,6 +351,40 @@ class TutorView(View):
     def get_object(self, queryset=None):
         st = Tutor.objects.filter(user=self.request.user)
         return st[0] if len(st) > 0 else None
+
+
+def get_thesis_help_messages(thesis):
+    help_messages_list = []
+
+    if not thesis.student.user.last_name:
+        help_messages_list.append('Studentennachname fehlt')
+    if not thesis.student.user.first_name:
+        help_messages_list.append('Studentenvorname fehlt')
+    if not thesis.student.matriculation_number:
+        help_messages_list.append('Matrikelnummer fehlt')
+    if not thesis.student.user.email:
+        help_messages_list.append('E-Mailadresse fehlt')
+    if not thesis.student.course:
+        help_messages_list.append('Studiengang fehlt')
+    if not thesis.second_examiner_first_name:
+        help_messages_list.append('Vorname 2.Gutachter fehlt')
+    if not thesis.second_examiner_last_name:
+        help_messages_list.append('Nachname 2. Gutachter fehlt')
+    if not thesis.second_examiner_organisation:
+        help_messages_list.append('Organisation 2. Gutachter fehlt')
+    if not thesis.task:
+        help_messages_list.append('Thema fehlt')
+    try:
+        if not thesis.student.address.street:
+            help_messages_list.append('Straße fehlt')
+        if not thesis.student.address.location:
+            help_messages_list.append('Ort fehlt')
+        if not thesis.student.address.zip_code:
+            help_messages_list.append('PLZ fehlt')
+    except Address.DoesNotExist:
+        help_messages_list.append('Adresse fehlt')
+
+    return help_messages_list
 
 
 class TutorUpdatePlacementView(View):
