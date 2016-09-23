@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-23 22:41+0200\n"
+"POT-Creation-Date: 2016-09-23 23:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -862,11 +862,11 @@ msgstr "Sie haben Ihre Abschlussarbeit nicht absolviert."
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
-#: .\mentoring\views.py:1493
+#: .\mentoring\views.py:1494
 msgid "Poster successfully updated."
 msgstr "Poster erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:1495
+#: .\mentoring\views.py:1496
 msgid "Poster update failed."
 msgstr "Aktualisierung des Posters fehlgeschlagen."
 

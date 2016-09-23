@@ -1347,6 +1347,7 @@ def generate_thesis_document(pk, template_file_name):
         'MatrNr': student.matriculation_number,
         'Telefon': student.phone,
         'Email': student.user.email,
+        'ExterneEmail': student.extern_email if student.extern_email else '',
         'THBBetreuer': u'%s' % thesis.tutor,
         'Strasse': student.address.street,
         'PLZ': student.address.zip_code,
