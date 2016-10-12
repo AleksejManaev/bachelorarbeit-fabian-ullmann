@@ -144,10 +144,10 @@ class Tutor(PortalUser):
 
     @property
     def get_full_name(self):
-        return "%s %s %s" % (self.title, self.user.first_name, self.user.last_name)
+        return "%s %s %s" % (self.title or '', self.user.first_name or '', self.user.last_name or '')
 
     def __str__(self):
-        return u"{} {} {}".format(self.title, self.user.first_name, self.user.last_name)
+        return u"{} {} {}".format(self.title or '', self.user.first_name or '', self.user.last_name or '')
 
 
 class Seminar(models.Model):
@@ -181,7 +181,7 @@ class Student(PortalUser):
     seminar_entries = models.ManyToManyField(SeminarEntry, blank=True, null=True, related_name='seminar_students')
 
     def __str__(self):
-        return u"{} ({})".format(self.user.get_full_name(), self.matriculation_number)
+        return u"{} ({})".format(self.user.get_full_name() or '', self.matriculation_number or '')
 
 
 class Address(models.Model):
