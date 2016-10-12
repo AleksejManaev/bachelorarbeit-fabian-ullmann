@@ -1310,8 +1310,8 @@ def generate_placement_document(request, pk):
 
     # Pfade zusammensetzen
     template_file = '{mediaroot}/docs/_Anerkennung_Praktikum_2014.docx'.format(mediaroot=settings.MEDIA_ROOT)
-    directory = "{}/{}/placement/".format(settings.MEDIA_ROOT, student.matriculation_number)
-    filename = '{}-Praktikumsanerkennung.docx'.format(student.matriculation_number)
+    directory = "{}/{}/placement/".format(settings.MEDIA_ROOT, student.id)
+    filename = 'Praktikumsanerkennung - {} {}.docx'.format(student.user.first_name, student.user.last_name)
     output_file = '{directory}/{file}'.format(directory=directory, file=filename)
 
     # Docx-Datei füllen
@@ -1323,7 +1323,7 @@ def generate_placement_document(request, pk):
     if os.path.exists(output_file):
         with open(output_file, 'rb') as document:
             response = HttpResponse(document.read(), content_type='application/docx')
-            response['Content-Disposition'] = 'attachment; filename="{filename}"'.format(student_name=student, filename=filename)
+            response['Content-Disposition'] = 'attachment; filename="{filename}"'.format(filename=filename)
             return response
         document.closed
 
@@ -1361,8 +1361,8 @@ def generate_thesis_document(pk, template_file_name):
 
     # Pfade zusammensetzen
     template_file = '{mediaroot}/docs/{template_file_name}'.format(mediaroot=settings.MEDIA_ROOT, template_file_name=template_file_name)
-    directory = "{}/{}/thesis/".format(settings.MEDIA_ROOT, student.matriculation_number)
-    filename = '{}-Anmeldung.docx'.format(student.matriculation_number)
+    directory = "{}/{}/thesis/".format(settings.MEDIA_ROOT, student.id)
+    filename = 'Anmeldung - {} {}.docx'.format(student.user.first_name, student.user.last_name)
     output_file = '{directory}/{file}'.format(directory=directory, file=filename)
     os.makedirs(directory, exist_ok=True)
 
@@ -1375,7 +1375,7 @@ def generate_thesis_document(pk, template_file_name):
     if os.path.exists(output_file):
         with open(output_file, 'rb') as document:
             response = HttpResponse(document.read(), content_type='application/docx')
-            response['Content-Disposition'] = 'attachment; filename="{filename}"'.format(student_name=student, filename=filename)
+            response['Content-Disposition'] = 'attachment; filename="{filename}"'.format(filename=filename)
             return response
         document.closed
 
