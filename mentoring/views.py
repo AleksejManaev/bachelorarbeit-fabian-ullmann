@@ -439,7 +439,7 @@ class TutorUpdatePlacementView(View):
 
             if form.instance.state == 'Certificate accepted' and form.cleaned_data['completed'] == 'Completed':
                 form.instance.state = 'Placement completed'
-                self.notify(request.user, instance, _('You completed your placement.'))
+                self.notify(request.user, instance, '{} {} {} {}'.format(_('The placement of'), form.instance.student.user.first_name, form.instance.student.user.last_name, _('has been completed.')))
             elif form.cleaned_data['completed'] == 'Failed':
                 form.instance.state = 'Placement failed'
             elif form.instance.state != 'Placement completed':
@@ -460,15 +460,15 @@ class TutorUpdatePlacementView(View):
                 if mentoring_accepted_new_value == 'MD':
                     active_placement = Placement(student=instance.student)
                     active_placement.save()
-                    self.notify(request.user, instance, _('Your mentoring request was denied.'))
+                    self.notify(request.user, instance, '{} {} {} {}'.format(_('The mentoring request of'), form.instance.student.user.first_name, form.instance.student.user.last_name, _('has been denied.')))
 
                 elif mentoring_accepted_new_value == 'MA':
-                    self.notify(request.user, instance, _('Your mentoring request was accepted.'))
+                    self.notify(request.user, instance, '{} {} {} {}'.format(_('The mentoring request of'), form.instance.student.user.first_name, form.instance.student.user.last_name, _('has been accepted.')))
             if completed_new_value != completed_old_value:
                 if completed_new_value == 'Failed':
                     active_placement = Placement(student=instance.student)
                     active_placement.save()
-                    self.notify(request.user, instance, _('You failed your placement.'))
+                    self.notify(request.user, instance, '{} {} {} {}'.format(_('The placement of'), form.instance.student.user.first_name, form.instance.student.user.last_name, _('has failed.')))
         else:
             messages.add_message(request, messages.ERROR, _('Placement update failed.'))
 
@@ -480,7 +480,7 @@ class TutorUpdatePlacementView(View):
         comment.save()
         Placement.objects.filter(id=placement.id).update(comment_unread_by_student=True, comment_unread_by_tutor=True)
 
-        html_message = '<a href="http://grad-man.th-brandenburg.de/comments/placement/{}">{}</a>'.format(placement.id, _('Show comments'))
+        html_message = '<a href="http://grad-man.th-brandenburg.de/comments/placement/{}">{}</a><br><br>{}'.format(placement.id, _('Go to comment'), comment_message)
         send_comment_email([placement.student.user.email, placement.tutor.user.email], html_message)
 
 
@@ -559,10 +559,9 @@ class TutorUpdateThesisView(View):
                 if mentoring_accepted_new_value == 'MD':
                     active_thesis = Thesis(student=instance.student)
                     active_thesis.save()
-                    self.notify(request.user, instance, _('Your mentoring request was denied.'))
-
+                    self.notify(request.user, instance, '{} {} {} {}'.format(_('The mentoring request of'), form.instance.student.user.first_name, form.instance.student.user.last_name, _('has been denied.')))
                 elif mentoring_accepted_new_value == 'MA':
-                    self.notify(request.user, instance, _('Your mentoring request was accepted.'))
+                    self.notify(request.user, instance, '{} {} {} {}'.format(_('The mentoring request of'), form.instance.student.user.first_name, form.instance.student.user.last_name, _('has been accepted.')))
 
             '''
                 Wenn eine Abschlussarbeit absolviert wurde oder der Student durchgefallen ist,
@@ -571,11 +570,11 @@ class TutorUpdateThesisView(View):
             '''
             instance_is_activethesis = StudentActiveThesis.objects.filter(thesis=instance)
             if form.cleaned_data['completed'] and instance_is_activethesis and form.instance.state == 'Thesis completed':
-                self.notify(request.user, instance, _('You completed your thesis.'))
+                self.notify(request.user, instance, '{} {} {} {}'.format(_('The thesis of'), form.instance.student.user.first_name, form.instance.student.user.last_name, _('has been completed.')))
                 active_thesis = Thesis(student=instance.student)
                 active_thesis.save()
             elif form.cleaned_data['completed'] and instance_is_activethesis and form.instance.state == 'Thesis failed':
-                self.notify(request.user, instance, _('You failed your thesis.'))
+                self.notify(request.user, instance, '{} {} {} {}'.format(_('The thesis of'), form.instance.student.user.first_name, form.instance.student.user.last_name, _('has failed.')))
                 active_thesis = Thesis(student=instance.student)
                 active_thesis.save()
 
@@ -590,7 +589,7 @@ class TutorUpdateThesisView(View):
         comment.save()
         Thesis.objects.filter(id=thesis.id).update(comment_unread_by_student=True, comment_unread_by_tutor=True)
 
-        html_message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a>'.format(thesis.id, _('Show comments'))
+        html_message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a><br><br>{}'.format(thesis.id, _('Go to comment'), comment_message)
         send_comment_email([thesis.student.user.email, thesis.tutor.user.email], html_message)
 
 
@@ -748,6 +747,12 @@ class TutorThesisView(UpdateView):
         return redirect('thesis-details', pk=form.instance.id)
 
 
+def create_email_message(comment):
+    message_template = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a><br>{} {}:<br><br>{}'
+    message = message_template.format(comment.abstractwork.id, _('Go to comment'), comment.author, _('wrote'), comment.message)
+    return message
+
+
 class CommentsView(View):
     template_name = 'comments.html'
     form_class = CommentForm
@@ -790,7 +795,7 @@ class CommentsView(View):
 
         # Kommentar als ungelesen für den anderen Gesprächspartner markieren (aber nicht bei privaten) und E-Mail versenden
         if (hasattr(request.user, 'portaluser')):
-            message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+            message = create_email_message(comment)
             abstractwork = comment.abstractwork
 
             if (hasattr(request.user.portaluser, 'tutor')):
@@ -827,14 +832,14 @@ def togglePrivacy(request):
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_student=False)
             else:
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_student=True)
-                message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                message = create_email_message(comment)
                 send_comment_email([comment.abstractwork.student.user.email], message)
         elif (hasattr(request.user.portaluser, 'student')):
             if comment.private:
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_tutor=False)
             else:
                 AbstractWork.objects.filter(id=comment.abstractwork.id).update(comment_unread_by_tutor=True)
-                message = '<a href="http://grad-man.th-brandenburg.de/comments/abstractwork/{}">{}</a>'.format(comment.abstractwork.id, _('Show comments'))
+                message = create_email_message(comment)
                 send_comment_email([comment.abstractwork.tutor.user.email], message)
 
     return JsonResponse({'private_state': comment.private, 'private_text': str(_(private_text))})
@@ -843,7 +848,7 @@ def togglePrivacy(request):
 def send_comment_email(recipient_list, html_message):
     def run_in_new_thread():
         try:
-            send_mail(_('You have unread comments.'), '', from_email='placement_thesis_service@gmx.net', recipient_list=recipient_list,
+            send_mail(_('You have unread comments.'), '', from_email=getattr(settings, "EMAIL_HOST_USER"), recipient_list=recipient_list,
                       html_message=html_message)
         except:
             pass
