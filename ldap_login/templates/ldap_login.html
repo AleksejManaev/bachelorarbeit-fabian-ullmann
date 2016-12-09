@@ -29,6 +29,7 @@
                 </div>
                 <div class="panel-body">
                     <form action="" method="post" class="form">
+                        <input type="hidden" name="next" value="{{ request.GET.next }}" />
                         {% csrf_token %}
                         {% bootstrap_form_errors form %}
                         {% bootstrap_field form.username %}
