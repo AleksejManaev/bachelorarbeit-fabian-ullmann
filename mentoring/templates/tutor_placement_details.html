@@ -64,7 +64,7 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         {% if placement_form.instance.report %}
-                                            <a href="{{ placement_form.instance.report.url }}">{{ placement_form.instance.report }}</a>
+                                            <a href="{{ placement_form.instance.report.url }}">{{ placement_form.instance.report.file|filename }}</a>
                                         {% else %}
                                             <p>-</p>
                                         {% endif %}
@@ -77,7 +77,7 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         {% if placement_form.instance.certificate %}
-                                            <a href="{{ placement_form.instance.certificate.url }}">{{ placement_form.instance.certificate }}</a>
+                                            <a href="{{ placement_form.instance.certificate.url }}">{{ placement_form.instance.certificate.file|filename }}</a>
                                         {% else %}
                                             <p>-</p>
                                         {% endif %}

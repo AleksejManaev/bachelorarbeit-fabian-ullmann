@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load filter %}
 {% load bootstrap3 %}
 {% load i18n %}
 {% load staticfiles %}
@@ -9,6 +10,49 @@
 
 {% block content %}
     <div class="container center-vertically">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="panel panel-primary">
+                    {% if placement %}
+                        <div class="panel-heading">
+                            {% trans 'information on report' %}
+                        </div>
+                        <div class="panel-body">
+                            {% trans 'student' %}: {{ placement.student }}<br>
+                            {% trans 'tutor' %}: {{ placement.tutor }}<br>
+                            {% trans 'task' %}: {{ placement.task }}<br>
+                            {% trans 'report' %}:
+                            {% if placement.report %}
+                                <a href="{{ placement.report.url }}">
+                                    {{ placement.report.file|filename }}
+                                </a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="panel-heading">
+                            {% trans 'information on thesis' %}
+                        </div>
+                        <div class="panel-body">
+                            {% trans 'student' %}: {{ thesis.student }}<br>
+                            {% trans 'tutor' %}: {{ thesis.tutor }}<br>
+                            {% trans 'title' %}: {{ thesis.task }}<br>
+                            {% trans 'thesis' %}:
+                             {% if thesis.thesis %}
+                                <a href="{{ thesis.thesis.url }}">
+                                    {{ thesis.thesis.file|filename }}
+                                </a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                     {% endif %}
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
         <!-- Übersicht Bisherige Kommentare -->
         <div class="row ">
             <div class="col-md-2"></div>

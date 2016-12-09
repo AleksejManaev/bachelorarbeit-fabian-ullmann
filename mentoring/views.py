@@ -760,9 +760,20 @@ class CommentsView(View):
             elif (hasattr(request.user.portaluser, 'student')):
                 AbstractWork.objects.filter(id=pk).update(comment_unread_by_student=False)
 
+        placement = None
+        thesis = None
+        try:
+            placement = Placement.objects.get(id=pk)
+        except:
+            pass
+        try:
+            thesis = Thesis.objects.get(id=pk)
+        except:
+            pass
+
         comments = Comment.objects.filter(abstractwork=pk).order_by('timestamp')
         comment_form = self.form_class()
-        return render(request, self.template_name, {'comments': comments, 'comment_form': comment_form})
+        return render(request, self.template_name, {'comments': comments, 'comment_form': comment_form, 'placement': placement, 'thesis': thesis})
 
     def post(self, request, pk):
         comment = Comment()

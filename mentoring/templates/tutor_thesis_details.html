@@ -54,7 +54,7 @@
                                     <div class="row">
                                         <div class="col-xs-12">
                                             {% if form.instance.expose %}
-                                                <a href="{{ form.instance.expose.url }}">{{ form.instance.expose }}</a>
+                                                <a href="{{ form.instance.expose.url }}">{{ form.instance.expose.file|filename }}</a>
                                             {% else %}
                                                 <p>-</p>
                                             {% endif %}
@@ -67,7 +67,7 @@
                                     <div class="row">
                                         <div class="col-xs-12">
                                             {% if form.instance.thesis %}
-                                                <a href="{{ form.instance.thesis.url }}">{{ form.instance.thesis }}</a>
+                                                <a href="{{ form.instance.thesis.url }}">{{ form.instance.thesis.file|filename }}</a>
                                             {% else %}
                                                 <p>-</p>
                                             {% endif %}
@@ -80,7 +80,7 @@
                                     <div class="row">
                                         <div class="col-xs-12">
                                             {% if form.instance.poster %}
-                                                <a href="{{ form.instance.poster.url }}">{{ form.instance.poster }}</a>
+                                                <a href="{{ form.instance.poster.url }}">{{ form.instance.poster.file|filename }}</a>
                                             {% else %}
                                                 <p>-</p>
                                             {% endif %}
@@ -93,7 +93,7 @@
                                     <div class="row">
                                         <div class="col-xs-12">
                                             {% if form.instance.presentation %}
-                                                <a href="{{ form.instance.presentation.url }}">{{ form.instance.presentation }}</a>
+                                                <a href="{{ form.instance.presentation.url }}">{{ form.instance.presentation.file|filename }}</a>
                                             {% else %}
                                                 <p>-</p>
                                             {% endif %}
@@ -106,7 +106,7 @@
                                     <div class="row">
                                         <div class="col-xs-12">
                                             {% if form.instance.other %}
-                                                <a href="{{ form.instance.other.url }}">{{ form.instance.other }}</a>
+                                                <a href="{{ form.instance.other.url }}">{{ form.instance.other.file|filename }}</a>
                                             {% else %}
                                                 <p>-</p>
                                             {% endif %}

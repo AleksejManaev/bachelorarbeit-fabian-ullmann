@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-12 22:43+0200\n"
+"POT-Creation-Date: 2016-12-09 16:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -163,6 +163,7 @@ msgid "Placement completion"
 msgstr "Praktikum bestanden"
 
 #: .\mentoring\models.py:131 .\mentoring\models.py:253
+#: .\mentoring\templates\comments.html:41
 msgid "title"
 msgstr "Titel"
 
@@ -243,7 +244,7 @@ msgstr "Ort"
 msgid "web address"
 msgstr "Internetadresse"
 
-#: .\mentoring\models.py:198
+#: .\mentoring\models.py:198 .\mentoring\templates\comments.html:24
 #: .\mentoring\templates\student_completed_theses.html:22
 #: .\mentoring\templates\student_placement.html:27
 #: .\mentoring\templates\student_thesis.html:27
@@ -411,50 +412,53 @@ msgstr "Nachricht"
 msgid "Only visible for me"
 msgstr "Nur für mich sichtbar"
 
-#: .\mentoring\templates\base.html:46 .\templates\base.html:46
-msgid "Poster management"
-msgstr "Posterverwaltung"
+#: .\mentoring\templates\comments.html:19
+msgid "information on report"
+msgstr ""
 
-#: .\mentoring\templates\base.html:55
-#: .\mentoring\templates\placement_seminar_list.html:14
-#: .\templates\base.html:55
-msgid "Placement seminars"
-msgstr "Praktikumsseminare"
+#: .\mentoring\templates\comments.html:22
+#: .\mentoring\templates\comments.html:39
+msgid "student"
+msgstr "Student"
 
-#: .\mentoring\templates\base.html:64 .\templates\base.html:64
-msgid "Thesis seminars"
-msgstr "Abschlussarbeitseminare"
+#: .\mentoring\templates\comments.html:23
+#: .\mentoring\templates\comments.html:40
+#: .\mentoring\templates\student_completed_theses.html:23
+#: .\mentoring\templates\student_placement.html:26
+#: .\mentoring\templates\student_thesis.html:26
+msgid "tutor"
+msgstr "Tutor"
 
-#: .\mentoring\templates\base.html:72 .\templates\base.html:72
-msgid "Home"
-msgstr "Start"
+#: .\mentoring\templates\comments.html:25
+msgid "report"
+msgstr "Praktikumsbericht"
 
-#: .\mentoring\templates\base.html:85 .\templates\base.html:85
-msgid "Profile"
-msgstr "Profil"
+#: .\mentoring\templates\comments.html:36
+msgid "information on thesis"
+msgstr "Informationen zur Abschlussarbeit"
 
-#: .\mentoring\templates\base.html:93 .\templates\base.html:93
-msgid "Logout"
-msgstr "Abmelden"
+#: .\mentoring\templates\comments.html:42
+msgid "thesis"
+msgstr "Abschlussarbeit"
 
-#: .\mentoring\templates\comments.html:21
-#: .\mentoring\templates\comments.html:45
+#: .\mentoring\templates\comments.html:65
+#: .\mentoring\templates\comments.html:89
 msgid "wrote"
 msgstr "schrieb"
 
-#: .\mentoring\templates\comments.html:29
+#: .\mentoring\templates\comments.html:73
 msgid "Private"
 msgstr "Privat"
 
-#: .\mentoring\templates\comments.html:33
+#: .\mentoring\templates\comments.html:77
 msgid "Not private"
 msgstr "Nicht privat"
 
-#: .\mentoring\templates\comments.html:66
+#: .\mentoring\templates\comments.html:110
 msgid "Create a comment"
 msgstr "Kommentar schreiben"
 
-#: .\mentoring\templates\comments.html:74
+#: .\mentoring\templates\comments.html:118
 msgid "Send"
 msgstr "Absenden"
 
@@ -489,6 +493,11 @@ msgstr "Datum"
 #: .\mentoring\templates\thesis_master_seminar_update.html:37
 msgid "Create appointment"
 msgstr "Erstelle Termin"
+
+#: .\mentoring\templates\placement_seminar_list.html:14
+#: .\templates\base.html:55
+msgid "Placement seminars"
+msgstr "Praktikumsseminare"
 
 #: .\mentoring\templates\placement_seminar_list.html:24
 #: .\mentoring\templates\seminar_create.html:26
@@ -564,12 +573,6 @@ msgstr "Speichern"
 #: .\mentoring\templates\student_index.html:35
 msgid "Completed Theses"
 msgstr "Abgeschlossene Abschlussarbeiten"
-
-#: .\mentoring\templates\student_completed_theses.html:23
-#: .\mentoring\templates\student_placement.html:26
-#: .\mentoring\templates\student_thesis.html:26
-msgid "tutor"
-msgstr "Tutor"
 
 #: .\mentoring\templates\student_completed_theses.html:24
 msgid "Second Examiner"
@@ -768,19 +771,19 @@ msgstr "Prüfungsamt"
 msgid "Grades"
 msgstr "Noten"
 
-#: .\mentoring\templatetags\filter.py:51
+#: .\mentoring\templatetags\filter.py:52
 msgid "requested"
 msgstr "angefragt"
 
-#: .\mentoring\templatetags\filter.py:53
+#: .\mentoring\templatetags\filter.py:54
 msgid "mentoring accepted"
 msgstr "Betreuung angenommen"
 
-#: .\mentoring\templatetags\filter.py:55
+#: .\mentoring\templatetags\filter.py:56
 msgid "mentoring denied"
 msgstr "Betreuung der Abschlussarbeit"
 
-#: .\mentoring\templatetags\filter.py:57
+#: .\mentoring\templatetags\filter.py:58
 msgid "error"
 msgstr "Fehler"
 
@@ -837,8 +840,8 @@ msgstr "Ihre Betreuungsanfrage wurde angenommen."
 msgid "You failed your placement."
 msgstr "Sie haben Ihr Praktikum nicht bestanden."
 
-#: .\mentoring\views.py:483 .\mentoring\views.py:593 .\mentoring\views.py:782
-#: .\mentoring\views.py:819 .\mentoring\views.py:826
+#: .\mentoring\views.py:483 .\mentoring\views.py:593 .\mentoring\views.py:793
+#: .\mentoring\views.py:830 .\mentoring\views.py:837
 msgid "Show comments"
 msgstr "Kommentare anzeigen"
 
@@ -858,17 +861,37 @@ msgstr "Sie haben Ihre Abschlussarbeit absolviert."
 msgid "You failed your thesis."
 msgstr "Sie haben Ihre Abschlussarbeit nicht absolviert."
 
-#: .\mentoring\views.py:835
+#: .\mentoring\views.py:846
 msgid "You have unread comments."
 msgstr "Sie haben ungelesene Kommentare."
 
-#: .\mentoring\views.py:1494
+#: .\mentoring\views.py:1505
 msgid "Poster successfully updated."
 msgstr "Poster erfolgreich aktualisiert."
 
-#: .\mentoring\views.py:1496
+#: .\mentoring\views.py:1507
 msgid "Poster update failed."
 msgstr "Aktualisierung des Posters fehlgeschlagen."
+
+#: .\templates\base.html:46
+msgid "Poster management"
+msgstr "Posterverwaltung"
+
+#: .\templates\base.html:64
+msgid "Thesis seminars"
+msgstr "Abschlussarbeitseminare"
+
+#: .\templates\base.html:72
+msgid "Home"
+msgstr "Start"
+
+#: .\templates\base.html:85
+msgid "Profile"
+msgstr "Profil"
+
+#: .\templates\base.html:93
+msgid "Logout"
+msgstr "Abmelden"
 
 #~ msgid "Thesis completion"
 #~ msgstr "Abschlussarbeit bestanden"
@@ -1064,9 +1087,6 @@ msgstr "Aktualisierung des Posters fehlgeschlagen."
 #~ msgid "Request"
 #~ msgstr "Anfrage versenden"
 
-#~ msgid "Company thesis"
-#~ msgstr "Informationen zum Unternehmen erfassen"
-
 #~ msgid "Contact-Data thesis"
 #~ msgstr "Ansprechpartner im Unternehmen"
 
@@ -1117,9 +1137,6 @@ msgstr "Aktualisierung des Posters fehlgeschlagen."
 
 #~ msgid "Preview placement"
 #~ msgstr "Vorschau Praktikum"
-
-#~ msgid "report"
-#~ msgstr "Praktikumsbericht"
 
 #~ msgid "Accept placement"
 #~ msgstr "Praktikum erfolgreich"

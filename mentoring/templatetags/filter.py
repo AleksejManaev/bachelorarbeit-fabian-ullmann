@@ -1,4 +1,5 @@
 import re
+import os
 from datetime import datetime
 
 import pytz
@@ -118,3 +119,8 @@ def placementeventregistration(value, arg=None):
 def file_upload_max_size():
     size_in_mb = int(getattr(settings, "FILE_UPLOAD_MAX_SIZE", "") / 1024 / 1024)
     return "(Max. %sMB)" % size_in_mb
+
+
+@register.filter
+def filename(value):
+    return os.path.basename(value.file.name)
