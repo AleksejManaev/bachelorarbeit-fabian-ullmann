@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-09 18:40+0100\n"
+"POT-Creation-Date: 2016-12-12 23:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Please sign in with your THB account!"
 msgstr "Bitte loggen Sie sich mit Ihrem THB-Konto ein!"
 
-#: .\ldap_login\templates\ldap_login.html:38
+#: .\ldap_login\templates\ldap_login.html:39
 msgid "Sign in"
 msgstr "Anmelden"
 
@@ -445,7 +445,7 @@ msgstr ""
 #: .\mentoring\templates\comments.html:22
 #: .\mentoring\templates\comments.html:39
 msgid "student"
-msgstr ""
+msgstr "Student"
 
 #: .\mentoring\templates\comments.html:23
 #: .\mentoring\templates\comments.html:40
