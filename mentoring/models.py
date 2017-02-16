@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from decimal import Decimal
 
 import pytz
@@ -231,13 +232,13 @@ class Placement(AbstractWork):
         super(Placement, self).save(force_insert, force_update, using, update_fields)
 
         # Loeschen alter Upload-Dateien
-        # for object in [self.report, self.presentation, self.certificate]:
-        #     if (bool(object)):
-        #         dir = os.path.dirname(getattr(object, 'path'))
-        #         for file in os.listdir(dir):
-        #             samefile = os.path.samefile(getattr(object, 'path'), os.path.join(dir, file))
-        #             if not samefile:
-        #                 os.remove(os.path.join(dir, file))
+        for object in [self.report, self.certificate]:
+            if (bool(object)):
+                dir = os.path.dirname(getattr(object, 'path'))
+                for file in os.listdir(dir):
+                    samefile = os.path.samefile(getattr(object, 'path'), os.path.join(dir, file))
+                    if not samefile:
+                        os.remove(os.path.join(dir, file))
 
 
 class StudentActivePlacement(models.Model):
@@ -267,13 +268,23 @@ class Thesis(AbstractWork):
     poster_accepted = models.BooleanField(_('Poster accepted'), default=False)
     state = models.CharField(_('State'), choices=THESIS_STATE_CHOICES, max_length=100, default='Not requested')
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
         # Zeitzone anpassen und somit den richtigen Tag setzen
         deadline = getattr(self, 'deadline')
         if deadline:
             self.deadline = deadline.replace(tzinfo=pytz.timezone('UTC'))
 
-        super(Thesis, self).save(*args, **kwargs)
+        super(Thesis, self).save(force_insert, force_update, using, update_fields)
+
+        # Loeschen alter Upload-Dateien
+        for object in [self.expose, self.thesis, self.poster, self.presentation, self.other]:
+            if (bool(object)):
+                dir = os.path.dirname(getattr(object, 'path'))
+                for file in os.listdir(dir):
+                    samefile = os.path.samefile(getattr(object, 'path'), os.path.join(dir, file))
+                    if not samefile:
+                        os.remove(os.path.join(dir, file))
 
 
 class StudentActiveThesis(models.Model):
