@@ -4,7 +4,9 @@ from decimal import Decimal
 
 import pytz
 from django.contrib.auth.models import AbstractUser
+from django.template.defaultfilters import date
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.timezone import localtime
 from django.utils.translation import ugettext_lazy as _
 
 from mentoring.helpers import *
@@ -118,9 +120,9 @@ COURSE_CHOICES = (
 )
 
 SEMINAR_TYPE_CHOICES = (
-    ('placement', 'placement'),
-    ('bachelor', 'bachelor'),
-    ('master', 'master'),
+    ('placement', _('placement')),
+    ('bachelor', _('bachelor')),
+    ('master', _('master')),
 )
 
 
@@ -143,6 +145,10 @@ class Tutor(PortalUser):
     thesis_responsible = models.BooleanField(default=False, null=False, blank=False)
     poster_responsible = models.BooleanField(default=False, null=False, blank=False)
 
+    class Meta:
+        verbose_name = _('Tutor')
+        verbose_name_plural = _('Tutors')
+
     @property
     def get_full_name(self):
         return "%s %s %s" % (self.title or '', self.user.first_name or '', self.user.last_name or '')
@@ -157,12 +163,23 @@ class Seminar(models.Model):
 
     class Meta:
         verbose_name = _('Seminar')
+        verbose_name_plural = _('Seminars')
         unique_together = ('year', 'type')
+
+    def __str__(self):
+        return "{} {}".format(self.year or '', _(self.type) or '')
 
 
 class SeminarEntry(models.Model):
     date = models.DateTimeField()
     seminar = models.ForeignKey(Seminar)
+
+    class Meta:
+        verbose_name = _('Seminar entry')
+        verbose_name_plural = _('Seminar entries')
+
+    def __str__(self):
+        return "{} - {}".format(date(localtime(self.date), 'SHORT_DATE_FORMAT') or '', self.seminar.__str__() or '')
 
 
 @python_2_unicode_compatible
@@ -181,6 +198,10 @@ class Student(PortalUser):
     master_seminar_done = models.BooleanField(_('Master seminar done'), default=False)
     seminar_entries = models.ManyToManyField(SeminarEntry, blank=True, null=True, related_name='seminar_students')
 
+    class Meta:
+        verbose_name = _('Student')
+        verbose_name_plural = _('Students')
+
     def __str__(self):
         return u"{} ({})".format(self.user.get_full_name() or '', self.matriculation_number or '')
 
@@ -191,6 +212,13 @@ class Address(models.Model):
     zip_code = models.CharField(_('zip code'), max_length=30, blank=True, null=True)
     location = models.CharField(_('location'), max_length=100, blank=True, null=True)
     web_address = models.CharField(_('web address'), max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Address')
+        verbose_name_plural = _('Addresses')
+
+    def __str__(self):
+        return self.student.__str__()
 
 
 class AbstractWork(models.Model):
@@ -208,7 +236,7 @@ class AbstractWork(models.Model):
     completed = models.CharField(_('Completed'), choices=ABSTRACTWORK_COMPLETED_CHOICES, max_length=100, default='-')
 
     def __str__(self):
-        return "AbstractWork {}".format(self.pk)
+        return "{}".format(self.task if self.task else _('No task'))
 
 
 @python_2_unicode_compatible
@@ -224,8 +252,12 @@ class Placement(AbstractWork):
     report_accepted = models.BooleanField(_('Report accepted'), default=False)
     certificate_accepted = models.BooleanField(_('Certificate accepted'), default=False)
 
+    class Meta:
+        verbose_name = _('Placement')
+        verbose_name_plural = _('Placements')
+
     def __str__(self):
-        return u"Placement {}".format(self.student.user.username)
+        return super(Placement, self).__str__()
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -244,6 +276,13 @@ class Placement(AbstractWork):
 class StudentActivePlacement(models.Model):
     student = models.OneToOneField(Student)
     placement = models.OneToOneField(Placement, null=True)
+
+    class Meta:
+        verbose_name = _('Active placement')
+        verbose_name_plural = _('Active placements')
+
+    def __str__(self):
+        return '{} - {}'.format(self.student, self.placement.__str__())
 
 
 class Thesis(AbstractWork):
@@ -268,6 +307,13 @@ class Thesis(AbstractWork):
     poster_accepted = models.BooleanField(_('Poster accepted'), default=False)
     state = models.CharField(_('State'), choices=THESIS_STATE_CHOICES, max_length=100, default='Not requested')
 
+    class Meta:
+        verbose_name = _('Thesis')
+        verbose_name_plural = _('Theses')
+
+    def __str__(self):
+        return super(Thesis, self).__str__()
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         # Zeitzone anpassen und somit den richtigen Tag setzen
@@ -291,6 +337,13 @@ class StudentActiveThesis(models.Model):
     student = models.OneToOneField(Student)
     thesis = models.OneToOneField(Thesis, null=True)
 
+    class Meta:
+        verbose_name = _('Active Thesis')
+        verbose_name_plural = _('Active Theses')
+
+    def __str__(self):
+        return '{} - {}'.format(self.student, self.thesis.__str__())
+
 
 @python_2_unicode_compatible
 class ContactData(ContactModel):
@@ -308,10 +361,24 @@ class ContactData(ContactModel):
 class PlacementCompanyContactData(ContactData):
     placement = models.OneToOneField(Placement, null=True)
 
+    class Meta:
+        verbose_name = _('Placement company contact')
+        verbose_name_plural = _('Placement company contacts')
+
+    def __str__(self):
+        return self.placement.student.__str__()
+
 
 class Comment(models.Model):
     author = models.ForeignKey(MentoringUser)
     abstractwork = models.ForeignKey(AbstractWork)
     message = models.TextField(_('message'))
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(_('timestamp'), auto_now_add=True)
     private = models.BooleanField(_('Only visible for me'), default=False)
+
+    def __str__(self):
+        return self.author.__str__() + " " + date(localtime(self.timestamp), 'SHORT_DATETIME_FORMAT')
+
+    class Meta:
+        verbose_name = _('Comment')
+        verbose_name_plural = _('Comments')

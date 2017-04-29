@@ -1,18 +1,21 @@
 from django.contrib import admin
+from django.db.models.loading import get_models, get_app
 
-from .models import *
+from .models import AbstractWork, ContactData, ContactModel, PortalUser, Comment
+
+
+class CommentAdmin(admin.ModelAdmin):
+    fields = ('author', 'abstractwork', 'message', 'timestamp', 'private')
+    readonly_fields = ('timestamp',)
+
 
 # Register your models here.
-admin.site.register(AbstractWork)
-admin.site.register(Placement)
-admin.site.register(StudentActivePlacement)
-admin.site.register(PortalUser)
-admin.site.register(Student)
+for model in get_models(get_app('mentoring')):
+    admin.site.register(model)
 
-admin.site.register(PlacementCompanyContactData)
-admin.site.register(ContactData)
-admin.site.register(Address)
-
-admin.site.register(Tutor)
-
-admin.site.register(MentoringUser)
+admin.site.unregister(AbstractWork)
+admin.site.unregister(ContactData)
+admin.site.unregister(ContactModel)
+admin.site.unregister(PortalUser)
+admin.site.unregister(Comment)
+admin.site.register(Comment, CommentAdmin)
