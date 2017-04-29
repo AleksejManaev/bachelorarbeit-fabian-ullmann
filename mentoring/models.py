@@ -78,8 +78,8 @@ THESIS_STATE_SUBGOAL_CHOICES = (
 
 MENTORING_STATE_CHOICES = (
     ('ND', '-'),
-    ('MA', 'Accepted'),
-    ('MD', 'Denied'),
+    ('MA', _('Accepted')),
+    ('MD', _('Denied')),
 )
 
 THESIS_CHOICES = (
@@ -102,10 +102,10 @@ GRADE_CHOICES = (
 )
 
 EXAMINATION_OFFICE_STATE_CHOICES = (
-    ('1A', 'Not submitted'),
-    ('1B', 'Submitted'),
-    ('2A', 'Accepted'),
-    ('2B', 'Denied')
+    ('1A', _('Not submitted')),
+    ('1B', _('Submitted')),
+    ('2A', _('Accepted')),
+    ('2B', _('Denied'))
 )
 
 COURSE_CHOICES = (
@@ -136,14 +136,14 @@ class ContactModel(models.Model):
 
 
 class PortalUser(ContactModel):
-    user = models.OneToOneField(MentoringUser, primary_key=True)
+    user = models.OneToOneField(MentoringUser, primary_key=True, verbose_name=_('user'))
 
 
 @python_2_unicode_compatible
 class Tutor(PortalUser):
-    placement_responsible = models.BooleanField(default=False, null=False, blank=False)
-    thesis_responsible = models.BooleanField(default=False, null=False, blank=False)
-    poster_responsible = models.BooleanField(default=False, null=False, blank=False)
+    placement_responsible = models.BooleanField(default=False, null=False, blank=False, verbose_name=_('Placement responsible'))
+    thesis_responsible = models.BooleanField(default=False, null=False, blank=False, verbose_name=_('Thesis responsible'))
+    poster_responsible = models.BooleanField(default=False, null=False, blank=False, verbose_name=_('Poster responsible'))
 
     class Meta:
         verbose_name = _('Tutor')
@@ -171,7 +171,7 @@ class Seminar(models.Model):
 
 
 class SeminarEntry(models.Model):
-    date = models.DateTimeField()
+    date = models.DateTimeField(verbose_name=_('Date'))
     seminar = models.ForeignKey(Seminar)
 
     class Meta:
@@ -190,13 +190,13 @@ class Student(PortalUser):
     placement_year = models.IntegerField(_('Placement year'), blank=True, null=True)
     bachelor_year = models.IntegerField(_('Bachelor year'), blank=True, null=True)
     master_year = models.IntegerField(_('Master year'), blank=True, null=True)
-    placement_seminar_presentation_date = models.ForeignKey(SeminarEntry, blank=True, null=True, related_name='placement_seminar_presentation_student')
-    bachelor_seminar_presentation_date = models.ForeignKey(SeminarEntry, blank=True, null=True, related_name='bachelor_seminar_presentation_student')
-    master_seminar_presentation_date = models.ForeignKey(SeminarEntry, blank=True, null=True, related_name='master_seminar_presentation_student')
+    placement_seminar_presentation_date = models.ForeignKey(SeminarEntry, blank=True, null=True, related_name='placement_seminar_presentation_student', verbose_name='{} - {}'.format(_('Seminar presentation date'), _('Placement')))
+    bachelor_seminar_presentation_date = models.ForeignKey(SeminarEntry, blank=True, null=True, related_name='bachelor_seminar_presentation_student', verbose_name='{} - {}'.format(_('Seminar presentation date'), _('Bachelor')))
+    master_seminar_presentation_date = models.ForeignKey(SeminarEntry, blank=True, null=True, related_name='master_seminar_presentation_student', verbose_name='{} - {}'.format(_('Seminar presentation date'), _('Master')))
     placement_seminar_done = models.BooleanField(_('Placement seminar done'), default=False)
     bachelor_seminar_done = models.BooleanField(_('Bachelor seminar done'), default=False)
     master_seminar_done = models.BooleanField(_('Master seminar done'), default=False)
-    seminar_entries = models.ManyToManyField(SeminarEntry, blank=True, null=True, related_name='seminar_students')
+    seminar_entries = models.ManyToManyField(SeminarEntry, blank=True, null=True, related_name='seminar_students', verbose_name=_('Seminar entries'))
 
     class Meta:
         verbose_name = _('Student')
@@ -228,10 +228,10 @@ class AbstractWork(models.Model):
     created_on = models.DateTimeField(_('date joined'), auto_created=True, auto_now_add=True)
     updated_on = models.DateTimeField(_('date updated'), auto_now=True, null=True)
     sent_on = models.DateTimeField(_('date sent'), blank=True, null=True)
-    comment_unread_by_student = models.BooleanField(default=False)
-    comment_unread_by_tutor = models.BooleanField(default=False)
+    comment_unread_by_student = models.BooleanField(_('Comment unread by student'), default=False)
+    comment_unread_by_tutor = models.BooleanField(_('Comment unread by tutor'), default=False)
     mentoring_requested = models.BooleanField(_('Requested'), default=False)
-    mentoring_accepted = models.CharField(max_length=2, choices=MENTORING_STATE_CHOICES, default='ND')
+    mentoring_accepted = models.CharField(_('Mentoring accepted'), max_length=2, choices=MENTORING_STATE_CHOICES, default='ND')
     archived = models.BooleanField(_('Archived'), default=False)
     completed = models.CharField(_('Completed'), choices=ABSTRACTWORK_COMPLETED_CHOICES, max_length=100, default='-')
 
@@ -274,8 +274,8 @@ class Placement(AbstractWork):
 
 
 class StudentActivePlacement(models.Model):
-    student = models.OneToOneField(Student)
-    placement = models.OneToOneField(Placement, null=True)
+    student = models.OneToOneField(Student, verbose_name=_('Student'))
+    placement = models.OneToOneField(Placement, verbose_name=_('Placement'), null=True)
 
     class Meta:
         verbose_name = _('Active placement')
@@ -334,8 +334,8 @@ class Thesis(AbstractWork):
 
 
 class StudentActiveThesis(models.Model):
-    student = models.OneToOneField(Student)
-    thesis = models.OneToOneField(Thesis, null=True)
+    student = models.OneToOneField(Student, verbose_name=_('Student'))
+    thesis = models.OneToOneField(Thesis, verbose_name=_('Thesis'), null=True)
 
     class Meta:
         verbose_name = _('Active Thesis')
@@ -371,7 +371,7 @@ class PlacementCompanyContactData(ContactData):
 
 class Comment(models.Model):
     author = models.ForeignKey(MentoringUser)
-    abstractwork = models.ForeignKey(AbstractWork)
+    abstractwork = models.ForeignKey(AbstractWork, verbose_name="{}/{}".format(_('Placement'), _('Thesis')))
     message = models.TextField(_('message'))
     timestamp = models.DateTimeField(_('timestamp'), auto_now_add=True)
     private = models.BooleanField(_('Only visible for me'), default=False)
