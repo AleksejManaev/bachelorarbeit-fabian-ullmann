@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import *
 from docxtpl import DocxTemplate
+from html import escape
 
 from mentoring.forms import *
 from mentoring.models import Student, Placement
@@ -1310,15 +1311,15 @@ def generate_placement_document(request, pk):
     context = {
         'BeginnDatum': placement.date_from.strftime('%d.%m.%Y') if placement.date_from else '',
         'EndeDatum': placement.date_to.strftime('%d.%m.%Y') if placement.date_to else '',
-        'StudentName': u"%s, %s" % (student.user.last_name, student.user.first_name),
-        'MatrNr': student.matriculation_number,
-        'Telefon': student.phone,
-        'Email': student.user.email,
-        'THBBetreuer': u'%s' % placement.tutor,
-        'BetriebName': u'%s' % placement.company_name,
-        'BetriebBetreuerName': u"%s" % placement.placementcompanycontactdata if placement.placementcompanycontactdata else '',
-        'BetriebAnschrift': u"%s" % placement.company_address.replace('\r\n', '<w:br/>'),
-        'Aufgabe': u"%s" % placement.task.replace('\r\n', '<w:br/>'),
+        'StudentName': u"%s, %s" % (escape(student.user.last_name), escape(student.user.first_name)),
+        'MatrNr': escape(student.matriculation_number),
+        'Telefon': escape(student.phone),
+        'Email': escape(student.user.email),
+        'THBBetreuer': u'%s' % escape(placement.tutor.__str__()),
+        'BetriebName': u'%s' % escape(placement.company_name),
+        'BetriebBetreuerName': u"%s" % escape(placement.placementcompanycontactdata.__str__()) if placement.placementcompanycontactdata else '',
+        'BetriebAnschrift': u"%s" % escape(placement.company_address).replace('\r\n', '<w:br/>'),
+        'Aufgabe': u"%s" % escape(placement.task).replace('\r\n', '<w:br/>'),
         'BerichtDatum': u"%s" % placement.report_uploaded_date.strftime('%d.%m.%Y') if placement.report_uploaded_date else '',
         'KollDatum': student.placement_seminar_presentation_date.date.strftime('%d.%m.%Y') if student.placement_seminar_presentation_date else '',
         'AktuellesDatum': datetime.now().strftime("%d.%m.%Y")
@@ -1359,20 +1360,20 @@ def generate_thesis_document(pk, template_file_name):
     student = thesis.student
 
     context = {
-        'StudentName': u"%s, %s" % (student.user.last_name, student.user.first_name),
-        'MatrNr': student.matriculation_number,
-        'Telefon': student.phone,
-        'Email': student.user.email,
-        'ExterneEmail': student.extern_email if student.extern_email else '',
-        'THBBetreuer': u'%s' % thesis.tutor,
-        'Strasse': student.address.street,
-        'PLZ': student.address.zip_code,
-        'Ort': student.address.location,
-        'Studiengang': student.course,
+        'StudentName': u"%s, %s" % (escape(student.user.last_name), escape(student.user.first_name)),
+        'MatrNr': escape(student.matriculation_number),
+        'Telefon': escape(student.phone),
+        'Email': escape(student.user.email),
+        'ExterneEmail': escape(student.extern_email) if student.extern_email else '',
+        'THBBetreuer': u'%s' % escape(thesis.tutor.__str__()),
+        'Strasse': escape(student.address.street),
+        'PLZ': escape(student.address.zip_code),
+        'Ort': escape(student.address.location),
+        'Studiengang': escape(student.course),
         'AktuellesDatum': datetime.now().strftime("%d.%m.%Y"),
-        'Thema': thesis.task,
-        'ZweiterGutachter': u"%s %s %s" % (thesis.second_examiner_title, thesis.second_examiner_first_name, thesis.second_examiner_last_name),
-        'ZGOrganisation': thesis.second_examiner_organisation
+        'Thema': escape(thesis.task),
+        'ZweiterGutachter': u"%s %s %s" % (escape(thesis.second_examiner_title), escape(thesis.second_examiner_first_name), escape(thesis.second_examiner_last_name)),
+        'ZGOrganisation': escape(thesis.second_examiner_organisation)
     }
 
     # Pfade zusammensetzen
